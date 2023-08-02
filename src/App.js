@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import styled from "styled-components";
+import Main from "./pages/Main";
+import Daily from "./pages/Daily";
+import Weekly from "./pages/Weekly";
+import Setting from "./pages/Setting";
+import Nav from "./components/Nav";
+import Header from "./components/Header";
 
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <RowContainer>
+        <Nav />
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/daily" element={<Daily />} />
+          <Route path="/weekly" element={<Weekly />} />
+          <Route path="/setting" element={<Setting />} />
+        </Routes>
+      </RowContainer>
     </div>
   );
 }
 
-export default App;
+const RowContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100wv;
+  height: calc(100vh - 50px);
+`;
