@@ -29,4 +29,6 @@ const RowContainer = styled.div`
   flex-direction: row;
   width: 100wv;
   height: calc(100vh - 50px);
+
+  font: 0.7em "Fira Sans", sans-serif;
 `;

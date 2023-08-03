@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { postDailyData } from "../features/api";
+import ReportGuide from "../components/ReportGuide";
 
 function Daily() {
   const [value, onChange] = useState(new Date());
@@ -20,11 +21,18 @@ function Daily() {
     <Flat>
       <Controls>
         <Picker>
-          <DatePicker selected={value} onChange={(date) => onChange(date)} />
+          <DatePicker
+            selected={value}
+            onChange={(date: Date) => onChange(date)}
+          />
         </Picker>
         <ApplyButton onClick={handleGetDaily}>Apply</ApplyButton>
       </Controls>
-      <ReportLine></ReportLine>
+      <ReportLine>
+        <ReportGuide />
+        <ReportGuide />
+        <ReportGuide />
+      </ReportLine>
     </Flat>
   );
 }
@@ -51,8 +59,8 @@ const Controls = styled.div`
 
 const ReportLine = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: start;
 
   margin: 20px;
   border: 1px solid #555;
