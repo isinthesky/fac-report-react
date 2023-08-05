@@ -13,13 +13,25 @@ export default function Header() {
     navigate("/setting");
   };
 
+  const handleGoLogin = async () => {
+    navigate("/Login");
+  };
+
+  const handleGoSignUp = async () => {
+    navigate("/SignUp");
+  };
+
   return (
     <TopHeader>
       <Title>Fac-Report</Title>
-      <Controls>
+      <PageControls>
         <PageButton onClick={handleGoReport}>Report</PageButton>
         <PageButton onClick={handleGoSetting}>Setting</PageButton>
-      </Controls>
+      </PageControls>
+      <LoginControls>
+        <LoginButton onClick={handleGoLogin}>Login</LoginButton>
+        <LoginButton onClick={handleGoSignUp}>Signup</LoginButton>
+      </LoginControls>
     </TopHeader>
   );
 }
@@ -27,6 +39,7 @@ export default function Header() {
 const TopHeader = styled.header`
   position: relative;
   display: flex;
+  justify-content: space-between;
 
   top: 0;
   width: 100wh;
@@ -51,15 +64,43 @@ const Title = styled.div`
   background-color: #ffffff;
 `;
 
-const Controls = styled.div`
+const PageControls = styled.div`
   display: flex;
-  flex-direction: rows;
+  flex-direction: row;
   align-items: center;
+
+  width: 50wh;
+`;
+
+const LoginControls = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 50wh;
+
+  background-color: #efffff;
 `;
 
 const PageButton = styled.button`
   justify-content: center;
   align-items: center;
+
+  height: 30px;
+  width: 100px;
+
+  margin: 50px;
+`;
+
+const LoginButton = styled.button`
+  justify-content: center;
+  align-items: center;
+
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.5);
 
   height: 30px;
   width: 100px;

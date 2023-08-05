@@ -8,7 +8,7 @@ import ReportGuide from "../components/ReportGuide";
 function Daily() {
   const [value, onChange] = useState(new Date());
 
-  const handleGetDaily = async () => {
+  const handleDailyInfo = async () => {
     const ret = await postDailyData(value.valueOf());
     if (ret) {
       console.info("post daily ok", ret);
@@ -26,7 +26,7 @@ function Daily() {
             onChange={(date: Date) => onChange(date)}
           />
         </Picker>
-        <ApplyButton onClick={handleGetDaily}>Apply</ApplyButton>
+        <ApplyButton onClick={handleDailyInfo}>Apply</ApplyButton>
       </Controls>
       <ReportLine>
         <ReportGuide />

@@ -4,6 +4,8 @@ import Main from "./pages/Main";
 import Daily from "./pages/Daily";
 import Weekly from "./pages/Weekly";
 import Setting from "./pages/Setting";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Nav from "./components/Nav";
 import Header from "./components/Header";
 
@@ -18,6 +20,8 @@ export default function App() {
           <Route path="/daily" element={<Daily />} />
           <Route path="/weekly" element={<Weekly />} />
           <Route path="/setting" element={<Setting />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </RowContainer>
     </div>

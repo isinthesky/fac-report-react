@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-function Main() {
-  return <Flat>last device info table</Flat>;
+function Signup() {
+  return <Flat>Signup</Flat>;
 }
 
 const Flat = styled.div`
@@ -14,4 +14,4 @@ const Flat = styled.div`
   width: calc(100vw - 200px);
 `;
 
-export default Main;
+export default Signup;

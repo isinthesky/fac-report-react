@@ -51,6 +51,7 @@ const Divide1 = styled.div`
   flex-direction: column;
   align-items: stretch;
 `;
+
 const Divide2 = styled.div`
   display: flex;
   flex-direction: row;
