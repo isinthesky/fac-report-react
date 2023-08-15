@@ -23,7 +23,7 @@ function Nav() {
 
 const LeftNav = styled.nav`
   display: flex;
-  width: 170px;
+  width: 130px;
 
   flex-direction: column;
 

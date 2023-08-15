@@ -11,12 +11,12 @@ const DeviceGuide: React.FC = () => {
       <Row2 key="r02">
         <div>
           <Row2 key="r03">
-            <MiddleColumn key="c01">{"Middle"}</MiddleColumn>
+            <MiddleColumn key="c11">{"Middle"}</MiddleColumn>
           </Row2>
           <Row2 key="r04">
-            <ValueColumn key="c01">{"R-S"}</ValueColumn>
-            <ValueColumn key="c02">{"S-T"}</ValueColumn>
-            <ValueColumn key="c03">{"T-R"}</ValueColumn>
+            <ValueColumn key="c11">{"R-S"}</ValueColumn>
+            <ValueColumn key="c12">{"S-T"}</ValueColumn>
+            <ValueColumn key="c13">{"T-R"}</ValueColumn>
           </Row2>
           <Row2>
             <DeviceValue row={4} col={3} />
@@ -24,34 +24,34 @@ const DeviceGuide: React.FC = () => {
         </div>
         <div>
           <Row2 key="r03">
-            <MiddleColumn key="c01">{"Middle"}</MiddleColumn>
+            <MiddleColumn key="c21">{"Middle"}</MiddleColumn>
           </Row2>
           <Row2 key="r04">
-            <ValueColumn key="c01">{"R-S"}</ValueColumn>
-            <ValueColumn key="c02">{"S-T"}</ValueColumn>
-            <ValueColumn key="c03">{"T-R"}</ValueColumn>
+            <ValueColumn key="c21">{"R-S"}</ValueColumn>
+            <ValueColumn key="c22">{"S-T"}</ValueColumn>
+            <ValueColumn key="c23">{"T-R"}</ValueColumn>
           </Row2>
           <Row2>
             <DeviceValue row={4} col={3} />
           </Row2>
         </div>
         <div>
-          <ValueColumn key="c04">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c04">{"PF"}</ValueColumn>{" "}
+          <ValueColumn key="c31">{"/"}</ValueColumn>{" "}
+          <ValueColumn key="c32">{"PF"}</ValueColumn>{" "}
           <Row2>
             <DeviceValue row={4} col={1} />
           </Row2>
         </div>
         <div>
-          <ValueColumn key="c04">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c04">{"Hz"}</ValueColumn>{" "}
+          <ValueColumn key="c33">{"/"}</ValueColumn>{" "}
+          <ValueColumn key="c34">{"Hz"}</ValueColumn>{" "}
           <Row2>
             <DeviceValue row={4} col={1} />
           </Row2>
         </div>
         <div>
-          <ValueColumn key="c04">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c04">{"kW"}</ValueColumn>{" "}
+          <ValueColumn key="c35">{"/"}</ValueColumn>{" "}
+          <ValueColumn key="c36">{"kW"}</ValueColumn>{" "}
           <Row2>
             <DeviceValue row={4} col={1} />
           </Row2>

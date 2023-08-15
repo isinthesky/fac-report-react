@@ -10,7 +10,7 @@ export default function Header() {
   };
 
   const handleGoSetting = async () => {
-    navigate("/setting");
+    navigate("/settings");
   };
 
   const handleGoLogin = async () => {
@@ -54,13 +54,13 @@ const Title = styled.div`
   text-align: center;
   align-items: center;
 
-  width: 150px;
+  width: 110px;
   height: 30px;
   padding: 10px;
 
   color: "black";
   font-weight: bold;
-  font-size: 30px;
+  font-size: 22px;
   background-color: #ffffff;
 `;
 

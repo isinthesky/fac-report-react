@@ -9,12 +9,11 @@ function Daily() {
   const [value, onChange] = useState(new Date());
 
   const handleDailyInfo = async () => {
-    const ret = await postDailyData(value.valueOf());
-    if (ret) {
-      console.info("post daily ok", ret);
-    } else {
-      console.info("post daily fail", ret);
-    }
+    const ret = await postDailyData(
+      value.getFullYear(),
+      value.getMonth(),
+      value.getDate()
+    );
   };
 
   return (
@@ -42,7 +41,7 @@ const Flat = styled.div`
   flex-direction: column;
 
   height: calc(100vh - 50px);
-  width: calc(100vw - 200px);
+  width: calc(100vw - 160px);
 
   background-color: #fcf0cf;
 `;
