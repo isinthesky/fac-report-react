@@ -2,23 +2,37 @@ import { useState } from "react";
 import React from "react";
 import styled from "styled-components";
 import Compose from "../components/Compose";
+import { getDeviceInfo } from "../features/api";
+import { IDevice, IDivision, IStation } from "../features/types";
 
 function Settings() {
   const [rows, setRow] = useState(3);
   const [columns, setColumn] = useState(3);
   const [compose, setCompose] = useState([3, 3]);
+  const [devices, setDevice] = useState<IDevice[]>([]);
+  const [stations, setStation] = useState<IStation[]>([]);
+  const [divisions, setDivision] = useState<IDivision[]>([]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("row", e, Number(e.target.value));
     setRow(Number(e.target.value));
   };
   const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("column", e);
     setColumn(Number(e.target.value));
   };
 
-  const handleApply = () => {
+  const handleApply = async () => {
     setCompose([rows, columns]);
+  };
+
+  const handleResetDeviceInfo = async () => {
+    try {
+      const devicesInfo = await getDeviceInfo();
+      setDevice(devicesInfo.data.deviceInfo.device);
+      setDivision(devicesInfo.data.deviceInfo.division);
+      setStation(devicesInfo.data.deviceInfo.station);
+    } catch (error) {
+      console.error("getDeviceInfo", error);
+    }
   };
 
   const handleSave = () => {
@@ -62,8 +76,17 @@ function Settings() {
           />
         </InputGroup>
         <SettingButton onClick={handleApply}>Apply</SettingButton>
+        <SettingButton onClick={handleResetDeviceInfo}>
+          ResetDeviceInfo
+        </SettingButton>
       </InputGroup>
-      <Compose row={compose[0]} column={compose[1]}></Compose>
+      <Compose
+        row={compose[0]}
+        column={compose[1]}
+        devices={devices}
+        divisions={divisions}
+        stations={stations}
+      ></Compose>
       <ButtonGroup>
         <SettingButton onClick={handleSave}>Save</SettingButton>
         <SettingButton>Cancel</SettingButton>

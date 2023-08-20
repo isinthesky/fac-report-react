@@ -8,23 +8,27 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Nav from "./components/Nav";
 import Header from "./components/Header";
+import store from "./store/congifureStore";
+import { Provider } from "react-redux";
 
 export default function App() {
   return (
-    <div className="App">
-      <Header />
-      <RowContainer>
-        <Nav />
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/daily" element={<Daily />} />
-          <Route path="/weekly" element={<Weekly />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Routes>
-      </RowContainer>
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <Header />
+        <RowContainer>
+          <Nav />
+          <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/daily" element={<Daily />} />
+            <Route path="/weekly" element={<Weekly />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Routes>
+        </RowContainer>
+      </div>
+    </Provider>
   );
 }
 

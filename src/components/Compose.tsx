@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { JsxElement } from "typescript";
+import Device from "./Device";
+import { IDevice, IDivision, IStation } from "../features/types";
 
 type ComposeProps = {
   row: number;
   column: number;
+  stations: IStation[];
+  divisions: IDivision[];
+  devices: IDevice[];
 };
 
-const Compose: React.FC<ComposeProps> = ({ row, column }) => {
+const Compose: React.FC<ComposeProps> = ({
+  row,
+  column,
+  devices,
+  divisions,
+  stations,
+}) => {
   const renderButtons = () => {
     const rows = [];
     let keyCounter = 0;
@@ -15,11 +25,20 @@ const Compose: React.FC<ComposeProps> = ({ row, column }) => {
     for (let r = 0; r < row; r++) {
       const buttons = [];
       for (let c = 0; c < column; c++) {
-        buttons.push(<button key={keyCounter}>Button {keyCounter + 1}</button>);
+        buttons.push(
+          <Device
+            key={keyCounter}
+            station={stations}
+            area={divisions}
+            list={devices}
+          />
+        );
         keyCounter++;
       }
       rows.push(<ButtonGrid key={r}>{buttons}</ButtonGrid>);
     }
+
+    console.log("list", devices);
 
     return rows;
   };

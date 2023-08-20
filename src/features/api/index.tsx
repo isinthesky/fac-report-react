@@ -25,3 +25,13 @@ export const postDailyData = async (
 
   return true;
 };
+
+export const getDeviceInfo = async (): Promise<any> => {
+  try {
+    return await axiosInstance.get("/getDeviceInfo");
+    // console.info("getDeviceInfo", res);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
