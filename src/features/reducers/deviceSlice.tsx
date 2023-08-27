@@ -2,18 +2,23 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   value: {
-    station: [],
+    deviceList: [],
     divide: [],
     devise: [],
   },
 };
 
 export const deviceSlice = createSlice({
-  name: "content",
+  name: "deviceList",
   initialState,
-  reducers: {},
+  reducers: {
+    updateDeviceList: (state, action) => {
+      const { value } = action.payload;
+      state.value.deviceList = value;
+    },
+  },
 });
 
-// export const {} = deviceSlice.actions;
+export const { updateDeviceList } = deviceSlice.actions;
 
 export default deviceSlice.reducer;

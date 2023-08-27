@@ -1,17 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import Compose from "../components/Compose";
-import { getDeviceInfo } from "../features/api";
+import {
+  getDeviceInfo,
+  getSettings,
+  setInitSettings,
+  setUpdateSettings,
+} from "../features/api";
 import { IDevice, IDivision, IStation } from "../features/types";
+import { updateDeviceList } from "../features/reducers/deviceSlice";
 
 function Settings() {
-  const [rows, setRow] = useState(3);
-  const [columns, setColumn] = useState(3);
-  const [compose, setCompose] = useState([3, 3]);
-  const [devices, setDevice] = useState<IDevice[]>([]);
-  const [stations, setStation] = useState<IStation[]>([]);
-  const [divisions, setDivision] = useState<IDivision[]>([]);
+  const dispatch = useDispatch();
+
+  const [rows, setRow] = useState(Number(process.env.REACT_APP_INIT_DAILY_ROW));
+  const [columns, setColumn] = useState(
+    Number(process.env.REACT_APP_INIT_DAILY_COLUMN)
+  );
+  const [compose, setCompose] = useState([
+    Number(process.env.REACT_APP_INIT_DAILY_ROW),
+    Number(process.env.REACT_APP_INIT_DAILY_COLUMN),
+  ]);
+
+  const [mode, setMode] = useState(false);
+  const [DeviceList, setDeviceList] = useState({});
+
+  // const [deviceInfo, setDeviceInfo] = useState<any[]>([]);
+  // const [deviceList, setDevice] = useState<IDevice[]>([]);
+  // const [stationsList, setStation] = useState<IStation[]>([]);
+  // const [divisionsList, setDivision] = useState<IDivision[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getSettings();
+
+        console.log("init setting: ", response);
+
+        if (response) {
+          setRow(response.settings.row);
+          setColumn(response.settings.column);
+          setCompose([response.settings.row, response.settings.column]);
+
+          dispatch(updateDeviceList({ value: response.deviceList }));
+          return;
+        }
+
+        await setInitSettings(
+          process.env.REACT_APP_INIT_GENERAL_SETTING
+            ? process.env.REACT_APP_INIT_GENERAL_SETTING
+            : "",
+          process.env.REACT_APP_INIT_DEVICE_SETTING
+            ? process.env.REACT_APP_INIT_DEVICE_SETTING
+            : ""
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRow(Number(e.target.value));
@@ -22,14 +71,31 @@ function Settings() {
 
   const handleApply = async () => {
     setCompose([rows, columns]);
+    setUpdateSettings(rows, columns);
   };
 
   const handleResetDeviceInfo = async () => {
     try {
-      const devicesInfo = await getDeviceInfo();
-      setDevice(devicesInfo.data.deviceInfo.device);
-      setDivision(devicesInfo.data.deviceInfo.division);
-      setStation(devicesInfo.data.deviceInfo.station);
+      if (mode === false) {
+        const devicesInfo = await getDeviceInfo();
+        setDeviceList(devicesInfo.data.deviceInfo);
+      }
+      setMode(!mode);
+    } catch (error) {
+      console.error("getDeviceInfo", error);
+    }
+  };
+
+  const handleInitSettings = async () => {
+    try {
+      const settings = await setInitSettings(
+        process.env.REACT_APP_INIT_GENERAL_SETTING
+          ? process.env.REACT_APP_INIT_GENERAL_SETTING
+          : "",
+        process.env.REACT_APP_INIT_DEVICE_SETTING
+          ? process.env.REACT_APP_INIT_DEVICE_SETTING
+          : ""
+      );
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
@@ -58,7 +124,7 @@ function Settings() {
       <InputGroup>
         <InputGroup>
           <label htmlFor="row-input">Rows:</label>
-          <input
+          <Input
             id="row-input"
             type="number"
             onChange={handleRow}
@@ -68,7 +134,7 @@ function Settings() {
 
         <InputGroup>
           <label htmlFor="column-input">Columns:</label>
-          <input
+          <Input
             id="column-input"
             type="number"
             onChange={handleColumn}
@@ -79,18 +145,19 @@ function Settings() {
         <SettingButton onClick={handleResetDeviceInfo}>
           ResetDeviceInfo
         </SettingButton>
+        <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
       </InputGroup>
-      <Compose
-        row={compose[0]}
-        column={compose[1]}
-        devices={devices}
-        divisions={divisions}
-        stations={stations}
-      ></Compose>
-      <ButtonGroup>
-        <SettingButton onClick={handleSave}>Save</SettingButton>
-        <SettingButton>Cancel</SettingButton>
-      </ButtonGroup>
+
+      <Compose row={compose[0]} column={compose[1]} mode={mode}></Compose>
+
+      {mode ? (
+        <ButtonGroup>
+          <SettingButton onClick={handleSave}>Save</SettingButton>
+          <SettingButton>Cancel</SettingButton>
+        </ButtonGroup>
+      ) : (
+        <ButtonGroup></ButtonGroup>
+      )}
     </Flat>
   );
 }
@@ -103,7 +170,6 @@ const Flat = styled.div`
   gap: 10px;
   padding: 20px;
 
-  height: calc(100vh - 50px);
   width: calc(100vw - 200px);
 
   background-color: #ece0af;
@@ -114,6 +180,10 @@ const InputGroup = styled.div`
   flex-direction: row;
   align-items: center;
   gap: 10px;
+`;
+
+const Input = styled.input`
+  width: 50px;
 `;
 
 const ButtonGroup = styled.div`

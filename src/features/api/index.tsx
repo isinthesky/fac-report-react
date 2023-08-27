@@ -10,14 +10,14 @@ export const postDailyData = async (
   dd: number
 ): Promise<Object> => {
   try {
-    const res = await axiosInstance.post("/report", {
+    const response = await axiosInstance.post("/report", {
       type: "daily",
       year: yy,
       month: mm,
       date: dd,
     });
 
-    console.info("getDailyData", res);
+    console.info("getDailyData", response);
   } catch (error) {
     console.error(error);
     return false;
@@ -28,8 +28,54 @@ export const postDailyData = async (
 
 export const getDeviceInfo = async (): Promise<any> => {
   try {
-    return await axiosInstance.get("/getDeviceInfo");
+    const response = axiosInstance.get("/getDeviceInfo");
+    console.log("getDeviceInfo", response);
+    return response;
     // console.info("getDeviceInfo", res);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export const getSettings = async (): Promise<any> => {
+  try {
+    const response = await axiosInstance.get("/getSettings");
+    console.log("getSettings", response);
+    return response.data.settings;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export const setInitSettings = async (
+  table: string,
+  device: string
+): Promise<any> => {
+  try {
+    await axiosInstance.post("/createSettings", {
+      type: "settings",
+      value: JSON.parse(table),
+    });
+    await axiosInstance.post("/createSettings", {
+      type: "deviceList",
+      value: JSON.parse(device),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const setUpdateSettings = async (
+  row: number,
+  column: number
+): Promise<any> => {
+  try {
+    return await axiosInstance.put("/updateSettings", {
+      row: row,
+      column: column,
+    });
   } catch (error) {
     console.error(error);
     return false;
