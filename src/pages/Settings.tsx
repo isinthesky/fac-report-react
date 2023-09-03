@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import Compose from "../components/Compose";
 import {
@@ -9,8 +8,8 @@ import {
   setInitSettings,
   setUpdateSettings,
 } from "../features/api";
-import { IDevice, IDivision, IStation } from "../features/types";
 import { updateDeviceList } from "../features/reducers/deviceSlice";
+import { setDailySetting } from "../features/reducers/optionSlice";
 
 function Settings() {
   const dispatch = useDispatch();
@@ -27,17 +26,10 @@ function Settings() {
   const [mode, setMode] = useState(false);
   const [DeviceList, setDeviceList] = useState({});
 
-  // const [deviceInfo, setDeviceInfo] = useState<any[]>([]);
-  // const [deviceList, setDevice] = useState<IDevice[]>([]);
-  // const [stationsList, setStation] = useState<IStation[]>([]);
-  // const [divisionsList, setDivision] = useState<IDivision[]>([]);
-
   useEffect(() => {
     (async () => {
       try {
         const response = await getSettings();
-
-        console.log("init setting: ", response);
 
         if (response) {
           setRow(response.settings.row);
@@ -72,6 +64,8 @@ function Settings() {
   const handleApply = async () => {
     setCompose([rows, columns]);
     setUpdateSettings(rows, columns);
+
+    dispatch(setDailySetting({ row: rows, column: columns }));
   };
 
   const handleResetDeviceInfo = async () => {
@@ -88,7 +82,7 @@ function Settings() {
 
   const handleInitSettings = async () => {
     try {
-      const settings = await setInitSettings(
+      await setInitSettings(
         process.env.REACT_APP_INIT_GENERAL_SETTING
           ? process.env.REACT_APP_INIT_GENERAL_SETTING
           : "",

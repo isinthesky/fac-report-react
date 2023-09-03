@@ -1,13 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  value: {
+    daily: { row: 2, column: 2 },
+  },
+};
 
 export const optionSlice = createSlice({
   name: "option",
   initialState,
-  reducers: {},
+  reducers: {
+    setDailySetting: (state, action) => {
+      state.value.daily = action.payload;
+    },
+  },
 });
 
-// export const {} = optionSlice.actions;
+export const { setDailySetting } = optionSlice.actions;
 
 export default optionSlice.reducer;

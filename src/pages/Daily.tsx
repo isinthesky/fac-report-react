@@ -1,11 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { postDailyData } from "../features/api";
+import { getSettings, postDailyData } from "../features/api";
 import ReportGuide from "../components/ReportGuide";
+import { setDailySetting } from "../features/reducers/optionSlice";
 
 function Daily() {
+  interface OptionState {
+    optionReducer: {
+      value: any;
+    };
+  }
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getSettings();
+        console.log("res", response);
+        if (response) {
+          dispatch(setDailySetting(response.settings));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  const option = useSelector((state: OptionState) => state.optionReducer.value);
+
   const [value, onChange] = useState(new Date());
 
   const handleDailyInfo = async () => {
@@ -28,9 +54,10 @@ function Daily() {
         <ApplyButton onClick={handleDailyInfo}>Apply</ApplyButton>
       </Controls>
       <ReportLine>
-        <ReportGuide />
-        <ReportGuide />
-        <ReportGuide />
+        <ReportGuide
+          row={option.daily.row}
+          column={option.daily.column}
+        ></ReportGuide>
       </ReportLine>
     </Flat>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
 
-const DeviceGuide: React.FC = () => {
+const DeviceType2: React.FC = () => {
   return (
     <Container2>
       <Row2 key="r01">
@@ -106,4 +106,4 @@ const ValueColumn = styled.div`
   min-width: 20px;
 `;
 
-export default DeviceGuide;
+export default DeviceType2;
