@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { getSettings, postDailyData } from "../features/api";
 import ReportGuide from "../components/ReportGuide";
 import { setDailySetting } from "../features/reducers/optionSlice";
+import { updateDeviceList } from "../features/reducers/deviceSlice";
 
 function Daily() {
   interface OptionState {
@@ -23,6 +24,7 @@ function Daily() {
         console.log("res", response);
         if (response) {
           dispatch(setDailySetting(response.settings));
+          dispatch(updateDeviceList(response.deviceList));
         }
       } catch (error) {
         console.error(error);

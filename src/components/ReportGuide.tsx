@@ -56,7 +56,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
               </Row1>
             </Divide1>
             <Divide2>
-              <DeviceType1 divName={devicelist.deviceList[r].name} />
+              <DeviceType1 divName={devicelist.deviceList[r]?.name} />
             </Divide2>
           </Container1>
         );

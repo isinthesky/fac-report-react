@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import Compose from "../components/Compose";
+import Compose from "../components/settings/Compose";
 import {
   getDeviceInfo,
   getSettings,
   setInitSettings,
   setUpdateSettings,
 } from "../features/api";
-import { updateDeviceList } from "../features/reducers/deviceSlice";
+import {
+  loadDeviceList,
+  updateDeviceList,
+} from "../features/reducers/deviceSlice";
 import { setDailySetting } from "../features/reducers/optionSlice";
 
 function Settings() {
@@ -72,7 +75,9 @@ function Settings() {
     try {
       if (mode === false) {
         const devicesInfo = await getDeviceInfo();
-        setDeviceList(devicesInfo.data.deviceInfo);
+        console.log("reset", devicesInfo);
+
+        dispatch(loadDeviceList(devicesInfo));
       }
       setMode(!mode);
     } catch (error) {
@@ -122,7 +127,9 @@ function Settings() {
             id="row-input"
             type="number"
             onChange={handleRow}
+            readOnly={mode}
             value={rows}
+            mode={mode}
           />
         </InputGroup>
 
@@ -132,7 +139,9 @@ function Settings() {
             id="column-input"
             type="number"
             onChange={handleColumn}
+            readOnly={mode}
             value={columns}
+            mode={mode}
           />
         </InputGroup>
         <SettingButton onClick={handleApply}>Apply</SettingButton>
@@ -176,8 +185,9 @@ const InputGroup = styled.div`
   gap: 10px;
 `;
 
-const Input = styled.input`
+const Input = styled.input<{ mode: boolean }>`
   width: 50px;
+  background-color: ${(props) => (props.mode ? "lightgray" : "white")};
 `;
 
 const ButtonGroup = styled.div`

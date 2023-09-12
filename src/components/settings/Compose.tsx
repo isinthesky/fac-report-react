@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import Device from "./Device";
-import { IDevice, IDivision, IStation } from "../features/types";
 import DeviceInfo from "./DeviceInfo";
 
 type ComposeProps = {
@@ -17,10 +16,21 @@ interface RootState {
   };
 }
 
+interface optionState {
+  optionReducer: {
+    value: any;
+  };
+}
+
 const Compose: React.FC<ComposeProps> = ({ row, column, mode }) => {
   const devicelist = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
+  const optionlist = useSelector(
+    (state: optionState) => state.optionReducer.value
+  );
+
+  console.log("compose", devicelist);
 
   const renderButtons = () => {
     const rows = [];
@@ -30,23 +40,22 @@ const Compose: React.FC<ComposeProps> = ({ row, column, mode }) => {
       const buttons = [];
       for (let c = 0; c < column; c++) {
         if (mode) {
-          buttons.push(
-            <Device key={keyCounter} station={[]} area={[]} list={[]} />
-          );
+          buttons.push(<Device key={keyCounter} devicelist={devicelist} />);
         } else {
           if (devicelist.deviceList.length < 1) {
             return;
           }
           buttons.push(
             <DeviceInfo
-              type={devicelist.deviceList[keyCounter].type}
-              name={devicelist.deviceList[keyCounter].name}
-              rs={devicelist.deviceList[keyCounter].rs}
-              st={devicelist.deviceList[keyCounter].st}
-              tr={devicelist.deviceList[keyCounter].tr}
-              pf={devicelist.deviceList[keyCounter].pf}
-              hz={devicelist.deviceList[keyCounter].hz}
-              kw={devicelist.deviceList[keyCounter].kw}
+              key={keyCounter}
+              type={devicelist.deviceList.value[keyCounter].type}
+              name={devicelist.deviceList.value[keyCounter].name}
+              rs={devicelist.deviceList.value[keyCounter].rs}
+              st={devicelist.deviceList.value[keyCounter].st}
+              tr={devicelist.deviceList.value[keyCounter].tr}
+              pf={devicelist.deviceList.value[keyCounter].pf}
+              hz={devicelist.deviceList.value[keyCounter].hz}
+              kw={devicelist.deviceList.value[keyCounter].kw}
             />
           );
         }
