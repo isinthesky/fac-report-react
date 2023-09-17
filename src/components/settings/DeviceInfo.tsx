@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 type DeviceInfoProps = {
-  type?: number;
+  type?: string;
   name?: string;
   rs?: string;
   st?: string;
@@ -25,7 +25,7 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
   return (
     <div className="device-info-container">
       <label htmlFor="type">Type:</label>
-      <Input id="type" type="number" value={type} />
+      <Input id="type" type="text" value={type} />
 
       <label htmlFor="name">Name:</label>
       <Input id="name" type="text" value={name} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import Compose from "../components/settings/Compose";
+import Compose2 from "../components/settings/Compose2";
 import {
   getDeviceInfo,
   getSettings,
@@ -100,24 +101,6 @@ function Settings() {
     }
   };
 
-  const handleSave = () => {
-    // Send a POST request to the API
-    fetch("YOUR_API_ENDPOINT_HERE", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ rows, columns }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   return (
     <Flat>
       <InputGroup>
@@ -151,15 +134,14 @@ function Settings() {
         <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
       </InputGroup>
 
-      <Compose row={compose[0]} column={compose[1]} mode={mode}></Compose>
-
-      {mode ? (
-        <ButtonGroup>
-          <SettingButton onClick={handleSave}>Save</SettingButton>
-          <SettingButton>Cancel</SettingButton>
-        </ButtonGroup>
+      {!mode ? (
+        <>
+          <Compose2 row={compose[0]} column={compose[1]} mode={mode}></Compose2>
+        </>
       ) : (
-        <ButtonGroup></ButtonGroup>
+        <>
+          <Compose row={compose[0]} column={compose[1]} mode={mode}></Compose>
+        </>
       )}
     </Flat>
   );

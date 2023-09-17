@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IDevice, IDivision, IStation } from "../../features/types";
 
-type DeviceProps = {
+type DeviceSelectProps = {
   devicelist: any;
+  station: number;
+  division: number;
 };
 
-const Device: React.FC<DeviceProps> = ({ devicelist }) => {
-  const [selectedStation, setSelectedStation] = useState<number>(0);
-  const [selectedDivision, setSelectedDivision] = useState<number>(0);
+const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
+  devicelist,
+  station,
+  division,
+}) => {
+  const [selectedStation, setSelectedStation] = useState<number>(station);
+  const [selectedDivision, setSelectedDivision] = useState<number>(division);
+
+  useEffect(() => {
+    setSelectedStation(station);
+  }, [station]);
+
+  useEffect(() => {
+    setSelectedDivision(division);
+  }, [division]);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -59,4 +73,4 @@ const Device: React.FC<DeviceProps> = ({ devicelist }) => {
   );
 };
 
-export default Device;
+export default DeviceAutoSelect;
