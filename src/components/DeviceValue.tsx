@@ -21,7 +21,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ row, col }) => {
 };
 
 const Container3 = styled.div`
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -33,7 +33,7 @@ const Row3 = styled.div`
 `;
 
 const ValueColumn3 = styled.div`
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;

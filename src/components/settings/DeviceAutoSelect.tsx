@@ -1,76 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { IDevice, IDivision, IStation } from "../../features/types";
+import React from "react";
+import { IDevice, IDivision, IStation } from "../../static/types";
+import styled from "styled-components";
 
 type DeviceSelectProps = {
   devicelist: any;
   station: number;
   division: number;
+  type: string;
+  valueType: string;
+  onDeviceChange?: (deviceId: number) => void; // Callback prop
 };
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   devicelist,
   station,
   division,
+  type,
+  valueType,
+  onDeviceChange,
 }) => {
-  const [selectedStation, setSelectedStation] = useState<number>(station);
-  const [selectedDivision, setSelectedDivision] = useState<number>(division);
-
-  useEffect(() => {
-    setSelectedStation(station);
-  }, [station]);
-
-  useEffect(() => {
-    setSelectedDivision(division);
-  }, [division]);
-
-  const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedStation(Number(e.target.value));
-    console.log("Selected Station:", e.target.value);
+  const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedDeviceId = Number(e.target.value);
+    onDeviceChange?.(selectedDeviceId); // Notify parent component
   };
-
-  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDivision(Number(e.target.value));
-    console.log("Selected Division:", e.target.value);
-  };
-
-  console.log("station", devicelist);
 
   return (
-    <div>
-      <select onChange={handleStationChange} value={selectedStation}>
-        {devicelist.stations.map((st: IStation, index: number) => (
-          <option key={index} value={st.id ? st.id : 0}>
+    <InnerDiv>
+      <select value={station}>
+        {devicelist.stations.map((st: IStation) => (
+          <option key={st.id} value={st.id}>
             {st.name}
           </option>
         ))}
       </select>
-      <select onChange={handleDivisionChange} value={selectedDivision}>
-        {devicelist.divisions.map((div: IDivision, index: number) => {
-          if (div.stationId === selectedStation) {
-            return (
-              <option key={index} value={div.id ? div.id : 0}>
-                {div.name}
-              </option>
-            );
-          }
-        })}
+      <select value={division}>
+        {devicelist.divisions
+          .filter((div: IDivision) => div.stationId === station)
+          .map((div: IDivision) => (
+            <option key={div.id} value={div.id}>
+              {div.name}
+            </option>
+          ))}
       </select>
-      <select>
-        {devicelist.devices.map((dev: IDevice, index: number) => {
-          if (
-            dev.stationId === selectedStation &&
-            dev.divisionId === selectedDivision
-          ) {
-            return (
-              <option key={index} value={dev.id ? dev.id : 0}>
-                {dev.name}
-              </option>
-            );
-          }
-        })}
+      <select onChange={handleDeviceChange}>
+        {devicelist.devices
+          .filter(
+            (dev: IDevice) =>
+              dev.stationId === station && dev.divisionId === division
+          )
+          .map((dev: IDevice) => (
+            <option key={dev.id} value={dev.id}>
+              {dev.name}
+            </option>
+          ))}
       </select>
-    </div>
+    </InnerDiv>
   );
 };
 
 export default DeviceAutoSelect;
+
+const InnerDiv = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+`;

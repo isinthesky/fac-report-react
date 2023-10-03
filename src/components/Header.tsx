@@ -1,109 +1,97 @@
-import React from "react";
+import { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { initDeviceList } from "../features/reducers/deviceSlice";
+import { getSettings } from "../features/api";
+import { setDailySetting } from "../features/reducers/optionSlice";
+import { MainMenu, SubMenu } from "./HeaderMenus";
 
 export default function Header() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [selectedFlatId, setSelectedFlatId] = useState<string>("");
 
-  const handleGoReport = async () => {
+  const handleGoReport = useCallback(() => {
     navigate("/");
+  }, [navigate]);
+
+  const handleFlatButtonClick = (id: string) => {
+    setSelectedFlatId(id);
+    handleGoReport();
   };
 
-  const handleGoSetting = async () => {
+  const subcallback = (id: string, id2: string) => {
+    console.log("sub", id, "aa", id2);
+
+    navigate(`/daily/${id}/${id2}`);
+  };
+
+  const getMarginButtonText = (marginButtonId: number) => {
+    return `${selectedFlatId}${marginButtonId}`;
+  };
+
+  const handleGoSetting = useCallback(() => {
     navigate("/settings");
-  };
+  }, [navigate]);
 
-  const handleGoLogin = async () => {
-    navigate("/Login");
-  };
-
-  const handleGoSignUp = async () => {
-    navigate("/SignUp");
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await getSettings();
+        if (response) {
+          dispatch(setDailySetting(response.settings));
+          dispatch(initDeviceList(response.deviceList));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [dispatch]);
 
   return (
     <TopHeader>
       <Title>Fac-Report</Title>
       <PageControls>
-        <PageButton onClick={handleGoReport}>Report</PageButton>
-        <PageButton onClick={handleGoSetting}>Setting</PageButton>
+        <MainMenu onClickCallback={handleFlatButtonClick} />
+        <SubMenu mainId={selectedFlatId} onClickCallback={subcallback} />
       </PageControls>
-      <LoginControls>
-        <LoginButton onClick={handleGoLogin}>Login</LoginButton>
-        <LoginButton onClick={handleGoSignUp}>Signup</LoginButton>
-      </LoginControls>
+      <SettingButton onClick={handleGoSetting}>Setting</SettingButton>
     </TopHeader>
   );
 }
 
 const TopHeader = styled.header`
-  position: relative;
   display: flex;
-  justify-content: space-between;
-
-  top: 0;
-  width: 100wh;
-  height: 50px;
-
+  justify-content: stretch;
+  width: 100%;
+  height: 70px;
   background-color: #ffff77;
   border: 1px solid #333;
 `;
 
 const Title = styled.div`
-  float: left;
-  text-align: center;
+  display: flex;
+  justify-content: center;
   align-items: center;
-
-  width: 110px;
-  height: 30px;
+  width: 150px;
+  height: 50px;
   padding: 10px;
-
-  color: "black";
+  color: black;
   font-weight: bold;
   font-size: 22px;
   background-color: #ffffff;
 `;
 
 const PageControls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  width: 50wh;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0px;
 `;
 
-const LoginControls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-
-  width: 50wh;
-
-  background-color: #efffff;
-`;
-
-const PageButton = styled.button`
-  justify-content: center;
-  align-items: center;
-
-  height: 30px;
+const SettingButton = styled.button`
+  height: 70px;
   width: 100px;
-
-  margin: 50px;
-`;
-
-const LoginButton = styled.button`
-  justify-content: center;
-  align-items: center;
-
-  border: none;
-  text-decoration: none;
-  display: inline-block;
-  background-color: rgba(255, 255, 255, 0.5);
-
-  height: 30px;
-  width: 100px;
-
-  margin: 50px;
+  margin: 0px 0px 0px 30px;
 `;

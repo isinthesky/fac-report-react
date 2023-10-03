@@ -52,6 +52,8 @@ export const setInitSettings = async (
   device: string
 ): Promise<any> => {
   try {
+    await axiosInstance.delete("/general");
+
     await axiosInstance.post("/createSettings", {
       type: "settings",
       value: JSON.parse(table),
@@ -61,7 +63,7 @@ export const setInitSettings = async (
       value: JSON.parse(device),
     });
   } catch (error) {
-    console.error(error);
+    console.error("setInitSettings", error);
   }
 };
 

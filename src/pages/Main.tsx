@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 function Main() {
@@ -6,12 +5,11 @@ function Main() {
 }
 
 const Flat = styled.div`
-  display: absolute;
-
+  flex: 1;
   flex-direction: column;
+  background-color: #fcf0e0;
 
-  height: calc(100vh - 50px);
-  width: calc(100vw - 200px);
+  height: calc(100vh - 85px);
 `;
 
 export default Main;

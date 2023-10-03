@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { Provider } from "react-redux";
 import styled from "styled-components";
 import Main from "./pages/Main";
 import Daily from "./pages/Daily";
@@ -6,10 +7,8 @@ import Weekly from "./pages/Weekly";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Nav from "./components/Nav";
 import Header from "./components/Header";
 import store from "./store/congifureStore";
-import { Provider } from "react-redux";
 
 export default function App() {
   return (
@@ -17,11 +16,10 @@ export default function App() {
       <div className="App">
         <Header />
         <RowContainer>
-          <Nav />
           <Routes>
             <Route path="/" element={<Main />} />
-            <Route path="/daily" element={<Daily />} />
-            <Route path="/weekly" element={<Weekly />} />
+            <Route path="/daily/:id1/:id2" element={<Daily />} />
+            <Route path="/weekly/:id1/:id2" element={<Weekly />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
@@ -35,8 +33,6 @@ export default function App() {
 const RowContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100wv;
-  height: calc(100vh - 50px);
 
   font: 0.7em "Fira Sans", sans-serif;
 `;

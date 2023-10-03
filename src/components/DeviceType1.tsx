@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
 
 type DeviceType1Props = {
+  key: number;
   divName: string;
 };
 
@@ -15,7 +16,7 @@ const DeviceType1: React.FC<DeviceType1Props> = ({ divName }) => {
       <Row2 key="r02">
         <div>
           <Row2 key="r03">
-            <MiddleColumn key="c11">{"Middle"}</MiddleColumn>
+            <MiddleColumn key="c11">{"KV"}</MiddleColumn>
           </Row2>
           <Row2 key="r04">
             <ValueColumn key="c11">{"R-S"}</ValueColumn>
@@ -28,12 +29,12 @@ const DeviceType1: React.FC<DeviceType1Props> = ({ divName }) => {
         </div>
         <div>
           <Row2 key="r03">
-            <MiddleColumn key="c21">{"Middle"}</MiddleColumn>
+            <MiddleColumn key="c21">{"A"}</MiddleColumn>
           </Row2>
           <Row2 key="r04">
-            <ValueColumn key="c21">{"R-S"}</ValueColumn>
-            <ValueColumn key="c22">{"S-T"}</ValueColumn>
-            <ValueColumn key="c23">{"T-R"}</ValueColumn>
+            <ValueColumn key="c21">{"R"}</ValueColumn>
+            <ValueColumn key="c22">{"S"}</ValueColumn>
+            <ValueColumn key="c23">{"T"}</ValueColumn>
           </Row2>
           <Row2>
             <DeviceValue row={4} col={3} />
@@ -66,7 +67,7 @@ const DeviceType1: React.FC<DeviceType1Props> = ({ divName }) => {
 };
 
 const Container2 = styled.div`
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -74,6 +75,7 @@ const Container2 = styled.div`
 `;
 
 const Row2 = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: row;
 `;

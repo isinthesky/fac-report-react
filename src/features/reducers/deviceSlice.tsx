@@ -1,6 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { DeviceListProp } from "../../static/interface";
 
-const initialState = {
+interface DeviceState {
+  value: {
+    deviceList: DeviceListProp[];
+    devices: any[];
+    divisions: any[];
+    stations: any[];
+  };
+}
+
+const initialState: DeviceState = {
   value: {
     deviceList: [],
     devices: [],
@@ -13,28 +23,36 @@ export const deviceSlice = createSlice({
   name: "deviceList",
   initialState,
   reducers: {
-    updateDeviceList: (state, action) => {
-      const value = action.payload;
-      console.log("updateDeviceList11 ", value);
-      // state.value.deviceList = value;
-      // state.value.deviceList.length = 0;
-      state.value.deviceList = value;
-      console.log("updateDeviceList 22", state.value.deviceList);
+    initDeviceList: (state, action: PayloadAction<DeviceListProp[]>) => {
+      state.value.deviceList = action.payload;
     },
-    loadDeviceList: (state, action) => {
-      const value = action.payload;
-      console.log("loadDeviceList ", value);
-      // state.value.deviceList = value;
-      // state.value.deviceList.length = 0;
-      state.value.devices = value.device;
-      state.value.divisions = value.division;
-      state.value.stations = value.station;
 
-      console.log("loadDeviceList 22", state.value);
+    loadDeviceList: (state, action: PayloadAction<any>) => {
+      state.value.devices = action.payload.device;
+      state.value.divisions = action.payload.division;
+      state.value.stations = action.payload.station;
+    },
+
+    updateDeviceList: (state, action: PayloadAction<DeviceListProp>) => {
+      const param = action.payload;
+      if (state.value.deviceList[param.id]) {
+        state.value.deviceList[param.id + 1].name = param.name;
+        state.value.deviceList[param.id + 1].type = param.type;
+        state.value.deviceList[param.id + 1].rs = "";
+        state.value.deviceList[param.id + 1].st = "";
+        state.value.deviceList[param.id + 1].tr = "";
+        state.value.deviceList[param.id + 1].s = "";
+        state.value.deviceList[param.id + 1].t = "";
+        state.value.deviceList[param.id + 1].r = "";
+        state.value.deviceList[param.id + 1].hz = "";
+        state.value.deviceList[param.id + 1].kw = "";
+        state.value.deviceList[param.id + 1].pf = "";
+      }
     },
   },
 });
 
-export const { updateDeviceList, loadDeviceList } = deviceSlice.actions;
+export const { initDeviceList, loadDeviceList, updateDeviceList } =
+  deviceSlice.actions;
 
 export default deviceSlice.reducer;

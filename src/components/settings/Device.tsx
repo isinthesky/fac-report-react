@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IDevice, IDivision, IStation } from "../../features/types";
+import { IDevice, IDivision, IStation } from "../../static/types";
 
 type DeviceProps = {
   devicelist: any;
@@ -11,15 +11,12 @@ const Device: React.FC<DeviceProps> = ({ devicelist }) => {
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
-    console.log("Selected Station:", e.target.value);
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
     console.log("Selected Division:", e.target.value);
   };
-
-  console.log("station", devicelist);
 
   return (
     <div>

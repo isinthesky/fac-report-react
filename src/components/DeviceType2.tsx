@@ -2,66 +2,47 @@ import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
 
-const DeviceType2: React.FC = () => {
+type DeviceType2Props = {
+  key: number;
+  divName: string;
+};
+
+const DeviceType2: React.FC<DeviceType2Props> = ({ divName }) => {
+  const sections = [
+    { label: "V", values: ["R-S", "S-T", "T-R"] },
+    { label: "A", values: ["R", "S", "T"] },
+    { label: "/", values: ["PF"] },
+    { label: "/", values: ["Hz"] },
+    { label: "/", values: ["kW"] },
+  ];
+
   return (
-    <Container2>
-      <Row2 key="r01">
-        <TitleColumn key="c01">{"Name"}</TitleColumn>
-      </Row2>
-      <Row2 key="r02">
-        <div>
-          <Row2 key="r03">
-            <MiddleColumn key="c11">{"Middle"}</MiddleColumn>
-          </Row2>
-          <Row2 key="r04">
-            <ValueColumn key="c11">{"R-S"}</ValueColumn>
-            <ValueColumn key="c12">{"S-T"}</ValueColumn>
-            <ValueColumn key="c13">{"T-R"}</ValueColumn>
-          </Row2>
-          <Row2>
-            <DeviceValue row={4} col={3} />
-          </Row2>
-        </div>
-        <div>
-          <Row2 key="r03">
-            <MiddleColumn key="c21">{"Middle"}</MiddleColumn>
-          </Row2>
-          <Row2 key="r04">
-            <ValueColumn key="c21">{"R-S"}</ValueColumn>
-            <ValueColumn key="c22">{"S-T"}</ValueColumn>
-            <ValueColumn key="c23">{"T-R"}</ValueColumn>
-          </Row2>
-          <Row2>
-            <DeviceValue row={4} col={3} />
-          </Row2>
-        </div>
-        <div>
-          <ValueColumn key="c31">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c32">{"PF"}</ValueColumn>{" "}
-          <Row2>
-            <DeviceValue row={4} col={1} />
-          </Row2>
-        </div>
-        <div>
-          <ValueColumn key="c33">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c34">{"Hz"}</ValueColumn>{" "}
-          <Row2>
-            <DeviceValue row={4} col={1} />
-          </Row2>
-        </div>
-        <div>
-          <ValueColumn key="c35">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c36">{"kW"}</ValueColumn>{" "}
-          <Row2>
-            <DeviceValue row={4} col={1} />
-          </Row2>
-        </div>
-      </Row2>
-    </Container2>
+    <Container>
+      <Row>
+        <TitleColumn>{divName}</TitleColumn>
+      </Row>
+      <Row>
+        {sections.map((section, idx) => (
+          <div key={idx}>
+            <Row>
+              <MiddleColumn>{section.label}</MiddleColumn>
+            </Row>
+            <Row>
+              {section.values.map((value, valueIdx) => (
+                <ValueColumn key={valueIdx}>{value}</ValueColumn>
+              ))}
+            </Row>
+            <Row>
+              <DeviceValue row={4} col={section.values.length} />
+            </Row>
+          </div>
+        ))}
+      </Row>
+    </Container>
   );
 };
 
-const Container2 = styled.div`
+const Container = styled.div`
   flex-grow: 1;
   display: flex;
   justify-content: center;
@@ -69,7 +50,7 @@ const Container2 = styled.div`
   align-items: stretch;
 `;
 
-const Row2 = styled.div`
+const Row = styled.div`
   display: flex;
   flex-direction: row;
 `;
@@ -79,30 +60,22 @@ const TitleColumn = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 3px;
   border: 1px solid #ccc;
 `;
 
-const MiddleColumn = styled.div`
+const Column = styled.div`
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 3px;
   border: 1px solid #ccc;
 `;
 
-const ValueColumn = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const MiddleColumn = styled(Column)``;
 
-  padding: 3px;
-  border: 1px solid #ccc;
-
+const ValueColumn = styled(Column)`
   min-width: 20px;
 `;
 

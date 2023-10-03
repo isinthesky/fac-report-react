@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import Compose from "../components/settings/Compose";
-import Compose2 from "../components/settings/Compose2";
+import ComposeSet from "../components/settings/ComposeSet";
+import ComposeView from "../components/settings/ComposeView";
 import {
   getDeviceInfo,
   getSettings,
@@ -12,20 +12,16 @@ import {
 import {
   loadDeviceList,
   updateDeviceList,
+  initDeviceList,
 } from "../features/reducers/deviceSlice";
 import { setDailySetting } from "../features/reducers/optionSlice";
 
 function Settings() {
   const dispatch = useDispatch();
 
-  const [rows, setRow] = useState(Number(process.env.REACT_APP_INIT_DAILY_ROW));
-  const [columns, setColumn] = useState(
-    Number(process.env.REACT_APP_INIT_DAILY_COLUMN)
-  );
-  const [compose, setCompose] = useState([
-    Number(process.env.REACT_APP_INIT_DAILY_ROW),
-    Number(process.env.REACT_APP_INIT_DAILY_COLUMN),
-  ]);
+  const [rows, setRow] = useState(0);
+  const [columns, setColumn] = useState(0);
+  const [compose, setCompose] = useState([0, 0]);
 
   const [mode, setMode] = useState(false);
   const [DeviceList, setDeviceList] = useState({});
@@ -35,23 +31,17 @@ function Settings() {
       try {
         const response = await getSettings();
 
+        dispatch(initDeviceList(response.deviceList));
+
+        console.info("setting init getSetting", response);
+
         if (response) {
           setRow(response.settings.row);
           setColumn(response.settings.column);
           setCompose([response.settings.row, response.settings.column]);
 
-          dispatch(updateDeviceList({ value: response.deviceList }));
           return;
         }
-
-        await setInitSettings(
-          process.env.REACT_APP_INIT_GENERAL_SETTING
-            ? process.env.REACT_APP_INIT_GENERAL_SETTING
-            : "",
-          process.env.REACT_APP_INIT_DEVICE_SETTING
-            ? process.env.REACT_APP_INIT_DEVICE_SETTING
-            : ""
-        );
       } catch (error) {
         console.error(error);
       }
@@ -88,14 +78,20 @@ function Settings() {
 
   const handleInitSettings = async () => {
     try {
-      await setInitSettings(
-        process.env.REACT_APP_INIT_GENERAL_SETTING
-          ? process.env.REACT_APP_INIT_GENERAL_SETTING
-          : "",
-        process.env.REACT_APP_INIT_DEVICE_SETTING
-          ? process.env.REACT_APP_INIT_DEVICE_SETTING
-          : ""
+      const isConfirmed = window.confirm(
+        "모든 데이터가 초기화 됩니다. \r\n 실행하시겠습니까?"
       );
+
+      if (isConfirmed) {
+        await setInitSettings(
+          process.env.REACT_APP_INIT_GENERAL_SETTING
+            ? process.env.REACT_APP_INIT_GENERAL_SETTING
+            : "",
+          process.env.REACT_APP_INIT_DEVICE_SETTING
+            ? process.env.REACT_APP_INIT_DEVICE_SETTING
+            : ""
+        );
+      }
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
@@ -134,14 +130,18 @@ function Settings() {
         <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
       </InputGroup>
 
-      {!mode ? (
-        <>
-          <Compose2 row={compose[0]} column={compose[1]} mode={mode}></Compose2>
-        </>
+      {mode ? (
+        <ComposeSet
+          row={compose[0]}
+          column={compose[1]}
+          mode={mode}
+        ></ComposeSet>
       ) : (
-        <>
-          <Compose row={compose[0]} column={compose[1]} mode={mode}></Compose>
-        </>
+        <ComposeView
+          row={compose[0]}
+          column={compose[1]}
+          mode={mode}
+        ></ComposeView>
       )}
     </Flat>
   );
@@ -154,8 +154,6 @@ const Flat = styled.div`
   align-items: center;
   gap: 10px;
   padding: 20px;
-
-  width: calc(100vw - 200px);
 
   background-color: #ece0af;
 `;
@@ -172,19 +170,13 @@ const Input = styled.input<{ mode: boolean }>`
   background-color: ${(props) => (props.mode ? "lightgray" : "white")};
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-`;
-
 const SettingButton = styled.button`
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   :hover: {
-    background-color: #e0e0e0;
+    background-color: #eeeeee;
   }
 `;
 

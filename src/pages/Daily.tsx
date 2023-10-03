@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { getSettings, postDailyData } from "../features/api";
+import { postDailyData } from "../features/api";
 import ReportGuide from "../components/ReportGuide";
-import { setDailySetting } from "../features/reducers/optionSlice";
-import { updateDeviceList } from "../features/reducers/deviceSlice";
 
 function Daily() {
   interface OptionState {
@@ -15,28 +14,14 @@ function Daily() {
     };
   }
 
-  const dispatch = useDispatch();
+  const { id1, id2 } = useParams();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await getSettings();
-        console.log("res", response);
-        if (response) {
-          dispatch(setDailySetting(response.settings));
-          dispatch(updateDeviceList(response.deviceList));
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+  console.log("Daily id : ", id1, id2);
 
   const option = useSelector((state: OptionState) => state.optionReducer.value);
-
   const [value, onChange] = useState(new Date());
 
-  const handleDailyInfo = async () => {
+  const handleDatePicker = async () => {
     const ret = await postDailyData(
       value.getFullYear(),
       value.getMonth(),
@@ -44,16 +29,29 @@ function Daily() {
     );
   };
 
+  const handleDaily = async () => {};
+
+  const handleWeekly = async () => {};
+
+  const handlePrint = async () => {
+    const isConfirmed = window.confirm("인쇄하시겠습니까??");
+
+    if (isConfirmed) {
+      window.confirm("Print");
+    }
+  };
+
   return (
     <Flat>
       <Controls>
-        <Picker>
-          <DatePicker
-            selected={value}
-            onChange={(date: Date) => onChange(date)}
-          />
-        </Picker>
-        <ApplyButton onClick={handleDailyInfo}>Apply</ApplyButton>
+        <DatePicker
+          selected={value}
+          onChange={(date: Date) => onChange(date)}
+        />
+        <ApplyButton onClick={handleDatePicker}>Apply</ApplyButton>
+        <ApplyButton onClick={handleDaily}>Daily</ApplyButton>
+        <ApplyButton onClick={handleWeekly}>Weekly</ApplyButton>
+        <ApplyButton onClick={handlePrint}>Print</ApplyButton>
       </Controls>
       <ReportLine>
         <ReportGuide
@@ -66,11 +64,9 @@ function Daily() {
 }
 
 const Flat = styled.div`
+  flex: 1;
   display: flex;
-  flex-direction: column;
-
-  height: calc(100vh - 50px);
-  width: calc(100vw - 160px);
+  flex-direction: column;\
 
   background-color: #fcf0cf;
 `;
@@ -86,6 +82,7 @@ const Controls = styled.div`
 `;
 
 const ReportLine = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -94,15 +91,12 @@ const ReportLine = styled.div`
   border: 1px solid #555;
 `;
 
-const Picker = styled.div`
-  width: 40vw;
-`;
-
 const ApplyButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 21px;
   width: 100px;
-
-  border: 1px solid #555;
 `;
 
 export default Daily;
