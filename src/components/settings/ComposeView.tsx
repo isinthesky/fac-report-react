@@ -7,7 +7,6 @@ import DeviceInfo from "./DeviceInfo";
 type ComposeViewProps = {
   row: number;
   column: number;
-  mode: boolean;
 };
 
 interface RootState {
@@ -22,7 +21,7 @@ interface optionState {
   };
 }
 
-const ComposeView: React.FC<ComposeViewProps> = ({ row, column, mode }) => {
+const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
   const devicelist = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
@@ -34,7 +33,7 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column, mode }) => {
   const columnOptions = Array.from({ length: column }, (_, i) => i + 1);
   const typeOptions = Array.from({ length: 2 }, (_, i) => i + 1);
 
-  console.log("ComposeView", devicelist, row, column, mode);
+  console.log("ComposeView", devicelist, row, column);
 
   const renderButtons = () => {
     const rows = [];
@@ -53,15 +52,15 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column, mode }) => {
               key={keyCounter}
               type={devicelist.deviceList[keyCounter].type}
               name={devicelist.deviceList[keyCounter].name}
-              rs={devicelist.deviceList[keyCounter].rs}
-              st={devicelist.deviceList[keyCounter].st}
-              tr={devicelist.deviceList[keyCounter].tr}
-              r={devicelist.deviceList[keyCounter].rs}
-              s={devicelist.deviceList[keyCounter].st}
-              t={devicelist.deviceList[keyCounter].tr}
-              pf={devicelist.deviceList[keyCounter].pf}
-              hz={devicelist.deviceList[keyCounter].hz}
-              kw={devicelist.deviceList[keyCounter].kw}
+              dv1={devicelist.deviceList[keyCounter].dv1}
+              dv2={devicelist.deviceList[keyCounter].dv2}
+              dv3={devicelist.deviceList[keyCounter].dv3}
+              dv4={devicelist.deviceList[keyCounter].dv4}
+              dv5={devicelist.deviceList[keyCounter].dv5}
+              dv6={devicelist.deviceList[keyCounter].dv6}
+              dv7={devicelist.deviceList[keyCounter].dv7}
+              dv8={devicelist.deviceList[keyCounter].dv8}
+              dv9={devicelist.deviceList[keyCounter].dv9}
             />
           );
         } else {
@@ -77,34 +76,32 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column, mode }) => {
 
   return (
     <ColumnContainer>
-      {mode && (
-        <RowContainer>
-          <label>row : </label>
-          <DeviceSelect id="SelectRow">
-            {rowOptions.map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </DeviceSelect>
-          <label>column : </label>
-          <DeviceSelect id="SelectColumn">
-            {columnOptions.map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </DeviceSelect>
-          <label>type : </label>
-          <DeviceSelect id="SelectType">
-            {typeOptions.map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </DeviceSelect>
-        </RowContainer>
-      )}
+      <RowContainer>
+        <label>row : </label>
+        {/* <DeviceSelect id="SelectRow">
+          {rowOptions.map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </DeviceSelect>
+        <label>column : </label>
+        <DeviceSelect id="SelectColumn">
+          {columnOptions.map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </DeviceSelect>
+        <label>type : </label>
+        <DeviceSelect id="SelectType">
+          {typeOptions.map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </DeviceSelect> */}
+      </RowContainer>
       {renderButtons()}
     </ColumnContainer>
   );
@@ -113,11 +110,12 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column, mode }) => {
 const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
 
+  gap: 10px;
   margin: 30px auto;
+
+  border: 1px solid #00e0e0;
+  border-radius: 5px;
 `;
 
 const RowContainer = styled.div`
@@ -130,6 +128,7 @@ const RowContainer = styled.div`
 `;
 
 const ButtonGrid = styled.div`
+  border: 1px solid #e000e0;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;

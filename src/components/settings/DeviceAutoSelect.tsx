@@ -8,7 +8,7 @@ type DeviceSelectProps = {
   division: number;
   type: string;
   valueType: string;
-  onDeviceChange?: (deviceId: number) => void; // Callback prop
+  onDeviceChange?: (type1: string, type2: string, deviceId: number) => void; // Callback prop
 };
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
@@ -21,7 +21,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 }) => {
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedDeviceId = Number(e.target.value);
-    onDeviceChange?.(selectedDeviceId); // Notify parent component
+    onDeviceChange?.(type, valueType, selectedDeviceId); // Notify parent component
   };
 
   return (

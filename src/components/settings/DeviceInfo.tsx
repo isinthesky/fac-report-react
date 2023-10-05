@@ -1,32 +1,19 @@
 import React from "react";
 import styled from "styled-components";
+import { DeviceInfoType } from "../../static/types";
 
-type DeviceInfoProps = {
-  type: string;
-  name: string;
-  rs: string;
-  st: string;
-  tr: string;
-  r: string;
-  s: string;
-  t: string;
-  pf: string;
-  hz: string;
-  kw: string;
-};
-
-const DeviceInfo: React.FC<DeviceInfoProps> = ({
+const DeviceInfo: React.FC<DeviceInfoType> = ({
   type,
   name,
-  rs,
-  st,
-  tr,
-  r,
-  s,
-  t,
-  pf,
-  hz,
-  kw,
+  dv1,
+  dv2,
+  dv3,
+  dv4,
+  dv5,
+  dv6,
+  dv7,
+  dv8,
+  dv9,
 }) => {
   return (
     <Container>
@@ -43,44 +30,44 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
       <Group>
         <ItemDiv>
           <label>rs</label>
-          <Input id="rs" type="text" value={rs} />
+          <Input id="rs" type="text" value={dv1} />
         </ItemDiv>
 
         <ItemDiv>
           <label>st</label>
-          <Input id="st" type="text" value={st} />
+          <Input id="st" type="text" value={dv2} />
         </ItemDiv>
         <ItemDiv>
           <label>tr</label>
-          <Input id="tr" type="text" value={tr} />
+          <Input id="tr" type="text" value={dv3} />
         </ItemDiv>
       </Group>
       <Group>
         <ItemDiv>
           <label>r</label>
-          <Input id="r" type="text" value={r} />
+          <Input id="r" type="text" value={dv4} />
         </ItemDiv>
         <ItemDiv>
           <label>s</label>
-          <Input id="s" type="text" value={s} />
+          <Input id="s" type="text" value={dv5} />
         </ItemDiv>
         <ItemDiv>
           <label>t</label>
-          <Input id="t" type="text" value={t} />
+          <Input id="t" type="text" value={dv6} />
         </ItemDiv>
       </Group>
       <Group>
         <ItemDiv>
           <label>pf</label>
-          <Input id="pf" type="text" value={pf} />
+          <Input id="pf" type="text" value={dv7} />
         </ItemDiv>
         <ItemDiv>
           <label>hz</label>
-          <Input id="hz" type="text" value={hz} />
+          <Input id="hz" type="text" value={dv8} />
         </ItemDiv>
         <ItemDiv>
           <label>kw</label>
-          <Input id="kw" type="text" value={kw} />
+          <Input id="kw" type="text" value={dv9} />
         </ItemDiv>
       </Group>
     </Container>
@@ -88,8 +75,9 @@ const DeviceInfo: React.FC<DeviceInfoProps> = ({
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: row;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 `;
 

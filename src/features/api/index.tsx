@@ -1,4 +1,5 @@
 import axios from "axios";
+import { DeviceListProp } from "../../static/interface";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -67,14 +68,27 @@ export const setInitSettings = async (
   }
 };
 
-export const setUpdateSettings = async (
+export const setUpdateSettingsColRow = async (
   row: number,
   column: number
 ): Promise<any> => {
   try {
-    return await axiosInstance.put("/updateSettings", {
+    return await axiosInstance.put("/updateSettingsColRow", {
       row: row,
       column: column,
+    });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export const setUpdateSettingsDeviceList = async (
+  deviceList: DeviceListProp[]
+): Promise<any> => {
+  try {
+    return await axiosInstance.put("/updateSettingsDeviceList", {
+      deviceList,
     });
   } catch (error) {
     console.error(error);

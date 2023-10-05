@@ -38,15 +38,15 @@ export const deviceSlice = createSlice({
       if (state.value.deviceList[param.id]) {
         state.value.deviceList[param.id + 1].name = param.name;
         state.value.deviceList[param.id + 1].type = param.type;
-        state.value.deviceList[param.id + 1].rs = "";
-        state.value.deviceList[param.id + 1].st = "";
-        state.value.deviceList[param.id + 1].tr = "";
-        state.value.deviceList[param.id + 1].s = "";
-        state.value.deviceList[param.id + 1].t = "";
-        state.value.deviceList[param.id + 1].r = "";
-        state.value.deviceList[param.id + 1].hz = "";
-        state.value.deviceList[param.id + 1].kw = "";
-        state.value.deviceList[param.id + 1].pf = "";
+        state.value.deviceList[param.id + 1].dv1 = "";
+        state.value.deviceList[param.id + 1].dv2 = "";
+        state.value.deviceList[param.id + 1].dv3 = "";
+        state.value.deviceList[param.id + 1].dv4 = "";
+        state.value.deviceList[param.id + 1].dv5 = "";
+        state.value.deviceList[param.id + 1].dv6 = "";
+        state.value.deviceList[param.id + 1].dv7 = "";
+        state.value.deviceList[param.id + 1].dv8 = "";
+        state.value.deviceList[param.id + 1].dv9 = "";
       }
     },
   },

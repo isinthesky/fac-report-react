@@ -8,13 +8,13 @@ export interface DeviceListProp {
   id: number;
   type: number;
   name: string;
-  rs: DeviceProp | string;
-  st: DeviceProp | string;
-  tr: DeviceProp | string;
-  r: DeviceProp | string;
-  s: DeviceProp | string;
-  t: DeviceProp | string;
-  hz: DeviceProp | string;
-  kw: DeviceProp | string;
-  pf: DeviceProp | string;
+  dv1: DeviceProp | string;
+  dv2: DeviceProp | string;
+  dv3: DeviceProp | string;
+  dv4: DeviceProp | string;
+  dv5: DeviceProp | string;
+  dv6: DeviceProp | string;
+  dv7: DeviceProp | string;
+  dv8: DeviceProp | string;
+  dv9: DeviceProp | string;
 }

@@ -66,7 +66,7 @@ function Daily() {
 const Flat = styled.div`
   flex: 1;
   display: flex;
-  flex-direction: column;\
+  flex-direction: column;
 
   background-color: #fcf0cf;
 `;
@@ -78,6 +78,7 @@ const Controls = styled.div`
 
   margin: 20px;
   padding: 10px;
+
   border: 1px solid #555;
 `;
 
@@ -95,6 +96,7 @@ const ApplyButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+
   height: 21px;
   width: 100px;
 `;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision } from "../../static/types";
+import { IStation, IDivision, SetDeviceType } from "../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
 
 interface RootState {
@@ -10,7 +10,7 @@ interface RootState {
   };
 }
 
-const SetDeviceTypeW: React.FC = () => {
+const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id }) => {
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
@@ -38,8 +38,14 @@ const SetDeviceTypeW: React.FC = () => {
             devicelist={deviceSet}
             type={typeDev}
             valueType={value}
-            onDeviceChange={(deviceId) => {
-              console.log("Selected device ID in parent:", deviceId);
+            onDeviceChange={(type1, type2, deviceId) => {
+              console.log(
+                "Selected device ID in parent:",
+                id,
+                type1,
+                type2,
+                deviceId
+              );
             }}
           />
         </ValueSection>
@@ -69,7 +75,7 @@ const SetDeviceTypeW: React.FC = () => {
           <TitleInput type="text" />
         </Row>
       </InnerDiv>
-      {renderSection("KV", ["R-S", "S-T", "T-R"])}
+      {renderSection("W", ["R-S", "S-T", "T-R"])}
       {renderSection("A", ["R", "S", "T"])}
       {renderSection("ETC", ["PF", "Hz", "kW"])}
     </Container>

@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import DeviceAutoSelect from "./DeviceAutoSelect";
-import { IStation, IDivision } from "../../static/types";
+import { IStation, IDivision, SetDeviceType } from "../../static/types";
+import { useDispatch } from "react-redux";
+import { updateCurrentDevice } from "../../features/reducers/optionSlice";
+import optionSlice from "../../features/reducers/optionSlice";
 
 interface RootState {
   deviceReducer: {
@@ -10,9 +13,20 @@ interface RootState {
   };
 }
 
-const SetDeviceTypeV: React.FC = () => {
+interface optionState {
+  optionReducer: {
+    value: any;
+  };
+}
+
+const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
+  const dispatch = useDispatch();
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
+  );
+
+  const optionlist = useSelector(
+    (state: optionState) => state.optionReducer.value
   );
 
   const [selectedStation, setSelectedStation] = useState<number>(0);
@@ -26,6 +40,8 @@ const SetDeviceTypeV: React.FC = () => {
     setSelectedDivision(Number(e.target.value));
   };
 
+  console.log("optionSet", optionlist);
+
   const renderSection = (typeDev: string, values: string[]) => (
     <Section>
       <MiddleColumn>{typeDev}</MiddleColumn>
@@ -38,8 +54,23 @@ const SetDeviceTypeV: React.FC = () => {
             devicelist={deviceSet}
             type={typeDev}
             valueType={value}
-            onDeviceChange={(deviceId) => {
-              console.log("Selected device ID in parent:", deviceId);
+            onDeviceChange={(type1, type2, deviceId) => {
+              console.log(
+                "Selected device ID in parent:",
+                id,
+                type1,
+                type2,
+                deviceId
+              );
+
+              dispatch(
+                updateCurrentDevice({
+                  idx: id,
+                  type1: type1,
+                  type2: type2,
+                  deviceId: deviceId,
+                })
+              );
             }}
           />
         </ValueSection>
@@ -71,9 +102,9 @@ const SetDeviceTypeV: React.FC = () => {
           </Row>
         </InnerDiv>
       </Row>
-      {renderSection("V", ["R-S", "S-T", "T-R"])}
-      {renderSection("A", ["R", "S", "T"])}
-      {renderSection("ETC", ["PF", "Hz", "kW"])}
+      {renderSection("V", ["dv1", "dv2", "dv3"])}
+      {renderSection("A", ["dv4", "dv5", "dv6"])}
+      {renderSection("ETC", ["dv7", "dv8", "dv9"])}
     </Container>
   );
 };

@@ -7,14 +7,18 @@ import {
   getDeviceInfo,
   getSettings,
   setInitSettings,
-  setUpdateSettings,
+  setUpdateSettingsColRow,
+  setUpdateSettingsDeviceList,
 } from "../features/api";
 import {
   loadDeviceList,
   updateDeviceList,
   initDeviceList,
 } from "../features/reducers/deviceSlice";
-import { setDailySetting } from "../features/reducers/optionSlice";
+import {
+  setCurrentDevice,
+  setDailySetting,
+} from "../features/reducers/optionSlice";
 
 function Settings() {
   const dispatch = useDispatch();
@@ -32,6 +36,7 @@ function Settings() {
         const response = await getSettings();
 
         dispatch(initDeviceList(response.deviceList));
+        dispatch(setCurrentDevice(response.deviceList));
 
         console.info("setting init getSetting", response);
 
@@ -57,7 +62,7 @@ function Settings() {
 
   const handleApply = async () => {
     setCompose([rows, columns]);
-    setUpdateSettings(rows, columns);
+    setUpdateSettingsColRow(rows, columns);
 
     dispatch(setDailySetting({ row: rows, column: columns }));
   };
@@ -131,17 +136,9 @@ function Settings() {
       </InputGroup>
 
       {mode ? (
-        <ComposeSet
-          row={compose[0]}
-          column={compose[1]}
-          mode={mode}
-        ></ComposeSet>
+        <ComposeSet row={compose[0]} column={compose[1]}></ComposeSet>
       ) : (
-        <ComposeView
-          row={compose[0]}
-          column={compose[1]}
-          mode={mode}
-        ></ComposeView>
+        <ComposeView row={compose[0]} column={compose[1]}></ComposeView>
       )}
     </Flat>
   );
@@ -149,9 +146,9 @@ function Settings() {
 
 const Flat = styled.div`
   display: flex;
-
   flex-direction: column;
   align-items: center;
+
   gap: 10px;
   padding: 20px;
 
