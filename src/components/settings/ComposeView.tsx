@@ -22,7 +22,7 @@ interface optionState {
 }
 
 const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
-  const devicelist = useSelector(
+  const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
   const optionlist = useSelector(
@@ -33,7 +33,7 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
   const columnOptions = Array.from({ length: column }, (_, i) => i + 1);
   const typeOptions = Array.from({ length: 2 }, (_, i) => i + 1);
 
-  console.log("ComposeView", devicelist, row, column);
+  console.log("ComposeView", deviceSet, row, column);
 
   const renderButtons = () => {
     const rows = [];
@@ -42,25 +42,25 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
     for (let r = 0; r < row; r++) {
       const buttons = [];
       for (let c = 0; c < column; c++) {
-        if (devicelist.deviceList?.value?.length < 1) {
+        if (deviceSet.deviceList?.value?.length < 1) {
           return;
         }
 
-        if (devicelist.deviceList.length > 0) {
+        if (deviceSet.deviceList.length > 0) {
           buttons.push(
             <DeviceInfo
               key={keyCounter}
-              type={devicelist.deviceList[keyCounter].type}
-              name={devicelist.deviceList[keyCounter].name}
-              dv1={devicelist.deviceList[keyCounter].dv1}
-              dv2={devicelist.deviceList[keyCounter].dv2}
-              dv3={devicelist.deviceList[keyCounter].dv3}
-              dv4={devicelist.deviceList[keyCounter].dv4}
-              dv5={devicelist.deviceList[keyCounter].dv5}
-              dv6={devicelist.deviceList[keyCounter].dv6}
-              dv7={devicelist.deviceList[keyCounter].dv7}
-              dv8={devicelist.deviceList[keyCounter].dv8}
-              dv9={devicelist.deviceList[keyCounter].dv9}
+              type={deviceSet.deviceList[keyCounter].type}
+              name={deviceSet.deviceList[keyCounter].name}
+              dv1={deviceSet.deviceList[keyCounter].dv1}
+              dv2={deviceSet.deviceList[keyCounter].dv2}
+              dv3={deviceSet.deviceList[keyCounter].dv3}
+              dv4={deviceSet.deviceList[keyCounter].dv4}
+              dv5={deviceSet.deviceList[keyCounter].dv5}
+              dv6={deviceSet.deviceList[keyCounter].dv6}
+              dv7={deviceSet.deviceList[keyCounter].dv7}
+              dv8={deviceSet.deviceList[keyCounter].dv8}
+              dv9={deviceSet.deviceList[keyCounter].dv9}
             />
           );
         } else {
@@ -78,7 +78,7 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
     <ColumnContainer>
       <RowContainer>
         <label>row : </label>
-        {/* <DeviceSelect id="SelectRow">
+        <DeviceSelect id="SelectRow">
           {rowOptions.map((num) => (
             <option key={num} value={num}>
               {num}
@@ -100,7 +100,7 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
               {num}
             </option>
           ))}
-        </DeviceSelect> */}
+        </DeviceSelect>
       </RowContainer>
       {renderButtons()}
     </ColumnContainer>

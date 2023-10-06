@@ -16,7 +16,7 @@ interface RootState {
 }
 
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
-  const devicelist = useSelector(
+  const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
 
@@ -24,8 +24,10 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
     console.log("DeviceType2 values changed:", values);
   };
 
+  console.log("ReportGuide : ", deviceSet);
+
   const renderDevice = () => {
-    if (!devicelist.deviceList || devicelist.deviceList.length < 1) {
+    if (!deviceSet.deviceList || deviceSet.deviceList.length < 1) {
       return;
     }
 
@@ -35,11 +37,14 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
-          const deviceName = devicelist.deviceList[index].name;
+          console.log(
+            "rowIndex * column + colIndex",
+            index,
+            deviceSet.deviceList[index]
+          );
+          const deviceName = deviceSet.deviceList[index].name;
           const TypeComp =
-            devicelist.deviceList[index]?.type === 1
-              ? DeviceType1
-              : DeviceType2;
+            deviceSet.deviceList[index]?.type === 1 ? DeviceType1 : DeviceType2;
           return (
             <Container key={colIndex}>
               <ColumnContainer>

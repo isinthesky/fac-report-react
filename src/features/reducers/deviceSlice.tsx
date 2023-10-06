@@ -23,8 +23,9 @@ export const deviceSlice = createSlice({
   name: "deviceList",
   initialState,
   reducers: {
-    initDeviceList: (state, action: PayloadAction<DeviceListProp[]>) => {
-      state.value.deviceList = action.payload;
+    initDeviceList: (state, action) => {
+      console.log("initDeviceList", action.payload);
+      state.value.deviceList = action.payload.deviceList;
     },
 
     loadDeviceList: (state, action: PayloadAction<any>) => {
@@ -36,17 +37,17 @@ export const deviceSlice = createSlice({
     updateDeviceList: (state, action: PayloadAction<DeviceListProp>) => {
       const param = action.payload;
       if (state.value.deviceList[param.id]) {
-        state.value.deviceList[param.id + 1].name = param.name;
-        state.value.deviceList[param.id + 1].type = param.type;
-        state.value.deviceList[param.id + 1].dv1 = "";
-        state.value.deviceList[param.id + 1].dv2 = "";
-        state.value.deviceList[param.id + 1].dv3 = "";
-        state.value.deviceList[param.id + 1].dv4 = "";
-        state.value.deviceList[param.id + 1].dv5 = "";
-        state.value.deviceList[param.id + 1].dv6 = "";
-        state.value.deviceList[param.id + 1].dv7 = "";
-        state.value.deviceList[param.id + 1].dv8 = "";
-        state.value.deviceList[param.id + 1].dv9 = "";
+        state.value.deviceList[param.id + 1].name = action.payload.name;
+        state.value.deviceList[param.id + 1].type = action.payload.type;
+        state.value.deviceList[param.id + 1].dv1 = action.payload.dv1;
+        state.value.deviceList[param.id + 1].dv2 = action.payload.dv2;
+        state.value.deviceList[param.id + 1].dv3 = action.payload.dv3;
+        state.value.deviceList[param.id + 1].dv4 = action.payload.dv4;
+        state.value.deviceList[param.id + 1].dv5 = action.payload.dv5;
+        state.value.deviceList[param.id + 1].dv6 = action.payload.dv6;
+        state.value.deviceList[param.id + 1].dv7 = action.payload.dv7;
+        state.value.deviceList[param.id + 1].dv8 = action.payload.dv8;
+        state.value.deviceList[param.id + 1].dv9 = action.payload.dv9;
       }
     },
   },

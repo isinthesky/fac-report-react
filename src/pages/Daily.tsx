@@ -16,8 +16,6 @@ function Daily() {
 
   const { id1, id2 } = useParams();
 
-  console.log("Daily id : ", id1, id2);
-
   const option = useSelector((state: OptionState) => state.optionReducer.value);
   const [value, onChange] = useState(new Date());
 
@@ -40,6 +38,8 @@ function Daily() {
       window.confirm("Print");
     }
   };
+
+  console.log("Daily id : ", id1, id2, option);
 
   return (
     <Flat>
