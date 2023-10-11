@@ -27,13 +27,10 @@ function Settings() {
   const [columns, setColumn] = useState(0);
   const [compose, setCompose] = useState([0, 0]);
 
-
   const [mainTab, setMainTab] = useState(1);
   const [subTab, setSubTab] = useState(1);
 
-
   const [mode, setMode] = useState(false);
-  const [DeviceList, setDeviceList] = useState({});
 
   useEffect(() => {
     (async () => {

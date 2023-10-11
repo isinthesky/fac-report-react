@@ -22,10 +22,6 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column , mainTab, subTab
     (state: RootState) => state.deviceReducer.value
   );
 
-  const handleDeviceTypeChange = (values: any) => {
-    console.log("DeviceType2 values changed:", values);
-  };
-
   console.log("ReportGuide : ", deviceSet);
 
   const renderDevice = () => {

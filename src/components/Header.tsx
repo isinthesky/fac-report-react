@@ -27,10 +27,6 @@ export default function Header() {
     navigate(`/daily/${id}/${id2}`);
   };
 
-  const getMarginButtonText = (marginButtonId: number) => {
-    return `${selectedFlatId}${marginButtonId}`;
-  };
-
   const handleGoSetting = useCallback(() => {
     navigate("/settings");
   }, [navigate]);

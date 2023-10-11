@@ -4,10 +4,8 @@ import styled from "styled-components";
 import { initDeviceList, updateDeviceList } from "../../features/reducers/deviceSlice";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
-import { DeviceListProp } from "../../static/interface";
 import { setUpdateSettingsDeviceList } from "../../features/api";
-import DeviceValue from "../DeviceValue";
-import { setCurrentDevice, updateCurrentDevice } from "../../features/reducers/optionSlice";
+import { updateCurrentDevice } from "../../features/reducers/optionSlice";
 
 type ComposeSetProps = {
   row: number;
