@@ -57,8 +57,8 @@ function Daily() {
         <ReportGuide
           row={option.daily.row}
           column={option.daily.column}
-          mainTab={id1?id1:"1"}
-          subTab={id2?id2:"1"}
+          // mainTab={id1?id1:"1"}
+          // subTab={id2?id2:"1"}
         ></ReportGuide>
       </ReportLine>
     </Flat>

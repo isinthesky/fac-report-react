@@ -7,8 +7,8 @@ import DeviceType2 from "./DeviceType2";
 type ReportGuideProps = {
   row: number;
   column: number;
-  mainTab: string;
-  subTab: string;
+  // mainTab: number;
+  // subTab: number;
 };
 
 interface RootState {
@@ -17,18 +17,19 @@ interface RootState {
   };
 }
 
-const ReportGuide: React.FC<ReportGuideProps> = ({ row, column , mainTab, subTab}) => {
+const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
 
+  const handleDeviceTypeChange = (values: any) => {
+    console.log("DeviceType2 values changed:", values);
+  };
+
   console.log("ReportGuide : ", deviceSet);
 
   const renderDevice = () => {
-
-    const key = `deviceList${mainTab}${subTab}`
-
-    if (!deviceSet[key] || deviceSet[key].length < 1) {
+    if (!deviceSet.deviceList || deviceSet.deviceList.length < 1) {
       return;
     }
 
@@ -41,10 +42,10 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column , mainTab, subTab
           console.log(
             "rowIndex * column + colIndex",
             index,
-            deviceSet[key][index]
+            deviceSet.deviceList[index]
           );
           const TypeComp =
-          deviceSet[key][index]?.type === 1 ? DeviceType1 : DeviceType2;
+            deviceSet.deviceList[index]?.type === 1 ? DeviceType1 : DeviceType2;
           return (
             <Container key={colIndex}>
               <ColumnContainer>
@@ -53,7 +54,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column , mainTab, subTab
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} device={deviceSet[key][index]} />
+                <TypeComp key={index} device={deviceSet.deviceList[index]} />
               </DeviceContainer>
             </Container>
           );
