@@ -1,39 +1,43 @@
 import React from "react";
-import { IDevice, IDivision, IStation } from "../../static/types";
+import { DeviceInfoType, IDevice, IDivision, IStation } from "../../static/types";
 import styled from "styled-components";
 
 type DeviceSelectProps = {
+  id: number;
   devicelist: any;
   station: number;
+  stationValue:number;
   division: number;
-  type: string;
-  valueType: string;
-  onDeviceChange?: (type1: string, type2: string, deviceId: number) => void; // Callback prop
+  divisionValue: number;
+  currentDevice: DeviceInfoType;
+  onDeviceChange?: (id: number, deviceId: number) => void;
 };
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
+  id,
   devicelist,
   station,
   division,
-  type,
-  valueType,
+  currentDevice,
   onDeviceChange,
 }) => {
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedDeviceId = Number(e.target.value);
-    onDeviceChange?.(type, valueType, selectedDeviceId); // Notify parent component
+    onDeviceChange?.(id, selectedDeviceId); // Notify parent component
   };
+
+  const key = `dv${String(id+1)}`
 
   return (
     <InnerDiv>
-      <select value={station}>
+      <SelectDevice value={station}>
         {devicelist.stations.map((st: IStation) => (
           <option key={st.id} value={st.id}>
             {st.name}
           </option>
         ))}
-      </select>
-      <select value={division}>
+      </SelectDevice>
+      <SelectDevice value={division}>
         {devicelist.divisions
           .filter((div: IDivision) => div.stationId === station)
           .map((div: IDivision) => (
@@ -41,8 +45,8 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
               {div.name}
             </option>
           ))}
-      </select>
-      <select onChange={handleDeviceChange}>
+      </SelectDevice> 
+      <SelectDevice onChange={handleDeviceChange} value={(currentDevice as any)[key]}>
         {devicelist.devices
           .filter(
             (dev: IDevice) =>
@@ -53,7 +57,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
               {dev.name}
             </option>
           ))}
-      </select>
+      </SelectDevice>
     </InnerDiv>
   );
 };
@@ -67,3 +71,7 @@ const InnerDiv = styled.div`
   justify-content: center;
   align-items: stretch;
 `;
+
+const SelectDevice = styled.select`
+  margin: 0px 10px;
+`

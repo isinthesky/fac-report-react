@@ -27,6 +27,11 @@ function Settings() {
   const [columns, setColumn] = useState(0);
   const [compose, setCompose] = useState([0, 0]);
 
+
+  const [mainTab, setMainTab] = useState(1);
+  const [subTab, setSubTab] = useState(1);
+
+
   const [mode, setMode] = useState(false);
   const [DeviceList, setDeviceList] = useState({});
 
@@ -35,18 +40,26 @@ function Settings() {
       try {
         const response = await getSettings();
 
-        dispatch(initDeviceList(response.deviceList));
-        dispatch(setCurrentDevice(response.deviceList));
-
-        console.info("setting init getSetting", response);
+        console.log("getSettings res: ", response)
 
         if (response) {
+          dispatch(setDailySetting(response.settings));
+          dispatch(initDeviceList(response.deviceList));
+          dispatch(setCurrentDevice(response.deviceList))
+
           setRow(response.settings.row);
           setColumn(response.settings.column);
           setCompose([response.settings.row, response.settings.column]);
-
-          return;
         }
+      } catch (error) {
+        console.error(error);
+      }
+
+      try {
+          const response = await getDeviceInfo();
+          console.log("reset res ", response);
+
+          dispatch(loadDeviceList(response));
       } catch (error) {
         console.error(error);
       }
@@ -69,12 +82,6 @@ function Settings() {
 
   const handleResetDeviceInfo = async () => {
     try {
-      if (mode === false) {
-        const devicesInfo = await getDeviceInfo();
-        console.log("reset", devicesInfo);
-
-        dispatch(loadDeviceList(devicesInfo));
-      }
       setMode(!mode);
     } catch (error) {
       console.error("getDeviceInfo", error);
@@ -82,7 +89,7 @@ function Settings() {
   };
 
   const handleInitSettings = async () => {
-    try {
+/*    try {
       const isConfirmed = window.confirm(
         "모든 데이터가 초기화 됩니다. \r\n 실행하시겠습니까?"
       );
@@ -100,6 +107,7 @@ function Settings() {
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
+    */
   };
 
   return (

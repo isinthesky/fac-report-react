@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import DeviceAutoSelect from "./DeviceAutoSelect";
 import { IStation, IDivision, SetDeviceType } from "../../static/types";
-import { useDispatch } from "react-redux";
+import DeviceAutoSelect from "./DeviceAutoSelect";
 import { updateCurrentDevice } from "../../features/reducers/optionSlice";
-import optionSlice from "../../features/reducers/optionSlice";
 
 interface RootState {
   deviceReducer: {
@@ -19,7 +17,7 @@ interface optionState {
   };
 }
 
-const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
+const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
   const dispatch = useDispatch();
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
@@ -29,45 +27,72 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
     (state: optionState) => state.optionReducer.value
   );
 
-  const [selectedStation, setSelectedStation] = useState<number>(0);
-  const [selectedDivision, setSelectedDivision] = useState<number>(0);
+  const [selectedStation, setSelectedStation] = useState<number>(optionlist.currentDevice[id].st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(optionlist.currentDevice[id].div);
+  const [deviceName, setDeviceName] = useState<string>(optionlist.currentDevice[id].name);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("st", e.target.value, id)
     setSelectedStation(Number(e.target.value));
+    dispatch(
+      updateCurrentDevice({
+        arrPos: id,
+        arrKey: "st",
+        deviceId: Number(e.target.value),
+      })
+    );
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log("div", e.target.value)
     setSelectedDivision(Number(e.target.value));
+    dispatch(
+      updateCurrentDevice({
+        arrPos: id,
+        arrKey: "div",
+        deviceId: Number(e.target.value),
+      })
+    );
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDeviceName(e.target.value);
+    dispatch(
+      updateCurrentDevice({
+        arrPos: id,
+        arrKey: "name",
+        deviceId: e.target.value,
+      })
+    );
   };
 
   console.log("optionSet", optionlist);
 
-  const renderSection = (typeDev: string, values: string[]) => (
+  const renderSection = (index1: number, typeDev: string, values: string[]) => (
     <Section>
       <MiddleColumn>{typeDev}</MiddleColumn>
       {values.map((value, idx) => (
         <ValueSection key={idx}>
           <ValueColumn>{value}</ValueColumn>
           <DeviceAutoSelect
-            station={selectedStation}
-            division={selectedDivision}
+            id={idx}
             devicelist={deviceSet}
-            type={typeDev}
-            valueType={value}
-            onDeviceChange={(type1, type2, deviceId) => {
+            station={selectedStation}
+            stationValue={device.st}
+            division={selectedDivision}
+            divisionValue={device.div}
+            currentDevice={optionlist.currentDevice}
+            onDeviceChange={(id, deviceId) => {
               console.log(
                 "Selected device ID in parent:",
                 id,
-                type1,
-                type2,
                 deviceId
               );
 
               dispatch(
                 updateCurrentDevice({
-                  idx: id,
-                  type1: type1,
-                  type2: type2,
+                  arrPos: index1,
+                  arrKey: `dv${String(id+1)}` ,
                   deviceId: deviceId,
                 })
               );
@@ -80,31 +105,27 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
 
   return (
     <Container>
-      <Row>
         <InnerDiv>
           <TitleColumn>{"NAME"}</TitleColumn>
           <Row>
-            <Select onChange={handleStationChange} value={selectedStation}>
+            <Select onChange={handleStationChange} value={device.st}>
               {deviceSet.stations.map((st: IStation) => (
                 <option key={st.id} value={st.id}>
                   {st.name}
                 </option>
               ))}
             </Select>
-            <Select onChange={handleDivisionChange} value={selectedDivision}>
+            <Select onChange={handleDivisionChange} value={device.div}>
               {deviceSet.divisions.map((div: IDivision) => (
                 <option key={div.id} value={div.id}>
                   {div.name}
                 </option>
               ))}
             </Select>
-            <TitleInput type="text" />
+            <TitleInput type="text" onChange={handleNameChange}  value={deviceName} />
           </Row>
         </InnerDiv>
-      </Row>
-      {renderSection("V", ["dv1", "dv2", "dv3"])}
-      {renderSection("A", ["dv4", "dv5", "dv6"])}
-      {renderSection("ETC", ["dv7", "dv8", "dv9"])}
+      {renderSection(id, "V", ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"])}
     </Container>
   );
 };

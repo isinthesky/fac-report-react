@@ -1,25 +1,28 @@
 import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
+import { DeviceInfoType } from "../static/types";
 
 type DeviceType2Props = {
   key: number;
-  divName: string;
+  device: DeviceInfoType;
 };
 
-const DeviceType2: React.FC<DeviceType2Props> = ({ divName }) => {
+const DeviceType2: React.FC<DeviceType2Props> = ({ device }) => {
   const sections = [
-    { label: "V", values: ["R-S", "S-T", "T-R"] },
+    { label: "W", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
     { label: "/", values: ["PF"] },
     { label: "/", values: ["Hz"] },
     { label: "/", values: ["kW"] },
   ];
 
+  let devIndex = 0;
+
   return (
     <Container>
       <Row>
-        <TitleColumn>{divName}</TitleColumn>
+        <TitleColumn>{device.name}</TitleColumn>
       </Row>
       <Row>
         {sections.map((section, idx) => (
@@ -29,11 +32,11 @@ const DeviceType2: React.FC<DeviceType2Props> = ({ divName }) => {
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
-                <ValueColumn key={valueIdx}>{value}</ValueColumn>
+                <Column>
+                  <ValueRow key={valueIdx}>{value}</ValueRow>
+                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++)+1)}`]}  />
+                </Column>
               ))}
-            </Row>
-            <Row>
-              <DeviceValue row={4} col={section.values.length} />
             </Row>
           </div>
         ))}
@@ -67,15 +70,29 @@ const TitleColumn = styled.div`
 const Column = styled.div`
   flex: 1;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+`;
+
+const MiddleColumn = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 3px;
   border: 1px solid #ccc;
 `;
 
-const MiddleColumn = styled(Column)``;
-
-const ValueColumn = styled(Column)`
+const ValueRow = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
   min-width: 20px;
 `;
 

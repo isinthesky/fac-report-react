@@ -35,6 +35,17 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
 
   console.log("ComposeView", deviceSet, row, column);
 
+
+  useEffect(() => {
+    (async () => {
+      try {
+        renderButtons();
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [deviceSet]);
+
   const renderButtons = () => {
     const rows = [];
     let keyCounter = 0;
@@ -52,6 +63,9 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
               key={keyCounter}
               type={deviceSet.deviceList[keyCounter].type}
               name={deviceSet.deviceList[keyCounter].name}
+              id={deviceSet.deviceList[keyCounter].id}
+              st={deviceSet.deviceList[keyCounter].st}
+              div={deviceSet.deviceList[keyCounter].div}
               dv1={deviceSet.deviceList[keyCounter].dv1}
               dv2={deviceSet.deviceList[keyCounter].dv2}
               dv3={deviceSet.deviceList[keyCounter].dv3}
@@ -76,32 +90,6 @@ const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
 
   return (
     <ColumnContainer>
-      <RowContainer>
-        <label>row : </label>
-        <DeviceSelect id="SelectRow">
-          {rowOptions.map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
-        </DeviceSelect>
-        <label>column : </label>
-        <DeviceSelect id="SelectColumn">
-          {columnOptions.map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
-        </DeviceSelect>
-        <label>type : </label>
-        <DeviceSelect id="SelectType">
-          {typeOptions.map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
-        </DeviceSelect>
-      </RowContainer>
       {renderButtons()}
     </ColumnContainer>
   );
@@ -114,7 +102,7 @@ const ColumnContainer = styled.div`
   gap: 10px;
   margin: 30px auto;
 
-  border: 1px solid #00e0e0;
+  border: 1px solid #f0e0e0;
   border-radius: 5px;
 `;
 
@@ -128,7 +116,6 @@ const RowContainer = styled.div`
 `;
 
 const ButtonGrid = styled.div`
-  border: 1px solid #e000e0;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;

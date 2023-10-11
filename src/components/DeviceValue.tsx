@@ -3,20 +3,16 @@ import styled from "styled-components";
 
 interface DeviceValueProps {
   row: number;
-  col: number;
+  devId: number[];
 }
 
-const DeviceValue: React.FC<DeviceValueProps> = ({ row, col }) => {
+const DeviceValue: React.FC<DeviceValueProps> = ({ row, devId }) => {
   return (
-    <Container3>
+    <Row3>
       {[...Array(row)].map((_, rowIndex) => (
-        <Row3 key={rowIndex}>
-          {[...Array(col)].map((_, colIndex) => (
-            <ValueColumn3 key={colIndex}>{colIndex}</ValueColumn3>
-          ))}
-        </Row3>
+        <ValueColumn3 key={rowIndex}>{devId}</ValueColumn3>
       ))}
-    </Container3>
+    </Row3>
   );
 };
 
@@ -29,7 +25,7 @@ const Container3 = styled.div`
 
 const Row3 = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const ValueColumn3 = styled.div`
@@ -38,8 +34,8 @@ const ValueColumn3 = styled.div`
   align-items: center;
   justify-content: center;
 
-  padding: 3px;
-  border: 1px solid #ccc;
+  padding: 4px;
+  border-top: 1px solid #ccc;
 
   min-width: 20px;
 `;

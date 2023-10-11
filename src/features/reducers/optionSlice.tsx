@@ -17,7 +17,7 @@ interface OptionState {
 const initialState: OptionState = {
   value: {
     daily: { row: 2, column: 2 },
-    currentDevice: [],
+    currentDevice: [] as DeviceInfoType[],
   },
 };
 
@@ -36,14 +36,10 @@ export const optionSlice = createSlice({
       state,
       action: PayloadAction<updateCurrentDeviceType>
     ) => {
-      console.log(
-        "updateCurrentDevice",
-        action.payload,
-        state.value.currentDevice[action.payload.idx]
-      );
-
-      state.value.currentDevice[action.payload.idx].dv1 =
-        action.payload.deviceId;
+      
+      if (action.payload.arrKey in state.value.currentDevice[action.payload.arrPos]) {
+        (state.value.currentDevice[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
+      }
     },
   },
 });

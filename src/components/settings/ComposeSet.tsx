@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { updateDeviceList } from "../../features/reducers/deviceSlice";
+import { initDeviceList, updateDeviceList } from "../../features/reducers/deviceSlice";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import { DeviceListProp } from "../../static/interface";
 import { setUpdateSettingsDeviceList } from "../../features/api";
 import DeviceValue from "../DeviceValue";
+import { setCurrentDevice, updateCurrentDevice } from "../../features/reducers/optionSlice";
 
 type ComposeSetProps = {
   row: number;
@@ -26,6 +27,7 @@ interface optionState {
 }
 
 const ComposeSet: React.FC<ComposeSetProps> = ({ row, column }) => {
+  const dispatch = useDispatch();
   const [deviceRow, setDeviceRow] = useState(1);
   const [deviceColumn, setDeviceColumn] = useState(1);
   const [deviceType, setDeviceType] = useState(0);
@@ -49,29 +51,53 @@ const ComposeSet: React.FC<ComposeSetProps> = ({ row, column }) => {
     const id = deviceColumn + (deviceRow - 1) * column - 1;
 
     console.log("id", id, optionlist, optionlist.currentDevice);
-    // dispatch(updateDeviceList());
 
+    dispatch(initDeviceList(optionlist.currentDevice));
     setUpdateSettingsDeviceList(optionlist.currentDevice);
   };
+
 
   useEffect(() => {
     (async () => {
       try {
+
+        console.log("useEffect ", optionlist.currentDevice, deviceRow, deviceColumn, deviceColumn + (deviceRow - 1) * column - 1);
+
         if (deviceColumn !== 0 && deviceRow !== 0) {
           const id = deviceColumn + (deviceRow - 1) * column - 1;
 
           if (id >= 0) {
-            setDeviceType(deviceSet.deviceList[id].type);
+            setDeviceType(optionlist.currentDevice[id].type);
             setDeviceId(id);
           }
         }
 
-        console.log("devList", deviceSet.deviceList);
+        // console.log("devList", optionlist.currentDevice);
       } catch (error) {
         console.error(error);
       }
     })();
   }, [deviceRow, deviceColumn]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const id = deviceColumn + (deviceRow - 1) * column - 1;
+
+        if (id >= 0) {
+          dispatch(
+            updateCurrentDevice({
+              arrPos: id,
+              arrKey: "type",
+              deviceId: deviceType,
+            })
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [deviceType]);
 
   return (
     <Wrapper>
@@ -98,8 +124,8 @@ const ComposeSet: React.FC<ComposeSetProps> = ({ row, column }) => {
         </DefalutDiv>
       </SettingsContainer>
       <SettingsContainer>
-        {deviceType === 1 && <SetDeviceTypeV id={deviceId} />}
-        {deviceType === 2 && <SetDeviceTypeW id={deviceId} />}
+        {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={optionlist?.currentDevice[deviceId]} />}
+        {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={optionlist?.currentDevice[deviceId]} />}
       </SettingsContainer>
       <ButtonGroup>
         <Button onClick={handleSave}>Save</Button>
@@ -118,9 +144,9 @@ const Setting: React.FC<{
   <DefalutDiv>
     <label>{label} : </label>
     <Select onChange={onChange} value={value}>
-      {Array.from({ length: options + 1 }).map((_, idx) => (
-        <option key={idx} value={idx}>
-          {idx}
+      {Array.from({ length: options }).map((_, idx) => (
+        <option key={idx} value={idx+1}>
+          {idx+1}
         </option>
       ))}
     </Select>

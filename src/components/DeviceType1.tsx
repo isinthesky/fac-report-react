@@ -1,81 +1,60 @@
 import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
+import { DeviceInfoType } from "../static/types";
 
 type DeviceType1Props = {
   key: number;
-  divName: string;
+  device: DeviceInfoType;
 };
 
-const DeviceType1: React.FC<DeviceType1Props> = ({ divName }) => {
+const DeviceType1: React.FC<DeviceType1Props> = ({ device }) => {
+  const sections = [
+    { label: "V", values: ["R-S", "S-T", "T-R"] },
+    { label: "A", values: ["R", "S", "T"] },
+    { label: "/", values: ["PF"] },
+    { label: "/", values: ["Hz"] },
+    { label: "/", values: ["kW"] },
+  ];
+
+  let devIndex = 0;
+
   return (
-    <Container2>
-      <Row2 key="r01">
-        <TitleColumn key="c01">{divName}</TitleColumn>
-      </Row2>
-      <Row2 key="r02">
-        <div>
-          <Row2 key="r03">
-            <MiddleColumn key="c11">{"KV"}</MiddleColumn>
-          </Row2>
-          <Row2 key="r04">
-            <ValueColumn key="c11">{"R-S"}</ValueColumn>
-            <ValueColumn key="c12">{"S-T"}</ValueColumn>
-            <ValueColumn key="c13">{"T-R"}</ValueColumn>
-          </Row2>
-          <Row2>
-            <DeviceValue row={4} col={3} />
-          </Row2>
-        </div>
-        <div>
-          <Row2 key="r03">
-            <MiddleColumn key="c21">{"A"}</MiddleColumn>
-          </Row2>
-          <Row2 key="r04">
-            <ValueColumn key="c21">{"R"}</ValueColumn>
-            <ValueColumn key="c22">{"S"}</ValueColumn>
-            <ValueColumn key="c23">{"T"}</ValueColumn>
-          </Row2>
-          <Row2>
-            <DeviceValue row={4} col={3} />
-          </Row2>
-        </div>
-        <div>
-          <ValueColumn key="c31">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c32">{"PF"}</ValueColumn>{" "}
-          <Row2>
-            <DeviceValue row={4} col={1} />
-          </Row2>
-        </div>
-        <div>
-          <ValueColumn key="c33">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c34">{"Hz"}</ValueColumn>{" "}
-          <Row2>
-            <DeviceValue row={4} col={1} />
-          </Row2>
-        </div>
-        <div>
-          <ValueColumn key="c35">{"/"}</ValueColumn>{" "}
-          <ValueColumn key="c36">{"kW"}</ValueColumn>{" "}
-          <Row2>
-            <DeviceValue row={4} col={1} />
-          </Row2>
-        </div>
-      </Row2>
-    </Container2>
+    <Container>
+      <Row>
+        <TitleColumn>{device.name}</TitleColumn>
+      </Row>
+      <Row>
+        {sections.map((section, idx) => (
+          <div key={idx}>
+            <Row>
+              <MiddleColumn>{section.label}</MiddleColumn>
+            </Row>
+            <Row>
+              {section.values.map((value, valueIdx) => (
+                <Column>
+                  <ValueRow key={valueIdx}>{value}</ValueRow>
+                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++)+1)}`]}  />
+                </Column>
+              ))}
+            </Row>
+          </div>
+        ))}
+      </Row>
+    </Container>
   );
 };
 
-const Container2 = styled.div`
-  flex: 1;
+
+const Container = styled.div`
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: stretch;
 `;
 
-const Row2 = styled.div`
-  flex: 1;
+const Row = styled.div`
   display: flex;
   flex-direction: row;
 `;
@@ -85,30 +64,36 @@ const TitleColumn = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   padding: 3px;
+  border: 1px solid #ccc;
+`;
+
+const Column = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #ccc;
 `;
 
 const MiddleColumn = styled.div`
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-
   padding: 3px;
   border: 1px solid #ccc;
 `;
 
-const ValueColumn = styled.div`
+const ValueRow = styled.div`
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-
   padding: 3px;
-  border: 1px solid #ccc;
-
   min-width: 20px;
 `;
 
