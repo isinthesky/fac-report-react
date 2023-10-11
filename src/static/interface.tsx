@@ -18,3 +18,16 @@ export interface DeviceListProp {
   dv8: DeviceProp | string;
   dv9: DeviceProp | string;
 }
+
+
+export interface RootState {
+  deviceReducer: {
+    value: any;
+  };
+}
+
+export interface optionState {
+  optionReducer: {
+    value: any;
+  };
+}

@@ -16,13 +16,6 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ row, devId }) => {
   );
 };
 
-const Container3 = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-`;
-
 const Row3 = styled.div`
   display: flex;
   flex-direction: column;

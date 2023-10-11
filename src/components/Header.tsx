@@ -22,8 +22,6 @@ export default function Header() {
   };
 
   const subcallback = (id: string, id2: string) => {
-    console.log("sub", id, "aa", id2);
-
     navigate(`/daily/${id}/${id2}`);
   };
 
@@ -35,7 +33,6 @@ export default function Header() {
     (async () => {
       try {
         const response = await getSettings();
-
         console.log("getSettings res: ", response)
         if (response) {
           dispatch(setDailySetting(response.settings));
@@ -45,7 +42,7 @@ export default function Header() {
         console.error(error);
       }
     })();
-  }, [dispatch]);
+  }, []);
 
   return (
     <TopHeader>

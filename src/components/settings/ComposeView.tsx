@@ -2,47 +2,24 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import DeviceInfo from "./DeviceInfo";
+import { RootState } from "../../static/interface";
 
 type ComposeViewProps = {
   row: number;
   column: number;
 };
 
-interface RootState {
-  deviceReducer: {
-    value: any;
-  };
-}
-
-interface optionState {
-  optionReducer: {
-    value: any;
-  };
-}
-
 const ComposeView: React.FC<ComposeViewProps> = ({ row, column }) => {
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
-  const optionlist = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
-
-  const rowOptions = Array.from({ length: row }, (_, i) => i + 1);
-  const columnOptions = Array.from({ length: column }, (_, i) => i + 1);
-  const typeOptions = Array.from({ length: 2 }, (_, i) => i + 1);
-
-  console.log("ComposeView", deviceSet, row, column);
-
 
   useEffect(() => {
-    (async () => {
-      try {
-        renderButtons();
-      } catch (error) {
-        console.error(error);
-      }
-    })();
+    try {
+      renderButtons();
+    } catch (error) {
+      console.error(error);
+    }
   }, [deviceSet]);
 
   const renderButtons = () => {
@@ -105,24 +82,11 @@ const ColumnContainer = styled.div`
   border-radius: 5px;
 `;
 
-const RowContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-`;
-
 const ButtonGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: space-around;
-`;
-
-const DeviceSelect = styled.select`
-  min-width: 70px;
 `;
 
 export default ComposeView;

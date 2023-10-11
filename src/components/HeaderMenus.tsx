@@ -42,8 +42,6 @@ interface SubMenuProps {
   onClickCallback: (mainId: string, subId: string) => void;
 }
 
-// REACT_APP_INIT_REPORT_TYPE2_SUB2
-
 export const SubMenu: React.FC<SubMenuProps> = ({
   mainId,
   onClickCallback,

@@ -4,18 +4,8 @@ import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType } from "../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
 import { updateCurrentDevice } from "../../features/reducers/optionSlice";
+import { RootState, optionState } from "../../static/interface";
 
-interface RootState {
-  deviceReducer: {
-    value: any;
-  };
-}
-
-interface optionState {
-  optionReducer: {
-    value: any;
-  };
-}
 const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
   const dispatch = useDispatch();
   const deviceSet = useSelector(
@@ -80,12 +70,6 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
             divisionValue={device.div}
             currentDevice={optionlist.currentDevice[id]}
             onDeviceChange={(id, deviceId) => {
-              console.log(
-                "Selected device ID in parent:",
-                id,
-                deviceId
-              );
-
               dispatch(
                 updateCurrentDevice({
                   arrPos: index1,

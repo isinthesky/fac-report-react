@@ -22,12 +22,6 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
     (state: RootState) => state.deviceReducer.value
   );
 
-  const handleDeviceTypeChange = (values: any) => {
-    console.log("DeviceType2 values changed:", values);
-  };
-
-  console.log("ReportGuide : ", deviceSet);
-
   const renderDevice = () => {
     if (!deviceSet.deviceList || deviceSet.deviceList.length < 1) {
       return;
@@ -39,11 +33,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
-          console.log(
-            "rowIndex * column + colIndex",
-            index,
-            deviceSet.deviceList[index]
-          );
+          
           const TypeComp =
             deviceSet.deviceList[index]?.type === 1 ? DeviceType1 : DeviceType2;
           return (

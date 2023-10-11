@@ -29,14 +29,12 @@ export const optionSlice = createSlice({
       state.value.daily = action.payload;
     },
     setCurrentDevice: (state, action: PayloadAction<DeviceInfoType[]>) => {
-      console.log("setCurrentDevice", action.payload);
       state.value.currentDevice = action.payload;
     },
     updateCurrentDevice: (
       state,
       action: PayloadAction<updateCurrentDeviceType>
     ) => {
-      
       if (action.payload.arrKey in state.value.currentDevice[action.payload.arrPos]) {
         (state.value.currentDevice[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
       }

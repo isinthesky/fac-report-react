@@ -6,13 +6,10 @@ import ComposeView from "../components/settings/ComposeView";
 import {
   getDeviceInfo,
   getSettings,
-  setInitSettings,
   setUpdateSettingsColRow,
-  setUpdateSettingsDeviceList,
 } from "../features/api";
 import {
   loadDeviceList,
-  updateDeviceList,
   initDeviceList,
 } from "../features/reducers/deviceSlice";
 import {
@@ -26,18 +23,12 @@ function Settings() {
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
   const [compose, setCompose] = useState([0, 0]);
-
-  const [mainTab, setMainTab] = useState(1);
-  const [subTab, setSubTab] = useState(1);
-
   const [mode, setMode] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const response = await getSettings();
-
-        console.log("getSettings res: ", response)
 
         if (response) {
           dispatch(setDailySetting(response.settings));
@@ -54,8 +45,6 @@ function Settings() {
 
       try {
           const response = await getDeviceInfo();
-          console.log("reset res ", response);
-
           dispatch(loadDeviceList(response));
       } catch (error) {
         console.error(error);
@@ -77,12 +66,8 @@ function Settings() {
     dispatch(setDailySetting({ row: rows, column: columns }));
   };
 
-  const handleResetDeviceInfo = async () => {
-    try {
+  const handleResetDeviceInfo = () => {
       setMode(!mode);
-    } catch (error) {
-      console.error("getDeviceInfo", error);
-    }
   };
 
   const handleInitSettings = async () => {
