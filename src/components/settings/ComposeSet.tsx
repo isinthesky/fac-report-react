@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { initDeviceList, updateDeviceList } from "../../features/reducers/deviceSlice";
+import { initDeviceList, updateTabInfo } from "../../features/reducers/deviceSlice";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import { setUpdateSettingsDeviceList } from "../../features/api";
 import { updateCurrentDevice } from "../../features/reducers/optionSlice";
 import { RootState, optionState } from "../../static/interface";
+import { ComposeProps } from "../../static/types";
 
-type ComposeSetProps = {
-  row: number;
-  column: number;
-};
-
-const ComposeSet: React.FC<ComposeSetProps> = ({ row, column }) => {
+const ComposeSet: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) => {
   const dispatch = useDispatch();
   const [deviceRow, setDeviceRow] = useState(1);
   const [deviceColumn, setDeviceColumn] = useState(1);
@@ -31,45 +27,44 @@ const ComposeSet: React.FC<ComposeSetProps> = ({ row, column }) => {
     };
 
   const handleSave = () => {
-    dispatch(initDeviceList(optionlist.currentDevice));
-    setUpdateSettingsDeviceList(optionlist.currentDevice);
+    const key = `deviceList${mainTab}${subTab}`;
+
+    dispatch(updateTabInfo({tab:key, device:optionlist.currentDevice}));
+    setUpdateSettingsDeviceList(key, optionlist.currentDevice);
   };
 
   useEffect(() => {
-    (async () => {
-      try {
-        if (deviceColumn !== 0 && deviceRow !== 0) {
-          const postion = deviceColumn + (deviceRow - 1) * column - 1;
+    try {
+      if (deviceColumn !== 0 && deviceRow !== 0) {
+        const position = deviceColumn + (deviceRow - 1) * column - 1;
+        console.log("position", optionlist, deviceColumn, position)
 
-          if (postion >= 0) {
-            setDeviceType(optionlist.currentDevice[postion].type);
-            setDeviceId(postion);
-          }
+        if (position >= 0) {
+          setDeviceType(optionlist.currentDevice[position].type);
+          setDeviceId(position);
         }
-      } catch (error) {
-        console.error(error);
       }
-    })();
+    } catch (error) {
+      console.error(error);
+    }
   }, [deviceRow, deviceColumn]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const postion = deviceColumn + (deviceRow - 1) * column - 1;
+    try {
+      const postion = deviceColumn + (deviceRow - 1) * column - 1;
 
-        if (postion >= 0) {
-          dispatch(
-            updateCurrentDevice({
-              arrPos: postion,
-              arrKey: "type",
-              deviceId: deviceType,
-            })
-          );
-        }
-      } catch (error) {
-        console.error(error);
+      if (postion >= 0) {
+        dispatch(
+          updateCurrentDevice({
+            arrPos: postion,
+            arrKey: "type",
+            deviceId: deviceType,
+          })
+        );
       }
-    })();
+    } catch (error) {
+      console.error(error);
+    }
   }, [deviceType]);
 
   return (
@@ -97,8 +92,8 @@ const ComposeSet: React.FC<ComposeSetProps> = ({ row, column }) => {
         </DefalutDiv>
       </SettingsContainer>
       <SettingsContainer>
-        {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={optionlist?.currentDevice[deviceId]} />}
-        {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={optionlist?.currentDevice[deviceId]} />}
+        {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={optionlist.currentDevice[deviceId]} />}
+        {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={optionlist.currentDevice[deviceId]} />}
       </SettingsContainer>
       <ButtonGroup>
         <Button onClick={handleSave}>Save</Button>

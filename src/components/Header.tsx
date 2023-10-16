@@ -36,7 +36,7 @@ export default function Header() {
         console.log("getSettings res: ", response)
         if (response) {
           dispatch(setDailySetting(response.settings));
-          dispatch(initDeviceList(response.deviceList));
+          dispatch(initDeviceList(response));
         }
       } catch (error) {
         console.error(error);

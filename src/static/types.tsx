@@ -13,6 +13,18 @@ export type SetDeviceType = {
   device: DeviceInfoType;
 };
 
+export type ViewDeviceProps = {
+  key: number;
+  device: DeviceInfoType;
+};
+
+export type ComposeProps = {
+  row: number;
+  column: number;
+  mainTab: number;
+  subTab: number;
+};
+
 export type updateCurrentDeviceType = {
   arrPos: number;
   arrKey: string;
@@ -35,7 +47,3 @@ export type DeviceInfoType = {
   dv8: number;
   dv9: number;
 };
-
-
-
-// [{"id": 1, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 2, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 3, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 4, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 5, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 6, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 7, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 8, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 9, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 10, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 11, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}, {"id": 12, "dv1": 0, "dv2": 0, "dv3": 0, "dv4": 0, "dv5": 0, "dv6": 0, "dv7": 0, "dv8": 0, "dv9": 0, "name": "device", "type": 1}]

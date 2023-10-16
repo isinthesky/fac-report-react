@@ -4,17 +4,22 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { postDailyData } from "../features/api";
+import { postDailyData, readDeviceLog } from "../features/api";
 import ReportGuide from "../components/ReportGuide";
+import { setViewType } from "../features/reducers/optionSlice";
+import { useDispatch } from "react-redux";
+
+
+interface OptionState {
+  optionReducer: {
+    value: any;
+  };
+}
+
 
 function Daily() {
-  interface OptionState {
-    optionReducer: {
-      value: any;
-    };
-  }
-
   const { id1, id2 } = useParams();
+  const dispatch = useDispatch()
 
   const option = useSelector((state: OptionState) => state.optionReducer.value);
   const [value, onChange] = useState(new Date());
@@ -27,7 +32,9 @@ function Daily() {
     );
   };
 
-  const handleDaily = async () => {};
+  const handleDaily = async () => {
+    dispatch(setViewType(option.viewType === 0 ? 1 : 0))
+  };
 
   const handleWeekly = async () => {};
 
@@ -38,8 +45,6 @@ function Daily() {
       window.confirm("Print");
     }
   };
-
-  console.log("Daily id : ", id1, id2, option);
 
   return (
     <Flat>
@@ -57,8 +62,8 @@ function Daily() {
         <ReportGuide
           row={option.daily.row}
           column={option.daily.column}
-          // mainTab={id1?id1:"1"}
-          // subTab={id2?id2:"1"}
+          mainTab={id1?id1:"1"}
+          subTab={id2?id2:"1"}
         ></ReportGuide>
       </ReportLine>
     </Flat>

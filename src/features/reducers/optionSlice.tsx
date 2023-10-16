@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DeviceInfoType, updateCurrentDeviceType } from "../../static/types";
-import { DeviceProp } from "../../static/interface";
 
 interface DailySetting {
   row: number;
@@ -10,6 +9,7 @@ interface DailySetting {
 interface OptionState {
   value: {
     daily: DailySetting;
+    viewType: number;
     currentDevice: DeviceInfoType[];
   };
 }
@@ -17,6 +17,7 @@ interface OptionState {
 const initialState: OptionState = {
   value: {
     daily: { row: 2, column: 2 },
+    viewType: 0,
     currentDevice: [] as DeviceInfoType[],
   },
 };
@@ -28,9 +29,17 @@ export const optionSlice = createSlice({
     setDailySetting: (state, action: PayloadAction<DailySetting>) => {
       state.value.daily = action.payload;
     },
+    
     setCurrentDevice: (state, action: PayloadAction<DeviceInfoType[]>) => {
+      console.log("setCurrentDevice", action.payload)
       state.value.currentDevice = action.payload;
     },
+
+    setViewType: (state, action: PayloadAction<number>) => {
+      console.log("setViewType", action.payload)
+      state.value.viewType = action.payload;
+    },
+
     updateCurrentDevice: (
       state,
       action: PayloadAction<updateCurrentDeviceType>
@@ -42,7 +51,7 @@ export const optionSlice = createSlice({
   },
 });
 
-export const { setDailySetting, setCurrentDevice, updateCurrentDevice } =
+export const { setDailySetting, setCurrentDevice, setViewType, updateCurrentDevice } =
   optionSlice.actions;
 
 export default optionSlice.reducer;

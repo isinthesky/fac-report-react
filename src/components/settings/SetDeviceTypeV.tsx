@@ -65,22 +65,14 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
         <ValueSection key={idx}>
           <ValueColumn>{value}</ValueColumn>
           <DeviceAutoSelect
-            id={idx}
+            pos={index1}
+            devKey={`dv${String(idx+1)}`}
             devicelist={deviceSet}
-            station={selectedStation}
+            initStationId={selectedStation}
             stationValue={device.st}
-            division={selectedDivision}
+            initDivisionId={selectedDivision}
             divisionValue={device.div}
-            currentDevice={optionlist.currentDevice}
-            onDeviceChange={(id, deviceId) => {
-              dispatch(
-                updateCurrentDevice({
-                  arrPos: index1,
-                  arrKey: `dv${String(id+1)}` ,
-                  deviceId: deviceId,
-                })
-              );
-            }}
+            currentDevice={optionlist.currentDevice[idx]}
           />
         </ValueSection>
       ))}

@@ -1,56 +1,94 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { DeviceInfoType, IDevice, IDivision, IStation } from "../../static/types";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { updateCurrentDevice } from "../../features/reducers/optionSlice";
 
 type DeviceSelectProps = {
-  id: number;
+  pos: number;
+  devKey: string;
   devicelist: any;
-  station: number;
+  initStationId: number;
   stationValue:number;
-  division: number;
+  initDivisionId: number;
   divisionValue: number;
   currentDevice: DeviceInfoType;
-  onDeviceChange?: (id: number, deviceId: number) => void;
 };
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
-  id,
+  pos,
+  devKey,
   devicelist,
-  station,
-  division,
+  initStationId,
+  initDivisionId,
   currentDevice,
-  onDeviceChange,
 }) => {
-  const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedDeviceId = Number(e.target.value);
-    onDeviceChange?.(id, selectedDeviceId); // Notify parent component
+  const dispatch = useDispatch();
+  const [selectedSt, setSelectedStation] = useState<number>(initStationId);
+  const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
+  const [selecteddevice, setSelectedDevice] = useState<number>((currentDevice as any)[devKey]);
+
+  useEffect(() => {
+    setSelectedStation(initStationId)
+    setSelectedDivision(initDivisionId)
+  }, [initStationId, initDivisionId]);
+  
+  const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStation(Number(e.target.value));
+    dispatch(
+      updateCurrentDevice({
+        arrPos: pos,
+        arrKey: "st",
+        deviceId: Number(e.target.value),
+      })
+    );
   };
 
-  const key = `dv${String(id+1)}`
+  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDivision(Number(e.target.value));
+    dispatch(
+      updateCurrentDevice({
+        arrPos: pos,
+        arrKey: "div",
+        deviceId: Number(e.target.value),
+      })
+    );
+  };
 
+  const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDevice(Number(e.target.value));
+    dispatch(
+      updateCurrentDevice({
+        arrPos: pos,
+        arrKey: devKey ,
+        deviceId: Number(e.target.value),
+      })
+    );
+  };
+  
   return (
     <InnerDiv>
-      <SelectDevice value={station}>
+      <SelectDivision onChange={handleStationChange} value={selectedSt}>
         {devicelist.stations.map((st: IStation) => (
           <option key={st.id} value={st.id}>
             {st.name}
           </option>
         ))}
-      </SelectDevice>
-      <SelectDevice value={division}>
+      </SelectDivision>
+      <SelectDivision onChange={handleDivisionChange} value={selectedDiv}>
         {devicelist.divisions
-          .filter((div: IDivision) => div.stationId === station)
+          .filter((div: IDivision) => div.stationId === selectedSt)
           .map((div: IDivision) => (
             <option key={div.id} value={div.id}>
               {div.name}
             </option>
           ))}
-      </SelectDevice> 
-      <SelectDevice onChange={handleDeviceChange} value={(currentDevice as any)[key]}>
+      </SelectDivision> 
+      <SelectDevice onChange={handleDeviceChange} value={selecteddevice}>
         {devicelist.devices
           .filter(
             (dev: IDevice) =>
-              dev.stationId === station && dev.divisionId === division
+              dev.stationId === selectedSt && dev.divisionId === selectedDiv
           )
           .map((dev: IDevice) => (
             <option key={dev.id} value={dev.id}>
@@ -72,6 +110,12 @@ const InnerDiv = styled.div`
   align-items: stretch;
 `;
 
+const SelectDivision = styled.select`
+  margin: 0px 10px;
+  min-width: 70px;
+`
+
 const SelectDevice = styled.select`
   margin: 0px 10px;
+  min-width: 220px;
 `

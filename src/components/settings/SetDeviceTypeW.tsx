@@ -6,6 +6,7 @@ import DeviceAutoSelect from "./DeviceAutoSelect";
 import { updateCurrentDevice } from "../../features/reducers/optionSlice";
 import { RootState, optionState } from "../../static/interface";
 
+
 const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
   const dispatch = useDispatch();
   const deviceSet = useSelector(
@@ -62,22 +63,14 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
         <ValueSection key={idx}>
           <ValueColumn>{value}</ValueColumn>
           <DeviceAutoSelect
-            id={idx}
+            pos={index1}
+            devKey={`dv${String(idx+1)}`}
             devicelist={deviceSet}
-            station={selectedStation}
+            initStationId={selectedStation}
             stationValue={device.st}
-            division={selectedDivision}
+            initDivisionId={selectedDivision}
             divisionValue={device.div}
             currentDevice={optionlist.currentDevice[id]}
-            onDeviceChange={(id, deviceId) => {
-              dispatch(
-                updateCurrentDevice({
-                  arrPos: index1,
-                  arrKey: `dv${String(id+1)}` ,
-                  deviceId: deviceId,
-                })
-              );
-            }}
           />
         </ValueSection>
       ))}

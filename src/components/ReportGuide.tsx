@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import DeviceType1 from "./DeviceType1";
-import DeviceType2 from "./DeviceType2";
+import ViewDeviceTypeV from "./ViewDeviceTypeV";
+import ViewDeviceTypeW from "./ViewDeviceTypeW";
 
 type ReportGuideProps = {
   row: number;
   column: number;
-  // mainTab: number;
-  // subTab: number;
+  mainTab: string;
+  subTab: string;
 };
 
 interface RootState {
@@ -17,13 +17,15 @@ interface RootState {
   };
 }
 
-const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
+const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab }) => {
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
 
   const renderDevice = () => {
-    if (!deviceSet.deviceList || deviceSet.deviceList.length < 1) {
+    const key = `deviceList${mainTab}${subTab}`;
+
+    if (!deviceSet[key] || deviceSet[key].length < 1) {
       return;
     }
 
@@ -33,9 +35,9 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
-          
+
           const TypeComp =
-            deviceSet.deviceList[index]?.type === 1 ? DeviceType1 : DeviceType2;
+            deviceSet[key][index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
           return (
             <Container key={colIndex}>
               <ColumnContainer>
@@ -44,7 +46,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} device={deviceSet.deviceList[index]} />
+                <TypeComp key={index} device={deviceSet[key][index]} />
               </DeviceContainer>
             </Container>
           );
@@ -77,6 +79,8 @@ const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  width: 20px;
 `;
 
 const DeviceContainer = styled.div`
@@ -87,11 +91,12 @@ const DeviceContainer = styled.div`
 
 const StyledColumn = styled.div`
   flex: 1;
-  padding: 3px;
-  border: 1px solid #ccc;
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  padding: 3px;
+  border: 1px solid #ccc;
 `;
 
 export default ReportGuide;

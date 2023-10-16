@@ -1,14 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { DeviceInfoType } from "../static/types";
+import { ViewDeviceProps } from "../static/types";
+import { readDeviceLog } from "../features/api";
 
-type DeviceType1Props = {
-  key: number;
-  device: DeviceInfoType;
-};
 
-const DeviceType1: React.FC<DeviceType1Props> = ({ device }) => {
+const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device }) => {
   const sections = [
     { label: "V", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -17,8 +14,8 @@ const DeviceType1: React.FC<DeviceType1Props> = ({ device }) => {
     { label: "/", values: ["kW"] },
   ];
 
-  let devIndex = 0;
-
+  let devIndex = 1;
+  
   return (
     <Container>
       <Row>
@@ -34,7 +31,7 @@ const DeviceType1: React.FC<DeviceType1Props> = ({ device }) => {
               {section.values.map((value, valueIdx) => (
                 <Column>
                   <ValueRow key={valueIdx}>{value}</ValueRow>
-                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++)+1)}`]}  />
+                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++))}`]}  />
                 </Column>
               ))}
             </Row>
@@ -44,7 +41,6 @@ const DeviceType1: React.FC<DeviceType1Props> = ({ device }) => {
     </Container>
   );
 };
-
 
 const Container = styled.div`
   flex-grow: 1;
@@ -97,4 +93,4 @@ const ValueRow = styled.div`
   min-width: 20px;
 `;
 
-export default DeviceType1;
+export default ViewDeviceTypeV;

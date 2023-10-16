@@ -1,24 +1,8 @@
-export interface DeviceProp {
+export interface DeviceinfoProp {
   id: number;
   xmlId: string;
   name: string;
 }
-
-export interface DeviceListProp {
-  id: number;
-  type: number;
-  name: string;
-  dv1: DeviceProp | string;
-  dv2: DeviceProp | string;
-  dv3: DeviceProp | string;
-  dv4: DeviceProp | string;
-  dv5: DeviceProp | string;
-  dv6: DeviceProp | string;
-  dv7: DeviceProp | string;
-  dv8: DeviceProp | string;
-  dv9: DeviceProp | string;
-}
-
 
 export interface RootState {
   deviceReducer: {
@@ -30,4 +14,24 @@ export interface optionState {
   optionReducer: {
     value: any;
   };
+}
+
+export interface DevicePackProp {
+  id: number;
+  type: number;
+  name: string;
+  dv1: DeviceinfoProp | string;
+  dv2: DeviceinfoProp | string;
+  dv3: DeviceinfoProp | string;
+  dv4: DeviceinfoProp | string;
+  dv5: DeviceinfoProp | string;
+  dv6: DeviceinfoProp | string;
+  dv7: DeviceinfoProp | string;
+  dv8: DeviceinfoProp | string;
+  dv9: DeviceinfoProp | string;
+}
+
+export interface TabInfoProp {
+  tab: string;
+  device: DevicePackProp;
 }

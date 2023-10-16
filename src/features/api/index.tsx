@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DeviceListProp } from "../../static/interface";
+import { DevicePackProp } from "../../static/interface";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -84,12 +84,27 @@ export const setUpdateSettingsColRow = async (
 };
 
 export const setUpdateSettingsDeviceList = async (
-  deviceList: DeviceListProp[]
+  tab: string,
+  deviceList: DevicePackProp[]
 ): Promise<any> => {
   try {
     return await axiosInstance.put("/updateSettingsDeviceList", {
-      deviceList,
+      tab:tab,
+      deviceList:deviceList
     });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export const readDeviceLog = async (
+  deviceId: number,
+  timeStamp: number
+): Promise<any> => {
+  try {
+    const res =  await axiosInstance.get(`/readDeviceLog/${deviceId}/${timeStamp}`);
+    return res.data;
   } catch (error) {
     console.error(error);
     return false;

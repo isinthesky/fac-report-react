@@ -29,11 +29,13 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
   );
 
   const getDevName = (id:number) =>{
+
     for (const item of deviceSet.devices){
       if (item.id === id) {
         return item.name;
       } 
     } 
+    return "";
   }
 
   return (

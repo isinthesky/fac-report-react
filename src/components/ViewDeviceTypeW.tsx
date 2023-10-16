@@ -1,14 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { DeviceInfoType } from "../static/types";
+import { ViewDeviceProps } from "../static/types";
 
-type DeviceType2Props = {
-  key: number;
-  device: DeviceInfoType;
-};
 
-const DeviceType2: React.FC<DeviceType2Props> = ({ device }) => {
+const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device }) => {
   const sections = [
     { label: "W", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -17,7 +13,7 @@ const DeviceType2: React.FC<DeviceType2Props> = ({ device }) => {
     { label: "/", values: ["kW"] },
   ];
 
-  let devIndex = 0;
+  let devIndex = 1;
 
   return (
     <Container>
@@ -34,7 +30,7 @@ const DeviceType2: React.FC<DeviceType2Props> = ({ device }) => {
               {section.values.map((value, valueIdx) => (
                 <Column>
                   <ValueRow key={valueIdx}>{value}</ValueRow>
-                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++)+1)}`]}  />
+                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++))}`]}  />
                 </Column>
               ))}
             </Row>
@@ -96,4 +92,4 @@ const ValueRow = styled.div`
   min-width: 20px;
 `;
 
-export default DeviceType2;
+export default ViewDeviceTypeW;

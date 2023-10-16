@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import ComposeSet from "../components/settings/ComposeSet";
 import ComposeView from "../components/settings/ComposeView";
@@ -16,28 +16,35 @@ import {
   setCurrentDevice,
   setDailySetting,
 } from "../features/reducers/optionSlice";
+import { RootState } from "../static/interface";
 
 function Settings() {
   const dispatch = useDispatch();
 
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
-  const [compose, setCompose] = useState([0, 0]);
   const [mode, setMode] = useState(false);
+  
+  const [mainTab, setMainTab] = useState(1);
+  const [subTab, setSubTab] = useState(1);
+
+  const deviceSet = useSelector(
+    (state: RootState) => state.deviceReducer.value
+  );
 
   useEffect(() => {
     (async () => {
       try {
         const response = await getSettings();
 
+        console.log("getSettings res: ", response)
+
         if (response) {
           dispatch(setDailySetting(response.settings));
-          dispatch(initDeviceList(response.deviceList));
-          dispatch(setCurrentDevice(response.deviceList))
+          dispatch(initDeviceList(response));
 
           setRow(response.settings.row);
           setColumn(response.settings.column);
-          setCompose([response.settings.row, response.settings.column]);
         }
       } catch (error) {
         console.error(error);
@@ -45,6 +52,8 @@ function Settings() {
 
       try {
           const response = await getDeviceInfo();
+          console.log("reset res ", response);
+
           dispatch(loadDeviceList(response));
       } catch (error) {
         console.error(error);
@@ -52,22 +61,59 @@ function Settings() {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const key = `deviceList${mainTab}${subTab}`;
+        dispatch(setCurrentDevice(deviceSet[key]))
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [mainTab, subTab]);
+
+  const handleMainTab = (e: React.ChangeEvent<HTMLInputElement>) => {
+    
+    const val =  Number(e.target.value)
+
+    if (val > Number(process.env.REACT_APP_INIT_MAINTAB_COUNT) || val <= 0) {
+      return;
+    }
+
+    setMainTab(val);
+  };
+
+  const handleSubTab = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    const val =  Number(e.target.value)
+
+    if (val > Number(process.env.REACT_APP_INIT_SUBTAB_COUNT) || val <= 0) {
+      return;
+    }
+    
+    setSubTab(val);
+  };
+
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRow(Number(e.target.value));
   };
+
   const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColumn(Number(e.target.value));
   };
 
   const handleApply = async () => {
-    setCompose([rows, columns]);
     setUpdateSettingsColRow(rows, columns);
-
     dispatch(setDailySetting({ row: rows, column: columns }));
   };
 
-  const handleResetDeviceInfo = () => {
+
+  const handleResetDeviceInfo = async () => {
+    try {
       setMode(!mode);
+    } catch (error) {
+      console.error("getDeviceInfo", error);
+    }
   };
 
   const handleInitSettings = async () => {
@@ -96,9 +142,30 @@ function Settings() {
     <Flat>
       <InputGroup>
         <InputGroup>
+          <label htmlFor="row-input">Main Tab:</label>
+          <Input
+            type="number"
+            onChange={handleMainTab}
+            readOnly={mode}
+            value={mainTab}
+            mode={mode}
+          />
+        </InputGroup>
+
+        <InputGroup>
+          <label htmlFor="column-input">Sub Tab:</label>
+          <Input
+            type="number"
+            onChange={handleSubTab}
+            readOnly={mode}
+            value={subTab}
+            mode={mode}
+          />
+        </InputGroup>
+
+        <InputGroup>
           <label htmlFor="row-input">Rows:</label>
           <Input
-            id="row-input"
             type="number"
             onChange={handleRow}
             readOnly={mode}
@@ -110,7 +177,6 @@ function Settings() {
         <InputGroup>
           <label htmlFor="column-input">Columns:</label>
           <Input
-            id="column-input"
             type="number"
             onChange={handleColumn}
             readOnly={mode}
@@ -126,9 +192,9 @@ function Settings() {
       </InputGroup>
 
       {mode ? (
-        <ComposeSet row={compose[0]} column={compose[1]}></ComposeSet>
+        <ComposeSet row={rows} column={columns} mainTab={mainTab} subTab={subTab}></ComposeSet>
       ) : (
-        <ComposeView row={compose[0]} column={compose[1]}></ComposeView>
+        <ComposeView row={rows} column={columns} mainTab={mainTab} subTab={subTab}></ComposeView>
       )}
     </Flat>
   );
