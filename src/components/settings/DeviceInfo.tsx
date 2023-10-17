@@ -28,14 +28,12 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
     (state: RootState) => state.deviceReducer.value
   );
 
-  const getDevName = (id:number) =>{
-
-    for (const item of deviceSet.devices){
-      if (item.id === id) {
-        return item.name;
-      } 
-    } 
-    return "";
+  const getDevName = (id:number) => {
+    if (true === Object.hasOwn(deviceSet.devices, id)) {
+      return deviceSet.devices[String(id)].name;
+    } else {
+      return ""
+    }
   }
 
   return (
@@ -47,7 +45,7 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
         </ItemDiv>
         <ItemDiv>
           <label>type</label>
-          <Input id="type" type="text" value={String(type)} />
+          <Input id="type" type="text" value={String(type)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
           <label>name</label>
@@ -57,44 +55,44 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
       <Group>
         <ItemDiv>
           <label>rs</label>
-          <DeviceInput id="rs" type="text" value={getDevName(dv1)} />
+          <DeviceInput id="rs" type="text" value={getDevName(dv1)} readOnly={true}/>
         </ItemDiv>
 
         <ItemDiv>
           <label>st</label>
-          <DeviceInput id="st" type="text" value={getDevName(dv2)} />
+          <DeviceInput id="st" type="text" value={getDevName(dv2)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
           <label>tr</label>
-          <DeviceInput id="tr" type="text" value={getDevName(dv3)} />
+          <DeviceInput id="tr" type="text" value={getDevName(dv3)}readOnly={true}/>
         </ItemDiv>
       </Group>
       <Group>
         <ItemDiv>
           <label>r</label>
-          <DeviceInput id="r" type="text" value={getDevName(dv4)} />
+          <DeviceInput id="r" type="text" value={getDevName(dv4)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
           <label>s</label>
-          <DeviceInput id="s" type="text" value={getDevName(dv5)} />
+          <DeviceInput id="s" type="text" value={getDevName(dv5)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
           <label>t</label>
-          <DeviceInput id="t" type="text" value={getDevName(dv6)} />
+          <DeviceInput id="t" type="text" value={getDevName(dv6)} readOnly={true}/>
         </ItemDiv>
       </Group>
       <Group>
         <ItemDiv>
           <label>pf</label>
-          <DeviceInput id="pf" type="text" value={getDevName(dv7)} />
+          <DeviceInput id="pf" type="text" value={getDevName(dv7)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
           <label>hz</label>
-          <DeviceInput id="hz" type="text" value={getDevName(dv8)} />
+          <DeviceInput id="hz" type="text" value={getDevName(dv8)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
           <label>kw</label>
-          <DeviceInput id="kw" type="text" value={getDevName(dv9)} />
+          <DeviceInput id="kw" type="text" value={getDevName(dv9)} readOnly={true}/>
         </ItemDiv>
       </Group>
     </Container>

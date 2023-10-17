@@ -65,7 +65,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       })
     );
   };
-  
+
   return (
     <InnerDiv>
       <SelectDivision onChange={handleStationChange} value={selectedSt}>
@@ -85,16 +85,15 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
           ))}
       </SelectDivision> 
       <SelectDevice onChange={handleDeviceChange} value={selecteddevice}>
-        {devicelist.devices
-          .filter(
-            (dev: IDevice) =>
+        {
+          Object.values(devicelist.devices).filter((dev:any) =>
               dev.stationId === selectedSt && dev.divisionId === selectedDiv
-          )
-          .map((dev: IDevice) => (
+          ).map((dev:any) => (
             <option key={dev.id} value={dev.id}>
               {dev.name}
             </option>
-          ))}
+          ))
+          }
       </SelectDevice>
     </InnerDiv>
   );

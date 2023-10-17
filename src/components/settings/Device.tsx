@@ -39,13 +39,13 @@ const Device: React.FC<DeviceProps> = ({ devicelist }) => {
         })}
       </select>
       <select>
-        {devicelist.devices.map((dev: IDevice, index: number) => {
+        {Object.values(devicelist.devices).map((dev:any) => {
           if (
             dev.stationId === selectedStation &&
             dev.divisionId === selectedDivision
           ) {
             return (
-              <option key={index} value={dev.id ? dev.id : 0}>
+              <option key={dev.id} value={dev.id ? dev.id : 0}>
                 {dev.name}
               </option>
             );

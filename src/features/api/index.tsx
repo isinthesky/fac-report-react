@@ -30,6 +30,16 @@ export const postDailyData = async (
 export const getDeviceInfo = async (): Promise<any> => {
   try {
     const response = await axiosInstance.get("/getDeviceInfo");
+    
+    const devices: { [key: number]: any } = {};
+        
+    for (const dev of response.data.deviceInfo.device) {
+      const key = Number(dev.id);
+      devices[key] = dev;
+    }
+
+    response.data.deviceInfo.device = devices
+
     return response.data.deviceInfo;
   } catch (error) {
     console.error(error);

@@ -14,6 +14,7 @@ const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device }) => {
   ];
 
   let devIndex = 1;
+  let keyIndex = 1;
 
   return (
     <Container>
@@ -22,19 +23,19 @@ const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device }) => {
       </Row>
       <Row>
         {sections.map((section, idx) => (
-          <div key={idx}>
+          <Container >
             <Row>
               <MiddleColumn>{section.label}</MiddleColumn>
             </Row>
             <Row>
-              {section.values.map((value, valueIdx) => (
+              {section.values.map((value) => (
                 <Column>
-                  <ValueRow key={valueIdx}>{value}</ValueRow>
-                  <DeviceValue row={4} devId={(device as any)[`dv${String((devIndex++))}`]}  />
+                  <ValueRow key={keyIndex++}>{value}</ValueRow>
+                  <DeviceValue key={keyIndex++} row={4} devId={(device as any)[`dv${String((devIndex++))}`]}  />
                 </Column>
               ))}
             </Row>
-          </div>
+          </Container>
         ))}
       </Row>
     </Container>

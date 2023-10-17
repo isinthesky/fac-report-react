@@ -51,13 +51,17 @@ function Settings() {
       }
 
       try {
-          const response = await getDeviceInfo();
-          console.log("reset res ", response);
+        const response = await getDeviceInfo();
+        console.log("reset res ", response);
+        dispatch(loadDeviceList(response));
 
-          dispatch(loadDeviceList(response));
+        const key = `deviceList${mainTab}${subTab}`;
+        dispatch(setCurrentDevice(deviceSet[key]))
+        
       } catch (error) {
         console.error(error);
       }
+      
     })();
   }, []);
 
@@ -65,6 +69,9 @@ function Settings() {
     (async () => {
       try {
         const key = `deviceList${mainTab}${subTab}`;
+
+        console.log("setcurrent", deviceSet[key], deviceSet)
+
         dispatch(setCurrentDevice(deviceSet[key]))
       } catch (error) {
         console.error(error);
@@ -76,22 +83,18 @@ function Settings() {
     
     const val =  Number(e.target.value)
 
-    if (val > Number(process.env.REACT_APP_INIT_MAINTAB_COUNT) || val <= 0) {
-      return;
+    if (val <= Number(process.env.REACT_APP_INIT_MAINTAB_COUNT) || val > 0) {
+      setMainTab(val);
     }
-
-    setMainTab(val);
   };
 
   const handleSubTab = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const val =  Number(e.target.value)
 
-    if (val > Number(process.env.REACT_APP_INIT_SUBTAB_COUNT) || val <= 0) {
-      return;
+    if (val <= Number(process.env.REACT_APP_INIT_SUBTAB_COUNT) || val > 0) {
+      setSubTab(val);
     }
-    
-    setSubTab(val);
   };
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
