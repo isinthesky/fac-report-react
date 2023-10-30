@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { initDeviceList, updateTabInfo } from "../../features/reducers/deviceSlice";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
+import TimeDropdowns from "./TimeDropdowns";
 import { setUpdateSettingsDeviceList } from "../../features/api";
 import { updateCurrentDevice } from "../../features/reducers/optionSlice";
 import { RootState, optionState } from "../../static/interface";
@@ -15,6 +16,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) =>
   const [deviceColumn, setDeviceColumn] = useState(1);
   const [deviceType, setDeviceType] = useState(0);
   const [deviceId, setDeviceId] = useState(0);
+  const [deviceNumber, setDeviceNumber] = useState(0);
 
   const optionlist = useSelector(
     (state: optionState) => state.optionReducer.value
@@ -89,11 +91,21 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) =>
             onChange={handleSelectChange(setDeviceType)}
             value={deviceType}
           />
+          <Setting
+            label="number"
+            options={2}
+            onChange={handleSelectChange(setDeviceNumber)}
+            value={deviceNumber}
+          />
         </DefalutDiv>
       </SettingsContainer>
       <SettingsContainer>
-        {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={optionlist.currentDevice[deviceId]} />}
-        {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={optionlist.currentDevice[deviceId]} />}
+        <ColumnDiv>
+          {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={optionlist.currentDevice[deviceId]} />}
+          {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={optionlist.currentDevice[deviceId]} />}
+
+          <TimeDropdowns mainTab = {mainTab} subTab={subTab}  />
+        </ColumnDiv>
       </SettingsContainer>
       <ButtonGroup>
         <Button onClick={handleSave}>Save</Button>
@@ -172,6 +184,13 @@ const Button = styled.button`
 const DefalutDiv = styled.div`
   flex: 1;
   display: flex;
+`;
+
+const ColumnDiv = styled.div`
+  flex: 1;
+  display: flex;
+
+  flex-direction: row;
 `;
 
 export default ComposeSet;

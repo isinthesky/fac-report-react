@@ -14,7 +14,7 @@ import {
 } from "../features/reducers/deviceSlice";
 import {
   setCurrentDevice,
-  setDailySetting,
+  setReportTable,
 } from "../features/reducers/optionSlice";
 import { RootState } from "../static/interface";
 
@@ -40,7 +40,7 @@ function Settings() {
         console.log("getSettings res: ", response)
 
         if (response) {
-          dispatch(setDailySetting(response.settings));
+          dispatch(setReportTable(response.settings));
           dispatch(initDeviceList(response));
 
           setRow(response.settings.row);
@@ -69,10 +69,10 @@ function Settings() {
     (async () => {
       try {
         const key = `deviceList${mainTab}${subTab}`;
-
         console.log("setcurrent", deviceSet[key], deviceSet)
 
         dispatch(setCurrentDevice(deviceSet[key]))
+
       } catch (error) {
         console.error(error);
       }
@@ -107,7 +107,7 @@ function Settings() {
 
   const handleApply = async () => {
     setUpdateSettingsColRow(rows, columns);
-    dispatch(setDailySetting({ row: rows, column: columns }));
+    dispatch(setReportTable({ row: rows, column: columns }));
   };
 
 

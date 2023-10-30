@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { postDailyData, readDeviceLog } from "../features/api";
 import ReportGuide from "../components/ReportGuide";
-import { setViewType } from "../features/reducers/optionSlice";
+import { setTableDate, setViewType } from "../features/reducers/optionSlice";
 import { useDispatch } from "react-redux";
 
 
@@ -22,15 +21,16 @@ function Daily() {
   const dispatch = useDispatch()
 
   const option = useSelector((state: OptionState) => state.optionReducer.value);
-  const [value, onChange] = useState(new Date());
+  const [date, setDate] = useState(option.date);
 
   const handleDatePicker = async () => {
-    const ret = await postDailyData(
-      value.getFullYear(),
-      value.getMonth(),
-      value.getDate()
-    );
+
   };
+
+  useEffect(() => {
+    console.log("date pick :", date)
+    dispatch(setTableDate(date))
+  }, [date]);
 
   const handleDaily = async () => {
     dispatch(setViewType(option.viewType === 0 ? 1 : 0))
@@ -50,8 +50,8 @@ function Daily() {
     <Flat>
       <Controls>
         <DatePicker
-          selected={value}
-          onChange={(date: Date) => onChange(date)}
+          selected={date}
+          onChange={(date: Date) => setDate(date.getTime())}
         />
         <ApplyButton onClick={handleDatePicker}>Apply</ApplyButton>
         <ApplyButton onClick={handleDaily}>Daily</ApplyButton>

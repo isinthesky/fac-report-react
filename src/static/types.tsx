@@ -15,6 +15,7 @@ export type SetDeviceType = {
 
 export type ViewDeviceProps = {
   key: number;
+  tabKey: string;
   device: DeviceInfoType;
 };
 
@@ -46,4 +47,23 @@ export type DeviceInfoType = {
   dv7: number;
   dv8: number;
   dv9: number;
+};
+
+
+export type AddDropDownType = {
+  mainTab: number;
+  subTab: number;
+};
+
+export type DeleteDropDownType = {
+  mainTab: number;
+  subTab: number;
+  index: number;
+};
+
+export type SetDropDownType = {
+  mainTab: number;
+  subTab: number;
+  index: number;
+  time: string;
 };

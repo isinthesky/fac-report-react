@@ -2,9 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
 import { ViewDeviceProps } from "../static/types";
+import { useSelector } from "react-redux";
+import { optionState } from "../static/interface";
 
 
-const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device }) => {
+const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
   const sections = [
     { label: "W", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -12,6 +14,10 @@ const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device }) => {
     { label: "/", values: ["Hz"] },
     { label: "/", values: ["kW"] },
   ];
+
+  const optionlist = useSelector(
+    (state: optionState) => state.optionReducer.value
+  );
 
   let devIndex = 1;
   let keyIndex = 1;
@@ -31,7 +37,7 @@ const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device }) => {
               {section.values.map((value) => (
                 <Column>
                   <ValueRow key={keyIndex++}>{value}</ValueRow>
-                  <DeviceValue key={keyIndex++} row={4} devId={(device as any)[`dv${String((devIndex++))}`]}  />
+                  <DeviceValue key={keyIndex++} times={optionlist[tabKey]} devId={(device as any)[`dv${String((devIndex++))}`]}  />
                 </Column>
               ))}
             </Row>

@@ -5,54 +5,80 @@ import { readDeviceLog } from "../features/api";
 import { optionState } from "../static/interface";
 
 interface DeviceValueProps {
-  row: number;
+  times: string[];
   devId: number;
 }
 
-const DeviceValue: React.FC<DeviceValueProps> = ({ row, devId }) => {
-
+const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const option = useSelector((state: optionState) => state.optionReducer.value);
   
-  const [deviceSave, setDeviceSave] = useState([0,0,0,0]); 
-  const [deviceValue, setDeviceValue] = useState([0,0,0,0]); 
+  const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
+  const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
+
+  const getLogByTimestamp = (devLog:any, timestamp:any) => {
+    // If the exact timestamp exists, return its value
+    if (devLog[timestamp]) {
+      return devLog[timestamp];
+    }
+
+    const precedingTimestamp = Object.keys(devLog)
+      .map(Number)
+      .filter(ts => ts < timestamp)
+      .sort((a, b) => b - a)[0];
+  
+    if (precedingTimestamp) {
+      return devLog[precedingTimestamp];
+    }
+  
+    return "-";
+  }
 
   useEffect(() => {
     (async () => {
       try {
-
         if (devId > 0) {
-          const result =  await readDeviceLog(devId, new Date(2023, 8, 1, 12, 0).getTime())
-          const t1 = new Date(2023, 8, 1, 7, 0).getTime()
-          const t2 = new Date(2023, 8, 1, 11, 0).getTime()
-          const t3 = new Date(2023, 8, 1, 17, 0).getTime()
-          const t4 = new Date(2023, 8, 1, 23, 0).getTime()
+          const result =  await readDeviceLog(devId, option.date);
+          const date = new Date(option.date);
+          const devYear = date.getFullYear();
+          const devMonth = date.getMonth();
+          const devDate = date.getDate();
+
+          const deviceData = times.map((time: string) => {
+
+            return new Date(devYear, devMonth, devDate, 
+                            Number(time.slice(0,2)), Number(time.slice(-2))).getTime()
+          }).map((devTime: number) => {
+            return getLogByTimestamp(result.deviceLog, devTime);
+          });
           
-          setDeviceValue([result.deviceLog[t1], result.deviceLog[t2], result.deviceLog[t3], result.deviceLog[t4]])
-          setDeviceSave([result.deviceLog[t1], result.deviceLog[t2], result.deviceLog[t3], result.deviceLog[t4]])
+          setDeviceValue(deviceData);
+          setDeviceSave(deviceData);
         }
       }
       catch (error) {
-        console.error(error)
+        console.error(error);
       }
     })();
-  }, []);
+  }, [option.date]);
 
   useEffect(() => {
-    console.log("redux viewType");
-
     if (option.viewType === 0) {
-      setDeviceValue([deviceSave[0],deviceSave[1],deviceSave[2],deviceSave[3]])
+      setDeviceValue(deviceSave);
+      return;
     }
-    else {
-      setDeviceValue([devId,devId,devId,devId])
-    }
-  }, [option.viewType]);
 
+    const deviceId = []
+    for (let i = 0; i < deviceSave.length; i += 1) {
+      deviceId.push(devId);
+    }
+    setDeviceValue(deviceId);
+    
+  }, [option.viewType]);
 
   return (
     <Row3>
-      {[...Array(row)].map((_, rowIndex) => (
-        <ValueColumn3 key={rowIndex}>{deviceValue[rowIndex]?deviceValue[rowIndex]:"-"}</ValueColumn3>
+      {deviceValue.map((value:any, index:number) => (
+        <ValueColumn3 key={index}>{value}</ValueColumn3>
       ))}
     </Row3>
   );

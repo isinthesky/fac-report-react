@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { initDeviceList } from "../features/reducers/deviceSlice";
 import { getSettings } from "../features/api";
-import { setDailySetting } from "../features/reducers/optionSlice";
+import { setReportTable } from "../features/reducers/optionSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 
 export default function Header() {
@@ -35,7 +35,7 @@ export default function Header() {
         const response = await getSettings();
         console.log("getSettings res: ", response)
         if (response) {
-          dispatch(setDailySetting(response.settings));
+          dispatch(setReportTable(response.settings));
           dispatch(initDeviceList(response));
         }
       } catch (error) {
