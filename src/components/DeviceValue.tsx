@@ -102,3 +102,4 @@ const ValueColumn3 = styled.div`
 `;
 
 export default DeviceValue;
+  

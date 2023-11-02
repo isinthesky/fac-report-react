@@ -16,7 +16,6 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) =>
   const [deviceColumn, setDeviceColumn] = useState(1);
   const [deviceType, setDeviceType] = useState(0);
   const [deviceId, setDeviceId] = useState(0);
-  const [deviceNumber, setDeviceNumber] = useState(0);
 
   const optionlist = useSelector(
     (state: optionState) => state.optionReducer.value
@@ -90,12 +89,6 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) =>
             options={2}
             onChange={handleSelectChange(setDeviceType)}
             value={deviceType}
-          />
-          <Setting
-            label="number"
-            options={2}
-            onChange={handleSelectChange(setDeviceNumber)}
-            value={deviceNumber}
           />
         </DefalutDiv>
       </SettingsContainer>

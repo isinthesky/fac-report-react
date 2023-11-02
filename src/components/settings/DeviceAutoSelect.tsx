@@ -116,5 +116,5 @@ const SelectDivision = styled.select`
 
 const SelectDevice = styled.select`
   margin: 0px 10px;
-  min-width: 220px;
+  min-width: 300px;
 `

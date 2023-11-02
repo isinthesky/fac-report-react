@@ -39,10 +39,15 @@ const TimeDropdowns: React.FC<AddDropDownType> = ({mainTab, subTab}) => {
               return <option key={timeValue} value={timeValue}>{timeValue}</option>;
             })}
           </TimeSelect>
-          <button onClick={() => handleRemoveDropdown(index)}>Remove</button>
+          {optionlist[`tab${mainTab}${subTab}`].length > 4 
+          ? <button onClick={() => handleRemoveDropdown(index)}>Remove</button> 
+          : null}
+          
         </SelectDiv>
       ))}
-      <button onClick={handleAddDropdown}>Add Dropdown</button>
+       {optionlist[`tab${mainTab}${subTab}`].length < 12 
+       ? <button onClick={handleAddDropdown}>Add Time</button>
+       : null}
     </Container>
   );
 };
