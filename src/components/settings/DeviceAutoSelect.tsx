@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import { DeviceInfoType, IDevice, IDivision, IStation } from "../../static/types";
+import { Unit, IDevice, IDivision, IStation } from "../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { updateCurrentDevice } from "../../features/reducers/optionSlice";
+import { updateCurrentTab } from "../../features/reducers/optionSlice";
 
 type DeviceSelectProps = {
   pos: number;
@@ -12,7 +12,7 @@ type DeviceSelectProps = {
   stationValue:number;
   initDivisionId: number;
   divisionValue: number;
-  currentDevice: DeviceInfoType;
+  currentDevice: Unit;
 };
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
@@ -36,7 +36,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: pos,
         arrKey: "st",
         deviceId: Number(e.target.value),
@@ -47,7 +47,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: pos,
         arrKey: "div",
         deviceId: Number(e.target.value),
@@ -58,7 +58,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDevice(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: pos,
         arrKey: devKey ,
         deviceId: Number(e.target.value),
@@ -107,14 +107,19 @@ const InnerDiv = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
+  text-align: center;
 `;
 
 const SelectDivision = styled.select`
   margin: 0px 10px;
   min-width: 70px;
+  text-align: center;
 `
 
 const SelectDevice = styled.select`
+  flex: 1;
   margin: 0px 10px;
   min-width: 300px;
+  text-align: center;
+  
 `

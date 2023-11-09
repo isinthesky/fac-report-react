@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../components/settings/ComposeSet";
 import ComposeView from "../components/settings/ComposeView";
@@ -7,41 +8,55 @@ import {
   getDeviceInfo,
   getSettings,
   setUpdateSettingsColRow,
+  setInitSettings,
+  resetXxmlDevice
 } from "../features/api";
 import {
   loadDeviceList,
-  initDeviceList,
 } from "../features/reducers/deviceSlice";
 import {
-  setCurrentDevice,
+  setCurrentTab,
   setReportTable,
+  setTabPage,
 } from "../features/reducers/optionSlice";
-import { RootState } from "../static/interface";
+import { optionState } from "../static/interface";
+import TabControlBar from "../components/settings/TabControlBar";
 
 function Settings() {
   const dispatch = useDispatch();
-
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
   const [mode, setMode] = useState(false);
-  
-  const [mainTab, setMainTab] = useState(1);
-  const [subTab, setSubTab] = useState(1);
+  const [edit, setEdit] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const params  = useParams();
 
-  const deviceSet = useSelector(
-    (state: RootState) => state.deviceReducer.value
+  const optionSet = useSelector(
+    (state: optionState) => state.optionReducer.value
   );
+
 
   useEffect(() => {
     (async () => {
       try {
         const response = await getSettings();
-
-        console.log("getSettings res: ", response)
-
+        console.log("settings getSettings:", response)
         if (response) {
           dispatch(setReportTable(response.settings));
-          dispatch(initDeviceList(response));
+
+          const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
+          let count = 1;
+          if (response.tabSettings.length) {
+            ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
+              ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
+                const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+                if (process.env[key]) {
+                  dispatch(setTabPage({name: keyName + `${mainId}${subId}`, 
+                                       object: response[keyName + `${count++}`]}));
+                }
+              })
+            })
+          }
 
           setRow(response.settings.row);
           setColumn(response.settings.column);
@@ -52,57 +67,37 @@ function Settings() {
 
       try {
         const response = await getDeviceInfo();
-        console.log("reset res ", response);
+        console.log("settings getDeviceInfo", response);
         dispatch(loadDeviceList(response));
-
-        const key = `deviceList${mainTab}${subTab}`;
-        dispatch(setCurrentDevice(deviceSet[key]))
-        
       } catch (error) {
         console.error(error);
       }
-      
+
+      const setting = params.page || "1";
+      if (setting === null || setting === "1") {
+        setMode(false);
+      }
+
     })();
   }, []);
 
+
   useEffect(() => {
-    (async () => {
-      try {
-        const key = `deviceList${mainTab}${subTab}`;
-        console.log("setcurrent", deviceSet[key], deviceSet)
-
-        dispatch(setCurrentDevice(deviceSet[key]))
-
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [mainTab, subTab]);
-
-  const handleMainTab = (e: React.ChangeEvent<HTMLInputElement>) => {
-    
-    const val =  Number(e.target.value)
-
-    if (val <= Number(process.env.REACT_APP_INIT_MAINTAB_COUNT) || val > 0) {
-      setMainTab(val);
-    }
-  };
-
-  const handleSubTab = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-    const val =  Number(e.target.value)
-
-    if (val <= Number(process.env.REACT_APP_INIT_SUBTAB_COUNT) || val > 0) {
-      setSubTab(val);
-    }
-  };
+    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${optionSet.selectedTab.main}${optionSet.selectedTab.sub}`;
+    dispatch(setCurrentTab(optionSet[key])) 
+  }, [optionSet]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRow(Number(e.target.value));
   };
 
+
   const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColumn(Number(e.target.value));
+  };
+
+  const handleEdit = async () => {
+    setEdit(!edit);
   };
 
   const handleApply = async () => {
@@ -110,8 +105,7 @@ function Settings() {
     dispatch(setReportTable({ row: rows, column: columns }));
   };
 
-
-  const handleResetDeviceInfo = async () => {
+  const handleSetDevice = async () => {
     try {
       setMode(!mode);
     } catch (error) {
@@ -120,110 +114,121 @@ function Settings() {
   };
 
   const handleInitSettings = async () => {
-/*    try {
+    try {
       const isConfirmed = window.confirm(
         "모든 데이터가 초기화 됩니다. \r\n 실행하시겠습니까?"
       );
 
       if (isConfirmed) {
-        await setInitSettings(
-          process.env.REACT_APP_INIT_GENERAL_SETTING
-            ? process.env.REACT_APP_INIT_GENERAL_SETTING
-            : "",
-          process.env.REACT_APP_INIT_DEVICE_SETTING
-            ? process.env.REACT_APP_INIT_DEVICE_SETTING
-            : ""
-        );
+        let id = 1;
+        
+        ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
+          ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
+            if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`]) {
+              await setInitSettings(process.env.REACT_APP_CONST_TABINFO_NAME + `${id++}`, 
+                                    String(process.env.REACT_APP_INIT_TABPAGE_SETTING));
+            }
+          })
+        })
+
+        await setInitSettings("settings", String(process.env.REACT_APP_INIT_GENERAL_SETTING));
+        await setInitSettings("tabSetting", String(process.env.REACT_APP_INIT_TAB_SETTING));
+
+        await resetXxmlDevice();
+
+        alert('초기화 되었습니다.');
       }
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
-    */
+  };
+
+  const handleSignPopup = () => {
+    setIsOpen(true) 
   };
 
   return (
     <Flat>
-      <InputGroup>
-        <InputGroup>
-          <label htmlFor="row-input">Main Tab:</label>
-          <Input
-            type="number"
-            onChange={handleMainTab}
-            readOnly={mode}
-            value={mainTab}
-            mode={mode}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <label htmlFor="column-input">Sub Tab:</label>
-          <Input
-            type="number"
-            onChange={handleSubTab}
-            readOnly={mode}
-            value={subTab}
-            mode={mode}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <label htmlFor="row-input">Rows:</label>
-          <Input
-            type="number"
-            onChange={handleRow}
-            readOnly={mode}
-            value={rows}
-            mode={mode}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <label htmlFor="column-input">Columns:</label>
-          <Input
-            type="number"
-            onChange={handleColumn}
-            readOnly={mode}
-            value={columns}
-            mode={mode}
-          />
-        </InputGroup>
-        <SettingButton onClick={handleApply}>Apply</SettingButton>
-        <SettingButton onClick={handleResetDeviceInfo}>
-          ResetDeviceInfo
-        </SettingButton>
-        <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
-      </InputGroup>
 
       {mode ? (
-        <ComposeSet row={rows} column={columns} mainTab={mainTab} subTab={subTab}></ComposeSet>
+        <>
+          <TabControlBar />
+          <ComposeSet row={rows} column={columns}></ComposeSet>
+        </>
       ) : (
-        <ComposeView row={rows} column={columns} mainTab={mainTab} subTab={subTab}></ComposeView>
+        <>
+          <TopBar>
+          <InputGroup>
+            <label htmlFor="row-input">Rows:</label>
+            <Input
+              type="number"
+              onChange={handleRow}
+              readOnly={edit}
+              value={rows}
+              mode={edit}
+            />
+          </InputGroup>
+          <InputGroup>
+            <label htmlFor="column-input">Columns:</label>
+            <Input
+              type="number"
+              onChange={handleColumn}
+              readOnly={edit}
+              value={columns}
+              mode={edit}
+            />
+          </InputGroup>
+          <SettingButton onClick={handleEdit}>편집</SettingButton>
+          <SettingButton onClick={handleApply}>Apply</SettingButton>
+          <SettingButton onClick={handleSetDevice}>
+            device setting
+          </SettingButton>
+          <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
+          {/* <SettingButton onClick={handleSignPopup}>sign</SettingButton> */}
+        </TopBar>
+        <TabControlBar />
+        <ComposeView row={rows} column={columns}></ComposeView>
+        </>
       )}
     </Flat>
   );
 }
 
 const Flat = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-content: start;
+  justify-content: stretch;
 
   gap: 10px;
   padding: 20px;
 
-  background-color: #ece0af;
+  background-color: #F5F5F5;
+`;
+
+
+const TopBar = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `;
 
 const InputGroup = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+
+  // gap: 20px;
 `;
 
 const Input = styled.input<{ mode: boolean }>`
   width: 50px;
   background-color: ${(props) => (props.mode ? "lightgray" : "white")};
+
+  margin: 0px 30px; 
 `;
 
 const SettingButton = styled.button`

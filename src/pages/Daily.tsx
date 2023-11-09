@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState, useRef } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import { setTableDate, setViewType } from "../features/reducers/optionSlice";
+import { useReactToPrint } from 'react-to-print';
+import ReportGuide from "../components/viewer/ReportGuide";
+import PrintModal from "../components/PrintModal";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ReportGuide from "../components/ReportGuide";
-import { setTableDate, setViewType } from "../features/reducers/optionSlice";
-import { useDispatch } from "react-redux";
-import PrintModal from "./PrintModal";
-
 
 interface OptionState {
   optionReducer: {
@@ -17,29 +16,27 @@ interface OptionState {
 }
 
 function Daily() {
-  const { id1, id2 } = useParams();
-  const dispatch = useDispatch()
-
+  const dispatch = useDispatch()  
   const option = useSelector((state: OptionState) => state.optionReducer.value);
   const [date, setDate] = useState(option.date);
   const [isOpen, setIsOpen] = useState(false);
+  const { id1, id2 } = useParams();
+  const componentRef = useRef<HTMLDivElement>(null);
 
-  const handleDatePicker = async () => {
-
+  const handleApply = () => {
   };
 
   useEffect(() => {
-    console.log("date pick :", date)
     dispatch(setTableDate(date))
   }, [date]);
 
-  const handleDaily = async () => {
+  const handleDaily = () => {
     dispatch(setViewType(option.viewType === 0 ? 1 : 0))
   };
 
   const handleWeekly = async () => {};
 
-  const handlePrint = async () => {
+  const handleOpenPrint = () => {
     const isConfirmed = window.confirm("인쇄하시겠습니까??");
 
     if (isConfirmed) {
@@ -47,9 +44,13 @@ function Daily() {
     }
   };
 
-  const handlePrintClose = async () => {
-      setIsOpen(false) 
+  const handlePrintClose = () => {
+    setIsOpen(false) 
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   return (
     <Flat>
@@ -58,17 +59,17 @@ function Daily() {
           selected={date}
           onChange={(date: Date) => setDate(date.getTime())}
         />
-        <ApplyButton onClick={handleDatePicker}>Apply</ApplyButton>
+        <ApplyButton onClick={handleApply}>Apply</ApplyButton>
         <ApplyButton onClick={handleDaily}>Daily</ApplyButton>
         <ApplyButton onClick={handleWeekly}>Weekly</ApplyButton>
-        <ApplyButton onClick={handlePrint}>Print</ApplyButton>
+        <ApplyButton onClick={handleOpenPrint}>Print</ApplyButton>
       </Controls>
       <ReportLine>
         <ReportGuide
           row={option.daily.row}
           column={option.daily.column}
-          mainTab={id1?id1:"1"}
-          subTab={id2?id2:"1"}
+          mainTab={id1 ? id1 : "1"}
+          subTab={id2 ? id2 : "1"}
         ></ReportGuide>
       </ReportLine>
       {isOpen ? 
@@ -76,14 +77,15 @@ function Daily() {
             <ModalView onClick={(e) => e.stopPropagation()}>
               <Header>
                 <HideBtn onClick={handlePrintClose}></HideBtn>
-                <PrintBtn onClick={handlePrintClose}>PRINT</PrintBtn>
+                <PrintBtn onClick={handlePrint}>PRINT</PrintBtn>
                 <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
               </Header>
               <PrintModal row={option.daily.row}
                           column={option.daily.column}
-                          mainTab={id1?id1:"1"}
-                          subTab={id2?id2:"1"}
-                          title={"수변전일지"}></PrintModal> 
+                          mainTab={id1 ? id1 : "1"}
+                          subTab={id2 ? id2 : "1"}
+                          title={"수변전일지"}
+                          ref={componentRef} />
             </ModalView>
           </ModalBackdrop>
           : null
@@ -97,9 +99,8 @@ const Flat = styled.div`
   display: flex;
   flex-direction: column;
 
-  background-color: #fcf0cf;
+  background-color: #F5F5F5;
 `;
-
 
 const Header = styled.div`
   // flex: 1;
@@ -137,6 +138,8 @@ const ApplyButton = styled.button`
 
   height: 21px;
   width: 100px;
+
+  font-size: 1em;
 `;
 
 
@@ -163,6 +166,7 @@ const ModalBtn = styled.button`
   color: white;
   border-radius: 30px;
   cursor: grab;
+  font-size: 1em;
 `;
 
 const ExitBtn = styled(ModalBtn) `
@@ -219,11 +223,6 @@ const ModalView = styled.div.attrs((props) => ({
   width: 90vw;
   height: 90vh;
   background-color: #ffffff;
-    >div.desc {
-      margin: 50px;
-      font-size: 20px;
-      color: var(--coz-purple-600);
-    }
 `;
 
 export default Daily;

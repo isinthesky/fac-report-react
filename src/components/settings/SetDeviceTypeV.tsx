@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType } from "../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
-import { updateCurrentDevice } from "../../features/reducers/optionSlice";
+import { updateCurrentTab } from "../../features/reducers/optionSlice";
 import { RootState, optionState } from "../../static/interface";
 
 
@@ -17,15 +17,14 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
     (state: optionState) => state.optionReducer.value
   );
 
-  const [selectedStation, setSelectedStation] = useState<number>(optionlist.currentDevice[id].st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(optionlist.currentDevice[id].div);
-  const [deviceName, setDeviceName] = useState<string>(optionlist.currentDevice[id].name);
+  const [selectedStation, setSelectedStation] = useState<number>(optionlist.currentTabPage.unitList[id].st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(optionlist.currentTabPage.unitList[id].div);
+  const [deviceName, setDeviceName] = useState<string>(optionlist.currentTabPage.unitList[id].name);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("st", e.target.value, id)
     setSelectedStation(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: id,
         arrKey: "st",
         deviceId: Number(e.target.value),
@@ -34,10 +33,9 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("div", e.target.value)
     setSelectedDivision(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: id,
         arrKey: "div",
         deviceId: Number(e.target.value),
@@ -48,7 +46,7 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceName(e.target.value);
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: id,
         arrKey: "name",
         deviceId: e.target.value,
@@ -72,7 +70,7 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
             stationValue={device.st}
             initDivisionId={selectedDivision}
             divisionValue={device.div}
-            currentDevice={optionlist.currentDevice[idx]}
+            currentDevice={optionlist.currentTabPage.unitList[idx]}
           />
         </ValueSection>
       ))}
@@ -81,26 +79,25 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
 
   return (
     <Container>
-        <InnerDiv>
-          <TitleColumn>{"NAME"}</TitleColumn>
-          <Row>
-            <Select onChange={handleStationChange} value={device.st}>
-              {deviceSet.stations.map((st: IStation) => (
-                <option key={st.id} value={st.id}>
-                  {st.name}
-                </option>
-              ))}
-            </Select>
-            <Select onChange={handleDivisionChange} value={device.div}>
-              {deviceSet.divisions.map((div: IDivision) => (
-                <option key={div.id} value={div.id}>
-                  {div.name}
-                </option>
-              ))}
-            </Select>
+      <InnerDiv>
+        <Row>
+          <Select onChange={handleStationChange} value={device.st}>
+            {deviceSet.stations.map((st: IStation) => (
+              <option key={st.id} value={st.id}>
+                {st.name}
+              </option>
+            ))}
+          </Select>
+          <Select onChange={handleDivisionChange} value={device.div}>
+            {deviceSet.divisions.map((div: IDivision) => (
+              <option key={div.id} value={div.id}>
+                {div.name}
+              </option>
+            ))}
+          </Select>
             <TitleInput type="text" onChange={handleNameChange}  value={deviceName} />
-          </Row>
-        </InnerDiv>
+        </Row>
+      </InnerDiv>
       {renderSection(id, "V", ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"])}
     </Container>
   );
@@ -131,18 +128,6 @@ const InnerDiv = styled.div`
   align-items: stretch;
 `;
 
-const TitleColumn = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px;
-  border: 1px solid #ccc;
-`;
-
-const TitleInput = styled.input`
-  margin: 0px 30px;
-`;
 
 const MiddleColumn = styled.div`
   flex: 1;
@@ -163,8 +148,13 @@ const ValueColumn = styled.div`
   max-width: 70px;
 `;
 
+const TitleInput = styled.input`
+  margin: 0px 30px;
+  font-size: 1em;
+`;
+
 const Select = styled.select`
-  margin: 0 10px;
+  margin: 0px 10px;
 `;
 
 const Section = styled.div`
@@ -173,6 +163,8 @@ const Section = styled.div`
   flex-direction: column;
 `;
 
-const ValueSection = styled(Row)``;
+const ValueSection = styled(Row)`
+  margin: 10px;
+`;
 
 export default SetDeviceTypeV;

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType } from "../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
-import { updateCurrentDevice } from "../../features/reducers/optionSlice";
+import { updateCurrentTab } from "../../features/reducers/optionSlice";
 import { RootState, optionState } from "../../static/interface";
 
 
@@ -17,14 +17,14 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
     (state: optionState) => state.optionReducer.value
   );
 
-  const [selectedStation, setSelectedStation] = useState<number>(optionlist.currentDevice[id].st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(optionlist.currentDevice[id].div);
-  const [deviceName, setDeviceName] = useState<string>(optionlist.currentDevice[id].name);
+  const [selectedStation, setSelectedStation] = useState<number>(optionlist.currentTabPage.unitList[id].st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(optionlist.currentTabPage.unitList[id].div);
+  const [deviceName, setDeviceName] = useState<string>(optionlist.currentTabPage.unitList[id].name);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: id,
         arrKey: "st",
         deviceId: Number(e.target.value),
@@ -35,7 +35,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: id,
         arrKey: "div",
         deviceId: Number(e.target.value),
@@ -46,7 +46,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceName(e.target.value);
     dispatch(
-      updateCurrentDevice({
+      updateCurrentTab({
         arrPos: id,
         arrKey: "name",
         deviceId: e.target.value,
@@ -70,7 +70,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
             stationValue={device.st}
             initDivisionId={selectedDivision}
             divisionValue={device.div}
-            currentDevice={optionlist.currentDevice[id]}
+            currentDevice={optionlist.currentTabPage.unitList[id]}
           />
         </ValueSection>
       ))}
@@ -80,7 +80,6 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
   return (
     <Container>
       <InnerDiv>
-        <TitleColumn>{"NAME"}</TitleColumn>
         <Row>
           <Select onChange={handleStationChange} value={device.st}>
             {deviceSet.stations.map((st: IStation) => (
@@ -129,18 +128,6 @@ const InnerDiv = styled.div`
   align-items: stretch;
 `;
 
-const TitleColumn = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 3px;
-  border: 1px solid #ccc;
-`;
-
-const TitleInput = styled.input`
-  margin: 0px 30px;
-`;
 
 const MiddleColumn = styled.div`
   flex: 1;
@@ -162,15 +149,24 @@ const ValueColumn = styled.div`
 `;
 
 const Select = styled.select`
-  margin: 0 10px;
+  margin: 0px 10px;
+`;
+
+
+const TitleInput = styled.input`
+  margin: 0px 30px;
+  font-size: 1em;
 `;
 
 const Section = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 `;
 
-const ValueSection = styled(Row)``;
+const ValueSection = styled(Row)`
+  
+`;
 
 export default SetDeviceTypeW;

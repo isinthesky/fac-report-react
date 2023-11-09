@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { readDeviceLog } from "../features/api";
-import { optionState } from "../static/interface";
+import { readDeviceLog } from "../../features/api";
+import { optionState } from "../../static/interface";
 
 interface DeviceValueProps {
   times: string[];
@@ -35,6 +35,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
 
   useEffect(() => {
     (async () => {
+      console.log("option.date",option.date, devId);
       try {
         if (devId > 0) {
           const result =  await readDeviceLog(devId, option.date);
@@ -44,12 +45,13 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
           const devDate = date.getDate();
 
           const deviceData = times.map((time: string) => {
-
             return new Date(devYear, devMonth, devDate, 
-                            Number(time.slice(0,2)), Number(time.slice(-2))).getTime()
+                            Number(time.slice(0,2)), Number(time.slice(-2))).getTime();
           }).map((devTime: number) => {
             return getLogByTimestamp(result.deviceLog, devTime);
           });
+
+          console.log("deviceData", deviceData)
           
           setDeviceValue(deviceData);
           setDeviceSave(deviceData);

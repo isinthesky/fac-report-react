@@ -2,9 +2,8 @@ import { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { initDeviceList } from "../features/reducers/deviceSlice";
 import { getSettings } from "../features/api";
-import { setReportTable } from "../features/reducers/optionSlice";
+import { setReportTable, setTabPage, setTabSetting } from "../features/reducers/optionSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 
 export default function Header() {
@@ -33,10 +32,26 @@ export default function Header() {
     (async () => {
       try {
         const response = await getSettings();
-        console.log("getSettings res: ", response)
+        console.log("getSettings res: ", response);
+
         if (response) {
           dispatch(setReportTable(response.settings));
-          dispatch(initDeviceList(response));
+          dispatch(setTabSetting(response.tabSetting));
+
+          let count = 1;
+          const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
+
+          if (response.tabSettings.length) {
+            ["1", "2", "3", "4", "5"].forEach((mainId)=>{
+              ["1", "2", "3", "4", "5"].forEach((subId)=>{
+                const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+                if (process.env[key]) {
+                  dispatch(setTabPage({name: keyName + `${mainId}${subId}`, 
+                                       object: response[keyName + `${count++}`]}));
+                }
+              })
+            })
+          }
         }
       } catch (error) {
         console.error(error);
@@ -61,21 +76,19 @@ const TopHeader = styled.header`
   justify-content: stretch;
   width: 100%;
   height: 70px;
-  background-color: #ffff77;
+  background-color: #344054;
   border: 1px solid #333;
 `;
 
-const Title = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
-  height: 50px;
-  padding: 10px;
-  color: black;
+const Title = styled.button`
+  width: 200px;
+  height: 70px;
   font-weight: bold;
-  font-size: 22px;
-  background-color: #ffffff;
+  font-size: 30px;
+  
+  color: white;
+  background-color: #344054;
+  border: 0px solid #333;
 `;
 
 const PageControls = styled.div`
@@ -88,5 +101,6 @@ const PageControls = styled.div`
 const SettingButton = styled.button`
   height: 70px;
   width: 100px;
-  margin: 0px 0px 0px 30px;
+  color: white;
+  background-color: #344054;
 `;

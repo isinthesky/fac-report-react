@@ -1,5 +1,6 @@
 import axios from "axios";
-import { DevicePackProp } from "../../static/interface";
+import { UnitProp } from "../../static/interface";
+import { Unit } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -7,7 +8,7 @@ const axiosInstance = axios.create({
 
 export const getDeviceInfo = async (): Promise<any> => {
   try {
-    const response = await axiosInstance.get("/getDeviceInfo");
+    const response = await axiosInstance.get("/deviceInfo");
     
     const devices: { [key: number]: any } = {};
         
@@ -27,8 +28,8 @@ export const getDeviceInfo = async (): Promise<any> => {
 
 export const getSettings = async (): Promise<any> => {
   try {
-    const response = await axiosInstance.get("/getSettings");
-    console.log("getSettings", response);
+    const response = await axiosInstance.get("/settings");
+    console.log("settings", response);
     return response.data.settings;
   } catch (error) {
     console.error(error);
@@ -37,22 +38,24 @@ export const getSettings = async (): Promise<any> => {
 };
 
 export const setInitSettings = async (
-  table: string,
-  device: string
+  keyString: string,
+  valueData: string
 ): Promise<any> => {
   try {
-    await axiosInstance.delete("/general");
-
     await axiosInstance.post("/createSettings", {
-      type: "settings",
-      value: JSON.parse(table),
-    });
-    await axiosInstance.post("/createSettings", {
-      type: "deviceList",
-      value: JSON.parse(device),
+      type: keyString,
+      value: JSON.parse(valueData),
     });
   } catch (error) {
-    console.error("setInitSettings", error);
+    console.error("setInitSettings", keyString, error);
+  }
+};
+
+export const resetXxmlDevice = async (): Promise<any> => {
+  try {
+    await axiosInstance.post("/resetXml");
+  } catch (error) {
+    console.error("resetXxmlDevice");
   }
 };
 
@@ -71,14 +74,14 @@ export const setUpdateSettingsColRow = async (
   }
 };
 
-export const setUpdateSettingsDeviceList = async (
-  tab: string,
-  deviceList: DevicePackProp[]
+export const setUpdateSettingsUnit = async (
+  name: string,
+  object: Unit
 ): Promise<any> => {
   try {
-    return await axiosInstance.put("/updateSettingsDeviceList", {
-      tab:tab,
-      deviceList:deviceList
+    return await axiosInstance.put("/updateSettingsUnit", {
+      name:name,
+      object:object
     });
   } catch (error) {
     console.error(error);

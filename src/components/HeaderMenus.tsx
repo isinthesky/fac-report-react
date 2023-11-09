@@ -2,11 +2,17 @@ import React from "react";
 import styled from "styled-components";
 
 const FlatButton = styled.button`
-  height: 50px;
+  height: 45px;
+  color: white;
+  background-color: #344054;
+  border: 0px solid #333;
 `;
 
 const MarginButton = styled.button`
-  height: 20px;
+  height: 25px;
+  color: white;
+  background-color: #344054;
+  border: 0px solid #333;
 `;
 
 interface MainMenuProps {

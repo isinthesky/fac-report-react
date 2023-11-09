@@ -16,7 +16,7 @@ export interface optionState {
   };
 }
 
-export interface DevicePackProp {
+export interface UnitProp {
   id: number;
   type: number;
   name: string;
@@ -33,5 +33,11 @@ export interface DevicePackProp {
 
 export interface TabInfoProp {
   tab: string;
-  device: DevicePackProp;
+  device: UnitProp;
+}
+
+
+export interface SetTabPageProp {
+  name: string;
+  object: any;
 }

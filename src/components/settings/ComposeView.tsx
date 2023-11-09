@@ -4,9 +4,8 @@ import styled from "styled-components";
 import DeviceInfo from "./DeviceInfo";
 import { RootState, optionState } from "../../static/interface";
 import { ComposeProps } from "../../static/types";
-import { subtle } from "crypto";
 
-const ComposeView: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) => {
+const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
   
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
@@ -25,51 +24,46 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) =
     })();
   }, [deviceSet]);
 
-
-  console.log("ComposeView", deviceSet, row, column, mainTab, subTab);
-
-
   const renderButtons = () => {
     const rows = [];
     let keyCounter = 0;
 
-    const key = `deviceList${mainTab}${subTab}`;
+    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${optionlist.selectedTab.main}${optionlist.selectedTab.sub}`;
 
-    console.log("deviceSet[key]", deviceSet[key])
 
-    for (let r = 0; r < row; r++) {
-      const buttons = [];
-      for (let c = 0; c < column; c++) {
-        if (deviceSet[key].length < 1) {
-          return;
-        }
+    console.log("optionlist[key].unitList", optionlist[key].unitList)
+    
+    for (let r = 0; r < row * column; r++) {
 
-        if (deviceSet[key].length > 0) {
-          buttons.push(
-            <DeviceInfo
-              key={keyCounter}
-              type={deviceSet[key][keyCounter].type}
-              name={deviceSet[key][keyCounter].name}
-              id={deviceSet[key][keyCounter].id}
-              st={deviceSet[key][keyCounter].st}
-              div={deviceSet[key][keyCounter].div}
-              dv1={deviceSet[key][keyCounter].dv1}
-              dv2={deviceSet[key][keyCounter].dv2}
-              dv3={deviceSet[key][keyCounter].dv3}
-              dv4={deviceSet[key][keyCounter].dv4}
-              dv5={deviceSet[key][keyCounter].dv5}
-              dv6={deviceSet[key][keyCounter].dv6}
-              dv7={deviceSet[key][keyCounter].dv7}
-              dv8={deviceSet[key][keyCounter].dv8}
-              dv9={deviceSet[key][keyCounter].dv9}
-            />
-          );
-        } else {
-          buttons.push([]);
-        }
-        keyCounter++;
+      if (optionlist[key]) {
+          if (optionlist[key].unitList.length < 1) return;
+
+          if (optionlist[key].unitList.length > 0) {
+
+
+            rows.push(
+              <DeviceInfo
+                key={keyCounter}
+                type={optionlist[key].unitList[keyCounter].type}
+                name={optionlist[key].unitList[keyCounter].name}
+                id={optionlist[key].unitList[keyCounter].id}
+                st={optionlist[key].unitList[keyCounter].st}
+                div={optionlist[key].unitList[keyCounter].div}
+                dv1={optionlist[key].unitList[keyCounter].dv1}
+                dv2={optionlist[key].unitList[keyCounter].dv2}
+                dv3={optionlist[key].unitList[keyCounter].dv3}
+                dv4={optionlist[key].unitList[keyCounter].dv4}
+                dv5={optionlist[key].unitList[keyCounter].dv5}
+                dv6={optionlist[key].unitList[keyCounter].dv6}
+                dv7={optionlist[key].unitList[keyCounter].dv7}
+                dv8={optionlist[key].unitList[keyCounter].dv8}
+                dv9={optionlist[key].unitList[keyCounter].dv9}
+              />
+            );
+          } 
+          keyCounter++;
       }
-      rows.push(<ButtonGrid key={r}>{buttons}</ButtonGrid>);
+      
     }
 
     return rows;
@@ -83,34 +77,11 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column, mainTab, subTab }) =
 };
 
 const ColumnContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
   gap: 10px;
-  margin: 30px auto;
-
-  border: 1px solid #f0e0e0;
-  border-radius: 5px;
-`;
-
-const RowContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-`;
-
-const ButtonGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-around;
-`;
-
-const DeviceSelect = styled.select`
-  min-width: 70px;
+  margin: 30px;
 `;
 
 export default ComposeView;

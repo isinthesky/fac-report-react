@@ -10,29 +10,27 @@ export type IStation = { id: number; name: string };
 
 export type SetDeviceType = {
   id: number;
-  device: DeviceInfoType;
+  device: Unit;
 };
 
 export type ViewDeviceProps = {
   key: number;
   tabKey: string;
-  device: DeviceInfoType;
+  device: Unit;
 };
 
 export type ComposeProps = {
   row: number;
   column: number;
-  mainTab: number;
-  subTab: number;
 };
 
-export type updateCurrentDeviceType = {
+export type updateCurrentTabPageType = {
   arrPos: number;
   arrKey: string;
   deviceId: number|string;
 };
 
-export type DeviceInfoType = {
+export type Unit = {
   type: number;
   name: string;
   id: number;
@@ -49,6 +47,18 @@ export type DeviceInfoType = {
   dv9: number;
 };
 
+
+export type SetTabPageType = {
+  mainTab: number;
+  subTab: number;
+  unitList : Unit[];
+};
+
+export type TabPageInfotype = {
+  id: number;
+  times: string[];
+  unitList: Unit[]
+}
 
 export type AddDropDownType = {
   mainTab: number;

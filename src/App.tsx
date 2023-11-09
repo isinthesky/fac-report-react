@@ -21,6 +21,7 @@ export default function App() {
             <Route path="/daily/:id1/:id2" element={<Daily />} />
             <Route path="/weekly/:id1/:id2" element={<Weekly />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/settings/:page" element={<Settings />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
@@ -34,5 +35,5 @@ const RowContainer = styled.div`
   display: flex;
   flex-direction: row;
 
-  font: 0.7em "Fira Sans", sans-serif;
+  font: 1em "Fira Sans", sans-serif;
 `;

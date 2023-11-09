@@ -1,8 +1,9 @@
-import React from 'react';
+import React , { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceTypeV from "../components/ViewDeviceTypeV";
-import ViewDeviceTypeW from "../components/ViewDeviceTypeW";
+import { useReactToPrint } from 'react-to-print';
+import ViewDeviceTypeV from "./viewer/ViewDeviceTypeV";
+import ViewDeviceTypeW from "./viewer/ViewDeviceTypeW";
 import { RootState, optionState } from "../static/interface";
 
 type PrintGuideProps = {
@@ -14,34 +15,33 @@ type PrintGuideProps = {
 };
 
 
-const PrintModal: React.FC<PrintGuideProps> = ({ row, column, mainTab, subTab, title }) => {
-
-  const deviceSet = useSelector(
-    (state: RootState) => state.deviceReducer.value
-  );
-  const optionlist = useSelector(
+const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab, title }, ref) => {
+  const optionSet = useSelector(
     (state: optionState) => state.optionReducer.value
   );
-
-  const renderTimes = (tabKey: string) => {
-    const times = ["구 분", "/", "시 간"];
-    times.push(...optionlist[tabKey]);
-    return times;
-  };
+  // const componentRef = useRef();
 
   const renderDevice = () => {
-    const key = `deviceList${mainTab}${subTab}`;
-    const currentDevices = deviceSet[key];
+    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
-    if (!currentDevices || currentDevices.length < 1) return null;
+    if (!optionSet[key]) {
+      return;
+    }
 
-    const times = renderTimes(`tab${mainTab}${subTab}`);
+    const times = ["구 분", "/", "시 간"];
 
+    for (const time of optionSet[key].times){
+      times.push(time);
+    }
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
-          const TypeComp = currentDevices[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+
+          const TypeComp = 
+          optionSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+
+          console.log("TypeComp", optionSet[key])
 
           return (
             <InnerContainer key={colIndex}>
@@ -51,7 +51,7 @@ const PrintModal: React.FC<PrintGuideProps> = ({ row, column, mainTab, subTab, t
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={`tab${mainTab}${subTab}`} device={currentDevices[index]} />
+                <TypeComp key={index} tabKey={key} device={optionSet[key].unitList[index]} />
               </DeviceContainer>
             </InnerContainer>
           );
@@ -61,7 +61,7 @@ const PrintModal: React.FC<PrintGuideProps> = ({ row, column, mainTab, subTab, t
   };
 
   return (
-    <PrintArea>
+    <PrintArea ref={ref}>
       <TitleArea>
         <HideDiv></HideDiv>
         <TitleBox>{title}</TitleBox>
@@ -77,7 +77,7 @@ const PrintModal: React.FC<PrintGuideProps> = ({ row, column, mainTab, subTab, t
       {renderDevice()}
     </PrintArea>
   );
-};
+});
 
 
 const PrintArea = styled.div`
@@ -101,8 +101,6 @@ const TitleArea =  styled.div`
 const TitleBox =  styled.button`
   position: relative;
   width: 500px;
-  font-weight: bold;
-  font-size: 54px;
   border: 1px solid #cc2;
 `;
 

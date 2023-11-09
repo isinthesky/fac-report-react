@@ -1,15 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { DeviceInfoType } from "../../static/types";
+import { Unit } from "../../static/types";
 import { useSelector } from "react-redux";
+import { RootState } from "../../static/interface";
 
-interface RootState {
-  deviceReducer: {
-    value: any;
-  };
-}
-
-const DeviceInfo: React.FC<DeviceInfoType> = ({
+const DeviceInfo: React.FC<Unit> = ({
   type,
   name,
   id,
@@ -23,7 +18,6 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
   dv8,
   dv9,
 }) => {
-
   const deviceSet = useSelector(
     (state: RootState) => state.deviceReducer.value
   );
@@ -39,18 +33,12 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
   return (
     <Container>
       <NameGroup>
-        <ItemDiv>
           <label>id</label>
           <KeyInput>{id}</KeyInput>
-        </ItemDiv>
-        <ItemDiv>
           <label>type</label>
-          <Input id="type" type="text" value={String(type)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
+          <KeyInput>{type}</KeyInput>
           <label>name</label>
-          <Input id="name" type="text" value={name} />
-        </ItemDiv>
+          <KeyInput>{name}</KeyInput>
       </NameGroup>
       <Group>
         <ItemDiv>
@@ -102,43 +90,51 @@ const DeviceInfo: React.FC<DeviceInfoType> = ({
 const Container = styled.div`
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  border: 1px solid #333;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1px;
+  padding: 10px;
+
+  border-radius: 10px;
+  background-color: white;
 `;
 
 const Group = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  border: 1px solid #ccc;
-  padding: 10px;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 5px;
   border-radius: 5px;
 `;
 
 
 const NameGroup = styled(Group)`
-  align-items: center; // Center children horizontally
-  justify-content: center; // Center children vertically
+  display: flex;
+  align-items: center; 
+  justify-self: start;
+  justify-content: center;
+
+  margin: 10px;
+
+  border-radius: 10px;
+  
 `;
 
 const ItemDiv = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-`;
 
-const Input = styled.input`
-  width: 120px;
 `;
 
 const KeyInput = styled.button`
-  width: 30px;
+  width: 70px;
   border: 0px;
 `;
 
-
 const DeviceInput = styled.input`
-  width: 150px;
+  flex:1;
+  padding:5px;
 `;
 
 export default DeviceInfo;

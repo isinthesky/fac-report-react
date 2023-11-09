@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ViewDeviceTypeV from "./ViewDeviceTypeV";
 import ViewDeviceTypeW from "./ViewDeviceTypeW";
-import { optionState } from "../static/interface";
+import { optionState } from "../../static/interface";
 
 type ReportGuideProps = {
   row: number;
@@ -12,41 +12,34 @@ type ReportGuideProps = {
   subTab: string;
 };
 
-interface RootState {
-  deviceReducer: {
-    value: any;
-  };
-}
-
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab }) => {
-  const deviceSet = useSelector(
-    (state: RootState) => state.deviceReducer.value
-  );
-  const optionlist = useSelector(
+  const optionSet = useSelector(
     (state: optionState) => state.optionReducer.value
   );
 
   const renderDevice = () => {
-    const key = `deviceList${mainTab}${subTab}`;
+    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
-    if (!deviceSet[key] || deviceSet[key].length < 1) {
+    if (!optionSet[key]) {
       return;
     }
 
     const times = ["구 분", "/", "시 간"];
-    const tabKey = `tab${mainTab}${subTab}`;
 
-    for (const time of optionlist[tabKey]){
+    for (const time of optionSet[key].times){
       times.push(time);
     }
-
+    
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
 
-          const TypeComp =
-            deviceSet[key][index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+          const TypeComp = 
+          optionSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+
+          console.log("TypeComp", optionSet[key])
+
           return (
             <Container key={colIndex}>
               <ColumnContainer>
@@ -55,7 +48,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={tabKey} device={deviceSet[key][index]} />
+                <TypeComp key={index} tabKey={key} device={optionSet[key].unitList[index]} />
               </DeviceContainer>
             </Container>
           );

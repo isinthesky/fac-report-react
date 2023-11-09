@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { ViewDeviceProps } from "../static/types";
+import { ViewDeviceProps } from "../../static/types";
 import { useSelector } from "react-redux";
-import { optionState } from "../static/interface";
+import { optionState } from "../../static/interface";
 
 
 const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
@@ -22,6 +22,8 @@ const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
   let devIndex = 1;
   let keyIndex = 1;
 
+  console.log("view dev type", device)
+
   return (
     <Container>
       <Row>
@@ -37,7 +39,7 @@ const ViewDeviceTypeW: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
               {section.values.map((value) => (
                 <Column>
                   <ValueRow key={keyIndex++}>{value}</ValueRow>
-                  <DeviceValue key={keyIndex++} times={optionlist[tabKey]} devId={(device as any)[`dv${String((devIndex++))}`]}  />
+                  <DeviceValue key={keyIndex++} times={optionlist[tabKey].times} devId={(device as any)[`dv${String((devIndex++))}`]}  />
                 </Column>
               ))}
             </Row>
@@ -96,7 +98,7 @@ const ValueRow = styled.div`
   align-items: center;
   justify-content: center;
   padding: 3px;
-  min-width: 20px;
+  min-width: 25px;
 `;
 
 export default ViewDeviceTypeW;

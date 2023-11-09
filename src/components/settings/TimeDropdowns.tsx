@@ -1,17 +1,19 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDropdown, removeDropdown, setTimes } from "../../features/reducers/optionSlice";
-import { AddDropDownType } from '../../static/types';
 import { optionState } from '../../static/interface';
 import styled from "styled-components";
 
 
-const TimeDropdowns: React.FC<AddDropDownType> = ({mainTab, subTab}) => {
+const TimeDropdowns: React.FC = () => {
   const dispatch = useDispatch();
 
   const optionlist = useSelector(
     (state: optionState) => state.optionReducer.value
   );
+
+  const mainTab = optionlist.selectedTab.main;
+  const subTab = optionlist.selectedTab.sub;
 
   const handleAddDropdown = () => {
     dispatch(addDropdown({ mainTab :mainTab, subTab: subTab}));
@@ -24,14 +26,12 @@ const TimeDropdowns: React.FC<AddDropDownType> = ({mainTab, subTab}) => {
   const handleTimeChange = (index:number, e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(setTimes({mainTab:mainTab, subTab:subTab, index:index, time:e.target.value}));
   };
-
-  const key = `tab${mainTab}${subTab}`;
-
-  console.log("time #",key, optionlist[`tab${mainTab}${subTab}`], optionlist.tap11)
+  
+  const key = process.env.REACT_APP_CONST_TABINFO_NAME;
 
   return (
     <Container>
-      {optionlist[`tab${mainTab}${subTab}`].map((time:number, index:number) => (
+      {optionlist[key + `${mainTab}${subTab}`].times.map((time:number, index:number) => (
         <SelectDiv key={index}>
           <TimeSelect value={time} onChange={(e) => handleTimeChange(index, e)}>
             {Array.from({ length: 24 }).map((_, hour) => {
@@ -39,14 +39,14 @@ const TimeDropdowns: React.FC<AddDropDownType> = ({mainTab, subTab}) => {
               return <option key={timeValue} value={timeValue}>{timeValue}</option>;
             })}
           </TimeSelect>
-          {optionlist[`tab${mainTab}${subTab}`].length > 4 
-          ? <button onClick={() => handleRemoveDropdown(index)}>Remove</button> 
+          {optionlist[key + `${mainTab}${subTab}`].times.length > 4 
+          ? <button onClick={() => handleRemoveDropdown(index)}>Del</button> 
           : null}
           
         </SelectDiv>
       ))}
-       {optionlist[`tab${mainTab}${subTab}`].length < 12 
-       ? <button onClick={handleAddDropdown}>Add Time</button>
+       {optionlist[key + `${mainTab}${subTab}`].times.length < 12 
+       ? <SettingButton onClick={handleAddDropdown}>Add Time</SettingButton>
        : null}
     </Container>
   );
@@ -54,19 +54,24 @@ const TimeDropdowns: React.FC<AddDropDownType> = ({mainTab, subTab}) => {
 
 
 const Container = styled.div`
-  flex-grow: 1;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   flex-direction: column;
-  padding: 10px;
+  width: 180px;
+  padding: 10px 100px;
 `;
 
 const SelectDiv = styled.div`
 `;
 
 const TimeSelect = styled.select`
-  margin: 0px 10px;
+  margin: 5px;
+  padding: 5px;
   min-width: 80px;
+`;
+
+const SettingButton = styled.button`
+  padding: 5px;
 `;
 
 export default TimeDropdowns;
