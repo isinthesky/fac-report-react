@@ -77,3 +77,8 @@ export type SetDropDownType = {
   index: number;
   time: string;
 };
+
+export type ApprovalsType = {
+  checked: boolean;
+  text: string;
+}

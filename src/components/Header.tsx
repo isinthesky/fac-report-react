@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getSettings } from "../features/api";
-import { setReportTable, setTabPage, setTabSetting } from "../features/reducers/optionSlice";
+import { setApproves, setReportTable, setTabPage, setTabSetting } from "../features/reducers/optionSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 
 export default function Header() {
@@ -37,6 +37,7 @@ export default function Header() {
         if (response) {
           dispatch(setReportTable(response.settings));
           dispatch(setTabSetting(response.tabSetting));
+          dispatch(setApproves(response.approves))
 
           let count = 1;
           const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;

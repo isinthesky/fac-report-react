@@ -1,10 +1,10 @@
-import React , { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { useReactToPrint } from 'react-to-print';
 import ViewDeviceTypeV from "./viewer/ViewDeviceTypeV";
 import ViewDeviceTypeW from "./viewer/ViewDeviceTypeW";
-import { RootState, optionState } from "../static/interface";
+import { optionState } from "../static/interface";
+import { ApprovalsType } from '../static/types';
 
 type PrintGuideProps = {
   row: number;
@@ -14,13 +14,10 @@ type PrintGuideProps = {
   title: string;
 };
 
-
 const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab, title }, ref) => {
   const optionSet = useSelector(
     (state: optionState) => state.optionReducer.value
   );
-  // const componentRef = useRef();
-
   const renderDevice = () => {
     const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
@@ -29,10 +26,8 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
     }
 
     const times = ["구 분", "/", "시 간"];
-
-    for (const time of optionSet[key].times){
-      times.push(time);
-    }
+    times.push(...optionSet[key].times.map((time:string) => time));
+    
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
@@ -40,8 +35,6 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
 
           const TypeComp = 
           optionSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
-
-          console.log("TypeComp", optionSet[key])
 
           return (
             <InnerContainer key={colIndex}>
@@ -66,12 +59,16 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
         <HideDiv></HideDiv>
         <TitleBox>{title}</TitleBox>
         <ApproveTable>
-          {Array.from({ length: 3 }).map((_, colIndex) => (
-            <ApproveDiv key={colIndex}>
-              <NameDiv> name </NameDiv>
-              <SignDiv />
-            </ApproveDiv>
-          ))}
+          {optionSet?.savedApprovals.filter(
+            (item:ApprovalsType) => item.checked).map(
+              (item:ApprovalsType, idx:number) => {
+                return (<ApproveDiv key={idx}>
+                  <NameDiv> {item.text} </NameDiv>
+                  <SignDiv />
+                </ApproveDiv>)
+              }
+            )
+          }
         </ApproveTable>
       </TitleArea>
       {renderDevice()}

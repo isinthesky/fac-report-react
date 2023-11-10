@@ -74,22 +74,21 @@ function Daily() {
       </ReportLine>
       {isOpen ? 
         <ModalBackdrop onClick={handlePrintClose}>
-            <ModalView onClick={(e) => e.stopPropagation()}>
-              <Header>
-                <HideBtn onClick={handlePrintClose}></HideBtn>
-                <PrintBtn onClick={handlePrint}>PRINT</PrintBtn>
-                <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
-              </Header>
-              <PrintModal row={option.daily.row}
-                          column={option.daily.column}
-                          mainTab={id1 ? id1 : "1"}
-                          subTab={id2 ? id2 : "1"}
-                          title={"수변전일지"}
-                          ref={componentRef} />
-            </ModalView>
-          </ModalBackdrop>
-          : null
-        } 
+          <ModalView onClick={(e) => e.stopPropagation()}>
+            <Header>
+              <HideBtn></HideBtn>
+              <PrintBtn onClick={handlePrint}>PRINT</PrintBtn>
+              <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
+            </Header>
+            <PrintModal row={option.daily.row}
+                        column={option.daily.column}
+                        mainTab={id1 ? id1 : "1"}
+                        subTab={id2 ? id2 : "1"}
+                        title={"수변전일지"}
+                        ref={componentRef} />
+          </ModalView>
+        </ModalBackdrop>
+      : null} 
     </Flat>
   );
 }

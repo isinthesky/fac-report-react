@@ -21,6 +21,7 @@ import {
 } from "../features/reducers/optionSlice";
 import { optionState } from "../static/interface";
 import TabControlBar from "../components/settings/TabControlBar";
+import ApproveSetModal from "../components/ApproveSetModal";
 
 function Settings() {
   const dispatch = useDispatch();
@@ -91,21 +92,24 @@ function Settings() {
     setRow(Number(e.target.value));
   };
 
-
   const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColumn(Number(e.target.value));
   };
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
     setEdit(!edit);
   };
 
-  const handleApply = async () => {
+  const handleApply = () => {
     setUpdateSettingsColRow(rows, columns);
     dispatch(setReportTable({ row: rows, column: columns }));
   };
 
-  const handleSetDevice = async () => {
+  const handleApproveSetting = () => {
+    setIsOpen(false) 
+  }
+
+  const handleSetDevice = () => {
     try {
       setMode(!mode);
     } catch (error) {
@@ -131,6 +135,7 @@ function Settings() {
           })
         })
 
+        await setInitSettings("approves", String(process.env.REACT_APP_INIT_APPROVES_SETTING));
         await setInitSettings("settings", String(process.env.REACT_APP_INIT_GENERAL_SETTING));
         await setInitSettings("tabSetting", String(process.env.REACT_APP_INIT_TAB_SETTING));
 
@@ -184,10 +189,21 @@ function Settings() {
             device setting
           </SettingButton>
           <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
-          {/* <SettingButton onClick={handleSignPopup}>sign</SettingButton> */}
+          <SettingButton onClick={handleSignPopup}>approve setting</SettingButton>
         </TopBar>
         <TabControlBar />
         <ComposeView row={rows} column={columns}></ComposeView>
+        {isOpen ? 
+        <ModalBackdrop onClick={handleApproveSetting}>
+            <ModalView onClick={(e) => e.stopPropagation()}>
+              <Header>
+                <ExitBtn onClick={handleApproveSetting}>x</ExitBtn>
+              </Header>
+              <ApproveSetModal />
+            </ModalView>
+          </ModalBackdrop>
+          : null
+        } 
         </>
       )}
     </Flat>
@@ -232,13 +248,89 @@ const Input = styled.input<{ mode: boolean }>`
 `;
 
 const SettingButton = styled.button`
-  padding: 5px 10px;
+  padding: 5px 15px;
+  margin: 0px 10px;
+  
   border: none;
   border-radius: 5px;
-  cursor: pointer;
-  :hover: {
-    background-color: #eeeeee;
-  }
+
+  font-size: 1em;
+  background-color: white;
+`;
+
+const ModalBackdrop = styled.div`
+  // Modal이 떴을 때의 배경을 깔아주는 CSS를 구현
+  z-index: 1; //위치지정 요소
+  position: fixed;
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  background-color: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  top : 0;
+  left : 0;
+  right : 0;
+  bottom : 0;
+`;
+
+
+const ModalView = styled.div.attrs((props) => ({
+  // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있다.
+  role: 'dialog',
+}))`
+  // Modal창 CSS를 구현합니다.
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 20px;
+  width: 300px;
+  height: 200px;
+  background-color: #ffffff;
+`;
+
+const Header = styled.div`
+  // flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-self: stretch;
+  justify-content: end;
+`;
+
+
+const ModalBtn = styled.button`
+  background-color: var(--coz-purple-600);
+  text-decoration: none;
+  border: none;
+  padding: 20px;
+  color: white;
+  border-radius: 30px;
+  cursor: grab;
+  font-size: 1em;
+`;
+
+const ExitBtn = styled(ModalBtn) `
+background-color : #4000c7;
+border-radius: 10px;
+text-decoration: none;
+margin: 10px;
+padding: 5px 10px;
+width: 30px;
+height: 30px;
+display : flex;
+justify-content : center;
+align-items : center;
+align-self : end;
+`;
+
+const HideBtn = styled(ModalBtn) `
+background-color : translate;
+border-radius: 10px;
+text-decoration: none;
+margin: 10px;
+padding: 5px 10px;
+width: 30px;
+height: 30px;
+display : flex;
 `;
 
 export default Settings;

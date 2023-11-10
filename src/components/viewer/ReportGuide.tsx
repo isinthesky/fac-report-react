@@ -21,14 +21,15 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
     const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
     if (!optionSet[key]) {
-      return;
+      return <></>;
+    }
+
+    if (optionSet[key].unitList[0] === undefined) {
+      return <></>
     }
 
     const times = ["구 분", "/", "시 간"];
-
-    for (const time of optionSet[key].times){
-      times.push(time);
-    }
+    times.push(...optionSet[key].times.map((time:string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -36,9 +37,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
           const index = rowIndex * column + colIndex;
 
           const TypeComp = 
-          optionSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
-
-          console.log("TypeComp", optionSet[key])
+          optionSet[key].unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
 
           return (
             <Container key={colIndex}>

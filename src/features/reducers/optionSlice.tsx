@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { updateCurrentTabPageType, AddDropDownType, DeleteDropDownType, SetDropDownType, TabPageInfotype, Unit } from "../../static/types";
-import { SetTabPageProp, TabInfoProp } from "../../static/interface";
+import { updateCurrentTabPageType, AddDropDownType, DeleteDropDownType, SetDropDownType, TabPageInfotype, Unit, ApprovalsType } from "../../static/types";
+import { SetTabPageProp } from "../../static/interface";
 
 interface DailySetting {
   row: number;
@@ -23,6 +23,7 @@ interface OptionState {
     tabSetting: TabSetting;
     selectedTab: SelectedTab,
     currentTabPage: TabPageInfotype;
+    savedApprovals: ApprovalsType[]; 
     viewType: number;
     tabPageInfo11: TabPageInfotype;
     tabPageInfo12: TabPageInfotype;
@@ -50,6 +51,7 @@ const initialState: OptionState = {
     tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
     selectedTab: {main:1, sub:1},
     currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
+    savedApprovals: [{checked:false, text:""},{checked:false, text:""},{checked:false, text:""}],
     viewType: 0,
     tabPageInfo11: {id: 11, times: Array(4).fill('00:00'), unitList: [] },
     tabPageInfo12: {id: 12, times: Array(4).fill('00:00'), unitList: [] },
@@ -164,10 +166,17 @@ export const optionSlice = createSlice({
       state.value.currentTabPage.times[action.payload.index] = String(action.payload.time);
       state.value.currentTabPage.times.sort();
     },
+
+    setApproves: (
+      state,
+      action: PayloadAction<ApprovalsType[]>
+    ) => {
+      state.value.savedApprovals = action.payload
+    }
   },
 });
 
-export const { setReportTable, setTabSetting, setSelectTab, setTableDate, setViewType, setCurrentTab, updateCurrentTab, setTabPage, updateTabPage, addDropdown, removeDropdown, setTimes } =
+export const { setReportTable, setTabSetting, setSelectTab, setTableDate, setViewType, setCurrentTab, updateCurrentTab, setTabPage, updateTabPage, addDropdown, removeDropdown, setTimes, setApproves } =
   optionSlice.actions;
 
 export default optionSlice.reducer;

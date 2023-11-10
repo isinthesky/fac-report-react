@@ -1,6 +1,6 @@
 import axios from "axios";
 import { UnitProp } from "../../static/interface";
-import { Unit } from "../../static/types";
+import { ApprovalsType, Unit } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -80,8 +80,21 @@ export const setUpdateSettingsUnit = async (
 ): Promise<any> => {
   try {
     return await axiosInstance.put("/updateSettingsUnit", {
-      name:name,
-      object:object
+      name: name,
+      object: object
+    });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export const setUpdateSettingsApprove = async (
+  approves: ApprovalsType[]
+): Promise<any> => {
+  try {
+    return await axiosInstance.put("/updateSettingsApprove", {
+      datas: approves
     });
   } catch (error) {
     console.error(error);

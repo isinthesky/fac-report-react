@@ -18,25 +18,22 @@ const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
     (state: optionState) => state.optionReducer.value
   );
 
-  let devIndex = 1;
-  let keyIndex = 1;
-
   return (
     <Container>
       <Row>
         <TitleColumn>{device.name}</TitleColumn>
       </Row>
       <Row>
-        {sections.map((section, idx) => (
-          <Container >
+        {sections.map((section, sectionIdx) => (
+          <Container key={`section-${sectionIdx}`} >
             <Row>
               <MiddleColumn>{section.label}</MiddleColumn>
             </Row>
             <Row>
-              {section.values.map((value) => (
-                <Column>
-                  <ValueRow key={keyIndex++}>{value}</ValueRow>
-                  <DeviceValue key={keyIndex++} times={optionlist[tabKey].times} devId={(device as any)[`dv${String((devIndex++))}`]}  />
+              {section.values.map((value, valueIdx) => (
+                <Column  key={`value-${sectionIdx}-${valueIdx}`}>
+                  <ValueRow> {value}</ValueRow>
+                  <DeviceValue times={optionlist[tabKey].times} devId={(device as any)[`dv${String((valueIdx + 1))}`]}  />
                 </Column>
               ))}
             </Row>
