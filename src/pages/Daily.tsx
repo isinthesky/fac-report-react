@@ -1,27 +1,25 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setTableDate, setViewType } from "../features/reducers/optionSlice";
+import { setTableDate, setViewType } from "../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../components/viewer/ReportGuide";
 import PrintModal from "../components/PrintModal";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { RootStore } from "../store/congifureStore";
 
-interface OptionState {
-  optionReducer: {
-    value: any;
-  };
-}
 
 function Daily() {
   const dispatch = useDispatch()  
-  const option = useSelector((state: OptionState) => state.optionReducer.value);
-  const [date, setDate] = useState(option.date);
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const [date, setDate] = useState(settingSet.date);
   const [isOpen, setIsOpen] = useState(false);
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
+
+  console.log("Daily settingSet", settingSet)
 
   const handleApply = () => {
   };
@@ -31,7 +29,7 @@ function Daily() {
   }, [date]);
 
   const handleDaily = () => {
-    dispatch(setViewType(option.viewType === 0 ? 1 : 0))
+    dispatch(setViewType(settingSet.viewType === 0 ? 1 : 0))
   };
 
   const handleWeekly = async () => {};
@@ -56,8 +54,8 @@ function Daily() {
     <Flat>
       <Controls>
         <DatePicker
-          selected={date}
-          onChange={(date: Date) => setDate(date.getTime())}
+          selected={new Date(date)}
+          onChange={(value: Date) => setDate(value.getTime())}
         />
         <ApplyButton onClick={handleApply}>Apply</ApplyButton>
         <ApplyButton onClick={handleDaily}>Daily</ApplyButton>
@@ -66,8 +64,8 @@ function Daily() {
       </Controls>
       <ReportLine>
         <ReportGuide
-          row={option.daily.row}
-          column={option.daily.column}
+          row={settingSet.daily.row}
+          column={settingSet.daily.column}
           mainTab={id1 ? id1 : "1"}
           subTab={id2 ? id2 : "1"}
         ></ReportGuide>
@@ -80,8 +78,8 @@ function Daily() {
               <PrintBtn onClick={handlePrint}>PRINT</PrintBtn>
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
             </Header>
-            <PrintModal row={option.daily.row}
-                        column={option.daily.column}
+            <PrintModal row={settingSet.daily.row}
+                        column={settingSet.daily.column}
                         mainTab={id1 ? id1 : "1"}
                         subTab={id2 ? id2 : "1"}
                         title={"수변전일지"}
@@ -211,7 +209,6 @@ display : flex;
 
 
 const ModalView = styled.div.attrs((props) => ({
-  // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있다.
   role: 'dialog',
 }))`
   // Modal창 CSS를 구현합니다.

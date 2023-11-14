@@ -3,23 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType } from "../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
-import { updateCurrentTab } from "../../features/reducers/optionSlice";
-import { RootState, optionState } from "../../static/interface";
+import { updateCurrentTab } from "../../features/reducers/tabPageSlice";
+import { RootStore } from "../../store/congifureStore";
 
 
 const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
   const dispatch = useDispatch();
-  const deviceSet = useSelector(
-    (state: RootState) => state.deviceReducer.value
-  );
+  const deviceSet = useSelector((state: RootStore) => state.deviceReducer.value);
+  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
 
-  const optionlist = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
-
-  const [selectedStation, setSelectedStation] = useState<number>(optionlist.currentTabPage.unitList[id].st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(optionlist.currentTabPage.unitList[id].div);
-  const [deviceName, setDeviceName] = useState<string>(optionlist.currentTabPage.unitList[id].name);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSet.currentTabPage.unitList[id].st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(tabPageSet.currentTabPage.unitList[id].div);
+  const [deviceName, setDeviceName] = useState<string>(tabPageSet.currentTabPage.unitList[id].name);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -54,7 +49,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
     );
   };
 
-  console.log("optionSet", optionlist);
+  console.log("optionSet", tabPageSet);
 
   const renderSection = (index1: number, typeDev: string, values: string[]) => (
     <Section>
@@ -70,7 +65,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
             stationValue={device.st}
             initDivisionId={selectedDivision}
             divisionValue={device.div}
-            currentDevice={optionlist.currentTabPage.unitList[id]}
+            currentDevice={tabPageSet.currentTabPage.unitList[id]}
           />
         </ValueSection>
       ))}

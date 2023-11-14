@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UnitProp, SetTabPageProp, TabInfoProp } from "../../static/interface";
+import { IDevice, IDivision, IStation } from "../../static/types";
 
-interface DeviceState {
+export interface DeviceState {
   value: {
-    devices: any[];
-    divisions: any[];
-    stations: any[];
+    devices: IDevice[];
+    divisions: IDivision[];
+    stations: IStation[];
   };
 }
 

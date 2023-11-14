@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ViewDeviceTypeV from "./ViewDeviceTypeV";
 import ViewDeviceTypeW from "./ViewDeviceTypeW";
-import { optionState } from "../../static/interface";
+import { RootStore } from "../../store/congifureStore";
 
 type ReportGuideProps = {
   row: number;
@@ -13,23 +13,21 @@ type ReportGuideProps = {
 };
 
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab }) => {
-  const optionSet = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
+  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
   const renderDevice = () => {
     const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
-    if (!optionSet[key]) {
+    if (!tabPageSet[key]) {
       return <></>;
     }
 
-    if (optionSet[key].unitList[0] === undefined) {
+    if (tabPageSet[key].unitList[0] === undefined) {
       return <></>
     }
 
     const times = ["구 분", "/", "시 간"];
-    times.push(...optionSet[key].times.map((time:string) => time));
+    times.push(...tabPageSet[key].times.map((time:string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -37,7 +35,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
           const index = rowIndex * column + colIndex;
 
           const TypeComp = 
-          optionSet[key].unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+          tabPageSet[key].unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
 
           return (
             <Container key={colIndex}>
@@ -47,7 +45,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={key} device={optionSet[key].unitList[index]} />
+                <TypeComp key={index} tabKey={key} device={tabPageSet[key].unitList[index]} />
               </DeviceContainer>
             </Container>
           );

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import { Unit, IDevice, IDivision, IStation } from "../../static/types";
+import { Unit, IDivision, IStation } from "../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { updateCurrentTab } from "../../features/reducers/optionSlice";
+import { updateCurrentTab } from "../../features/reducers/tabPageSlice";
 
 type DeviceSelectProps = {
   pos: number;
@@ -30,29 +30,18 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 
   useEffect(() => {
     setSelectedStation(initStationId)
+  }, [initStationId]);
+
+  useEffect(() => {
     setSelectedDivision(initDivisionId)
-  }, [initStationId, initDivisionId]);
+  }, [initDivisionId]);
   
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
-    dispatch(
-      updateCurrentTab({
-        arrPos: pos,
-        arrKey: "st",
-        deviceId: Number(e.target.value),
-      })
-    );
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
-    dispatch(
-      updateCurrentTab({
-        arrPos: pos,
-        arrKey: "div",
-        deviceId: Number(e.target.value),
-      })
-    );
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -99,7 +88,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   );
 };
 
-export default DeviceAutoSelect;
 
 const InnerDiv = styled.div`
   flex: 1;
@@ -121,5 +109,7 @@ const SelectDevice = styled.select`
   margin: 0px 10px;
   min-width: 300px;
   text-align: center;
-  
+
 `
+
+export default DeviceAutoSelect;

@@ -1,10 +1,18 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-import optionReducer from "../features/reducers/optionSlice";
-import deviceReducer from "../features/reducers/deviceSlice";
+import settingReducer, { SettingState } from "../features/reducers/settingSlice"
+import tabPageReducer, { TabPageState } from "../features/reducers/tabPageSlice"
+import deviceReducer, { DeviceState } from "../features/reducers/deviceSlice";
+
+export interface RootStore {
+  settingReducer: SettingState;
+  deviceReducer: DeviceState;
+  tabPageReducer: TabPageState;
+}
 
 const rootReducer = combineReducers({
-  optionReducer,
+  settingReducer,
+  tabPageReducer,
   deviceReducer,
 });
 

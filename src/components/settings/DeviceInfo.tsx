@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Unit } from "../../static/types";
 import { useSelector } from "react-redux";
-import { RootState } from "../../static/interface";
+import { RootState } from "../../static/interfaces";
 
 const DeviceInfo: React.FC<Unit> = ({
   type,

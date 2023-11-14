@@ -1,0 +1,4 @@
+export const MAIN_TAB_ENV_NAME = "REACT_APP_INIT_REPORT_TYPE";
+
+export const STRING_SETTING_SET_TIME_ADD = "Add Time";
+export const STRING_SETTING_SET_TIME_DELETE = "Delete";

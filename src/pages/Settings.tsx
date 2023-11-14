@@ -11,17 +11,15 @@ import {
   setInitSettings,
   resetXxmlDevice
 } from "../features/api";
-import {
-  loadDeviceList,
-} from "../features/reducers/deviceSlice";
+import { loadDeviceList } from "../features/reducers/deviceSlice";
+import { setReportTable } from "../features/reducers/settingSlice";
 import {
   setCurrentTab,
-  setReportTable,
   setTabPage,
-} from "../features/reducers/optionSlice";
-import { optionState } from "../static/interface";
+} from "../features/reducers/tabPageSlice";
 import TabControlBar from "../components/settings/TabControlBar";
 import ApproveSetModal from "../components/ApproveSetModal";
+import { RootStore } from "../store/congifureStore";
 
 function Settings() {
   const dispatch = useDispatch();
@@ -32,16 +30,14 @@ function Settings() {
   const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
 
-  const optionSet = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
-
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
   useEffect(() => {
     (async () => {
       try {
         const response = await getSettings();
-        console.log("settings getSettings:", response)
+        // console.log("settings getSettings:", response)
         if (response) {
           dispatch(setReportTable(response.settings));
 
@@ -68,15 +64,9 @@ function Settings() {
 
       try {
         const response = await getDeviceInfo();
-        console.log("settings getDeviceInfo", response);
         dispatch(loadDeviceList(response));
       } catch (error) {
         console.error(error);
-      }
-
-      const setting = params.page || "1";
-      if (setting === null || setting === "1") {
-        setMode(false);
       }
 
     })();
@@ -84,9 +74,15 @@ function Settings() {
 
 
   useEffect(() => {
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${optionSet.selectedTab.main}${optionSet.selectedTab.sub}`;
-    dispatch(setCurrentTab(optionSet[key])) 
-  }, [optionSet]);
+    if (Object.keys(params).length === 0) {
+      setMode(false);
+    }
+  }, [params]);
+
+  useEffect(() => {
+    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`;
+    dispatch(setCurrentTab(tabPageSet[key])) 
+  }, [settingSet]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRow(Number(e.target.value));
@@ -320,17 +316,6 @@ display : flex;
 justify-content : center;
 align-items : center;
 align-self : end;
-`;
-
-const HideBtn = styled(ModalBtn) `
-background-color : translate;
-border-radius: 10px;
-text-decoration: none;
-margin: 10px;
-padding: 5px 10px;
-width: 30px;
-height: 30px;
-display : flex;
 `;
 
 export default Settings;

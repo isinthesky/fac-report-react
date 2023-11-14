@@ -1,6 +1,5 @@
 import axios from "axios";
-import { UnitProp } from "../../static/interface";
-import { ApprovalsType, Unit } from "../../static/types";
+import { ApprovalsType, TabPageInfotype, Unit } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -74,12 +73,12 @@ export const setUpdateSettingsColRow = async (
   }
 };
 
-export const setUpdateSettingsUnit = async (
+export const setUpdateSettingsTabPage = async (
   name: string,
-  object: Unit
+  object: TabPageInfotype
 ): Promise<any> => {
   try {
-    return await axiosInstance.put("/updateSettingsUnit", {
+    return await axiosInstance.put("/updateSettingsTabPage", {
       name: name,
       object: object
     });

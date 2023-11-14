@@ -10,12 +10,6 @@ export interface RootState {
   };
 }
 
-export interface optionState {
-  optionReducer: {
-    value: any;
-  };
-}
-
 export interface UnitProp {
   id: number;
   type: number;
@@ -36,8 +30,21 @@ export interface TabInfoProp {
   device: UnitProp;
 }
 
+export interface DailySetting {
+  row: number;
+  column: number;
+}
 
-export interface SetTabPageProp {
-  name: string;
-  object: any;
+export interface TabSetting {
+  length: number;
+}
+
+export interface SelectedTab {
+  main: number;
+  sub: number;
+}
+
+export interface ApprovalsType {
+  checked: boolean;
+  text: string;
 }

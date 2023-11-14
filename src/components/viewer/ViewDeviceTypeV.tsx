@@ -3,7 +3,7 @@ import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
 import { ViewDeviceProps } from "../../static/types";
 import { useSelector } from "react-redux";
-import { optionState } from "../../static/interface";
+import { RootStore } from "../../store/congifureStore";
 
 const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
   const sections = [
@@ -14,9 +14,9 @@ const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
     { label: "/", values: ["kW"] },
   ];
 
-  const optionlist = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
+  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
+
+  console.log("tabPageSet", tabPageSet);
 
   return (
     <Container>
@@ -33,7 +33,7 @@ const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
               {section.values.map((value, valueIdx) => (
                 <Column  key={`value-${sectionIdx}-${valueIdx}`}>
                   <ValueRow> {value}</ValueRow>
-                  <DeviceValue times={optionlist[tabKey].times} devId={(device as any)[`dv${String((valueIdx + 1))}`]}  />
+                  <DeviceValue times={tabPageSet[tabKey].times} devId={(device as any)[`dv${String((valueIdx + 1))}`]}  />
                 </Column>
               ))}
             </Row>

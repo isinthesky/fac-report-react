@@ -4,10 +4,11 @@ import styled from "styled-components";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import TimeDropdowns from "./TimeDropdowns";
-import { setUpdateSettingsUnit } from "../../features/api";
-import { updateCurrentTab, updateTabPage } from "../../features/reducers/optionSlice";
-import { optionState } from "../../static/interface";
+import { setUpdateSettingsTabPage } from "../../features/api";
+import { setCurrentUnit, updateCurrentTab, updateTabPage } from "../../features/reducers/tabPageSlice";
 import { ComposeProps } from "../../static/types";
+import { MAIN_TAB_ENV_NAME } from "../../static/consts";
+import { RootStore } from "../../store/congifureStore";
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch();
@@ -15,10 +16,13 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const [deviceColumn, setDeviceColumn] = useState(1);
   const [deviceType, setDeviceType] = useState(0);
   const [deviceId, setDeviceId] = useState(0);
+  
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
-  const optionlist = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
+
+  const position = deviceColumn + (deviceRow - 1) * column - 1;
+  const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`; 
 
   const handleSelectChange =
     (setter: React.Dispatch<React.SetStateAction<number>>) =>
@@ -27,26 +31,20 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     };
       
   const handleSave = () => {
-
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${optionlist.selectedTab.main}${optionlist.selectedTab.sub}`; 
-    
-    console.log("handleSave 22",key, optionlist.currentTabPage)
-
-    dispatch(updateTabPage({name:key, object:optionlist.currentTabPage}));
+    dispatch(updateTabPage({name:key, object:tabPageSet.currentTabPage}));
 
     let count = 1;
 
     [1, 2, 3, 4, 5].forEach( async (mainId)=>{
       [1, 2, 3, 4, 5].forEach( async (subId)=>{
-        const TabKey = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`
+        const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`
         if (process.env[TabKey]) {
-          if (optionlist.selectedTab.main === mainId && optionlist.selectedTab.sub === subId ) {
+          if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId ) {
             const keyNumber = process.env.REACT_APP_CONST_TABINFO_NAME + `${count}`; 
-            if (false !== await setUpdateSettingsUnit(keyNumber, optionlist.currentTabPage)){
+            if (false !== await setUpdateSettingsTabPage(keyNumber, tabPageSet.currentTabPage)){
               alert('저장 되었습니다.');
               return;
             }
-            
           }
           count += 1;
         }
@@ -54,35 +52,29 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     })
   };
 
+  const handleCancel = () => {
+    if (deviceColumn !== 0 && deviceRow !== 0) {
+      dispatch(setCurrentUnit({position: position, unit: tabPageSet[key].unitList[position]}));
+    }
+  }
+
   useEffect(() => {
-    try {
       if (deviceColumn !== 0 && deviceRow !== 0) {
-        const position = deviceColumn + (deviceRow - 1) * column - 1;
-
-        console.log("ConposeSet", position, optionlist.currentTabPage )
-
         if (position >= 0) {
-          setDeviceType(optionlist.currentTabPage.unitList[position].type);
+          setDeviceType(tabPageSet.currentTabPage.unitList[position].type);
           setDeviceId(position);
         }
       }
-    } catch (error) {
-      console.error(error);
-    }
   }, [deviceRow, deviceColumn]);
 
   useEffect(() => {
-    try {
-      const postion = deviceColumn + (deviceRow - 1) * column - 1;
+    const postion = deviceColumn + (deviceRow - 1) * column - 1;
 
-      if (postion >= 0) {
-        dispatch(updateCurrentTab({arrPos: postion,
-                                   arrKey: "type",
-                                   deviceId: deviceType})
-        );
-      }
-    } catch (error) {
-      console.error(error);
+    if (postion >= 0) {
+      dispatch(updateCurrentTab({arrPos: postion,
+                                arrKey: "type",
+                                deviceId: deviceType})
+      );
     }
   }, [deviceType]);
 
@@ -112,14 +104,14 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       </SettingsContainer>
       <SettingsContainer>
         <ColumnDiv>
-          {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={optionlist.currentTabPage.unitList[deviceId]} />}
-          {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={optionlist.currentTabPage.unitList[deviceId]} />}
+          {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={tabPageSet.currentTabPage.unitList[deviceId]} />}
+          {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={tabPageSet.currentTabPage.unitList[deviceId]} />}
 
           <TimeDropdowns/>
         </ColumnDiv>
       </SettingsContainer>
       <ButtonGroup>
-        <Button>Cancel</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
         <SaveButton onClick={handleSave}>Save</SaveButton>
       </ButtonGroup>
     </Wrapper>

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { readDeviceLog } from "../../features/api";
-import { optionState } from "../../static/interface";
+import { RootStore } from "../../store/congifureStore";
 
 interface DeviceValueProps {
   times: string[];
@@ -10,13 +10,13 @@ interface DeviceValueProps {
 }
 
 const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
-  const option = useSelector((state: optionState) => state.optionReducer.value);
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+
   
   const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
 
   const getLogByTimestamp = (devLog:any, timestamp:any) => {
-    // If the exact timestamp exists, return its value
     if (devLog[timestamp]) {
       return devLog[timestamp];
     }
@@ -35,11 +35,11 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
 
   useEffect(() => {
     (async () => {
-      console.log("option.date",option.date, devId);
+      console.log("settingSet.date",settingSet.date, devId);
       try {
         if (devId > 0) {
-          const result =  await readDeviceLog(devId, option.date);
-          const date = new Date(option.date);
+          const result =  await readDeviceLog(devId, settingSet.date);
+          const date = new Date(settingSet.date);
           const devYear = date.getFullYear();
           const devMonth = date.getMonth();
           const devDate = date.getDate();
@@ -61,10 +61,10 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
         console.error(error);
       }
     })();
-  }, [option.date]);
+  }, [settingSet.date]);
 
   useEffect(() => {
-    if (option.viewType === 0) {
+    if (settingSet.viewType === 0) {
       setDeviceValue(deviceSave);
       return;
     }
@@ -75,7 +75,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
     }
     setDeviceValue(deviceId);
     
-  }, [option.viewType]);
+  }, [settingSet.viewType]);
 
   return (
     <Row3>

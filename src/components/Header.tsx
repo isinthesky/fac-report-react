@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getSettings } from "../features/api";
-import { setApproves, setReportTable, setTabPage, setTabSetting } from "../features/reducers/optionSlice";
+import { setApproves, setReportTable, setTabSetting } from "../features/reducers/settingSlice";
+import { setTabPage } from "../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 
 export default function Header() {

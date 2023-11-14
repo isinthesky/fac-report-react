@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { optionState } from "../static/interface";
-import { setApproves } from '../features/reducers/optionSlice';
+import { setApproves } from '../features/reducers/settingSlice';
 import { setUpdateSettingsApprove } from '../features/api';
+import { RootStore } from '../store/congifureStore';
 
 const ApproveSetModal = () => {
   const dispatch = useDispatch();
-  // const savedApprovals = useSelector(state => state.approve.approvals); // Adjust the selector as needed
 
-  const savedApprovals = useSelector(
-    (state: optionState) => state.optionReducer.value.savedApprovals
-  );
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
 
   const [groups, setGroups] = useState([
     { checked: false, text: '' },
@@ -18,14 +15,16 @@ const ApproveSetModal = () => {
     { checked: false, text: '' }
   ]);
 
-  useEffect(() => {
-    // Initialize groups with saved values
-    if (savedApprovals && savedApprovals.length > 0) {
-      setGroups(savedApprovals);
-    }
-  }, [savedApprovals]);
+  console.log("ApproveSetModal settingSet", settingSet)
 
-  const handleCheckboxChange = (index:number) => {
+
+  useEffect(() => {
+    if (settingSet.savedApprovals.length > 0) {
+      setGroups(settingSet.savedApprovals);
+    }
+  }, [settingSet.savedApprovals]);
+
+  const handleCheckboxChange = (index: number) => {
     const newGroups = groups.map((group, idx) => {
       if (idx === index) {
         return { ...group, checked: !group.checked };
@@ -35,9 +34,13 @@ const ApproveSetModal = () => {
     setGroups(newGroups);
   };
 
-  const handleInputChange = (index:number, value:string) => {
-    const newGroups = [...groups];
-    newGroups[index].text = value;
+  const handleInputChange = (index: number, value: string) => {
+    const newGroups = groups.map((group, idx) => {
+      if (idx === index) {
+        return { ...group, text: value };
+      }
+      return group;
+    });
     setGroups(newGroups);
   };
 
@@ -51,7 +54,6 @@ const ApproveSetModal = () => {
   };
 
   const handleCancel = () => {
-    // Reset to initial state or perform other cancel actions
   };
 
   return (

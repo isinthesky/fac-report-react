@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ViewDeviceTypeV from "./viewer/ViewDeviceTypeV";
 import ViewDeviceTypeW from "./viewer/ViewDeviceTypeW";
-import { optionState } from "../static/interface";
 import { ApprovalsType } from '../static/types';
+import { RootStore } from '../store/congifureStore';
 
 type PrintGuideProps = {
   row: number;
@@ -15,18 +15,14 @@ type PrintGuideProps = {
 };
 
 const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab, title }, ref) => {
-  const optionSet = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
+
   const renderDevice = () => {
     const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
-    if (!optionSet[key]) {
-      return;
-    }
-
     const times = ["구 분", "/", "시 간"];
-    times.push(...optionSet[key].times.map((time:string) => time));
+    times.push(...tabPageSet[key].times.map((time:string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -34,7 +30,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
           const index = rowIndex * column + colIndex;
 
           const TypeComp = 
-          optionSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+          tabPageSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
 
           return (
             <InnerContainer key={colIndex}>
@@ -44,7 +40,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={key} device={optionSet[key].unitList[index]} />
+                <TypeComp key={index} tabKey={key} device={tabPageSet[key].unitList[index]} />
               </DeviceContainer>
             </InnerContainer>
           );
@@ -59,7 +55,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
         <HideDiv></HideDiv>
         <TitleBox>{title}</TitleBox>
         <ApproveTable>
-          {optionSet?.savedApprovals.filter(
+          {settingSet?.savedApprovals.filter(
             (item:ApprovalsType) => item.checked).map(
               (item:ApprovalsType, idx:number) => {
                 return (<ApproveDiv key={idx}>

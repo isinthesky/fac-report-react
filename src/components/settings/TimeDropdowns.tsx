@@ -1,19 +1,19 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDropdown, removeDropdown, setTimes } from "../../features/reducers/optionSlice";
-import { optionState } from '../../static/interface';
+import { addDropdown, removeDropdown, setTimes } from "../../features/reducers/tabPageSlice";
 import styled from "styled-components";
+import { RootStore } from '../../store/congifureStore';
+import { STRING_SETTING_SET_TIME_ADD, STRING_SETTING_SET_TIME_DELETE } from '../../static/consts';
 
 
 const TimeDropdowns: React.FC = () => {
   const dispatch = useDispatch();
 
-  const optionlist = useSelector(
-    (state: optionState) => state.optionReducer.value
-  );
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
-  const mainTab = optionlist.selectedTab.main;
-  const subTab = optionlist.selectedTab.sub;
+  const mainTab = settingSet.selectedTab.main;
+  const subTab = settingSet.selectedTab.sub;
 
   const handleAddDropdown = () => {
     dispatch(addDropdown({ mainTab :mainTab, subTab: subTab}));
@@ -27,11 +27,11 @@ const TimeDropdowns: React.FC = () => {
     dispatch(setTimes({mainTab:mainTab, subTab:subTab, index:index, time:e.target.value}));
   };
   
-  const key = process.env.REACT_APP_CONST_TABINFO_NAME;
+  const key = process.env.REACT_APP_CONST_TABINFO_NAME || "tabPageInfo";
 
   return (
     <Container>
-      {optionlist[key + `${mainTab}${subTab}`].times.map((time:number, index:number) => (
+      {tabPageSet[key + `${mainTab}${subTab}`]?.times.map((time:string, index:number) => (
         <SelectDiv key={index}>
           <TimeSelect value={time} onChange={(e) => handleTimeChange(index, e)}>
             {Array.from({ length: 24 }).map((_, hour) => {
@@ -39,14 +39,14 @@ const TimeDropdowns: React.FC = () => {
               return <option key={timeValue} value={timeValue}>{timeValue}</option>;
             })}
           </TimeSelect>
-          {optionlist[key + `${mainTab}${subTab}`].times.length > 4 
-          ? <button onClick={() => handleRemoveDropdown(index)}>Del</button> 
+          {tabPageSet[key + `${mainTab}${subTab}`]?.times.length > 4 
+          ? <button onClick={() => handleRemoveDropdown(index)}>{STRING_SETTING_SET_TIME_DELETE}</button> 
           : null}
           
         </SelectDiv>
       ))}
-       {optionlist[key + `${mainTab}${subTab}`].times.length < 12 
-       ? <SettingButton onClick={handleAddDropdown}>Add Time</SettingButton>
+       {tabPageSet[key + `${mainTab}${subTab}`]?.times.length < 12 
+       ? <SettingButton onClick={handleAddDropdown}>{STRING_SETTING_SET_TIME_ADD}</SettingButton>
        : null}
     </Container>
   );

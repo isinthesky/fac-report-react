@@ -30,6 +30,11 @@ export type updateCurrentTabPageType = {
   deviceId: number|string;
 };
 
+export type updateCurrentTabPageUnit = {
+  position: number;
+  unit: Unit;
+};
+
 export type Unit = {
   type: number;
   name: string;
@@ -81,4 +86,23 @@ export type SetDropDownType = {
 export type ApprovalsType = {
   checked: boolean;
   text: string;
+}
+
+export interface DailySetting {
+  row: number;
+  column: number;
+}
+
+export interface SelectedTab {
+  main: number;
+  sub: number;
+}
+
+export interface TabSetting {
+  length: number;
+}
+
+export interface SetTabPageProp {
+  name: string;
+  object: any;
 }
