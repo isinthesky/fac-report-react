@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision, SetDeviceType, Unit } from "../../static/types";
+import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
-import { updateCurrentTab } from "../../features/reducers/tabPageSlice";
-import { RootStore } from "../../store/congifureStore";
+import { updateCurrentTab } from "../../../features/reducers/tabPageSlice";
+import { RootStore } from "../../../store/congifureStore";
 
 
-const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
+const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id }) => {
   const dispatch = useDispatch();
-  const deviceSet = useSelector((state: RootStore) => state.deviceReducer.value);
+  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
 
   const [selectedStation, setSelectedStation] = useState<number>(0);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>(tabPageSet.currentTabPage.unitList[id].name);
-
 
   useEffect(() => {
     const newStation = tabPageSet.currentTabPage.unitList[id].st;
@@ -71,7 +70,6 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
     return deviceSet.devices[deviceId]
   }
 
-
   const renderSection = (index1: number, typeDev: string, values: string[]) => (
     <Section>
       <MiddleColumn>{typeDev}</MiddleColumn>
@@ -79,7 +77,7 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
         
         const deviceKey = `dv${String(idx + 1)}` as keyof Unit;
         const device = tabPageSet.currentTabPage.unitList[idx];
-        const initStationId = device[deviceKey] !== 0 ? deviceinfo(Number( device[deviceKey])).stationId : selectedStation;
+        const initStationId = device[deviceKey] !== 0 ? deviceinfo(Number(device[deviceKey])).stationId : selectedStation;
 
         return(
         <ValueSection key={idx}>
@@ -120,10 +118,10 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id, device }) => {
               )
             )}
           </Select>
-          <TitleInput type="text" onChange={handleNameChange} value={deviceName} />
+            <TitleInput type="text" onChange={handleNameChange}  value={deviceName} />
         </Row>
       </InnerDiv>
-      {renderSection(id, "V", ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"])}
+      {renderSection(id, "W", ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"])}
     </Container>
   );
 };
@@ -173,23 +171,25 @@ const ValueColumn = styled.div`
   max-width: 70px;
 `;
 
+const Select = styled.select`
+  margin: 0px 10px;
+`;
+
+
 const TitleInput = styled.input`
   margin: 0px 30px;
   font-size: 1em;
-`;
-
-const Select = styled.select`
-  margin: 0px 10px;
 `;
 
 const Section = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 `;
 
 const ValueSection = styled(Row)`
-  margin: 10px;
+  
 `;
 
-export default SetDeviceTypeV;
+export default SetDeviceTypeW;

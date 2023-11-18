@@ -2,19 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IDevice, IDivision, IStation } from "../../static/types";
 
 export interface DeviceState {
-  value: {
     devices: IDevice[];
     divisions: IDivision[];
     stations: IStation[];
-  };
 }
 
 const initialState: DeviceState = {
-  value: {
     devices: [],
     divisions: [],
     stations: [],
-  },
 };
 
 export const deviceSlice = createSlice({
@@ -22,9 +18,9 @@ export const deviceSlice = createSlice({
   initialState,
   reducers: {
     loadDeviceList: (state, action: PayloadAction<any>) => {
-      state.value.devices = action.payload.device;
-      state.value.divisions = action.payload.division;
-      state.value.stations = action.payload.station;
+      state.devices = action.payload.device;
+      state.divisions = action.payload.division;
+      state.stations = action.payload.station;
     },
   },
 });

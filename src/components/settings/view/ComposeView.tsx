@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import DeviceInfo from "./DeviceInfo";
-import { ComposeProps } from "../../static/types";
-import { RootStore } from "../../store/congifureStore";
+import { ComposeProps } from "../../../static/types";
+import { RootStore } from "../../../store/congifureStore";
 
 const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
-  const deviceSet = useSelector((state: RootStore) => state.deviceReducer.value);
+  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 

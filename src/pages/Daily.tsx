@@ -9,6 +9,8 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../store/congifureStore";
+import { BaseButton } from "../static/styledComps";
+import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT } from "../static/consts";
 
 
 function Daily() {
@@ -20,9 +22,6 @@ function Daily() {
   const componentRef = useRef<HTMLDivElement>(null);
 
   console.log("Daily settingSet", settingSet)
-
-  const handleApply = () => {
-  };
 
   useEffect(() => {
     dispatch(setTableDate(date))
@@ -42,6 +41,12 @@ function Daily() {
     }
   };
 
+
+  const handleIdCheck = async () => {
+    dispatch(setViewType(settingSet.viewType === 0 ? 1 : 0))
+  };
+
+
   const handlePrintClose = () => {
     setIsOpen(false) 
   };
@@ -57,10 +62,11 @@ function Daily() {
           selected={new Date(date)}
           onChange={(value: Date) => setDate(value.getTime())}
         />
-        <ApplyButton onClick={handleApply}>Apply</ApplyButton>
-        <ApplyButton onClick={handleDaily}>Daily</ApplyButton>
-        <ApplyButton onClick={handleWeekly}>Weekly</ApplyButton>
-        <ApplyButton onClick={handleOpenPrint}>Print</ApplyButton>
+        <BaseButton onClick={handleIdCheck}>{STRING_DAILY_MAIN_BTN_IDCHECK}</BaseButton>
+        <BaseButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</BaseButton>
+
+        {/* <ApplyButton onClick={handleDaily}>Daily</ApplyButton>
+        <ApplyButton onClick={handleWeekly}>Weekly</ApplyButton>*/}
       </Controls>
       <ReportLine>
         <ReportGuide
@@ -75,14 +81,13 @@ function Daily() {
           <ModalView onClick={(e) => e.stopPropagation()}>
             <Header>
               <HideBtn></HideBtn>
-              <PrintBtn onClick={handlePrint}>PRINT</PrintBtn>
+              <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
             </Header>
             <PrintModal row={settingSet.daily.row}
                         column={settingSet.daily.column}
                         mainTab={id1 ? id1 : "1"}
                         subTab={id2 ? id2 : "1"}
-                        title={"수변전일지"}
                         ref={componentRef} />
           </ModalView>
         </ModalBackdrop>

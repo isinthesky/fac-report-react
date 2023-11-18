@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDropdown, removeDropdown, setTimes } from "../../features/reducers/tabPageSlice";
+import { addDropdown, removeDropdown, setTimes } from "../../../features/reducers/tabPageSlice";
 import styled from "styled-components";
-import { RootStore } from '../../store/congifureStore';
-import { STRING_SETTING_SET_TIME_ADD, STRING_SETTING_SET_TIME_DELETE } from '../../static/consts';
+import { RootStore } from '../../../store/congifureStore';
+import { STRING_SETTING_SET_TIME_ADD, STRING_SETTING_SET_TIME_DELETE } from '../../../static/consts';
 
 
 const TimeDropdowns: React.FC = () => {

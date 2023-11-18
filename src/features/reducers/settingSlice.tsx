@@ -8,6 +8,7 @@ export interface SettingState {
   tabSetting: TabSetting;
   selectedTab: SelectedTab;
   viewType: number;
+  printTitle: string;
   savedApprovals: ApprovalsType[];
 }
 
@@ -20,6 +21,7 @@ const initialState: SettingState = {
   tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
   selectedTab: {main:1, sub:1},
   viewType: 0,
+  printTitle: "",
   savedApprovals: [ {checked:false, text:""},
                     {checked:false, text:""},
                     {checked:false, text:""}],
@@ -44,11 +46,14 @@ export const settingSlice = createSlice({
     setSelectTab: (state, action: PayloadAction<SelectedTab>) => {
       state.selectedTab = action.payload;
     },
+    setPrintTitle: (state, action: PayloadAction<string>) => {
+      state.printTitle = action.payload;
+    },
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
       state.savedApprovals = action.payload;
     },
   },
 });
 
-export const { setReportTable, setTabSetting, setSelectTab, setTableDate, setViewType, setApproves } = settingSlice.actions;
+export const { setReportTable, setTabSetting, setSelectTab, setTableDate, setViewType, setPrintTitle, setApproves } = settingSlice.actions;
 export default settingSlice.reducer;

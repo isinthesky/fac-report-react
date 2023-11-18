@@ -10,7 +10,6 @@ export type IStation = { id: number; name: string };
 
 export type SetDeviceType = {
   id: number;
-  device: Unit;
 };
 
 export type ViewDeviceProps = {

@@ -1,0 +1,1 @@
+export const COLORSET_BASE_COLOR = "#f0f0f0"

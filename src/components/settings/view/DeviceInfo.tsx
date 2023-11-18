@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { Unit } from "../../static/types";
+import { Unit } from "../../../static/types";
 import { useSelector } from "react-redux";
-import { RootState } from "../../static/interfaces";
+import { RootStore } from "../../../store/congifureStore";
+import { BaseButton, BaseLabel } from "../../../static/styledComps";
+
 
 const DeviceInfo: React.FC<Unit> = ({
   type,
@@ -19,12 +21,12 @@ const DeviceInfo: React.FC<Unit> = ({
   dv9,
 }) => {
   const deviceSet = useSelector(
-    (state: RootState) => state.deviceReducer.value
+    (state: RootStore) => state.deviceReducer
   );
 
   const getDevName = (id:number) => {
     if (true === Object.hasOwn(deviceSet.devices, id)) {
-      return deviceSet.devices[String(id)].name;
+      return "" //deviceSet.devices[String(id)].name;
     } else {
       return ""
     }
@@ -33,25 +35,24 @@ const DeviceInfo: React.FC<Unit> = ({
   return (
     <Container>
       <NameGroup>
-          <label>id</label>
-          <KeyInput>{id}</KeyInput>
-          <label>type</label>
-          <KeyInput>{type}</KeyInput>
-          <label>name</label>
-          <KeyInput>{name}</KeyInput>
+          <BaseLabel>id</BaseLabel>
+          <ButtonUnitInfo>{id}</ButtonUnitInfo>
+          <BaseLabel>type</BaseLabel>
+          <ButtonUnitInfo>{type}</ButtonUnitInfo>
+          <BaseLabel>name</BaseLabel>
+          <ButtonUnitInfo>{name}</ButtonUnitInfo>
       </NameGroup>
       <Group>
         <ItemDiv>
-          <label>rs</label>
+          <BaseLabel>rs</BaseLabel>
           <DeviceInput id="rs" type="text" value={getDevName(dv1)} readOnly={true}/>
         </ItemDiv>
-
         <ItemDiv>
-          <label>st</label>
+          <BaseLabel>st</BaseLabel>
           <DeviceInput id="st" type="text" value={getDevName(dv2)} readOnly={true}/>
         </ItemDiv>
         <ItemDiv>
-          <label>tr</label>
+          <BaseLabel>tr</BaseLabel>
           <DeviceInput id="tr" type="text" value={getDevName(dv3)}readOnly={true}/>
         </ItemDiv>
       </Group>
@@ -124,11 +125,9 @@ const ItemDiv = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-
 `;
 
-const KeyInput = styled.button`
-  width: 70px;
+const ButtonUnitInfo = styled(BaseButton)`
   border: 0px;
 `;
 

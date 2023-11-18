@@ -1,32 +1,27 @@
 import React, {useEffect, useState} from "react";
-import { Unit, IDivision, IStation } from "../../static/types";
+import { IDivision, IStation } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { updateCurrentTab } from "../../features/reducers/tabPageSlice";
 
-type DeviceSelectProps = {
+type UnitGroupAutoSelectProps = {
   pos: number;
-  devKey: string;
   devicelist: any;
   initStationId: number;
   stationValue:number;
   initDivisionId: number;
   divisionValue: number;
-  currentDevice: Unit;
 };
 
-const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
+const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
   pos,
-  devKey,
   devicelist,
   initStationId,
   initDivisionId,
-  currentDevice,
 }) => {
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selecteddevice, setSelectedDevice] = useState<number>((currentDevice as any)[devKey]);
+  const [selecteddevice, setSelectedDevice] = useState<number>(0);
 
   useEffect(() => {
     setSelectedStation(initStationId)
@@ -46,13 +41,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDevice(Number(e.target.value));
-    dispatch(
-      updateCurrentTab({
-        arrPos: pos,
-        arrKey: devKey ,
-        deviceId: Number(e.target.value),
-      })
-    );
   };
 
   return (
@@ -112,4 +100,4 @@ const SelectDevice = styled.select`
 
 `
 
-export default DeviceAutoSelect;
+export default UnitGroupAutoSelect;

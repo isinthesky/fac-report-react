@@ -4,12 +4,6 @@ export interface DeviceinfoProp {
   name: string;
 }
 
-export interface RootState {
-  deviceReducer: {
-    value: any;
-  };
-}
-
 export interface UnitProp {
   id: number;
   type: number;

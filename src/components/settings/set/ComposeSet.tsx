@@ -4,11 +4,11 @@ import styled from "styled-components";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import TimeDropdowns from "./TimeDropdowns";
-import { setUpdateSettingsTabPage } from "../../features/api";
-import { setCurrentUnit, updateCurrentTab, updateTabPage } from "../../features/reducers/tabPageSlice";
-import { ComposeProps } from "../../static/types";
-import { MAIN_TAB_ENV_NAME } from "../../static/consts";
-import { RootStore } from "../../store/congifureStore";
+import { setUpdateSettingsTabPage } from "../../../features/api";
+import { setCurrentUnit, updateCurrentTab, updateTabPage } from "../../../features/reducers/tabPageSlice";
+import { ComposeProps } from "../../../static/types";
+import { MAIN_TAB_ENV_NAME } from "../../../static/consts";
+import { RootStore } from "../../../store/congifureStore";
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch();
@@ -52,7 +52,11 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     })
   };
 
+  console.log("tabcurrent", tabPageSet.currentTabPage)
+
   const handleCancel = () => {
+
+    console.log("unit", key, position, tabPageSet[key].unitList[position])
     if (deviceColumn !== 0 && deviceRow !== 0) {
       dispatch(setCurrentUnit({position: position, unit: tabPageSet[key].unitList[position]}));
     }
@@ -104,8 +108,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       </SettingsContainer>
       <SettingsContainer>
         <ColumnDiv>
-          {deviceType === 1 && <SetDeviceTypeV id={deviceId} device={tabPageSet.currentTabPage.unitList[deviceId]} />}
-          {deviceType === 2 && <SetDeviceTypeW id={deviceId} device={tabPageSet.currentTabPage.unitList[deviceId]} />}
+          {deviceType === 1 && <SetDeviceTypeV id={deviceId} />}
+          {deviceType === 2 && <SetDeviceTypeW id={deviceId} />}
 
           <TimeDropdowns/>
         </ColumnDiv>

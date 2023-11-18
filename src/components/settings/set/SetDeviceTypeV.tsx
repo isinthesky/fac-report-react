@@ -1,20 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision, SetDeviceType } from "../../static/types";
+import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
-import { updateCurrentTab } from "../../features/reducers/tabPageSlice";
-import { RootStore } from "../../store/congifureStore";
+import { updateCurrentTab } from "../../../features/reducers/tabPageSlice";
+import { RootStore } from "../../../store/congifureStore";
 
 
-const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
+const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
   const dispatch = useDispatch();
-  const deviceSet = useSelector((state: RootStore) => state.deviceReducer.value);
+  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
 
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageSet.currentTabPage.unitList[id].st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(tabPageSet.currentTabPage.unitList[id].div);
+  const [selectedStation, setSelectedStation] = useState<number>(0);
+  const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>(tabPageSet.currentTabPage.unitList[id].name);
+
+  useEffect(() => {
+    const newStation = tabPageSet.currentTabPage.unitList[id].st;
+    setSelectedStation(newStation);
+  }, [tabPageSet.currentTabPage, id]);
+
+  useEffect(() => {
+    const relatedDivisions = deviceSet.divisions.filter(div => div.stationId === selectedStation);
+    if (relatedDivisions.length > 0) {
+      setSelectedDivision(relatedDivisions[0].id);
+    } else {
+      setSelectedDivision(0); // or a default value indicating no division is selected
+    }
+  }, [selectedStation, deviceSet.divisions]);
+
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -51,24 +66,35 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
 
   console.log("optionSet", tabPageSet);
 
+  const deviceinfo = (deviceId: number) => {
+    return deviceSet.devices[deviceId]
+  }
+
   const renderSection = (index1: number, typeDev: string, values: string[]) => (
     <Section>
       <MiddleColumn>{typeDev}</MiddleColumn>
-      {values.map((value, idx) => (
+      {values.map((value, idx) => {
+        
+        const deviceKey = `dv${String(idx + 1)}` as keyof Unit;
+        const device = tabPageSet.currentTabPage.unitList[idx];
+        const initStationId = device[deviceKey] !== 0 ? deviceinfo(Number(device[deviceKey])).stationId : selectedStation;
+
+        return(
         <ValueSection key={idx}>
           <ValueColumn>{value}</ValueColumn>
           <DeviceAutoSelect
             pos={index1}
             devKey={`dv${String(idx+1)}`}
             devicelist={deviceSet}
-            initStationId={selectedStation}
+            initStationId={initStationId}
             stationValue={device.st}
             initDivisionId={selectedDivision}
             divisionValue={device.div}
-            currentDevice={tabPageSet.currentTabPage.unitList[id]}
+            currentDevice={tabPageSet.currentTabPage.unitList[idx]}
           />
         </ValueSection>
-      ))}
+      )}
+      )}
     </Section>
   );
 
@@ -76,24 +102,26 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ id, device }) => {
     <Container>
       <InnerDiv>
         <Row>
-          <Select onChange={handleStationChange} value={device.st}>
+          <Select onChange={handleStationChange} value={selectedStation}>
             {deviceSet.stations.map((st: IStation) => (
               <option key={st.id} value={st.id}>
                 {st.name}
               </option>
             ))}
           </Select>
-          <Select onChange={handleDivisionChange} value={device.div}>
-            {deviceSet.divisions.map((div: IDivision) => (
-              <option key={div.id} value={div.id}>
-                {div.name}
-              </option>
-            ))}
+          <Select onChange={handleDivisionChange} value={selectedDivision}>
+            {deviceSet.divisions.filter((item) => item.stationId === selectedStation).map(
+              (div: IDivision) => (
+                <option key={div.id} value={div.id}>
+                  {div.name}
+                </option>
+              )
+            )}
           </Select>
-            <TitleInput type="text" onChange={handleNameChange}  value={deviceName} />
+          <TitleInput type="text" onChange={handleNameChange} value={deviceName} />
         </Row>
       </InnerDiv>
-      {renderSection(id, "W", ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"])}
+      {renderSection(id, "V", ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"])}
     </Container>
   );
 };
@@ -143,25 +171,23 @@ const ValueColumn = styled.div`
   max-width: 70px;
 `;
 
-const Select = styled.select`
-  margin: 0px 10px;
-`;
-
-
 const TitleInput = styled.input`
   margin: 0px 30px;
   font-size: 1em;
+`;
+
+const Select = styled.select`
+  margin: 0px 10px;
 `;
 
 const Section = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 `;
 
 const ValueSection = styled(Row)`
-  
+  margin: 10px;
 `;
 
-export default SetDeviceTypeW;
+export default SetDeviceTypeV;
