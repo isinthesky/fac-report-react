@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import ComposeSet from "../components/settings/ComposeSet";
-import ComposeView from "../components/settings/ComposeView";
+import ComposeSet from "../components/settings/set/ComposeSet";
+import ComposeView from "../components/settings/view/ComposeView";
 import {
   getDeviceInfo,
   getSettings,
@@ -18,14 +18,17 @@ import {
   setTabPage,
 } from "../features/reducers/tabPageSlice";
 import TabControlBar from "../components/settings/TabControlBar";
-import ApproveSetModal from "../components/ApproveSetModal";
+import PrintSetting from "../components/PrintSetting";
 import { RootStore } from "../store/congifureStore";
+import {STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../static/consts";
+import SetDeviceType from "../components/settings/group/SetDeviceType";
+import UnitGroupSet from "../components/settings/group/UnitGroupSet";
 
 function Settings() {
   const dispatch = useDispatch();
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
-  const [mode, setMode] = useState(false);
+  const [mode, setMode] = useState(0);
   const [edit, setEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
@@ -75,7 +78,7 @@ function Settings() {
 
   useEffect(() => {
     if (Object.keys(params).length === 0) {
-      setMode(false);
+      setMode(0);
     }
   }, [params]);
 
@@ -107,7 +110,15 @@ function Settings() {
 
   const handleSetDevice = () => {
     try {
-      setMode(!mode);
+      setMode(1);
+    } catch (error) {
+      console.error("getDeviceInfo", error);
+    }
+  };
+
+  const handleUnitGroup = () => {
+    try {
+      setMode(2);
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
@@ -150,58 +161,62 @@ function Settings() {
 
   return (
     <Flat>
-
-      {mode ? (
+      {mode === 1 ? (
         <>
           <TabControlBar />
           <ComposeSet row={rows} column={columns}></ComposeSet>
         </>
-      ) : (
+      ) : mode === 0 ? (
         <>
           <TopBar>
-          <InputGroup>
-            <label htmlFor="row-input">Rows:</label>
-            <Input
-              type="number"
-              onChange={handleRow}
-              readOnly={edit}
-              value={rows}
-              mode={edit}
-            />
-          </InputGroup>
-          <InputGroup>
-            <label htmlFor="column-input">Columns:</label>
-            <Input
-              type="number"
-              onChange={handleColumn}
-              readOnly={edit}
-              value={columns}
-              mode={edit}
-            />
-          </InputGroup>
-          <SettingButton onClick={handleEdit}>편집</SettingButton>
-          <SettingButton onClick={handleApply}>Apply</SettingButton>
-          <SettingButton onClick={handleSetDevice}>
-            device setting
-          </SettingButton>
-          <SettingButton onClick={handleInitSettings}>initialize</SettingButton>
-          <SettingButton onClick={handleSignPopup}>approve setting</SettingButton>
-        </TopBar>
+            <InputGroup>
+              <label htmlFor="row-input">Rows:</label>
+              <Input
+                type="number"
+                onChange={handleRow}
+                readOnly={edit}
+                value={rows}
+                mode={edit}
+              />
+            </InputGroup>
+            <InputGroup>
+              <label htmlFor="column-input">Columns:</label>
+              <Input
+                type="number"
+                onChange={handleColumn}
+                readOnly={edit}
+                value={columns}
+                mode={edit}
+              />
+            </InputGroup>
+            <SettingButton onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</SettingButton>
+            <SettingButton onClick={handleApply}>{STRING_SETTING_MAIN_BTN_APPLY}</SettingButton>
+            <SettingButton onClick={handleSetDevice}>
+              {STRING_SETTING_MAIN_BTN_DEVSET}
+            </SettingButton>
+            <SettingButton onClick={handleInitSettings}>{STRING_SETTING_MAIN_BTN_INIT}</SettingButton>
+            <SettingButton onClick={handleUnitGroup}>{STRING_SETTING_MAIN_BTN_GROUPSET}</SettingButton>
+            <SettingButton onClick={handleSignPopup}>{STRING_SETTING_MAIN_BTN_PRINTSET}</SettingButton>
+          </TopBar>
         <TabControlBar />
         <ComposeView row={rows} column={columns}></ComposeView>
         {isOpen ? 
-        <ModalBackdrop onClick={handleApproveSetting}>
+          <ModalBackdrop onClick={handleApproveSetting}>
             <ModalView onClick={(e) => e.stopPropagation()}>
               <Header>
                 <ExitBtn onClick={handleApproveSetting}>x</ExitBtn>
               </Header>
-              <ApproveSetModal />
+              <PrintSetting />
             </ModalView>
           </ModalBackdrop>
           : null
         } 
-        </>
-      )}
+      </>
+      
+      ) : mode === 2 ? (
+        <UnitGroupSet />
+      ) : null
+      }
     </Flat>
   );
 }
@@ -279,8 +294,8 @@ const ModalView = styled.div.attrs((props) => ({
   align-items: center;
   flex-direction: column;
   border-radius: 20px;
-  width: 300px;
-  height: 200px;
+  width: 800px;
+  height: 400px;
   background-color: #ffffff;
 `;
 

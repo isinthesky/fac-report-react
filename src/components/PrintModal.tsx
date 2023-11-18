@@ -11,10 +11,9 @@ type PrintGuideProps = {
   column: number;
   mainTab: string;
   subTab: string;
-  title: string;
 };
 
-const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab, title }, ref) => {
+const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab }, ref) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
@@ -53,7 +52,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
     <PrintArea ref={ref}>
       <TitleArea>
         <HideDiv></HideDiv>
-        <TitleBox>{title}</TitleBox>
+        <TitleBox>{settingSet.printTitle}</TitleBox>
         <ApproveTable>
           {settingSet?.savedApprovals.filter(
             (item:ApprovalsType) => item.checked).map(
