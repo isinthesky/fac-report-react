@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ViewDeviceTypeV from "./viewer/ViewDeviceTypeV";
 import ViewDeviceTypeW from "./viewer/ViewDeviceTypeW";
-import { ApprovalsType } from '../static/types';
+import { ApprovalsType, TabPageInfotype } from '../static/types';
 import { RootStore } from '../store/congifureStore';
 
 type PrintGuideProps = {
@@ -20,8 +20,10 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
   const renderDevice = () => {
     const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
+  const tabPageInfo = tabPageSet[key] as TabPageInfotype;
+
     const times = ["구 분", "/", "시 간"];
-    times.push(...tabPageSet[key].times.map((time:string) => time));
+    times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -29,8 +31,8 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
           const index = rowIndex * column + colIndex;
 
           const TypeComp = 
-          tabPageSet[key].unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
-
+          tabPageInfo.unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+  
           return (
             <InnerContainer key={colIndex}>
               <ColumnContainer>
@@ -39,8 +41,8 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={key} device={tabPageSet[key].unitList[index]} />
-              </DeviceContainer>
+              <TypeComp key={index} tabKey={key} device={tabPageInfo.unitList[index]} />
+            </DeviceContainer>
             </InnerContainer>
           );
         })}

@@ -3,6 +3,7 @@ import { Unit, IDivision, IStation } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { updateCurrentTab } from "../../../features/reducers/tabPageSlice";
+import { BaseOption, BaseRow } from "../../../static/styledComps";
 
 type DeviceSelectProps = {
   pos: number;
@@ -59,18 +60,18 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
     <InnerDiv>
       <SelectDivision onChange={handleStationChange} value={selectedSt}>
         {devicelist.stations.map((st: IStation) => (
-          <option key={st.id} value={st.id}>
+          <BaseOption key={st.id} value={st.id}>
             {st.name}
-          </option>
+          </BaseOption>
         ))}
       </SelectDivision>
       <SelectDivision onChange={handleDivisionChange} value={selectedDiv}>
         {devicelist.divisions
           .filter((div: IDivision) => div.stationId === selectedSt)
           .map((div: IDivision) => (
-            <option key={div.id} value={div.id}>
+            <BaseOption key={div.id} value={div.id}>
               {div.name}
-            </option>
+            </BaseOption>
           ))}
       </SelectDivision> 
       <SelectDevice onChange={handleDeviceChange} value={selecteddevice}>
@@ -78,9 +79,9 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
           Object.values(devicelist.devices).filter((dev:any) =>
               dev.stationId === selectedSt && dev.divisionId === selectedDiv
           ).map((dev:any) => (
-            <option key={dev.id} value={dev.id}>
+            <BaseOption key={dev.id} value={dev.id}>
               {dev.name}
-            </option>
+            </BaseOption>
           ))
           }
       </SelectDevice>
@@ -89,25 +90,20 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 };
 
 
-const InnerDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
+const InnerDiv = styled(BaseRow)`
   justify-content: center;
   align-items: stretch;
   text-align: center;
 `;
 
 const SelectDivision = styled.select`
-  margin: 0px 10px;
   min-width: 70px;
   text-align: center;
 `
 
 const SelectDevice = styled.select`
   flex: 1;
-  margin: 0px 10px;
-  min-width: 300px;
+  min-width: 200px;
   text-align: center;
 
 `

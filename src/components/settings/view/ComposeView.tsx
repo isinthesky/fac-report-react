@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import DeviceInfo from "./DeviceInfo";
-import { ComposeProps } from "../../../static/types";
+import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
 
 const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
@@ -10,7 +10,6 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
-  
   useEffect(() => {
     (async () => {
       try {
@@ -26,34 +25,35 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
     let keyCounter = 0;
 
     const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`;
+    const tabPageInfo = tabPageSet[key] as TabPageInfotype;
 
     console.log("optionlist[key].unitList", tabPageSet, key, tabPageSet[key])
     
     for (let r = 0; r < row * column; r++) {
 
-      if (tabPageSet[key]) {
-          if (tabPageSet[key].unitList.length < 1) return;
+      if (tabPageInfo) {
+          if (tabPageInfo.unitList.length < 1) return;
 
-          if (tabPageSet[key].unitList.length > 0) {
+          if (tabPageInfo.unitList.length > 0) {
 
 
             rows.push(
               <DeviceInfo
                 key={keyCounter}
-                type={tabPageSet[key].unitList[keyCounter].type}
-                name={tabPageSet[key].unitList[keyCounter].name}
-                id={tabPageSet[key].unitList[keyCounter].id}
-                st={tabPageSet[key].unitList[keyCounter].st}
-                div={tabPageSet[key].unitList[keyCounter].div}
-                dv1={tabPageSet[key].unitList[keyCounter].dv1}
-                dv2={tabPageSet[key].unitList[keyCounter].dv2}
-                dv3={tabPageSet[key].unitList[keyCounter].dv3}
-                dv4={tabPageSet[key].unitList[keyCounter].dv4}
-                dv5={tabPageSet[key].unitList[keyCounter].dv5}
-                dv6={tabPageSet[key].unitList[keyCounter].dv6}
-                dv7={tabPageSet[key].unitList[keyCounter].dv7}
-                dv8={tabPageSet[key].unitList[keyCounter].dv8}
-                dv9={tabPageSet[key].unitList[keyCounter].dv9}
+                type={tabPageInfo.unitList[keyCounter].type}
+                name={tabPageInfo.unitList[keyCounter].name}
+                id={tabPageInfo.unitList[keyCounter].id}
+                st={tabPageInfo.unitList[keyCounter].st}
+                div={tabPageInfo.unitList[keyCounter].div}
+                dv1={tabPageInfo.unitList[keyCounter].dv1}
+                dv2={tabPageInfo.unitList[keyCounter].dv2}
+                dv3={tabPageInfo.unitList[keyCounter].dv3}
+                dv4={tabPageInfo.unitList[keyCounter].dv4}
+                dv5={tabPageInfo.unitList[keyCounter].dv5}
+                dv6={tabPageInfo.unitList[keyCounter].dv6}
+                dv7={tabPageInfo.unitList[keyCounter].dv7}
+                dv8={tabPageInfo.unitList[keyCounter].dv8}
+                dv9={tabPageInfo.unitList[keyCounter].dv9}
               />
             );
           } 

@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, AddDropDownType, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit } from "../../static/types";
+import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, AddDropDownType, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, TabKeys } from "../../static/types";
 
-type TabKeys = 'tabPageInfo11' | 'tabPageInfo12' | 'tabPageInfo13' | `tabPageInfo14` | 'tabPageInfo21' | 'tabPageInfo22' | 'tabPageInfo23' | `tabPageInfo24` | 'tabPageInfo31' | 'tabPageInfo32' | 'tabPageInfo33' | `tabPageInfo34` | 'tabPageInfo41' | 'tabPageInfo42' | 'tabPageInfo43' | `tabPageInfo44`;
 
 export interface TabPageState {
+  unitPosition: {index:number, times:string[]};
   currentTabPage: TabPageInfotype;
-  [key: string]: TabPageInfotype;
+  [key: string]: TabPageInfotype | {index:number};
 }
 
 const initialState: TabPageState = {
+  unitPosition: {index: 0, times:[] },
   currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
   tabPageInfo11: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
   tabPageInfo12: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
@@ -50,19 +51,6 @@ export const tabPageSlice = createSlice({
       }
     },
 
-    // resetCurrentTab: (
-    //   state,
-    //   action: PayloadAction<updateCurrentTabPageUnit>
-    // ) => {
-    //   console.log("resetCurrentTab", action.payload)
-    //   const key = action.payload.name as TabKeys;
-    //   if (state[key].unitList.length > action.payload.unitPosition &&
-    //     state.currentTabPage.unitList.length > action.payload.unitPosition) {
-    //     state.currentTabPage.unitList[action.payload.unitPosition] = state[key].unitList[action.payload.unitPosition];
-    //   }
-    //   console.log("resetCurrentTab22 ", state.currentTabPage.unitList[action.payload.unitPosition], state[key].unitList[action.payload.unitPosition])
-    // },
-
     updateTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
       const key = action.payload.name as TabKeys;
       if (state[key]) {
@@ -75,14 +63,22 @@ export const tabPageSlice = createSlice({
         state[key] = action.payload.object;
       }
     },
+
+    setUnitPostion: (state, action: PayloadAction<number>) => {
+      state.unitPosition.index = action.payload
+    },
+
     addDropdown: (
       state,
       action: PayloadAction<AddDropDownType>
     ) => {
       const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
       const key = keyName + `${action.payload.mainTab}${action.payload.subTab}` as TabKeys;
-      if (state[key].times.length < 12) {
-        state[key].times.push('00:00');
+      
+      const tabPage = state[key] as TabPageInfotype;
+
+      if (tabPage.times.length < 12) {
+        tabPage.times.push('00:00');
         state.currentTabPage.times.push('00:00');
       }
     },
@@ -93,9 +89,13 @@ export const tabPageSlice = createSlice({
     ) => {
       const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
       const key = keyName + `${action.payload.mainTab}${action.payload.subTab}` as TabKeys;
-      if (state[key].times.length > 4) {
-          state[key].times.splice(action.payload.index, 1);
-          state.currentTabPage.times.splice(action.payload.index, 1);
+
+      const tabPage = state[key] as TabPageInfotype;
+      const index = action.payload.index;
+
+      if (tabPage.times.length > 4) {
+        tabPage.times.splice(index, 1);
+        state.currentTabPage.times.splice(index, 1);
       }
     },
     
@@ -105,13 +105,18 @@ export const tabPageSlice = createSlice({
     ) => {
       const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
       const key = keyName + `${action.payload.mainTab}${action.payload.subTab}` as TabKeys;
-      state[key].times[action.payload.index] = String(action.payload.time);
-      state[key].times.sort();
-      state.currentTabPage.times[action.payload.index] = String(action.payload.time);
+
+      const tabPage = state[key] as TabPageInfotype;
+      const index = action.payload.index;
+
+      tabPage.times[index] = String(action.payload.time);
+      tabPage.times.sort();
+
+      state.currentTabPage.times[index] = String(action.payload.time);
       state.currentTabPage.times.sort();
     },
   },
 });
 
-export const { setCurrentTab, updateCurrentTab, setCurrentUnit, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes } = tabPageSlice.actions;
+export const { setCurrentTab, updateCurrentTab, setCurrentUnit, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setUnitPostion } = tabPageSlice.actions;
 export default tabPageSlice.reducer;

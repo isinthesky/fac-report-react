@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
-import { IDivision, IStation } from "../../../static/types";
+import { GroupDevice, IDivision, IStation } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
+import { BaseRow } from "../../../static/styledComps";
 
 type UnitGroupAutoSelectProps = {
   pos: number;
   devicelist: any;
   initStationId: number;
-  stationValue:number;
   initDivisionId: number;
-  divisionValue: number;
+  currentGroup: GroupDevice;
 };
 
 const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
@@ -17,20 +17,23 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
   devicelist,
   initStationId,
   initDivisionId,
+  currentGroup
 }) => {
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
   const [selecteddevice, setSelectedDevice] = useState<number>(0);
 
-  useEffect(() => {
-    setSelectedStation(initStationId)
-  }, [initStationId]);
 
   useEffect(() => {
-    setSelectedDivision(initDivisionId)
-  }, [initDivisionId]);
-  
+    // You can use currentGroup here to set initial state or react to changes
+    // For example, if currentGroup has stationId and divisionId, you can set them:
+    if (currentGroup) {
+      // You might also want to set selecteddevice based on currentGroup
+    }
+  }, [currentGroup]);
+
+
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
   };
@@ -77,25 +80,21 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
 };
 
 
-const InnerDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
+const InnerDiv = styled(BaseRow)`
   justify-content: center;
   align-items: stretch;
   text-align: center;
 `;
 
+
 const SelectDivision = styled.select`
-  margin: 0px 10px;
   min-width: 70px;
   text-align: center;
 `
 
 const SelectDevice = styled.select`
   flex: 1;
-  margin: 0px 10px;
-  min-width: 300px;
+  min-width: 200px;
   text-align: center;
 
 `

@@ -17,5 +17,5 @@ export const STRING_SETTING_SET_TIME_DELETE = "Delete";
 
 
 export const STRING_SETTING_GROUP_ADD = "Add";
-export const STRING_SETTING_GROUP_UPDATE = "Update"
 export const STRING_SETTING_GROUP_DELETE = "Delete";
+export const STRING_SETTING_GROUP_UPDATE = "Update";

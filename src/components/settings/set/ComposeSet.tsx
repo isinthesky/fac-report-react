@@ -5,10 +5,15 @@ import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import TimeDropdowns from "./TimeDropdowns";
 import { setUpdateSettingsTabPage } from "../../../features/api";
-import { setCurrentUnit, updateCurrentTab, updateTabPage } from "../../../features/reducers/tabPageSlice";
-import { ComposeProps } from "../../../static/types";
+import { setCurrentUnit, setUnitPostion, updateCurrentTab, updateTabPage } from "../../../features/reducers/tabPageSlice";
+import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/consts";
 import { RootStore } from "../../../store/congifureStore";
+import DeviceHeaderSet from "./DeviceHeaderSet";
+
+interface GridContainerProps {
+  column: number;
+}
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch();
@@ -23,6 +28,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
   const position = deviceColumn + (deviceRow - 1) * column - 1;
   const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`; 
+
+  const tabPageInfo = tabPageSet[key] as TabPageInfotype;
 
   const handleSelectChange =
     (setter: React.Dispatch<React.SetStateAction<number>>) =>
@@ -55,10 +62,9 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   console.log("tabcurrent", tabPageSet.currentTabPage)
 
   const handleCancel = () => {
-
-    console.log("unit", key, position, tabPageSet[key].unitList[position])
+    console.log("unit", key, position, tabPageInfo.unitList[position])
     if (deviceColumn !== 0 && deviceRow !== 0) {
-      dispatch(setCurrentUnit({position: position, unit: tabPageSet[key].unitList[position]}));
+      dispatch(setCurrentUnit({position: position, unit: tabPageInfo.unitList[position]}));
     }
   }
 
@@ -82,35 +88,51 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     }
   }, [deviceType]);
 
+  const handleButtonClick = (rowIndex: number, columnIndex: number) => {
+    console.log(`Button clicked at row ${rowIndex}, column ${columnIndex}`);
+
+    setDeviceRow(rowIndex)
+    setDeviceColumn(columnIndex)
+
+    const position = columnIndex + (rowIndex - 1) * column - 1;
+
+    dispatch(setUnitPostion(position))
+  };
+
+  // Create grid buttons
+  const renderGridButtons = () => {
+    let gridButtons = [];
+    for (let r = 0; r < row; r++) {
+      for (let c = 0; c < column; c++) {
+        gridButtons.push(
+          <GridButton
+            key={`${r}-${c}`}
+            onClick={() => handleButtonClick(r + 1, c + 1)}
+            data-row={r + 1}
+            data-column={c + 1}
+          >
+            {`R${r + 1} C${c + 1}`}
+          </GridButton>
+        );
+      }
+    }
+    return gridButtons;
+  };
+
   return (
     <Wrapper>
       <SettingsContainer>
         <DefalutDiv>
-          <Setting
-            label="row"
-            options={row}
-            onChange={handleSelectChange(setDeviceRow)}
-            value={deviceRow}
-          />
-          <Setting
-            label="column"
-            options={column}
-            onChange={handleSelectChange(setDeviceColumn)}
-            value={deviceColumn}
-          />
-          <Setting
-            label="type"
-            options={2}
-            onChange={handleSelectChange(setDeviceType)}
-            value={deviceType}
-          />
+          <GridContainer column={column}>
+            {renderGridButtons()}
+          </GridContainer>
+          <DeviceHeaderSet />
         </DefalutDiv>
       </SettingsContainer>
       <SettingsContainer>
         <ColumnDiv>
           {deviceType === 1 && <SetDeviceTypeV id={deviceId} />}
           {deviceType === 2 && <SetDeviceTypeW id={deviceId} />}
-
           <TimeDropdowns/>
         </ColumnDiv>
       </SettingsContainer>
@@ -122,34 +144,14 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   );
 };
 
-const Setting: React.FC<{
-  label: string;
-  options: number;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  value: number;
-}> = ({ label, options, onChange, value }) => (
-  <DefalutDiv>
-    <Label>{label}</Label>
-    <Select onChange={onChange} value={value}>
-      {Array.from({ length: options }).map((_, idx) => (
-        <option key={idx} value={idx+1}>
-          {idx+1}
-        </option>
-      ))}
-    </Select>
-  </DefalutDiv>
-);
-
 const Wrapper = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   align-items: center; // Center children horizontally
   justify-content: center; // Center children vertically
-  gap: 10px;
   // width: calc(100vw-20px); // Fill the viewport height
   width: 95vw;
-  margin: 0 auto; // Remove the margin to fill the width
 `;
 
 const SettingsContainer = styled.div`
@@ -158,19 +160,8 @@ const SettingsContainer = styled.div`
   grid-template-columns: repeat(1, 1fr);
   justify-content: center; // Center children horizontally
   align-items: center; // Center children vertically
-  gap: 10px;
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
-`;
-
-const Label = styled.label`
-  font-size: 1em;
-  font-weight: bold;
-`;
-
-const Select = styled.select`
-  min-width: 70px;
-  padding: 5px 10px;
 `;
 
 const ButtonGroup = styled.div`
@@ -205,8 +196,11 @@ const SaveButton = styled(Button)`
 const DefalutDiv = styled.div`
   display: flex;
   justify-content: start;
+
   margin: 1px 30px;
   gap: 20px;
+  
+  border: 1px solid #111;
 `;
 
 const ColumnDiv = styled.div`
@@ -214,5 +208,22 @@ const ColumnDiv = styled.div`
   display: flex;
   flex-direction: row;
 `;
+
+const GridContainer = styled.div<GridContainerProps>`
+  display: grid;
+  grid-template-columns: repeat(${props => props.column}, 1fr);
+  grid-gap: 10px;
+  padding: 10px;
+`;
+
+const GridButton = styled.button`
+  padding: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  :hover {
+    background-color: #e0e0e0;
+  }
+`;
+
 
 export default ComposeSet;

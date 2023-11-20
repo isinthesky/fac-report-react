@@ -26,7 +26,7 @@ const DeviceInfo: React.FC<Unit> = ({
 
   const getDevName = (id:number) => {
     if (true === Object.hasOwn(deviceSet.devices, id)) {
-      return "" //deviceSet.devices[String(id)].name;
+      return deviceSet.devices[id].name;
     } else {
       return ""
     }
@@ -92,7 +92,6 @@ const Container = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  gap: 1px;
   padding: 10px;
 
   border-radius: 10px;

@@ -4,6 +4,7 @@ import { addDropdown, removeDropdown, setTimes } from "../../../features/reducer
 import styled from "styled-components";
 import { RootStore } from '../../../store/congifureStore';
 import { STRING_SETTING_SET_TIME_ADD, STRING_SETTING_SET_TIME_DELETE } from '../../../static/consts';
+import { TabPageInfotype } from '../../../static/types';
 
 
 const TimeDropdowns: React.FC = () => {
@@ -26,12 +27,21 @@ const TimeDropdowns: React.FC = () => {
   const handleTimeChange = (index:number, e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(setTimes({mainTab:mainTab, subTab:subTab, index:index, time:e.target.value}));
   };
-  
-  const key = process.env.REACT_APP_CONST_TABINFO_NAME || "tabPageInfo";
+
+
+  const key = process.env.REACT_APP_CONST_TABINFO_NAME || "tabPageInfo"
+  const tabkey = `${key}${mainTab}${subTab}`;
+
+  console.log("tabPageInfo 11", tabPageSet, tabkey)
+
+  const tabPageInfo = tabPageSet[tabkey] as TabPageInfotype;
+
+  console.log("tabPageInfo 22", tabPageInfo)
+
 
   return (
     <Container>
-      {tabPageSet[key + `${mainTab}${subTab}`]?.times.map((time:string, index:number) => (
+      {tabPageInfo.times.map((time:string, index:number) => (
         <SelectDiv key={index}>
           <TimeSelect value={time} onChange={(e) => handleTimeChange(index, e)}>
             {Array.from({ length: 24 }).map((_, hour) => {
@@ -39,13 +49,13 @@ const TimeDropdowns: React.FC = () => {
               return <option key={timeValue} value={timeValue}>{timeValue}</option>;
             })}
           </TimeSelect>
-          {tabPageSet[key + `${mainTab}${subTab}`]?.times.length > 4 
+          {tabPageInfo.times.length > 4 
           ? <button onClick={() => handleRemoveDropdown(index)}>{STRING_SETTING_SET_TIME_DELETE}</button> 
           : null}
           
         </SelectDiv>
       ))}
-       {tabPageSet[key + `${mainTab}${subTab}`]?.times.length < 12 
+       {tabPageInfo.times.length < 12 
        ? <SettingButton onClick={handleAddDropdown}>{STRING_SETTING_SET_TIME_ADD}</SettingButton>
        : null}
     </Container>

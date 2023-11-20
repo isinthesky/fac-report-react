@@ -10,9 +10,11 @@ import UnitGroupAutoSelect from "./UnitGroupAutoSelect";
 const SetDeviceType: React.FC = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
+  const currentGroup = useSelector((state: RootStore) => state.unitGroupReducer.currentGroup);
 
-  const [selectedStation, setSelectedStation] = useState<number>(0);
-  const [selectedDivision, setSelectedDivision] = useState<number>(0);
+
+  const [selectedStation, setSelectedStation] = useState<number>(deviceSet.stations[0].id);
+  const [selectedDivision, setSelectedDivision] = useState<number>(deviceSet.divisions[0].id);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -22,23 +24,20 @@ const SetDeviceType: React.FC = () => {
     setSelectedDivision(Number(e.target.value));
   };
 
-  const renderSection = (index1: number, values: string[]) => (
+  const renderSection = (index1: number, values: number[]) => (
     <BaseColumn>
-      {values.map((value, idx) => {
-        return(
-        <ValueSection key={idx}>
-          <ValueColumn>{value}</ValueColumn>
-          <UnitGroupAutoSelect
-            pos={index1}
-            devicelist={deviceSet}
-            initStationId={selectedStation}
-            stationValue={selectedStation}
-            initDivisionId={selectedDivision}
-            divisionValue={selectedDivision}
-          />
-        </ValueSection>
-      )}
-      )}
+     {values.map((value, idx) => (
+      <ValueSection key={idx}>
+        <ValueColumn>{idx + 1}</ValueColumn>
+        <UnitGroupAutoSelect
+          pos={index1}
+          devicelist={deviceSet}
+          initStationId={selectedStation}
+          initDivisionId={selectedDivision}
+          currentGroup={currentGroup} // Pass the currentGroup here
+        />
+      </ValueSection>
+    ))}
     </BaseColumn>
   );
 
@@ -62,7 +61,7 @@ const SetDeviceType: React.FC = () => {
           )}
         </BaseSelect>
       </CenterRow>
-      {renderSection(0, ["dv1", "dv2", "dv3", "dv4", "dv5", "dv6", "dv7", "dv8", "dv9"])}
+      { renderSection(0, currentGroup.list)}
     </Container>
   );
 };

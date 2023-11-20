@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { ViewDeviceProps } from "../../static/types";
+import { TabPageInfotype, ViewDeviceProps } from "../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 
@@ -15,6 +15,7 @@ const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
   ];
 
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
+  const tabPageInfo = tabPageSet[tabKey] as TabPageInfotype;
 
   console.log("tabPageSet", tabPageSet);
 
@@ -33,7 +34,7 @@ const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
               {section.values.map((value, valueIdx) => (
                 <Column  key={`value-${sectionIdx}-${valueIdx}`}>
                   <ValueRow> {value}</ValueRow>
-                  <DeviceValue times={tabPageSet[tabKey].times} devId={(device as any)[`dv${String((valueIdx + 1))}`]}  />
+                  <DeviceValue times={tabPageInfo.times} devId={(device as any)[`dv${String((valueIdx + 1))}`]}  />
                 </Column>
               ))}
             </Row>

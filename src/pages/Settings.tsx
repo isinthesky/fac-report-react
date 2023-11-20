@@ -4,38 +4,33 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../components/settings/set/ComposeSet";
 import ComposeView from "../components/settings/view/ComposeView";
-import {
-  getDeviceInfo,
-  getSettings,
-  setUpdateSettingsColRow,
-  setInitSettings,
-  resetXxmlDevice
-} from "../features/api";
+import { getSettings, setUpdateSettingsColRow } from "../features/api";
+import { getDeviceInfo } from "../features/api/device";
 import { loadDeviceList } from "../features/reducers/deviceSlice";
 import { setReportTable } from "../features/reducers/settingSlice";
-import {
-  setCurrentTab,
-  setTabPage,
-} from "../features/reducers/tabPageSlice";
+import { setCurrentTab, setTabPage } from "../features/reducers/tabPageSlice";
 import TabControlBar from "../components/settings/TabControlBar";
 import PrintSetting from "../components/PrintSetting";
 import { RootStore } from "../store/congifureStore";
 import {STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../static/consts";
-import SetDeviceType from "../components/settings/group/SetDeviceType";
 import UnitGroupSet from "../components/settings/group/UnitGroupSet";
+import { TabKeys, TabPageInfotype } from "../static/types";
+import { handleInitSettings } from "../components/settings/set/handleButtons";
+import { BaseModalBack, BaseRow } from "../static/styledComps";
+
 
 function Settings() {
   const dispatch = useDispatch();
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
   const [mode, setMode] = useState(0);
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
 
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
-
+  
   useEffect(() => {
     (async () => {
       try {
@@ -83,8 +78,9 @@ function Settings() {
   }, [params]);
 
   useEffect(() => {
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`;
-    dispatch(setCurrentTab(tabPageSet[key])) 
+    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}` as TabKeys;
+
+    dispatch(setCurrentTab(tabPageSet[key] as TabPageInfotype)) 
   }, [settingSet]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,6 +112,7 @@ function Settings() {
     }
   };
 
+
   const handleUnitGroup = () => {
     try {
       setMode(2);
@@ -124,36 +121,6 @@ function Settings() {
     }
   };
 
-  const handleInitSettings = async () => {
-    try {
-      const isConfirmed = window.confirm(
-        "모든 데이터가 초기화 됩니다. \r\n 실행하시겠습니까?"
-      );
-
-      if (isConfirmed) {
-        let id = 1;
-        
-        ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
-          ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
-            if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`]) {
-              await setInitSettings(process.env.REACT_APP_CONST_TABINFO_NAME + `${id++}`, 
-                                    String(process.env.REACT_APP_INIT_TABPAGE_SETTING));
-            }
-          })
-        })
-
-        await setInitSettings("approves", String(process.env.REACT_APP_INIT_APPROVES_SETTING));
-        await setInitSettings("settings", String(process.env.REACT_APP_INIT_GENERAL_SETTING));
-        await setInitSettings("tabSetting", String(process.env.REACT_APP_INIT_TAB_SETTING));
-
-        await resetXxmlDevice();
-
-        alert('초기화 되었습니다.');
-      }
-    } catch (error) {
-      console.error("getDeviceInfo", error);
-    }
-  };
 
   const handleSignPopup = () => {
     setIsOpen(true) 
@@ -201,14 +168,14 @@ function Settings() {
         <TabControlBar />
         <ComposeView row={rows} column={columns}></ComposeView>
         {isOpen ? 
-          <ModalBackdrop onClick={handleApproveSetting}>
+          <BaseModalBack onClick={handleApproveSetting}>
             <ModalView onClick={(e) => e.stopPropagation()}>
               <Header>
                 <ExitBtn onClick={handleApproveSetting}>x</ExitBtn>
               </Header>
               <PrintSetting />
             </ModalView>
-          </ModalBackdrop>
+          </BaseModalBack>
           : null
         } 
       </>
@@ -235,20 +202,13 @@ const Flat = styled.div`
 `;
 
 
-const TopBar = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
+const TopBar = styled(BaseRow)`
   align-items: center;
   justify-content: center;
 `;
 
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: row;
+const InputGroup = styled(BaseRow)`
   align-items: center;
-
-  // gap: 20px;
 `;
 
 const Input = styled.input<{ mode: boolean }>`
@@ -269,33 +229,16 @@ const SettingButton = styled.button`
   background-color: white;
 `;
 
-const ModalBackdrop = styled.div`
-  // Modal이 떴을 때의 배경을 깔아주는 CSS를 구현
-  z-index: 1; //위치지정 요소
-  position: fixed;
-  display : flex;
-  justify-content : center;
-  align-items : center;
-  background-color: rgba(0,0,0,0.4);
-  border-radius: 10px;
-  top : 0;
-  left : 0;
-  right : 0;
-  bottom : 0;
-`;
-
 
 const ModalView = styled.div.attrs((props) => ({
-  // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있다.
   role: 'dialog',
 }))`
-  // Modal창 CSS를 구현합니다.
   display: flex;
   align-items: center;
   flex-direction: column;
   border-radius: 20px;
-  width: 800px;
-  height: 400px;
+  width: 600px;
+  height: 300px;
   background-color: #ffffff;
 `;
 

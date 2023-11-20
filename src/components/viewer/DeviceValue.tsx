@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { readDeviceLog } from "../../features/api";
 import { RootStore } from "../../store/congifureStore";
+import { readDeviceLog } from "../../features/api/device";
+
 
 interface DeviceValueProps {
   times: string[];

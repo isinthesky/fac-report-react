@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ViewDeviceTypeV from "./ViewDeviceTypeV";
 import ViewDeviceTypeW from "./ViewDeviceTypeW";
 import { RootStore } from "../../store/congifureStore";
+import { TabPageInfotype } from "../../static/types";
 
 type ReportGuideProps = {
   row: number;
@@ -16,18 +17,15 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
 
   const renderDevice = () => {
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
+    const tabKey = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
+    const tabPageInfo = tabPageSet[tabKey] as TabPageInfotype;
 
-    if (!tabPageSet[key]) {
-      return <></>;
-    }
-
-    if (tabPageSet[key].unitList[0] === undefined) {
+    if (tabPageInfo.unitList[0] === undefined) {
       return <></>
     }
 
     const times = ["구 분", "/", "시 간"];
-    times.push(...tabPageSet[key].times.map((time:string) => time));
+    times.push(...tabPageInfo.times.map((time:string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -35,7 +33,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
           const index = rowIndex * column + colIndex;
 
           const TypeComp = 
-          tabPageSet[key].unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+          tabPageInfo.unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
 
           return (
             <Container key={colIndex}>
@@ -45,7 +43,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
                 ))}
               </ColumnContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={key} device={tabPageSet[key].unitList[index]} />
+                <TypeComp key={index} tabKey={tabKey} device={tabPageInfo.unitList[index]} />
               </DeviceContainer>
             </Container>
           );

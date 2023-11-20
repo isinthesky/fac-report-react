@@ -8,6 +8,8 @@ export type IDevice = {
 export type IDivision = { id: number; name: string; stationId: number };
 export type IStation = { id: number; name: string };
 
+export type TabKeys = 'tabPageInfo11' | 'tabPageInfo12' | 'tabPageInfo13' | `tabPageInfo14` | 'tabPageInfo21' | 'tabPageInfo22' | 'tabPageInfo23' | `tabPageInfo24` | 'tabPageInfo31' | 'tabPageInfo32' | 'tabPageInfo33' | `tabPageInfo34` | 'tabPageInfo41' | 'tabPageInfo42' | 'tabPageInfo43' | `tabPageInfo44`;
+
 export type SetDeviceType = {
   id: number;
 };
@@ -105,3 +107,9 @@ export interface SetTabPageProp {
   name: string;
   object: any;
 }
+
+
+export type GroupDevice = {
+  name: string; list: number[] 
+};
+

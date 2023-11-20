@@ -66,7 +66,7 @@ const ApproveSetModal = () => {
   };
 
   return (
-    <BaseColumn>
+    <CenterContainer>
       <BaseInput
         type="text"
         value={print}
@@ -93,12 +93,24 @@ const ApproveSetModal = () => {
         <BaseButton onClick={handleSave}>Save</BaseButton>
         <BaseButton onClick={handleCancel}>Cancel</BaseButton>
       </ButtonsContainer>
-    </BaseColumn>
+    </CenterContainer>
   );
 };
 
+const CenterContainer = styled(BaseColumn)`
+  // align-content: center;
+
+  border: 1px solid #f11;
+  margin-bottom: 40px;
+`
+
 const ButtonsContainer =  styled(BaseRow)`
-  gap: 10px
+  gap: 20px;
+  align-content: center;
+  justify-content: center; // Add this line to center-align the buttons
+  width: 100%; // Add
+  
+  border: 1px solid #11f;
 `
 
 const InputJobTitle = styled(BaseInput)`

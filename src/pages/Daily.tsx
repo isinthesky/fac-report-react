@@ -9,7 +9,7 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../store/congifureStore";
-import { BaseButton } from "../static/styledComps";
+import { BaseButton, BaseModalBack } from "../static/styledComps";
 import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT } from "../static/consts";
 
 
@@ -77,7 +77,7 @@ function Daily() {
         ></ReportGuide>
       </ReportLine>
       {isOpen ? 
-        <ModalBackdrop onClick={handlePrintClose}>
+        <BaseModalBack onClick={handlePrintClose}>
           <ModalView onClick={(e) => e.stopPropagation()}>
             <Header>
               <HideBtn></HideBtn>
@@ -90,7 +90,7 @@ function Daily() {
                         subTab={id2 ? id2 : "1"}
                         ref={componentRef} />
           </ModalView>
-        </ModalBackdrop>
+        </BaseModalBack>
       : null} 
     </Flat>
   );
@@ -144,21 +144,6 @@ const ApplyButton = styled.button`
   font-size: 1em;
 `;
 
-
-const ModalBackdrop = styled.div`
-  // Modal이 떴을 때의 배경을 깔아주는 CSS를 구현
-  z-index: 1; //위치지정 요소
-  position: fixed;
-  display : flex;
-  justify-content : center;
-  align-items : center;
-  background-color: rgba(0,0,0,0.4);
-  border-radius: 10px;
-  top : 0;
-  left : 0;
-  right : 0;
-  bottom : 0;
-`;
 
 const ModalBtn = styled.button`
   background-color: var(--coz-purple-600);
