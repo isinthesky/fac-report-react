@@ -16,7 +16,7 @@ import {
   ENG_DEFALT_SAVE,
   ENG_DEFALT_CANCEL,
   ENG_DEFALT_EDIT,
-} from "./eng"
+} from "./langEng"
 
 import {
   KOR_DAILY_MAIN_BTN_IDCHECK,
@@ -35,7 +35,7 @@ import {
   KOR_DEFALT_SAVE,
   KOR_DEFALT_CANCEL,
   KOR_DEFALT_EDIT
-} from "./kor";
+} from "./langKor";
 
 export const MAIN_TAB_ENV_NAME = "REACT_APP_INIT_REPORT_TYPE";
 
