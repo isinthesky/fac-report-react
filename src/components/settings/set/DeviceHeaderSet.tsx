@@ -2,25 +2,25 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { updateCurrentTab } from "../../../features/reducers/tabPageSlice";
+import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseInput, BaseSelect, BaseOption, BaseColumn, BaseRow, BaseLabel, BaseButton } from "../../../static/styledComps";
+import { BaseInput, BaseSelect, BaseOption, BaseFlexColumn, BaseFlexRow, BaseLabel, BaseButton } from "../../../static/styledComps";
 import { IDivision, IStation } from "../../../static/types";
 
 const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const tabPageReducer = useSelector((state: RootStore) => state.tabPageReducer);
-  const [deviceType, setDeviceType] = useState(tabPageReducer.currentTabPage.unitList[tabPageReducer.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageReducer.currentTabPage.unitList[tabPageReducer.unitPosition.index].st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(tabPageReducer.currentTabPage.unitList[tabPageReducer.unitPosition.index].div);
-  const [deviceName, setDeviceName] = useState<string>(tabPageReducer.currentTabPage.unitList[tabPageReducer.unitPosition.index].name);
+  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
+  const [deviceType, setDeviceType] = useState(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index].type);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index].st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index].div);
+  const [deviceName, setDeviceName] = useState<string>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index].name);
 
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = Number(e.target.value);
     setDeviceType(newType);
-    dispatch(updateCurrentTab({arrPos:tabPageReducer.unitPosition.index,
+    dispatch(updateCurrentUnit({arrPos:tabPageSet.unitPosition.index,
         arrKey:"type",
         deviceId: newType
     }));
@@ -29,8 +29,8 @@ const DeviceHeaderSet = () => {
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
     dispatch(
-      updateCurrentTab({
-        arrPos: tabPageReducer.unitPosition.index,
+      updateCurrentUnit({
+        arrPos: tabPageSet.unitPosition.index,
         arrKey: "st",
         deviceId: Number(e.target.value),
       })
@@ -40,8 +40,8 @@ const DeviceHeaderSet = () => {
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
     dispatch(
-      updateCurrentTab({
-        arrPos: tabPageReducer.unitPosition.index,
+      updateCurrentUnit({
+        arrPos: tabPageSet.unitPosition.index,
         arrKey: "div",
         deviceId: Number(e.target.value),
       })
@@ -51,8 +51,8 @@ const DeviceHeaderSet = () => {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceName(e.target.value);
     dispatch(
-      updateCurrentTab({
-        arrPos: tabPageReducer.unitPosition.index,
+      updateCurrentUnit({
+        arrPos: tabPageSet.unitPosition.index,
         arrKey: "name",
         deviceId: e.target.value,
       })
@@ -61,8 +61,8 @@ const DeviceHeaderSet = () => {
 
   return (
     <Container>
-      <BaseColumn>
-        <BaseRow>
+      <BaseFlexColumn>
+        <BaseFlexRow>
           <NameButton>Name</NameButton>
           <BaseInput type="text" onChange={handleNameChange} value={deviceName} />
           <NameButton>Type</NameButton>
@@ -70,8 +70,8 @@ const DeviceHeaderSet = () => {
             <BaseOption value={1}>Type 1</BaseOption>
             <BaseOption value={2}>Type 2</BaseOption>
           </BaseSelect>
-        </BaseRow>
-        <BaseRow>
+        </BaseFlexRow>
+        <BaseFlexRow>
           <BaseSelect onChange={handleStationChange} value={selectedStation}>
             {deviceSet.stations.map((st: IStation) => (
               <BaseOption key={st.id} value={st.id}>
@@ -88,13 +88,13 @@ const DeviceHeaderSet = () => {
               )
             )}
           </BaseSelect>
-        </BaseRow>
-      </BaseColumn>
+        </BaseFlexRow>
+      </BaseFlexColumn>
     </Container>
   );
 };
 
-const Container = styled(BaseColumn)`
+const Container = styled(BaseFlexColumn)`
   justify-content : end;
   gap: 10px;
 

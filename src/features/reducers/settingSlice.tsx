@@ -5,6 +5,8 @@ export interface SettingState {
   [x: string]: any;
   date: number;
   daily: DailySetting;
+  unitPostion: DailySetting;
+  tabPosition: DailySetting;
   tabSetting: TabSetting;
   selectedTab: SelectedTab;
   viewType: number;
@@ -18,6 +20,8 @@ twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 const initialState: SettingState = {
   date: twoMonthsAgo.getTime(),
   daily: { row: 3, column: 2 },
+  unitPostion: { row: 0, column: 0 },
+  tabPosition: { row: 1, column: 1 },
   tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
   selectedTab: {main:1, sub:1},
   viewType: 0,
@@ -33,6 +37,12 @@ export const settingSlice = createSlice({
   reducers: {
     setReportTable: (state, action: PayloadAction<DailySetting>) => {
       state.daily = action.payload;
+    },
+    setUnitSelectPosition: (state, action: PayloadAction<DailySetting>) => {
+      state.unitPostion = action.payload;
+    },
+    setTabSelectPosition: (state, action: PayloadAction<DailySetting>) => {
+      state.tabPosition = action.payload;
     },
     setTableDate: (state, action: PayloadAction<number>) => {
       state.date = action.payload;
@@ -55,5 +65,5 @@ export const settingSlice = createSlice({
   },
 });
 
-export const { setReportTable, setTabSetting, setSelectTab, setTableDate, setViewType, setPrintTitle, setApproves } = settingSlice.actions;
+export const { setReportTable,setUnitSelectPosition, setTabSelectPosition, setTabSetting, setSelectTab, setTableDate, setViewType, setPrintTitle, setApproves } = settingSlice.actions;
 export default settingSlice.reducer;

@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from "react";
-import { GroupDevice, IDivision, IStation } from "../../../static/types";
+import { IDivision, IStation, Unit } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { BaseRow } from "../../../static/styledComps";
+import { BaseFlexRow } from "../../../static/styledComps";
 
 type UnitGroupAutoSelectProps = {
   pos: number;
   devicelist: any;
   initStationId: number;
   initDivisionId: number;
-  currentGroup: GroupDevice;
+  currentGroup: Unit;
 };
 
 const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
@@ -80,7 +80,7 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
 };
 
 
-const InnerDiv = styled(BaseRow)`
+const InnerDiv = styled(BaseFlexRow)`
   justify-content: center;
   align-items: stretch;
   text-align: center;

@@ -36,7 +36,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
 
   useEffect(() => {
     (async () => {
-      console.log("settingSet.date",settingSet.date, devId);
+      // console.log("settingSet.date",settingSet.date, devId);
       try {
         if (devId > 0) {
           const result =  await readDeviceLog(devId, settingSet.date);

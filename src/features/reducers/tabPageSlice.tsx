@@ -9,24 +9,24 @@ export interface TabPageState {
 }
 
 const initialState: TabPageState = {
-  unitPosition: {index: 0, times:[] },
-  currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo11: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo12: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo13: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo14: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo21: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo22: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo23: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo24: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo31: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo32: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo33: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo34: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo41: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo42: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo43: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
-  tabPageInfo44: {id: 0, times: Array(4).fill('00:00'), unitList: [] },
+  unitPosition: {index: 0, times:[]},
+  currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo11: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo12: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo13: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo14: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo21: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo22: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo23: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo24: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo31: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo32: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo33: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo34: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo41: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo42: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo43: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo44: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
 };
 
 export const tabPageSlice = createSlice({
@@ -41,7 +41,7 @@ export const tabPageSlice = createSlice({
       state.currentTabPage.unitList[action.payload.position] = action.payload.unit;
     },
 
-    updateCurrentTab: (
+    updateCurrentUnit: (
       state,
       action: PayloadAction<updateCurrentTabPageType>
     ) => {
@@ -118,5 +118,5 @@ export const tabPageSlice = createSlice({
   },
 });
 
-export const { setCurrentTab, updateCurrentTab, setCurrentUnit, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setUnitPostion } = tabPageSlice.actions;
+export const { setCurrentTab, updateCurrentUnit, setCurrentUnit, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setUnitPostion } = tabPageSlice.actions;
 export default tabPageSlice.reducer;

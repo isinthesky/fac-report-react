@@ -3,18 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseButton, BaseColumn, BaseOption, BaseRow, BaseSelect } from "../../../static/styledComps";
+import { BaseButton, BaseFlexColumn, BaseOption, BaseFlexRow, BaseSelect } from "../../../static/styledComps";
 import UnitGroupAutoSelect from "./UnitGroupAutoSelect";
 
 
 const SetDeviceType: React.FC = () => {
-  const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const currentGroup = useSelector((state: RootStore) => state.unitGroupReducer.currentGroup);
 
 
   const [selectedStation, setSelectedStation] = useState<number>(deviceSet.stations[0].id);
   const [selectedDivision, setSelectedDivision] = useState<number>(deviceSet.divisions[0].id);
+
+  console.log("currentGroup", currentGroup)
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -25,7 +26,7 @@ const SetDeviceType: React.FC = () => {
   };
 
   const renderSection = (index1: number, values: number[]) => (
-    <BaseColumn>
+    <BaseFlexColumn>
      {values.map((value, idx) => (
       <ValueSection key={idx}>
         <ValueColumn>{idx + 1}</ValueColumn>
@@ -38,7 +39,7 @@ const SetDeviceType: React.FC = () => {
         />
       </ValueSection>
     ))}
-    </BaseColumn>
+    </BaseFlexColumn>
   );
 
   return (
@@ -61,7 +62,7 @@ const SetDeviceType: React.FC = () => {
           )}
         </BaseSelect>
       </CenterRow>
-      { renderSection(0, currentGroup.list)}
+      { renderSection(0, currentGroup.dvList)}
     </Container>
   );
 };
@@ -72,10 +73,11 @@ const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: stretch;
+  border: 1px solid #ccc;
 `;
 
 
-const CenterRow = styled(BaseRow)`
+const CenterRow = styled(BaseFlexRow)`
   justify-content: center;
   align-items: stretch;
 
@@ -89,7 +91,7 @@ const ValueColumn = styled(BaseButton)`
 `;
 
 
-const ValueSection = styled(BaseRow)`
+const ValueSection = styled(BaseFlexRow)`
   margin: 10px;
 `;
 

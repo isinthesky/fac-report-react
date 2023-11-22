@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { RootStore } from '../../../store/congifureStore';
 import { STRING_SETTING_SET_TIME_ADD, STRING_SETTING_SET_TIME_DELETE } from '../../../static/consts';
 import { TabPageInfotype } from '../../../static/types';
+import { BaseSelect, MiniButton } from '../../../static/styledComps';
 
 
 const TimeDropdowns: React.FC = () => {
@@ -32,11 +33,7 @@ const TimeDropdowns: React.FC = () => {
   const key = process.env.REACT_APP_CONST_TABINFO_NAME || "tabPageInfo"
   const tabkey = `${key}${mainTab}${subTab}`;
 
-  console.log("tabPageInfo 11", tabPageSet, tabkey)
-
   const tabPageInfo = tabPageSet[tabkey] as TabPageInfotype;
-
-  console.log("tabPageInfo 22", tabPageInfo)
 
 
   return (
@@ -50,7 +47,7 @@ const TimeDropdowns: React.FC = () => {
             })}
           </TimeSelect>
           {tabPageInfo.times.length > 4 
-          ? <button onClick={() => handleRemoveDropdown(index)}>{STRING_SETTING_SET_TIME_DELETE}</button> 
+          ? <MiniButton onClick={() => handleRemoveDropdown(index)}>{STRING_SETTING_SET_TIME_DELETE}</MiniButton> 
           : null}
           
         </SelectDiv>
@@ -67,17 +64,21 @@ const Container = styled.div`
   display: flex;
   justify-content: end;
   flex-direction: column;
-  width: 180px;
-  padding: 10px 100px;
+  width: 130px;
+  padding: 0px 20px;
+
+  gap: 9px;
+
+  border: 1px solid #111;
 `;
 
 const SelectDiv = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
-const TimeSelect = styled.select`
-  margin: 5px;
-  padding: 5px;
-  min-width: 80px;
+const TimeSelect = styled(BaseSelect)`
+  width: 100%
 `;
 
 const SettingButton = styled.button`

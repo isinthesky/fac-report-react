@@ -5,7 +5,7 @@ import styled from "styled-components";
 import ComposeSet from "../components/settings/set/ComposeSet";
 import ComposeView from "../components/settings/view/ComposeView";
 import { getSettings, setUpdateSettingsColRow } from "../features/api";
-import { getDeviceInfo } from "../features/api/device";
+import { getDeviceInfo, getUnitGroupList } from "../features/api/device";
 import { loadDeviceList } from "../features/reducers/deviceSlice";
 import { setReportTable } from "../features/reducers/settingSlice";
 import { setCurrentTab, setTabPage } from "../features/reducers/tabPageSlice";
@@ -14,9 +14,11 @@ import PrintSetting from "../components/PrintSetting";
 import { RootStore } from "../store/congifureStore";
 import {STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../static/consts";
 import UnitGroupSet from "../components/settings/group/UnitGroupSet";
-import { TabKeys, TabPageInfotype } from "../static/types";
+import { TabKeys, TabPageInfotype, Unit } from "../static/types";
 import { handleInitSettings } from "../components/settings/set/handleButtons";
-import { BaseModalBack, BaseRow } from "../static/styledComps";
+import { BaseFlexColumn, BaseFlexDiv, BaseModalBack, BaseFlexRow } from "../static/styledComps";
+import { CONST_TABINFO_NAME } from "../env";
+import { updateGroup } from "../features/reducers/unitGroupSlice";
 
 
 function Settings() {
@@ -30,6 +32,9 @@ function Settings() {
 
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
+  const unitGroupSet = useSelector((state : RootStore) => state.unitGroupReducer);
+
+  console.log("unitGroupSet", unitGroupSet)
   
   useEffect(() => {
     (async () => {
@@ -67,6 +72,19 @@ function Settings() {
         console.error(error);
       }
 
+      try {
+        const response = await getUnitGroupList();
+
+        console.log("getUnitGroupList", response)
+
+        response.map((item:Unit, pos:number) => {
+          // dispatch(updateGroup({key:String(pos), group: item}))
+        })
+        
+      } catch (error) {
+        console.error(error);
+      }
+
     })();
   }, []);
 
@@ -78,7 +96,7 @@ function Settings() {
   }, [params]);
 
   useEffect(() => {
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}` as TabKeys;
+    const key = CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}` as TabKeys;
 
     dispatch(setCurrentTab(tabPageSet[key] as TabPageInfotype)) 
   }, [settingSet]);
@@ -143,7 +161,7 @@ function Settings() {
                 onChange={handleRow}
                 readOnly={edit}
                 value={rows}
-                mode={edit}
+                mode={String(edit)}
               />
             </InputGroup>
             <InputGroup>
@@ -153,7 +171,7 @@ function Settings() {
                 onChange={handleColumn}
                 readOnly={edit}
                 value={columns}
-                mode={edit}
+                mode={String(edit)} 
               />
             </InputGroup>
             <SettingButton onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</SettingButton>
@@ -181,6 +199,7 @@ function Settings() {
       </>
       
       ) : mode === 2 ? (
+        // <></>
         <UnitGroupSet />
       ) : null
       }
@@ -188,32 +207,28 @@ function Settings() {
   );
 }
 
-const Flat = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+const Flat = styled(BaseFlexColumn)`
   align-content: start;
   justify-content: stretch;
 
-  gap: 10px;
   padding: 20px;
 
   background-color: #F5F5F5;
 `;
 
 
-const TopBar = styled(BaseRow)`
+const TopBar = styled(BaseFlexRow)`
   align-items: center;
   justify-content: center;
 `;
 
-const InputGroup = styled(BaseRow)`
+const InputGroup = styled(BaseFlexRow)`
   align-items: center;
 `;
 
-const Input = styled.input<{ mode: boolean }>`
+const Input = styled.input<{ mode: string }>`
   width: 50px;
-  background-color: ${(props) => (props.mode ? "lightgray" : "white")};
+  background-color: ${(props) => (props.mode === "true" ? "lightgray" : "white")};
 
   margin: 0px 30px; 
 `;
@@ -242,9 +257,7 @@ const ModalView = styled.div.attrs((props) => ({
   background-color: #ffffff;
 `;
 
-const Header = styled.div`
-  // flex: 1;
-  display: flex;
+const Header = styled(BaseFlexDiv)`
   flex-direction: row;
   align-self: stretch;
   justify-content: end;

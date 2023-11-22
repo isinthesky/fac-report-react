@@ -4,6 +4,7 @@ import DeviceValue from "./DeviceValue";
 import { TabPageInfotype, ViewDeviceProps } from "../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
+import { BaseFlexColumn } from "../../static/styledComps";
 
 const ViewDeviceTypeV: React.FC<ViewDeviceProps> = ({ device, tabKey }) => {
   const sections = [
@@ -76,10 +77,7 @@ const Column = styled.div`
   border: 1px solid #ccc;
 `;
 
-const MiddleColumn = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+const MiddleColumn = styled(BaseFlexColumn)`
   align-items: center;
   justify-content: center;
   padding: 3px;

@@ -10,15 +10,7 @@ const DeviceInfo: React.FC<Unit> = ({
   type,
   name,
   id,
-  dv1,
-  dv2,
-  dv3,
-  dv4,
-  dv5,
-  dv6,
-  dv7,
-  dv8,
-  dv9,
+  dvList
 }) => {
   const deviceSet = useSelector(
     (state: RootStore) => state.deviceReducer
@@ -35,55 +27,23 @@ const DeviceInfo: React.FC<Unit> = ({
   return (
     <Container>
       <NameGroup>
-          <BaseLabel>id</BaseLabel>
-          <ButtonUnitInfo>{id}</ButtonUnitInfo>
-          <BaseLabel>type</BaseLabel>
-          <ButtonUnitInfo>{type}</ButtonUnitInfo>
-          <BaseLabel>name</BaseLabel>
-          <ButtonUnitInfo>{name}</ButtonUnitInfo>
+        <BaseLabel>id</BaseLabel>
+        <ButtonUnitInfo>{id}</ButtonUnitInfo>
+        <BaseLabel>type</BaseLabel>
+        <ButtonUnitInfo>{type}</ButtonUnitInfo>
+        <BaseLabel>name</BaseLabel>
+        <ButtonUnitInfo>{name}</ButtonUnitInfo>
       </NameGroup>
+
       <Group>
-        <ItemDiv>
-          <BaseLabel>rs</BaseLabel>
-          <DeviceInput id="rs" type="text" value={getDevName(dv1)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
-          <BaseLabel>st</BaseLabel>
-          <DeviceInput id="st" type="text" value={getDevName(dv2)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
-          <BaseLabel>tr</BaseLabel>
-          <DeviceInput id="tr" type="text" value={getDevName(dv3)}readOnly={true}/>
-        </ItemDiv>
-      </Group>
-      <Group>
-        <ItemDiv>
-          <label>r</label>
-          <DeviceInput id="r" type="text" value={getDevName(dv4)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
-          <label>s</label>
-          <DeviceInput id="s" type="text" value={getDevName(dv5)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
-          <label>t</label>
-          <DeviceInput id="t" type="text" value={getDevName(dv6)} readOnly={true}/>
-        </ItemDiv>
-      </Group>
-      <Group>
-        <ItemDiv>
-          <label>pf</label>
-          <DeviceInput id="pf" type="text" value={getDevName(dv7)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
-          <label>hz</label>
-          <DeviceInput id="hz" type="text" value={getDevName(dv8)} readOnly={true}/>
-        </ItemDiv>
-        <ItemDiv>
-          <label>kw</label>
-          <DeviceInput id="kw" type="text" value={getDevName(dv9)} readOnly={true}/>
-        </ItemDiv>
-      </Group>
+      {dvList.map((dv, index) => (
+          <ItemDiv key={index}>
+            <BaseLabel>{`dv${index + 1}`}</BaseLabel>
+            <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv)} readOnly={true}/>
+          </ItemDiv>
+      ))}
+      </ Group>
+      
     </Container>
   );
 };
@@ -102,8 +62,11 @@ const Group = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 5px;
+  gap: 10px;
+
+  padding: 10px;
+  
+  
   border-radius: 5px;
 `;
 

@@ -4,12 +4,15 @@ import styled from "styled-components";
 import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import TimeDropdowns from "./TimeDropdowns";
-import { setUpdateSettingsTabPage } from "../../../features/api";
-import { setCurrentUnit, setUnitPostion, updateCurrentTab, updateTabPage } from "../../../features/reducers/tabPageSlice";
+import { updateSettingsTabPage } from "../../../features/api/device";
+import { setCurrentUnit, setUnitPostion, updateCurrentUnit, updateTabPage } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/consts";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./DeviceHeaderSet";
+import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
+import { BaseButton } from "../../../static/styledComps";
+import UnitGroupListControl from "../group/UnitGroupListControl";
 
 interface GridContainerProps {
   column: number;
@@ -20,7 +23,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const [deviceRow, setDeviceRow] = useState(1);
   const [deviceColumn, setDeviceColumn] = useState(1);
   const [deviceType, setDeviceType] = useState(0);
-  const [deviceId, setDeviceId] = useState(0);
+  const [unitPosition, setUnitPosition] = useState(0);
   
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
@@ -48,7 +51,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         if (process.env[TabKey]) {
           if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId ) {
             const keyNumber = process.env.REACT_APP_CONST_TABINFO_NAME + `${count}`; 
-            if (false !== await setUpdateSettingsTabPage(keyNumber, tabPageSet.currentTabPage)){
+            if (false !== await updateSettingsTabPage(keyNumber, tabPageSet.currentTabPage)){
               alert('저장 되었습니다.');
               return;
             }
@@ -72,7 +75,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       if (deviceColumn !== 0 && deviceRow !== 0) {
         if (position >= 0) {
           setDeviceType(tabPageSet.currentTabPage.unitList[position].type);
-          setDeviceId(position);
+          setUnitPosition(position);
         }
       }
   }, [deviceRow, deviceColumn]);
@@ -81,7 +84,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     const postion = deviceColumn + (deviceRow - 1) * column - 1;
 
     if (postion >= 0) {
-      dispatch(updateCurrentTab({arrPos: postion,
+      dispatch(updateCurrentUnit({arrPos: postion,
                                 arrKey: "type",
                                 deviceId: deviceType})
       );
@@ -96,7 +99,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
     const position = columnIndex + (rowIndex - 1) * column - 1;
 
-    dispatch(setUnitPostion(position))
+    dispatch(setUnitSelectPosition({row:rowIndex, column:columnIndex}));
+    dispatch(setUnitPostion(position));
   };
 
   // Create grid buttons
@@ -110,6 +114,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
             onClick={() => handleButtonClick(r + 1, c + 1)}
             data-row={r + 1}
             data-column={c + 1}
+            mode = {(deviceRow - 1 === r && deviceColumn - 1 === c) ? "true" : "false"}
           >
             {`R${r + 1} C${c + 1}`}
           </GridButton>
@@ -131,13 +136,14 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       </SettingsContainer>
       <SettingsContainer>
         <ColumnDiv>
-          {deviceType === 1 && <SetDeviceTypeV id={deviceId} />}
-          {deviceType === 2 && <SetDeviceTypeW id={deviceId} />}
+          {deviceType === 1 && <SetDeviceTypeV unitPos={unitPosition} />}
+          {deviceType === 2 && <SetDeviceTypeW unitPos={unitPosition} />}
           <TimeDropdowns/>
+          <UnitGroupListControl viewMode={true}/>
         </ColumnDiv>
       </SettingsContainer>
       <ButtonGroup>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <BaseButton onClick={handleCancel}>Cancel</BaseButton>
         <SaveButton onClick={handleSave}>Save</SaveButton>
       </ButtonGroup>
     </Wrapper>
@@ -174,17 +180,8 @@ const ButtonGroup = styled.div`
   align-items: center; // Center buttons vertically
 `;
 
-const Button = styled.button`
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  :hover {
-    background-color: #e0e0e0;
-  }
-`;
 
-const SaveButton = styled(Button)`
+const SaveButton = styled(BaseButton)`
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
@@ -197,7 +194,6 @@ const DefalutDiv = styled.div`
   display: flex;
   justify-content: start;
 
-  margin: 1px 30px;
   gap: 20px;
   
   border: 1px solid #111;
@@ -209,21 +205,20 @@ const ColumnDiv = styled.div`
   flex-direction: row;
 `;
 
+
+const GridButton = styled.button<{ mode: string }>`
+  padding: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  
+  background-color: ${(props) => (props.mode === "true" ? "#e4a0a4" : "white")};
+`;
+
+
 const GridContainer = styled.div<GridContainerProps>`
   display: grid;
   grid-template-columns: repeat(${props => props.column}, 1fr);
   grid-gap: 10px;
-  padding: 10px;
 `;
-
-const GridButton = styled.button`
-  padding: 6px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  :hover {
-    background-color: #e0e0e0;
-  }
-`;
-
 
 export default ComposeSet;

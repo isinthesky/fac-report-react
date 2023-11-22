@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
-import { Unit, IDivision, IStation } from "../../../static/types";
+import { Unit, IDivision, IStation, IDevice } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { updateCurrentTab } from "../../../features/reducers/tabPageSlice";
-import { BaseOption, BaseRow } from "../../../static/styledComps";
+import { updateCurrentUnit, setCurrentUnit } from "../../../features/reducers/tabPageSlice";
+import { BaseOption, BaseFlexRow } from "../../../static/styledComps";
 
 type DeviceSelectProps = {
-  pos: number;
-  devKey: string;
+  unitPosition: number;
+  devicePosition: number;
   devicelist: any;
   initStationId: number;
   stationValue:number;
@@ -16,9 +16,10 @@ type DeviceSelectProps = {
   currentDevice: Unit;
 };
 
+
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
-  pos,
-  devKey,
+  unitPosition,
+  devicePosition,
   devicelist,
   initStationId,
   initDivisionId,
@@ -27,7 +28,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selecteddevice, setSelectedDevice] = useState<number>((currentDevice as any)[devKey]);
+  const [selecteddevice, setSelectedDevice] = useState<number>((currentDevice as any));
 
   useEffect(() => {
     setSelectedStation(initStationId)
@@ -46,15 +47,18 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDevice(Number(e.target.value));
-    dispatch(
-      updateCurrentTab({
-        arrPos: pos,
-        arrKey: devKey ,
-        deviceId: Number(e.target.value),
-      })
-    );
+    //setSelectedDevice(Number(e.target.value));
+    const newDeviceId = Number(e.target.value);
+    setSelectedDevice(newDeviceId);
+
+
+    const updatedDeviceList = [...currentDevice.dvList];
+    updatedDeviceList[devicePosition] = newDeviceId;
+
+    const updatedCurrentDevice = { ...currentDevice, dvList: updatedDeviceList };
+    dispatch(setCurrentUnit({ position: unitPosition, unit: updatedCurrentDevice }));
   };
+
 
   return (
     <InnerDiv>
@@ -90,7 +94,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 };
 
 
-const InnerDiv = styled(BaseRow)`
+const InnerDiv = styled(BaseFlexRow)`
   justify-content: center;
   align-items: stretch;
   text-align: center;

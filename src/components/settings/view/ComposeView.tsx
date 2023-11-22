@@ -36,24 +36,15 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
 
           if (tabPageInfo.unitList.length > 0) {
 
-
             rows.push(
               <DeviceInfo
                 key={keyCounter}
                 type={tabPageInfo.unitList[keyCounter].type}
                 name={tabPageInfo.unitList[keyCounter].name}
-                id={tabPageInfo.unitList[keyCounter].id}
+                id={keyCounter+1}
                 st={tabPageInfo.unitList[keyCounter].st}
                 div={tabPageInfo.unitList[keyCounter].div}
-                dv1={tabPageInfo.unitList[keyCounter].dv1}
-                dv2={tabPageInfo.unitList[keyCounter].dv2}
-                dv3={tabPageInfo.unitList[keyCounter].dv3}
-                dv4={tabPageInfo.unitList[keyCounter].dv4}
-                dv5={tabPageInfo.unitList[keyCounter].dv5}
-                dv6={tabPageInfo.unitList[keyCounter].dv6}
-                dv7={tabPageInfo.unitList[keyCounter].dv7}
-                dv8={tabPageInfo.unitList[keyCounter].dv8}
-                dv9={tabPageInfo.unitList[keyCounter].dv9}
+                dvList={tabPageInfo.unitList[keyCounter].dvList}
               />
             );
           } 

@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setSelectTab } from "../../features/reducers/settingSlice";
+import { BaseButton } from "../../static/styledComps";
+import { RootStore } from "../../store/congifureStore";
 
 const TabControlBar: React.FC = () => {
   const dispatch =  useDispatch()
   const [menus, setMenus] = useState<string[]>([]);
+
+
+  const selectedTab = useSelector((state: RootStore) => state.settingReducer.selectedTab);
 
   useEffect(() => {
     const buttons:string[] = [];
 
     ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
       ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
-          const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-          if (process.env[key]) {
-            buttons.push(`${mainId}${subId}`)
-          }
+        const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+        if (process.env[key]) {
+          buttons.push(`${mainId}${subId}`)
+        }
       })
     })
+
     setMenus(buttons);
   }, []);
 
@@ -40,21 +46,23 @@ const TabControlBar: React.FC = () => {
           {process.env[`REACT_APP_INIT_REPORT_TYPE${ten}`]}
         </MainTabLabel>); // 결과 배열에 10의 자리 수를 먼저 삽입
       }
-  
-      ones.push(<TabButton key={number} onClick = {(e)=>{handleTabClick(ten, one)}} >
-        {process.env[`REACT_APP_INIT_REPORT_TYPE${ten}_SUB${one}`]}
-      </TabButton>); // 결과 배열에 1의 자리 수를 삽입
+
+      ones.push(
+        <TabButton
+          key={number}
+          onClick={() => handleTabClick(ten, one)}
+          mode={(Number(ten) === selectedTab.main && Number(one) === selectedTab.sub) ? "true" : "false"}
+        >
+          {process.env[`REACT_APP_INIT_REPORT_TYPE${ten}_SUB${one}`]}
+        </TabButton>
+      );
     }
   
     return ones;
   };
 
     
-  return (
-    <TopBar>
-    {processArray(menus)}
-    </TopBar>
-  );
+  return <TopBar>{processArray(menus)}</TopBar>;
 }
 
 const TopBar = styled.div`
@@ -63,6 +71,8 @@ const TopBar = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: start;
+
+  gap: 20px;
 `;
 
 const MainTabLabel = styled.label` 
@@ -70,12 +80,15 @@ const MainTabLabel = styled.label`
   padding: 10px;
 `;
 
-const TabButton = styled.button`
-  margin: 10px;
-  padding: 10px;
-  width: 80px;
+
+const TabButton = styled.button<{ mode: string }>`
+  height: 30px;
+  width: 100px;
+
+  font-size: 1em;
   border: 0px solid #333;
   border-bottom: 2px solid #333;
+  background-color: ${(props) => (props.mode === "true" ? "#ff0080" : "white")};
 `;
 
 export default TabControlBar;

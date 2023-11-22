@@ -6,6 +6,7 @@ import { getSettings } from "../features/api";
 import { setApproves, setReportTable, setTabSetting } from "../features/reducers/settingSlice";
 import { setTabPage } from "../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
+import { CONST_TABINFO_NAME } from "../env";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ export default function Header() {
           dispatch(setApproves(response.approves))
 
           let count = 1;
-          const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
+          const keyName = CONST_TABINFO_NAME;
 
           if (response.tabSettings.length) {
             ["1", "2", "3", "4", "5"].forEach((mainId)=>{

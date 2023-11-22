@@ -46,21 +46,6 @@ export const setUpdateSettingsColRow = async (
   }
 };
 
-export const setUpdateSettingsTabPage = async (
-  name: string,
-  object: TabPageInfotype
-): Promise<any> => {
-  try {
-    return await axiosInstance.put("/updateSettingsTabPage", {
-      name: name,
-      object: object
-    });
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-};
-
 export const setUpdateSettingsApprove = async (
   approves: ApprovalsType[]
 ): Promise<any> => {

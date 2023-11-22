@@ -4,7 +4,8 @@ import { setApproves, setPrintTitle } from '../features/reducers/settingSlice';
 import { setUpdateSettingsApprove } from '../features/api';
 import { RootStore } from '../store/congifureStore';
 import styled from "styled-components";
-import { BaseButton, BaseInput, BaseColumn, BaseRow } from '../static/styledComps';
+import { BaseButton, BaseInput, BaseFlexColumn, BaseFlexRow, BaseLabel } from '../static/styledComps';
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from '../static/consts';
 
 const ApproveSetModal = () => {
   const dispatch = useDispatch();
@@ -67,14 +68,17 @@ const ApproveSetModal = () => {
 
   return (
     <CenterContainer>
-      <BaseInput
-        type="text"
-        value={print}
-        onChange={(e) => handlePrintTitleChange(e.target.value)}
-      />
+      <BaseFlexColumn>
+        <TitleLabel>Title</TitleLabel>
+        <BaseInput
+          type="text"
+          value={print}
+          onChange={(e) => handlePrintTitleChange(e.target.value)}
+        />
+      </BaseFlexColumn>
       <ControlContainer>
         {groups.map((group, index) => (
-          <BaseRow key={index}>
+          <BaseFlexRow key={index}>
             <BaseInput
               type="checkbox"
               checked={group.checked}
@@ -86,25 +90,29 @@ const ApproveSetModal = () => {
               disabled={!group.checked}
               onChange={(e) => handleInputChange(index, e.target.value)}
             />
-          </BaseRow>
+          </BaseFlexRow>
         ))}
       </ControlContainer>
       <ButtonsContainer>
-        <BaseButton onClick={handleSave}>Save</BaseButton>
-        <BaseButton onClick={handleCancel}>Cancel</BaseButton>
+        <BaseButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</BaseButton>
+        <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
       </ButtonsContainer>
     </CenterContainer>
   );
 };
 
-const CenterContainer = styled(BaseColumn)`
+const CenterContainer = styled(BaseFlexColumn)`
   // align-content: center;
 
   border: 1px solid #f11;
   margin-bottom: 40px;
 `
 
-const ButtonsContainer =  styled(BaseRow)`
+const TitleLabel = styled(BaseLabel)`
+  bottom:0px;
+`
+
+const ButtonsContainer =  styled(BaseFlexRow)`
   gap: 20px;
   align-content: center;
   justify-content: center; // Add this line to center-align the buttons
@@ -117,7 +125,7 @@ const InputJobTitle = styled(BaseInput)`
   width: 100px;
 `
 
-const ControlContainer = styled(BaseRow)`
+const ControlContainer = styled(BaseFlexRow)`
   gap: 20px;
   `
 

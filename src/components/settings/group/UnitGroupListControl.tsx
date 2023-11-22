@@ -1,60 +1,61 @@
 import React, {useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { addGroup, updateGroup, deleteGroup, setCurrentGroup } from '../../../features/reducers/unitGroupSlice';
+import { addGroup, updateGroup, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 
-import { BaseButton, BaseColumn, BaseRow } from '../../../static/styledComps';
-import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/consts';
+import { BaseButton, BaseFlexColumn, BaseLabel, BaseFlexRow, MiniButton } from '../../../static/styledComps';
+import { STRING_DEFAULT_EDIT, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/consts';
+import { Unit, ViewModeProp } from '../../../static/types';
 
 
-const UnitGroupListControl: React.FC = () => {
+const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   const dispatch = useDispatch();
   const unitGroups = useSelector((state: RootStore) => state.unitGroupReducer);
   const [editMode, setEditMode] = useState<{ [key: string]: boolean }>({});
   const [editedNames, setEditedNames] = useState<{ [key: string]: string }>({});
 
-  console.log("unitGroups", unitGroups)
+  const toggleEdit = (index: number) => {
+    setEditMode(prev => ({ ...prev, [index]: !prev[index] }));
 
-  const toggleEdit = (key: string) => {
-    setEditMode(prev => ({ ...prev, [key]: !prev[key] }));
-    if (editMode[key]) {
-      // Save the changes
-      const updatedGroup = { ...unitGroups.groups[key], name: editedNames[key] || unitGroups.groups[key].name };
-      dispatch(updateGroup({ key, group: updatedGroup }));
+    if (editMode[index]) {
+      const updatedGroup = { ...unitGroups.groups[index], name: editedNames[index] || unitGroups.groups[index].name };
+      dispatch(updateGroup({ index, group: updatedGroup }));
     }
   };
 
-
-  const handleGroupNameClick = (key: string) => {
-    dispatch(setCurrentGroup(key));
+  const handleGroupNameClick = (position: number) => {
+    console.log("handleGroupNameClick", position)
+    dispatch(setSelectedGroup(position))
+    dispatch(setCurrentGroup(position));
   };
 
-
-  const handleNameChange = (key: string, name: string) => {
-    setEditedNames(prev => ({ ...prev, [key]: name }));
+  const handleNameChange = (position: number, name: string) => {
+    console.log("handleNameChange", position)
+    setEditedNames(prev => ({ ...prev, [position]: name }));
   };
 
-
-  const handleAdd = (key: string) => {
-    // dispatch(addGroup(key, unitGroups.currentGroup));
+  const handleAdd = () => {
+    const newGroup = { name: "New Group", type: 1, id: 0, st: 0, div: 0, dvList: [] };
+    dispatch(addGroup(newGroup));
   };
 
-  const handleUpdate = (key: string) => {
-    // dispatch(updateGroup(key, unitGroups.currentGroup));
+  const handleUpdate = (index: number) => {
+    const updatedGroup = { ...unitGroups.groups[index], name: editedNames[index] || unitGroups.groups[index].name };
+    dispatch(updateGroup({ index, group: updatedGroup }));
   };
 
-  const handleDelete = (key: string) => {
-    dispatch(deleteGroup(key));
+  const handleDelete = (index: number) => {
+    dispatch(deleteGroup(index));
   };
 
   const renderEmptyRows = () => {
     const emptyRows = [];
     for (let i = 0; i < 10; i++) {
       emptyRows.push(
-        <BaseRow key={i}>
+        <BaseFlexRow key={i}>
           <span>Group {i + 1}</span>
-        </BaseRow>
+        </BaseFlexRow>
       );
     }
     return emptyRows;
@@ -62,65 +63,91 @@ const UnitGroupListControl: React.FC = () => {
 
   return (
     <Container>
-           <BaseColumn>
-        {Object.keys(unitGroups.groups).length > 0
-          ? Object.entries(unitGroups.groups).map(([key, group]) => (
-              <BaseRow key={key}>
-                <GroupKey>{key}</GroupKey>
-                <GroupName 
-                  type="text" 
-                  disabled={!editMode[key]}
-                  defaultValue={group.name}
-                  onChange={(e) => handleNameChange(key, e.target.value)}
-                  onClick={() => handleGroupNameClick(key)}
-                 />
-                 <button onClick={() => toggleEdit(key)}>
-                  {editMode[key] ? 'save' : 'edit'}
-                </button>
-              </BaseRow>
+      <ListContainer>
+        {unitGroups.groups.length > 0
+          ? unitGroups.groups.map((group:Unit, index:number) => (
+              <BaseFlexRow key={index}  onDoubleClick={() => handleGroupNameClick(index)}>
+                <GroupKey>{index + 1}</GroupKey>
+                <GroupNameContainer>
+                  <GroupName 
+                      type="text" 
+                      disabled={!editMode[index]}
+                      defaultValue={group.name}
+                      onChange={(e) => handleNameChange(index, e.target.value)}
+                      mode={(index) === unitGroups.selectedPos ? "true" : "false"}
+                    />
+                    {!viewMode && (
+                    <BaseButton onClick={(e) => {
+                      e.stopPropagation(); // Prevents handleGroupNameClick when clicking the button
+                      toggleEdit(index);
+                    }}>
+                      {editMode[index] ? STRING_DEFAULT_SAVE : STRING_DEFAULT_EDIT}
+                    </BaseButton>
+                  )}
+                </GroupNameContainer>
+              </BaseFlexRow>
             ))
           : renderEmptyRows()
         }
-      </BaseColumn>
+      </ListContainer>
+      {!viewMode && (
       <ButtonsContainer>
-        <CenterButton onClick={() => handleAdd("0")}>
-          {STRING_SETTING_GROUP_ADD}</CenterButton>
-        <CenterButton onClick={() => handleDelete("0")}>
-          {STRING_SETTING_GROUP_DELETE}</CenterButton>
-        <CenterButton onClick={() => handleUpdate("0")}>
-          {STRING_SETTING_GROUP_UPDATE}</CenterButton>
+        <CenterButton onClick={handleAdd}>
+          {STRING_SETTING_GROUP_ADD}
+        </CenterButton>
+        <CenterButton onClick={() => handleDelete(unitGroups.groups.length - 1)}>
+          {STRING_SETTING_GROUP_DELETE}
+        </CenterButton>
+        <CenterButton onClick={() => handleUpdate(unitGroups.groups.length - 1)}>
+          {STRING_SETTING_GROUP_UPDATE}
+        </CenterButton>
       </ButtonsContainer>
+      )}
     </Container>
-  );
+  );  
 };
 
-const Container = styled(BaseColumn)`
-  margin-top: 50px;
+const Container = styled(BaseFlexColumn)`
   border: 1px solid #3f3;
 `;
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+  justify-content: center;
 
-const ButtonsContainer = styled.div`
-  align-items: end;
-  justify-items: center;
-  border: 1px solid #f33;
-  height: 30px;
+
+  max-height: 600px; // Set the maximum height to 1000px
+  overflow-y: auto; // Enable vertical scrolling
 `;
 
-
-const GroupKey = styled.div`
-  width: 50px;
+const ButtonsContainer = styled(BaseFlexRow)`
+  align-items: flex-end;
+  justify-content: center;
   height: 30px;
+  border: 1px solid #3df;
 `;
 
-const GroupName = styled.input`
+const GroupNameContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const GroupKey = styled(MiniButton)`
+  border: 0px solid #3f3;
+`;
+
+const GroupName = styled.input<{ mode: string }>`
 
   width: 85%;
   height: 30px;
   background-color: #b44054;
+
+  background-color: ${(props) => (props.mode === "true" ? "#ff0080" : "white")};
 `;
 
 const CenterButton = styled(BaseButton)`
-  margin:auto;
 `
 
 export default UnitGroupListControl;

@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
 import { RootStore } from "../../../store/congifureStore";
+import { BaseFlexDiv, BaseFlexRow } from "../../../static/styledComps";
 
 
-const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
+const SetDeviceTypeV: React.FC<SetDeviceType> = ({ unitPos }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index])
@@ -21,38 +22,37 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ id }) => {
     setCurrUnit(unit)
   }, [tabPageSet.currentTabPage, tabPageSet.unitPosition]);
 
+  console.log("tabPageSet", tabPageSet)
+  console.log("currUnit", currUnit)
 
   return (
     <Container>
-       <Section>
-         <MiddleColumn>{"V"}</MiddleColumn>
-       </Section>
+    <Section>
+      <TitleDiv>{"W"}</TitleDiv>
+    </Section>
 
-       {unitKeys.map((value, idx) => {
-        
-        const deviceKey = `dv${String(idx + 1)}` as keyof Unit;
-        const device = tabPageSet.currentTabPage.unitList[idx];
-        const initStationId = Number(device[deviceKey]) !== 0 ? deviceinfo(Number(device[deviceKey])).stationId : currUnit.st;
-        const initDivisionId = Number(device[deviceKey]) !== 0 ? deviceinfo(Number(device[deviceKey])).divisionId : currUnit.div;
+    {unitKeys.map((value, idx) => {
+     const initStationId = currUnit.dvList[idx] !== 0 ? deviceinfo(currUnit.dvList[idx]).stationId : currUnit.st;
+     const initDivisionId = currUnit.dvList[idx] !== 0 ? deviceinfo(currUnit.dvList[idx]).divisionId : currUnit.div;
 
-        return(
-        <ValueSection key={idx}>
-          <ValueColumn>{value}</ValueColumn>
-          <DeviceAutoSelect
-            pos={tabPageSet.unitPosition.index}
-            devKey={`dv${String(idx+1)}`}
-            devicelist={deviceSet}
-            initStationId={initStationId}
-            stationValue={device.st}
-            initDivisionId={initDivisionId}
-            divisionValue={device.div}
-            currentDevice={tabPageSet.currentTabPage.unitList[idx]}
-          />
-        </ValueSection>
-      )}
-      )}
-      
-    </Container>
+     return(
+     <ValueSection key={idx}>
+       <ValueColumn>{value}</ValueColumn>
+       <DeviceAutoSelect
+         unitPosition={tabPageSet.unitPosition.index}
+         devicePosition={idx}
+         devicelist={deviceSet}
+         initStationId={initStationId}
+         stationValue={currUnit.st}
+         initDivisionId={initDivisionId}
+         divisionValue={currUnit.div}
+         currentDevice={tabPageSet.currentTabPage.unitList[idx]}
+       />
+     </ValueSection>
+   )}
+   )}
+   
+ </Container>
   );
 };
 
@@ -62,23 +62,11 @@ const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: stretch;
-
   
   border: 1px solid #111;
 `;
 
-const Row = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: stretch;
-  margin-bottom: 10px;
-`;
-
-const MiddleColumn = styled.div`
-  flex: 1;
-  display: flex;
+const TitleDiv = styled(BaseFlexDiv)`
   align-items: center;
   justify-content: center;
   padding: 3px;
@@ -86,13 +74,12 @@ const MiddleColumn = styled.div`
 `;
 
 const ValueColumn = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 3px;
   border: 1px solid #ccc;
-  width: 70px;
+  width: 50px;
 `;
 
 const Section = styled.div`
@@ -101,8 +88,9 @@ const Section = styled.div`
   flex-direction: column;
 `;
 
-const ValueSection = styled(Row)`
+const ValueSection = styled(BaseFlexRow)`
   margin: 10px;
+  gap 20px;
 `;
 
 export default SetDeviceTypeV;

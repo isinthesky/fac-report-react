@@ -1,5 +1,6 @@
+import { CONST_TABINFO_NAME, CONST_UNITGROUP_NAME, INIT_TABPAGE_SETTING, INIT_UNITGROUP_SETTING } from "../../../env";
 import { setInitSettings } from "../../../features/api";
-import { resetXxmlDevice } from "../../../features/api/device";
+import { resetXmlDevice } from "../../../features/api/device";
 
 
 export const handleInitSettings = async () => {
@@ -14,8 +15,7 @@ export const handleInitSettings = async () => {
         ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
           ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
             if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`]) {
-              await setInitSettings(process.env.REACT_APP_CONST_TABINFO_NAME + `${id++}`, 
-                                    String(process.env.REACT_APP_INIT_TABPAGE_SETTING));
+              await setInitSettings(CONST_TABINFO_NAME + `${id++}`, JSON.stringify(INIT_TABPAGE_SETTING));
             }
           })
         })
@@ -24,7 +24,10 @@ export const handleInitSettings = async () => {
         await setInitSettings("settings", String(process.env.REACT_APP_INIT_GENERAL_SETTING));
         await setInitSettings("tabSetting", String(process.env.REACT_APP_INIT_TAB_SETTING));
 
-        await resetXxmlDevice();
+        const initUnitGroup = Array(10).fill(INIT_UNITGROUP_SETTING)
+        await setInitSettings(String(CONST_UNITGROUP_NAME), JSON.stringify(initUnitGroup) );
+
+        await resetXmlDevice();
 
         alert('초기화 되었습니다.');
       }

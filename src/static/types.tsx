@@ -5,13 +5,14 @@ export type IDevice = {
   stationId: number;
   divisionId: number;
 };
+
 export type IDivision = { id: number; name: string; stationId: number };
 export type IStation = { id: number; name: string };
 
 export type TabKeys = 'tabPageInfo11' | 'tabPageInfo12' | 'tabPageInfo13' | `tabPageInfo14` | 'tabPageInfo21' | 'tabPageInfo22' | 'tabPageInfo23' | `tabPageInfo24` | 'tabPageInfo31' | 'tabPageInfo32' | 'tabPageInfo33' | `tabPageInfo34` | 'tabPageInfo41' | 'tabPageInfo42' | 'tabPageInfo43' | `tabPageInfo44`;
 
 export type SetDeviceType = {
-  id: number;
+  unitPos: number;
 };
 
 export type ViewDeviceProps = {
@@ -42,17 +43,8 @@ export type Unit = {
   id: number;
   st: number;
   div: number;
-  dv1: number;
-  dv2: number;
-  dv3: number;
-  dv4: number;
-  dv5: number;
-  dv6: number;
-  dv7: number;
-  dv8: number;
-  dv9: number;
+  dvList: number[]
 };
-
 
 export type SetTabPageType = {
   mainTab: number;
@@ -89,6 +81,12 @@ export type ApprovalsType = {
   text: string;
 }
 
+
+export type ViewModeProp = {
+  viewMode: boolean;
+}
+
+
 export interface DailySetting {
   row: number;
   column: number;
@@ -107,9 +105,3 @@ export interface SetTabPageProp {
   name: string;
   object: any;
 }
-
-
-export type GroupDevice = {
-  name: string; list: number[] 
-};
-
