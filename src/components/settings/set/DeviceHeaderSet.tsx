@@ -16,7 +16,6 @@ const DeviceHeaderSet = () => {
   const [selectedDivision, setSelectedDivision] = useState<number>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index].div);
   const [deviceName, setDeviceName] = useState<string>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index].name);
 
-
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = Number(e.target.value);
     setDeviceType(newType);

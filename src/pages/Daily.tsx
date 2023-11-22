@@ -133,18 +133,6 @@ const ReportLine = styled.div`
   border: 1px solid #555;
 `;
 
-const ApplyButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 21px;
-  width: 100px;
-
-  font-size: 1em;
-`;
-
-
 const ModalBtn = styled.button`
   background-color: var(--coz-purple-600);
   text-decoration: none;

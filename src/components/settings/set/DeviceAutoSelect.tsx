@@ -3,7 +3,7 @@ import { Unit, IDivision, IStation, IDevice } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { updateCurrentUnit, setCurrentUnit } from "../../../features/reducers/tabPageSlice";
-import { BaseOption, BaseFlexRow } from "../../../static/styledComps";
+import { BaseOption, BaseFlexRow, BaseSelect } from "../../../static/styledComps";
 
 type DeviceSelectProps = {
   unitPosition: number;
@@ -100,12 +100,12 @@ const InnerDiv = styled(BaseFlexRow)`
   text-align: center;
 `;
 
-const SelectDivision = styled.select`
+const SelectDivision = styled(BaseSelect)`
   min-width: 70px;
   text-align: center;
 `
 
-const SelectDevice = styled.select`
+const SelectDevice = styled(BaseSelect)`
   flex: 1;
   min-width: 200px;
   text-align: center;
