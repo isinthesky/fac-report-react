@@ -1,37 +1,60 @@
 import React, {useEffect, useState} from "react";
-import { IDivision, IStation, Unit } from "../../../static/types";
+import { IDevice, IDivision, IStation, Unit } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { BaseFlexRow } from "../../../static/styledComps";
+import { BaseFlex1Row, BaseOption, BaseSelect } from "../../../static/componentSet";
+import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
+import { updateCurrentGroup } from "../../../features/reducers/unitGroupSlice";
+import { useSelector } from "react-redux";
+import { RootStore } from "../../../store/congifureStore";
+import { DeviceState } from "../../../features/reducers/deviceSlice";
 
 type UnitGroupAutoSelectProps = {
   pos: number;
-  devicelist: any;
-  initStationId: number;
-  initDivisionId: number;
-  currentGroup: Unit;
+  devicelist: DeviceState;
 };
 
 const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
   pos,
-  devicelist,
-  initStationId,
-  initDivisionId,
-  currentGroup
+  devicelist
 }) => {
   const dispatch = useDispatch();
-  const [selectedSt, setSelectedStation] = useState<number>(initStationId);
-  const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selecteddevice, setSelectedDevice] = useState<number>(0);
+
+  const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
+
+  const [selectedSt, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
+  const [selectedDiv, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
+  const [selecteddevice, setSelectedDevice] = useState<number>(unitGroupSlice.currentGroup.dvList[pos]);
+  const [device, setDevice] = useState<IDevice>(
+    {id: 0,
+    xmlId: "",
+    name: "",
+    type: 0,
+    stationId: 0,
+    divisionId: 0});
+  const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
 
   useEffect(() => {
     // You can use currentGroup here to set initial state or react to changes
     // For example, if currentGroup has stationId and divisionId, you can set them:
-    if (currentGroup) {
-      // You might also want to set selecteddevice based on currentGroup
+    if (unitGroupSlice.currentGroup) {
+      if (unitGroupSlice.currentGroup.dvList[pos] > 0) {
+
+        setDevice(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]])
+        setSelectedStation(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]].stationId);
+        
+        setSelectedDivision(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]].divisionId);
+
+        setSelectedDevice(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]].id);
+      }
+      else{
+        setSelectedStation(unitGroupSlice.currentGroup.st);
+        setSelectedDivision(unitGroupSlice.currentGroup.div);
+        setSelectedDevice(0);
+      }
     }
-  }, [currentGroup]);
+  }, [unitGroupSlice.currentGroup, pos]);
 
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,60 +66,90 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDevice(Number(e.target.value));
-  };
+    const newDeviceId = Number(e.target.value);
+    setSelectedDevice(newDeviceId);
+    setDevice(devicelist.devices[newDeviceId])
 
+    // Create a copy of the dvList array and update the specific element
+    const updatedDvList = [...unitGroupSlice.currentGroup.dvList];
+    updatedDvList[pos] = newDeviceId;
+
+    // Create a new object with the updated dvList
+    const updatedCurrentGroup = { ...unitGroupSlice.currentGroup, dvList: updatedDvList };
+
+    // Dispatch the action to update the state
+    dispatch(updateCurrentGroup(updatedCurrentGroup));
+  };
+  
+  console.log("selecteddevice", selecteddevice)
+  
   return (
     <InnerDiv>
       <SelectDivision onChange={handleStationChange} value={selectedSt}>
         {devicelist.stations.map((st: IStation) => (
-          <option key={st.id} value={st.id}>
+          <BaseOption key={st.id} value={st.id}>
             {st.name}
-          </option>
+          </BaseOption>
         ))}
       </SelectDivision>
       <SelectDivision onChange={handleDivisionChange} value={selectedDiv}>
-        {devicelist.divisions
-          .filter((div: IDivision) => div.stationId === selectedSt)
-          .map((div: IDivision) => (
-            <option key={div.id} value={div.id}>
-              {div.name}
-            </option>
-          ))}
+        {
+          (selectedDiv > 0) ? ( 
+            devicelist.divisions.filter((div: IDivision) => div.id === selectedDiv)
+            .map((div: IDivision) => (
+              <BaseOption key={div.id} value={div.id}>
+                {div.name}
+              </BaseOption>)
+            )) : ( 
+              devicelist.divisions.filter((div: IDivision) => div.stationId === selectedSt)
+              .map((div: IDivision) => (
+                <BaseOption key={div.id} value={div.id}>
+                  {div.name}
+                </BaseOption>)
+            ))
+        }
       </SelectDivision> 
       <SelectDevice onChange={handleDeviceChange} value={selecteddevice}>
         {
-          Object.values(devicelist.devices).filter((dev:any) =>
-              dev.stationId === selectedSt && dev.divisionId === selectedDiv
-          ).map((dev:any) => (
-            <option key={dev.id} value={dev.id}>
-              {dev.name}
-            </option>
-          ))
-          }
+            Object.values(devicelist.devices).filter((dev:IDevice) => {
+              if (dev.stationId === selectedSt && dev.divisionId === selectedDiv) {
+                if (searchWord.length > 0) {
+                  return dev.name.toLowerCase().includes(searchWord.toLowerCase()) 
+                          ? true 
+                          : false;
+                }
+                return true;
+              }
+              return false;
+            }).map((dev:any) => (
+              <BaseOption key={dev.id} value={dev.id}>
+                {dev.name}
+              </BaseOption>
+            ))
+        }
+     
       </SelectDevice>
     </InnerDiv>
   );
 };
 
 
-const InnerDiv = styled(BaseFlexRow)`
+const InnerDiv = styled(BaseFlex1Row)`
   justify-content: center;
   align-items: stretch;
   text-align: center;
 `;
 
 
-const SelectDivision = styled.select`
+const SelectDivision = styled(BaseSelect)`
   min-width: 70px;
   text-align: center;
 `
 
-const SelectDevice = styled.select`
+const SelectDevice = styled(BaseSelect)`
   flex: 1;
   min-width: 200px;
   text-align: center;
-
 `
 
 export default UnitGroupAutoSelect;

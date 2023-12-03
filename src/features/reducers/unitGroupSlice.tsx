@@ -22,7 +22,7 @@ const initialState: UnitGroupState = {
     { name: "name10", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) }
   ],
   currentGroup: { name: "", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-  selectedPos: -1,
+  selectedPos: 0,
 };
 
 export const unitGroupSlice = createSlice({
@@ -36,13 +36,18 @@ export const unitGroupSlice = createSlice({
       const { index, group } = action.payload;
       if (state.groups[index]) {
         state.groups[index] = group;
+      } else {
+        state.groups.push(group)
       }
     },
     deleteGroup: (state, action: PayloadAction<number>) => {
       state.groups.splice(action.payload, 1);
     },
     setCurrentGroup: (state, action: PayloadAction<number>) => {
-      state.currentGroup = state.groups[action.payload] || { name: "", type: 1, id: 0, st: 0, div: 0, dvList: [] };
+      state.currentGroup = state.groups[action.payload];
+    },
+    updateCurrentGroup: (state, action: PayloadAction<Unit>) => {
+      state.currentGroup = action.payload;
     },
     setSelectedGroup: (state, action: PayloadAction<number>) => {
       state.selectedPos = action.payload
@@ -50,5 +55,5 @@ export const unitGroupSlice = createSlice({
   },
 });
 
-export const {addGroup, updateGroup, deleteGroup, setCurrentGroup, setSelectedGroup } = unitGroupSlice.actions;
+export const {addGroup, updateGroup, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup } = unitGroupSlice.actions;
 export default unitGroupSlice.reducer;

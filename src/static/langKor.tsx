@@ -2,9 +2,12 @@
 export const KOR_DEFALT_SAVE = "저장"
 export const KOR_DEFALT_CANCEL = "취소"
 export const KOR_DEFALT_EDIT = "변경"
+export const KOR_DEFALT_APPLY = "적용";
 
 export const KOR_DAILY_MAIN_BTN_IDCHECK = "ID 확인";
 export const KOR_DAILY_MAIN_BTN_PRINT = "인쇄";
+export const KOR_DAILY_MAIN_VIEW_SORTATION = "구분";
+export const KOR_DAILY_MAIN_VIEW_TIME = "시간";
 
 export const KOR_SETTING_MAIN_BTN_EDIT = "편집"
 export const KOR_SETTING_MAIN_BTN_APPLY = "적용";
@@ -15,6 +18,7 @@ export const KOR_SETTING_MAIN_BTN_PRINTSET = "인쇄 설정"
 
 export const KOR_SETTING_SET_TIME_ADD = "시간 추가";
 export const KOR_SETTING_SET_TIME_DELETE = "삭제";
+export const KOR_SETTING_SET_PRINT_TITLE = "인쇄 제목";
 
 
 export const KOR_SETTING_GROUP_ADD = "추가";

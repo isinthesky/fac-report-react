@@ -7,12 +7,14 @@ import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
 import { setCurrentUnit, setUnitPostion, updateCurrentUnit, updateTabPage } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
-import { MAIN_TAB_ENV_NAME } from "../../../static/consts";
+import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./DeviceHeaderSet";
 import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
-import { BaseButton } from "../../../static/styledComps";
+import { ActiveButton, BaseButton, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
+import { COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 
 interface GridContainerProps {
   column: number;
@@ -26,22 +28,15 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const [unitPosition, setUnitPosition] = useState(0);
   
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
-
+  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
 
   const position = deviceColumn + (deviceRow - 1) * column - 1;
   const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`; 
 
-  const tabPageInfo = tabPageSet[key] as TabPageInfotype;
+  const tabPageInfo = tabPageSlice[key] as TabPageInfotype;
 
-  const handleSelectChange =
-    (setter: React.Dispatch<React.SetStateAction<number>>) =>
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setter(Number(e.target.value));
-    };
-      
   const handleSave = () => {
-    dispatch(updateTabPage({name:key, object:tabPageSet.currentTabPage}));
+    dispatch(updateTabPage({name:key, object:tabPageSlice.currentTabPage}));
 
     let count = 1;
 
@@ -51,7 +46,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         if (process.env[TabKey]) {
           if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId ) {
             const keyNumber = process.env.REACT_APP_CONST_TABINFO_NAME + `${count}`; 
-            if (false !== await updateSettingsTabPage(keyNumber, tabPageSet.currentTabPage)){
+            if (false !== await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage)){
               alert('저장 되었습니다.');
               return;
             }
@@ -62,7 +57,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     })
   };
 
-  console.log("tabcurrent", tabPageSet.currentTabPage)
+  console.log("tabcurrent", tabPageSlice.currentTabPage)
 
   const handleCancel = () => {
     console.log("unit", key, position, tabPageInfo.unitList[position])
@@ -74,7 +69,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   useEffect(() => {
       if (deviceColumn !== 0 && deviceRow !== 0) {
         if (position >= 0) {
-          setDeviceType(tabPageSet.currentTabPage.unitList[position].type);
+          setDeviceType(tabPageSlice.currentTabPage.unitList[position].type);
           setUnitPosition(position);
         }
       }
@@ -116,7 +111,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
             data-column={c + 1}
             mode = {(deviceRow - 1 === r && deviceColumn - 1 === c) ? "true" : "false"}
           >
-            {`R${r + 1} C${c + 1}`}
+            {`${ (c+1)+ (r * column) }`}
           </GridButton>
         );
       }
@@ -128,10 +123,10 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     <Wrapper>
       <SettingsContainer>
         <DefalutDiv>
+          <DeviceHeaderSet />
           <GridContainer column={column}>
             {renderGridButtons()}
           </GridContainer>
-          <DeviceHeaderSet />
         </DefalutDiv>
       </SettingsContainer>
       <SettingsContainer>
@@ -143,8 +138,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         </ColumnDiv>
       </SettingsContainer>
       <ButtonGroup>
-        <BaseButton onClick={handleCancel}>Cancel</BaseButton>
-        <SaveButton onClick={handleSave}>Save</SaveButton>
+        <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
+        <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
       </ButtonGroup>
     </Wrapper>
   );
@@ -156,7 +151,6 @@ const Wrapper = styled.div`
   grid-template-columns: repeat(1, 1fr);
   align-items: center; // Center children horizontally
   justify-content: center; // Center children vertically
-  // width: calc(100vw-20px); // Fill the viewport height
   width: 95vw;
 `;
 
@@ -170,24 +164,13 @@ const SettingsContainer = styled.div`
   border-radius: 5px;
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
+const ButtonGroup = styled(BaseFlexCenterDiv)`
   flex-wrap: wrap;
+  
   padding: 10px;
   margin: 20px;
+
   gap: 50px;
-  justify-content: center; // Center buttons horizontally
-  align-items: center; // Center buttons vertically
-`;
-
-
-const SaveButton = styled(BaseButton)`
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  color: white;
-  background-color: #344054;
 `;
 
 const DefalutDiv = styled.div`
@@ -205,15 +188,16 @@ const ColumnDiv = styled.div`
   flex-direction: row;
 `;
 
-
 const GridButton = styled.button<{ mode: string }>`
-  padding: 6px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  
-  background-color: ${(props) => (props.mode === "true" ? "#e4a0a4" : "white")};
-`;
+  width : 30px;
 
+  padding: 6px;
+  color: ${(props) => (props.mode === "true" ? "white" : "black")};
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : "white")};
+  
+  cursor: pointer;
+  border: 1px solid #ccc;
+`;
 
 const GridContainer = styled.div<GridContainerProps>`
   display: grid;

@@ -5,6 +5,8 @@ import ViewDeviceTypeV from "./viewer/ViewDeviceTypeV";
 import ViewDeviceTypeW from "./viewer/ViewDeviceTypeW";
 import { ApprovalsType, TabPageInfotype } from '../static/types';
 import { RootStore } from '../store/congifureStore';
+import { BaseFlexCenterDiv, BaseFlexDiv } from '../static/componentSet';
+import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../static/langSet';
 
 type PrintGuideProps = {
   row: number;
@@ -15,15 +17,15 @@ type PrintGuideProps = {
 
 const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab }, ref) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
+  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
 
   const renderDevice = () => {
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
+    const tabKey = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
 
-  const tabPageInfo = tabPageSet[key] as TabPageInfotype;
+    const tabPageInfo = tabPageSlice[tabKey] as TabPageInfotype;
 
-    const times = ["구 분", "/", "시 간"];
-    times.push(...tabPageInfo.times.map((time: string) => time));
+    const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
+      times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -31,19 +33,19 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
           const index = rowIndex * column + colIndex;
 
           const TypeComp = 
-          tabPageInfo.unitList[index]?.type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
-  
+          tabPageInfo.unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+
           return (
-            <InnerContainer key={colIndex}>
-              <ColumnContainer>
-                {times.map((time, index) => (
-                  <StyledColumn key={index}>{time}</StyledColumn>
+            <Container key={colIndex}>
+              {colIndex === 0 && (<TimeContainer>
+                {times.map((time: string, index: number) => (
+                  <TimeDiv key={index}>{time}</TimeDiv>
                 ))}
-              </ColumnContainer>
+              </TimeContainer>)}
               <DeviceContainer>
-              <TypeComp key={index} tabKey={key} device={tabPageInfo.unitList[index]} />
-            </DeviceContainer>
-            </InnerContainer>
+                <TypeComp key={index} tabKey={tabKey} unit={tabPageInfo.unitList[index]} />
+              </DeviceContainer>
+            </Container>
           );
         })}
       </RowContainer>
@@ -75,12 +77,16 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
 
 
 const PrintArea = styled.div`
-  width: 297mm;
-  height: 210mm;
   position: relative;
   display: flex;
   flex-direction: column;
-  border: 1px solid #cc2;
+  
+  width: 287mm;
+  height: 200mm;
+
+  padding: 5px;
+  
+  border: 2px solid #777;
 `;
 
 const TitleArea =  styled.div`
@@ -89,12 +95,13 @@ const TitleArea =  styled.div`
   flex-direction: row;
   justify-content: space-between;
   justify-self: stretch;
-  border: 1px solid #cc2;
 `;
 
 const TitleBox =  styled.button`
   position: relative;
   width: 500px;
+  font-size: 42px;
+
   border: 1px solid #cc2;
 `;
 
@@ -102,26 +109,26 @@ const ApproveTable = styled.div`
   display: flex;
   position: relative;
   flex-direction: row;
-  align-self: end;
-  align-items: start;
-  height: 100px;
+
+  justify-content: flex-end;
+
+  height: 80px;
   width: 300px;
   margin : 5px;
-  // border: 1px solid #ccc;
 `;
 
-const ApproveDiv = styled.div`
-  flex: 1;
-  display: flex;
+const ApproveDiv = styled(BaseFlexDiv)`
   flex-direction: column;
   align-items: stretch;
   justify-items: stretch;
-  
-  // border: 1px solid #ccc;
+
+  gap: 0px;
+
+  width: 100px;
 `;
 
 const NameDiv = styled.button`
-  height : 20px;
+  height : 18px;
   border: 1px solid #555;
 `;
 
@@ -136,8 +143,6 @@ const SignDiv = styled.div`
 `;
 
 const RowContainer = styled.div`
-  // flex: 1;
-  // display: inline-block;
   display: flex;
   flex-direction: row;
   align-items: start;
@@ -147,43 +152,39 @@ const RowContainer = styled.div`
   border: 1px solid #C33;
 `;
 
-const InnerContainer = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: start;
-  justify-items: stretch;
+const Container = styled(BaseFlexDiv)`
   flex-direction: row;
+  
+  width: 100%;
+  
+  gap: 0px;
 `;
 
-const ColumnContainer = styled.div`
-  flex: 1;
-  display: flex;
+const TimeContainer = styled(BaseFlexDiv)`
   flex-direction: column;
-  width: 20px;
+
+  width: 50px;
+
+  gap: 0px;
 `;
 
 const DeviceContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: stretch;
+  width: 100%;
 `;
 
-const StyledColumn = styled.div`
-  // flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 14px;
-  
-  padding: 3px;
-  border: 1px solid #c3c;
-  min-width: 30px;
+const TimeDiv = styled(BaseFlexCenterDiv)`
+  width: calc(100% - 2px);
+  height: 25px;
+
+  padding: 0px;
+  border: 1px solid #ccc;
 `;
 
 const HideDiv = styled.div`
   display: flex;
   width: 200px;
-  // border: 1px solid #ccc;
 `;
 
 export default PrintModal;

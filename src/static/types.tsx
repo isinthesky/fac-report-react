@@ -2,6 +2,7 @@ export type IDevice = {
   id: number;
   xmlId: string;
   name: string;
+  type: number;
   stationId: number;
   divisionId: number;
 };
@@ -15,10 +16,10 @@ export type SetDeviceType = {
   unitPos: number;
 };
 
-export type ViewDeviceProps = {
+export type ViewUnitProps = {
   key: number;
   tabKey: string;
-  device: Unit;
+  unit: Unit;
 };
 
 export type ComposeProps = {

@@ -4,13 +4,13 @@ import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceAutoSelect";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseFlexDiv, BaseFlexRow } from "../../../static/styledComps";
+import { BaseFlex1Div, BaseFlex1Row } from "../../../static/componentSet";
 
 
 const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
-  const [currUnit, setCurrUnit] = useState<Unit>(tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index])
+  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
+  const [currUnit, setCurrUnit] = useState<Unit>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index])
 
   const deviceinfo = (deviceId: number) => {
     return deviceSet.devices[deviceId]
@@ -18,12 +18,10 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
   const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"];
 
   useEffect(() => {
-    const unit = tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index]
+    const unit = tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
     setCurrUnit(unit)
-  }, [tabPageSet.currentTabPage, tabPageSet.unitPosition]);
+  }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
 
-
-  // console.log()
 
   return (
     <Container>
@@ -39,14 +37,14 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
         <ValueSection key={idx}>
           <ValueColumn>{value}</ValueColumn>
           <DeviceAutoSelect
-            unitPosition={tabPageSet.unitPosition.index}
+            unitPosition={tabPageSlice.unitPosition.index}
             devicePosition={idx}
             devicelist={deviceSet}
             initStationId={initStationId}
             stationValue={currUnit.st}
             initDivisionId={initDivisionId}
             divisionValue={currUnit.div}
-            currentDevice={tabPageSet.currentTabPage.unitList[tabPageSet.unitPosition.index]}
+            currentDevice={tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
           />
         </ValueSection>
       )}
@@ -66,7 +64,7 @@ const Container = styled.div`
   border: 1px solid #111;
 `;
 
-const TitleDiv = styled(BaseFlexDiv)`
+const TitleDiv = styled(BaseFlex1Div)`
   align-items: center;
   justify-content: center;
   padding: 3px;
@@ -88,7 +86,7 @@ const Section = styled.div`
   flex-direction: column;
 `;
 
-const ValueSection = styled(BaseFlexRow)`
+const ValueSection = styled(BaseFlex1Row)`
   margin: 10px;
   gap 20px;
 `;

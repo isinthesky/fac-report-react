@@ -1,17 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setTableDate, setViewType } from "../features/reducers/settingSlice";
+import { setTableDate, setViewType } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
-import ReportGuide from "../components/viewer/ReportGuide";
-import PrintModal from "../components/PrintModal";
+import ReportGuide from "../viewer/ReportGuide";
+import PrintModal from "../PrintModal";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { RootStore } from "../store/congifureStore";
-import { BaseButton, BaseModalBack } from "../static/styledComps";
-import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT } from "../static/consts";
-
+import { RootStore } from "../../store/congifureStore";
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseModalBack, ControlButton, MiniButton } from "../../static/componentSet";
+import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT } from "../../static/langSet";
+import { COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 
 function Daily() {
   const dispatch = useDispatch()  
@@ -21,7 +21,7 @@ function Daily() {
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
 
-  console.log("Daily settingSet", settingSet)
+  // console.log("Daily settingSet", settingSet)
 
   useEffect(() => {
     dispatch(setTableDate(date))
@@ -62,11 +62,8 @@ function Daily() {
           selected={new Date(date)}
           onChange={(value: Date) => setDate(value.getTime())}
         />
+        <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
         <BaseButton onClick={handleIdCheck}>{STRING_DAILY_MAIN_BTN_IDCHECK}</BaseButton>
-        <BaseButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</BaseButton>
-
-        {/* <ApplyButton onClick={handleDaily}>Daily</ApplyButton>
-        <ApplyButton onClick={handleWeekly}>Weekly</ApplyButton>*/}
       </Controls>
       <ReportLine>
         <ReportGuide
@@ -96,16 +93,11 @@ function Daily() {
   );
 }
 
-const Flat = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-
+const Flat = styled(BaseFlex1Column)`
   background-color: #F5F5F5;
 `;
 
 const Header = styled.div`
-  // flex: 1;
   display: flex;
   flex-direction: row;
   align-self: stretch;
@@ -123,68 +115,37 @@ const Controls = styled.div`
   border: 1px solid #555;
 `;
 
-const ReportLine = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+const ReportLine = styled(BaseFlex1Column)`
   justify-content: start;
 
-  margin: 20px;
+  margin: 0px 20px;
+  gap: 5px;
+  
   border: 1px solid #555;
 `;
 
-const ModalBtn = styled.button`
-  background-color: var(--coz-purple-600);
-  text-decoration: none;
-  border: none;
-  padding: 20px;
+
+const ExitBtn = styled(MiniButton)<{ bgColor?: string }>`
+  margin: 20px;
+  width: 30px;
+  height: 30px;
+
+  font-size: 20px;
+
   color: white;
-  border-radius: 30px;
-  cursor: grab;
-  font-size: 1em;
+  background-color: ${(props) => props.bgColor || COLORSET_SIGNITURE_COLOR};
+  border-radius: 10px;
 `;
 
-const ExitBtn = styled(ModalBtn) `
-background-color : #4000c7;
-border-radius: 10px;
-text-decoration: none;
-margin: 10px;
-padding: 5px 10px;
-width: 30px;
-height: 30px;
-display : flex;
-justify-content : center;
-align-items : center;
-align-self : end;
+  const PrintBtn = styled(ActiveButton) `
+  margin: 20px;
+  border-radius: 10px;
 `;
 
-
-const PrintBtn = styled(ModalBtn) `
-background-color : #4000c7;
-border-radius: 10px;
-text-decoration: none;
-margin: 10px;
-padding: 5px 10px;
-width: 60px;
-height: 30px;
-display : flex;
-justify-content : center;
-align-items : center;
-align-self : end;
+const HideBtn = styled(BaseButton) `
+  background-color : white;
+  border: 0px solid #555;
 `;
-
-
-const HideBtn = styled(ModalBtn) `
-background-color : translate;
-border-radius: 10px;
-text-decoration: none;
-margin: 10px;
-padding: 5px 10px;
-width: 30px;
-height: 30px;
-display : flex;
-`;
-
 
 const ModalView = styled.div.attrs((props) => ({
   role: 'dialog',

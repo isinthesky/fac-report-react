@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setSelectTab } from "../../features/reducers/settingSlice";
-import { BaseButton } from "../../static/styledComps";
 import { RootStore } from "../../store/congifureStore";
+import { COLORSET_BUTTON_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
+import { FONTSET_DEFAULT_BUTTON_SIZE } from "../../static/fontSet";
 
 const TabControlBar: React.FC = () => {
   const dispatch =  useDispatch()
@@ -73,6 +74,8 @@ const TopBar = styled.div`
   justify-content: start;
 
   gap: 20px;
+
+  border: 1px solid #222;
 `;
 
 const MainTabLabel = styled.label` 
@@ -81,14 +84,17 @@ const MainTabLabel = styled.label`
 `;
 
 
-const TabButton = styled.button<{ mode: string }>`
+const TabButton = styled.button<{ mode: string, fontsize?: string }>`
   height: 30px;
   width: 100px;
 
-  font-size: 1em;
+  color: ${(props) => (props.mode === "true" ? "white" : "black")};
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : "white")};
+  
   border: 0px solid #333;
   border-bottom: 2px solid #333;
-  background-color: ${(props) => (props.mode === "true" ? "#ff0080" : "white")};
 `;
 
 export default TabControlBar;

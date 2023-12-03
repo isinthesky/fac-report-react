@@ -3,7 +3,7 @@ import { Unit, IDivision, IStation, IDevice } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { updateCurrentUnit, setCurrentUnit } from "../../../features/reducers/tabPageSlice";
-import { BaseOption, BaseFlexRow, BaseSelect } from "../../../static/styledComps";
+import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
 
 type DeviceSelectProps = {
   unitPosition: number;
@@ -47,7 +47,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //setSelectedDevice(Number(e.target.value));
     const newDeviceId = Number(e.target.value);
     setSelectedDevice(newDeviceId);
 
@@ -94,7 +93,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 };
 
 
-const InnerDiv = styled(BaseFlexRow)`
+const InnerDiv = styled(BaseFlex1Row)`
   justify-content: center;
   align-items: stretch;
   text-align: center;

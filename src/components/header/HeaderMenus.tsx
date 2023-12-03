@@ -1,19 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
+import { COLORSET_FONT_HIGHLIGHT, COLORSET_HEADER_BG } from "../../static/colorSet";
 
-const FlatButton = styled.button`
-  height: 45px;
-  color: white;
-  background-color: #344054;
-  border: 0px solid #333;
-`;
-
-const MarginButton = styled.button`
-  height: 25px;
-  color: white;
-  background-color: #344054;
-  border: 0px solid #333;
-`;
 
 interface MainMenuProps {
   onClickCallback: (id: string) => void;
@@ -74,3 +63,19 @@ export const SubMenu: React.FC<SubMenuProps> = ({
     </>
   );
 };
+
+const FlatButton = styled.button<{BGColor?: string, fontcolor?: string, fontsize?: string }>`
+  height: 45px;
+  color:  ${(props) => props.fontsize || COLORSET_FONT_HIGHLIGHT};
+  background-color: ${(props) => props.fontsize || COLORSET_HEADER_BG};
+  border: 0px solid #333;
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
+`;
+
+const MarginButton = styled.button<{ fontsize?: string }>`
+  height: 25px;
+  color:  ${(props) => props.fontsize || COLORSET_FONT_HIGHLIGHT};
+  background-color: ${(props) => props.fontsize || COLORSET_HEADER_BG};
+  border: 0px solid #333;
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
+`;

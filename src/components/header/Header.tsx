@@ -2,11 +2,12 @@ import { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getSettings } from "../features/api";
-import { setApproves, setReportTable, setTabSetting } from "../features/reducers/settingSlice";
-import { setTabPage } from "../features/reducers/tabPageSlice";
+import { getSettings } from "../../features/api";
+import { setApproves, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
+import { setTabPage } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
-import { CONST_TABINFO_NAME } from "../env";
+import { CONST_TABINFO_NAME } from "../../env";
+import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_TITLESIZE } from "../../static/fontSet";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -77,20 +78,17 @@ export default function Header() {
 const TopHeader = styled.header`
   display: flex;
   justify-content: stretch;
+  top: 0px;
   width: 100%;
   height: 70px;
-  background-color: #344054;
   border: 1px solid #333;
 `;
 
-const Title = styled.button`
+const Title = styled.button<{ fontsize?: string }>`
   width: 200px;
   height: 70px;
   font-weight: bold;
-  font-size: 30px;
-  
-  color: white;
-  background-color: #344054;
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_TITLESIZE};
   border: 0px solid #333;
 `;
 
@@ -101,9 +99,8 @@ const PageControls = styled.div`
   gap: 0px;
 `;
 
-const SettingButton = styled.button`
+const SettingButton = styled.button<{ fontsize?: string }>`
   height: 70px;
   width: 100px;
-  color: white;
-  background-color: #344054;
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
 `;

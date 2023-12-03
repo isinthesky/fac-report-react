@@ -2,23 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import ComposeSet from "../components/settings/set/ComposeSet";
-import ComposeView from "../components/settings/view/ComposeView";
-import { getSettings, setUpdateSettingsColRow } from "../features/api";
-import { getDeviceInfo, getUnitGroupList } from "../features/api/device";
-import { loadDeviceList } from "../features/reducers/deviceSlice";
-import { setReportTable } from "../features/reducers/settingSlice";
-import { setCurrentTab, setTabPage } from "../features/reducers/tabPageSlice";
-import TabControlBar from "../components/settings/TabControlBar";
-import PrintSetting from "../components/PrintSetting";
-import { RootStore } from "../store/congifureStore";
-import {STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../static/consts";
-import UnitGroupSet from "../components/settings/group/UnitGroupSet";
-import { TabKeys, TabPageInfotype, Unit } from "../static/types";
-import { handleInitSettings } from "../components/settings/set/handleButtons";
-import { BaseFlexColumn, BaseFlexDiv, BaseModalBack, BaseFlexRow } from "../static/styledComps";
-import { CONST_TABINFO_NAME } from "../env";
-import { updateGroup } from "../features/reducers/unitGroupSlice";
+import ComposeSet from "../settings/set/ComposeSet";
+import ComposeView from "../settings/view/ComposeView";
+import { getSettings, setUpdateSettingsColRow } from "../../features/api";
+import { getDeviceInfo, getUnitGroupList } from "../../features/api/device";
+import { loadDeviceList } from "../../features/reducers/deviceSlice";
+import { setReportTable } from "../../features/reducers/settingSlice";
+import { setCurrentTab, setTabPage } from "../../features/reducers/tabPageSlice";
+import TabControlBar from "../settings/TabControlBar";
+import PrintSetting from "../PrintSetting";
+import { RootStore } from "../../store/congifureStore";
+import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
+import { STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../../static/langSet";
+import UnitGroupSet from "../settings/group/UnitGroupSet";
+import { TabKeys, TabPageInfotype, Unit } from "../../static/types";
+import { handleInitSettings } from "../settings/set/handleButtons";
+import { BaseFlex1Column, BaseModalBack, BaseFlex1Row, BaseButton, MiniButton, BaseLabel, BaseFlexDiv } from "../../static/componentSet";
+import { CONST_TABINFO_NAME } from "../../env";
+import { updateGroup } from "../../features/reducers/unitGroupSlice";
+import { COLORSET_DISABLE_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 
 
 function Settings() {
@@ -30,11 +32,8 @@ function Settings() {
   const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
 
-  const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
-  const unitGroupSet = useSelector((state : RootStore) => state.unitGroupReducer);
-
-  console.log("unitGroupSet", unitGroupSet)
+  const settingSlice = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
   
   useEffect(() => {
     (async () => {
@@ -75,16 +74,12 @@ function Settings() {
       try {
         const response = await getUnitGroupList();
 
-        console.log("getUnitGroupList", response)
-
-        response.map((item:Unit, pos:number) => {
-          // dispatch(updateGroup({key:String(pos), group: item}))
+        response.data.map((item:Unit, pos:number) => {
+          dispatch(updateGroup({index: pos, group: item}))
         })
-        
       } catch (error) {
         console.error(error);
       }
-
     })();
   }, []);
 
@@ -96,10 +91,10 @@ function Settings() {
   }, [params]);
 
   useEffect(() => {
-    const key = CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}` as TabKeys;
+    const key = CONST_TABINFO_NAME + `${settingSlice.selectedTab.main}${settingSlice.selectedTab.sub}` as TabKeys;
 
-    dispatch(setCurrentTab(tabPageSet[key] as TabPageInfotype)) 
-  }, [settingSet]);
+    dispatch(setCurrentTab(tabPageSlice[key] as TabPageInfotype)) 
+  }, [settingSlice]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRow(Number(e.target.value));
@@ -130,7 +125,6 @@ function Settings() {
     }
   };
 
-
   const handleUnitGroup = () => {
     try {
       setMode(2);
@@ -155,27 +149,29 @@ function Settings() {
         <>
           <TopBar>
             <InputGroup>
-              <label htmlFor="row-input">Rows:</label>
+              <BaseLabel>Rows:</BaseLabel>
               <Input
                 type="number"
                 onChange={handleRow}
                 readOnly={edit}
                 value={rows}
                 mode={String(edit)}
+                min="1"
+                max="3"
               />
-            </InputGroup>
-            <InputGroup>
-              <label htmlFor="column-input">Columns:</label>
+              <BaseLabel>Columns:</BaseLabel>
               <Input
                 type="number"
                 onChange={handleColumn}
                 readOnly={edit}
                 value={columns}
                 mode={String(edit)} 
+                min="1"
+                max="4"
               />
+              <SettingButton onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</SettingButton>
+              <SettingButton onClick={handleApply}>{STRING_SETTING_MAIN_BTN_APPLY}</SettingButton>
             </InputGroup>
-            <SettingButton onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</SettingButton>
-            <SettingButton onClick={handleApply}>{STRING_SETTING_MAIN_BTN_APPLY}</SettingButton>
             <SettingButton onClick={handleSetDevice}>
               {STRING_SETTING_MAIN_BTN_DEVSET}
             </SettingButton>
@@ -207,7 +203,7 @@ function Settings() {
   );
 }
 
-const Flat = styled(BaseFlexColumn)`
+const Flat = styled(BaseFlex1Column)`
   align-content: start;
   justify-content: stretch;
 
@@ -217,30 +213,35 @@ const Flat = styled(BaseFlexColumn)`
 `;
 
 
-const TopBar = styled(BaseFlexRow)`
+const TopBar = styled(BaseFlex1Row)`
   align-items: center;
   justify-content: center;
+
+  padding: 10px;
 `;
 
-const InputGroup = styled(BaseFlexRow)`
+const InputGroup = styled(BaseFlex1Row)`
   align-items: center;
+  padding-left: 25px;
 `;
 
-const Input = styled.input<{ mode: string }>`
+const Input = styled.input<{ mode: string, heightsize?: string, disable?:string }>`
+  text-align: center;
   width: 50px;
-  background-color: ${(props) => (props.mode === "true" ? "lightgray" : "white")};
+  height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
 
-  margin: 0px 30px; 
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_DISABLE_COLOR : "white")};
+
+  margin: 0px 10px; 
 `;
 
-const SettingButton = styled.button`
+const SettingButton = styled(BaseButton)`
   padding: 5px 15px;
   margin: 0px 10px;
   
   border: none;
   border-radius: 5px;
 
-  font-size: 1em;
   background-color: white;
 `;
 
@@ -252,8 +253,8 @@ const ModalView = styled.div.attrs((props) => ({
   align-items: center;
   flex-direction: column;
   border-radius: 20px;
-  width: 600px;
-  height: 300px;
+  width: 500px;
+  height: 260px;
   background-color: #ffffff;
 `;
 
@@ -263,30 +264,16 @@ const Header = styled(BaseFlexDiv)`
   justify-content: end;
 `;
 
+const ExitBtn = styled(MiniButton)<{ bgColor?: string }>`
+  margin: 10px;
+  width: 30px;
+  height: 30px;
 
-const ModalBtn = styled.button`
-  background-color: var(--coz-purple-600);
-  text-decoration: none;
-  border: none;
-  padding: 20px;
+  font-size: 20px;
+
   color: white;
-  border-radius: 30px;
-  cursor: grab;
-  font-size: 1em;
-`;
-
-const ExitBtn = styled(ModalBtn) `
-background-color : #4000c7;
-border-radius: 10px;
-text-decoration: none;
-margin: 10px;
-padding: 5px 10px;
-width: 30px;
-height: 30px;
-display : flex;
-justify-content : center;
-align-items : center;
-align-self : end;
+  background-color: ${(props) => props.bgColor || COLORSET_SIGNITURE_COLOR};
+  border-radius: 10px;
 `;
 
 export default Settings;

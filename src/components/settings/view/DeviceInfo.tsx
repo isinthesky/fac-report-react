@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { Unit } from "../../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseButton, BaseLabel } from "../../../static/styledComps";
+import { BaseButton, BaseFlex1Column, BaseFlex1Div, BaseLabel, CenterLabel } from "../../../static/componentSet";
+import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
 
 
 const DeviceInfo: React.FC<Unit> = ({
@@ -32,7 +33,7 @@ const DeviceInfo: React.FC<Unit> = ({
         <BaseLabel>type</BaseLabel>
         <ButtonUnitInfo>{type}</ButtonUnitInfo>
         <BaseLabel>name</BaseLabel>
-        <ButtonUnitInfo>{name}</ButtonUnitInfo>
+        <NameLabel>{name}</NameLabel>
       </NameGroup>
 
       <Group>
@@ -46,7 +47,7 @@ const DeviceInfo: React.FC<Unit> = ({
       
     </Container>
   );
-};
+}; 
 
 const Container = styled.div`
   flex: 1;
@@ -66,35 +67,32 @@ const Group = styled.div`
 
   padding: 10px;
   
-  
   border-radius: 5px;
 `;
 
+const NameLabel = styled(CenterLabel)`
+  width:100px;
+`;
 
-const NameGroup = styled(Group)`
-  display: flex;
+
+const NameGroup = styled(BaseFlex1Div)`
   align-items: center; 
   justify-self: start;
-  justify-content: center;
-
   margin: 10px;
-
-  border-radius: 10px;
-  
 `;
 
-const ItemDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+const ItemDiv = styled(BaseFlex1Column)`
+  gap: 1px;
 `;
 
-const ButtonUnitInfo = styled(BaseButton)`
+const ButtonUnitInfo = styled(CenterLabel)`
   border: 0px;
 `;
 
-const DeviceInput = styled.input`
+const DeviceInput = styled.input<{ heightsize?: string }>`
   flex:1;
+  height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
+
   padding:5px;
 `;
 

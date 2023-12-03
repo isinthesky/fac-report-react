@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { ApprovalsType, TabPageInfotype, Unit } from "../../static/types";
+import { TabPageInfotype, Unit } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -57,17 +57,18 @@ export const getUnitGroupList = async (): Promise<any> => {
     try {
       const response = await axiosInstance.get("device/unitGroupList");
 
-      console.log("getUnitGroupList", response)
+      console.log("api: getUnitGroupList", response)
 
-      return response.data.deviceInfo;
+      return response.data;
     } catch (error) {
       console.error(error);
       return false;
     }
   };
 
+
 export const updateUnitGroupList = async (
-    object: [Unit[]]
+    object: Unit[]
   ): Promise<any> => {
     try {
       return await axiosInstance.put("/device/UnitGroupList", {
@@ -78,6 +79,7 @@ export const updateUnitGroupList = async (
       return false;
     }
   };
+
 
 export const readDeviceLog = async (
     deviceId: number,

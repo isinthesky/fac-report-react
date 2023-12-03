@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootStore } from "../../store/congifureStore";
 import { readDeviceLog } from "../../features/api/device";
+import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
+import { BaseFlexCenterDiv } from "../../static/componentSet";
 
 
 interface DeviceValueProps {
@@ -12,7 +14,6 @@ interface DeviceValueProps {
 
 const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-
   
   const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
@@ -27,16 +28,11 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
       .filter(ts => ts < timestamp)
       .sort((a, b) => b - a)[0];
   
-    if (precedingTimestamp) {
-      return devLog[precedingTimestamp];
-    }
-  
-    return "-";
+    return precedingTimestamp ? devLog[precedingTimestamp] : "-";
   }
 
   useEffect(() => {
     (async () => {
-      // console.log("settingSet.date",settingSet.date, devId);
       try {
         if (devId > 0) {
           const result =  await readDeviceLog(devId, settingSet.date);
@@ -79,29 +75,22 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   }, [settingSet.viewType]);
 
   return (
-    <Row3>
+    <>
       {deviceValue.map((value:any, index:number) => (
         <ValueColumn3 key={index}>{value}</ValueColumn3>
       ))}
-    </Row3>
+    </>
   );
 };
 
-const Row3 = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+const ValueColumn3 = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
 
-const ValueColumn3 = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 25px;  
+  width: calc(100% - 2px);
+  min-width: 25px;
 
-  padding: 4px;
-  border-top: 1px solid #ccc;
-
-  min-width: 20px;
+  border: 1px solid #ccc;
 `;
 
 export default DeviceValue;

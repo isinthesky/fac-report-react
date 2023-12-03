@@ -11,6 +11,7 @@ export interface SettingState {
   selectedTab: SelectedTab;
   viewType: number;
   printTitle: string;
+  deviceSearchWord: string;
   savedApprovals: ApprovalsType[];
 }
 
@@ -26,6 +27,7 @@ const initialState: SettingState = {
   selectedTab: {main:1, sub:1},
   viewType: 0,
   printTitle: "",
+  deviceSearchWord: "",
   savedApprovals: [ {checked:false, text:""},
                     {checked:false, text:""},
                     {checked:false, text:""}],
@@ -53,6 +55,9 @@ export const settingSlice = createSlice({
     setViewType: (state, action: PayloadAction<number>) => {
       state.viewType = action.payload;
     },
+    setdeviceSearchWord: (state, action: PayloadAction<string>) => {
+      state.deviceSearchWord = action.payload;
+    },
     setSelectTab: (state, action: PayloadAction<SelectedTab>) => {
       state.selectedTab = action.payload;
     },
@@ -65,5 +70,5 @@ export const settingSlice = createSlice({
   },
 });
 
-export const { setReportTable,setUnitSelectPosition, setTabSelectPosition, setTabSetting, setSelectTab, setTableDate, setViewType, setPrintTitle, setApproves } = settingSlice.actions;
+export const { setReportTable,setUnitSelectPosition, setTabSelectPosition, setTabSetting, setSelectTab, setTableDate, setViewType, setPrintTitle, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;

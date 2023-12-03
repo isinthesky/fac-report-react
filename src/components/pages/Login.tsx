@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
 
 function Login() {
   return (
@@ -67,9 +68,10 @@ const LoginLabel = styled.label`
   width: 60px;
 `;
 
-const LoginInput = styled.input`
+const LoginInput = styled.input<{ heightsize?: string }>`
   margin: 10px;
   width: 200px;
+  height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
 `;
 
 const LoginButton = styled.button`

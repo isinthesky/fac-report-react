@@ -4,8 +4,8 @@ import { setApproves, setPrintTitle } from '../features/reducers/settingSlice';
 import { setUpdateSettingsApprove } from '../features/api';
 import { RootStore } from '../store/congifureStore';
 import styled from "styled-components";
-import { BaseButton, BaseInput, BaseFlexColumn, BaseFlexRow, BaseLabel } from '../static/styledComps';
-import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from '../static/consts';
+import { BaseButton, BaseInput, BaseFlex1Column, BaseFlex1Row, BaseLabel, ActiveButton, BaseFlexDiv } from '../static/componentSet';
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE } from '../static/langSet';
 
 const ApproveSetModal = () => {
   const dispatch = useDispatch();
@@ -68,17 +68,17 @@ const ApproveSetModal = () => {
 
   return (
     <CenterContainer>
-      <BaseFlexColumn>
-        <TitleLabel>Title</TitleLabel>
+      <TitleContainer>
+        <TitleLabel>{STRING_SETTING_SET_PRINT_TITLE}</TitleLabel>
         <BaseInput
           type="text"
           value={print}
           onChange={(e) => handlePrintTitleChange(e.target.value)}
         />
-      </BaseFlexColumn>
+      </TitleContainer>
       <ControlContainer>
         {groups.map((group, index) => (
-          <BaseFlexRow key={index}>
+          <BaseFlex1Row key={index}>
             <BaseInput
               type="checkbox"
               checked={group.checked}
@@ -90,42 +90,41 @@ const ApproveSetModal = () => {
               disabled={!group.checked}
               onChange={(e) => handleInputChange(index, e.target.value)}
             />
-          </BaseFlexRow>
+          </BaseFlex1Row>
         ))}
       </ControlContainer>
       <ButtonsContainer>
-        <BaseButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</BaseButton>
+        <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
         <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
       </ButtonsContainer>
     </CenterContainer>
   );
 };
 
-const CenterContainer = styled(BaseFlexColumn)`
-  // align-content: center;
+const CenterContainer = styled(BaseFlexDiv)`
+  flex-direction: column;
+  gap: 30px;
+`
 
-  border: 1px solid #f11;
-  margin-bottom: 40px;
+const TitleContainer = styled(BaseFlex1Column)`
+  gap: 3px;
 `
 
 const TitleLabel = styled(BaseLabel)`
-  bottom:0px;
+  font-size: 16px;
 `
 
-const ButtonsContainer =  styled(BaseFlexRow)`
-  gap: 20px;
+const ButtonsContainer =  styled(BaseFlex1Row)`
+  gap: 40px;
   align-content: center;
   justify-content: center; // Add this line to center-align the buttons
-  width: 100%; // Add
-  
-  border: 1px solid #11f;
 `
 
 const InputJobTitle = styled(BaseInput)`
   width: 100px;
 `
 
-const ControlContainer = styled(BaseFlexRow)`
+const ControlContainer = styled(BaseFlex1Row)`
   gap: 20px;
   `
 

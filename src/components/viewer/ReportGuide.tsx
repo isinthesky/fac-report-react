@@ -5,6 +5,8 @@ import ViewDeviceTypeV from "./ViewDeviceTypeV";
 import ViewDeviceTypeW from "./ViewDeviceTypeW";
 import { RootStore } from "../../store/congifureStore";
 import { TabPageInfotype } from "../../static/types";
+import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from "../../static/langSet";
+import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 
 type ReportGuideProps = {
   row: number;
@@ -14,18 +16,18 @@ type ReportGuideProps = {
 };
 
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab }) => {
-  const tabPageSet = useSelector((state : RootStore) => state.tabPageReducer);
+  const tabPageSlice = useSelector((state :RootStore) => state.tabPageReducer);
 
   const renderDevice = () => {
     const tabKey = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
-    const tabPageInfo = tabPageSet[tabKey] as TabPageInfotype;
+    const tabPageInfo = tabPageSlice[tabKey] as TabPageInfotype;
 
     if (tabPageInfo.unitList[0] === undefined) {
       return <></>
     }
 
-    const times = ["구 분", "/", "시 간"];
-    times.push(...tabPageInfo.times.map((time:string) => time));
+    const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
+    times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
@@ -37,13 +39,13 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
 
           return (
             <Container key={colIndex}>
-              <ColumnContainer>
-                {times.map((time, index) => (
-                  <StyledColumn key={index}>{time}</StyledColumn>
+              <TimeContainer>
+                {times.map((time: string, index: number) => (
+                  <TimeDiv key={index}>{time}</TimeDiv>
                 ))}
-              </ColumnContainer>
+              </TimeContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={tabKey} device={tabPageInfo.unitList[index]} />
+                <TypeComp key={index} tabKey={tabKey} unit={tabPageInfo.unitList[index]} />
               </DeviceContainer>
             </Container>
           );
@@ -55,44 +57,42 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
   return <>{renderDevice()}</>;
 };
 
-const RowContainer = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
+const RowContainer = styled(BaseFlexDiv)`
   align-items: stretch;
+
+  width: calc(100% - 10px);
+
   margin: 5px;
   gap: 5px;
 `;
 
-const Container = styled.div`
-  flex: 1;
-  display: flex;
+const Container = styled(BaseFlexDiv)`
   flex-direction: row;
-  align-items: stretch;
+  
+  width: 100%;
+  
+  gap: 0px;
 `;
 
-const ColumnContainer = styled.div`
-  flex: 1;
-  display: flex;
+const TimeContainer = styled(BaseFlexDiv)`
   flex-direction: column;
-  align-items: stretch;
 
-  width: 20px;
+  width: 50px;
+
+  gap: 0px;
 `;
 
 const DeviceContainer = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: stretch;
+  width: 100%;
 `;
 
-const StyledColumn = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  padding: 3px;
+const TimeDiv = styled(BaseFlexCenterDiv)`
+  width: calc(100% - 2px);
+  height: 25px;
+
+  padding: 0px;
   border: 1px solid #ccc;
 `;
 

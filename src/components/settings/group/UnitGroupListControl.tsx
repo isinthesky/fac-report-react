@@ -1,47 +1,78 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { addGroup, updateGroup, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 
-import { BaseButton, BaseFlexColumn, BaseFlexRow, MiniButton } from '../../../static/styledComps';
-import { STRING_DEFAULT_EDIT, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/consts';
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BaseInput, CenterLabel, ControlButton, MiniButton } from '../../../static/componentSet';
+import { ICON_DAY_CHECK, ICON_DAY_CLOSE, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
+  
+import { STRING_DEFAULT_APPLY, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
 import { Unit, ViewModeProp } from '../../../static/types';
+import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
+import { COLORSET_SIGNITURE_COLOR } from '../../../static/colorSet';
+import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
 
 
 const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   const dispatch = useDispatch();
-  const unitGroups = useSelector((state: RootStore) => state.unitGroupReducer);
+  const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
+  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [editMode, setEditMode] = useState<{ [key: string]: boolean }>({});
-  const [editedNames, setEditedNames] = useState<{ [key: string]: string }>({});
+  const [editedNames, setEditedNames] = useState< string[] >(Array(unitGroupSlice.groups.length).fill('-'));
 
   const toggleEdit = (index: number) => {
     setEditMode(prev => ({ ...prev, [index]: !prev[index] }));
 
     if (editMode[index]) {
-      const updatedGroup = { ...unitGroups.groups[index], name: editedNames[index] || unitGroups.groups[index].name };
+      const updatedGroup = { ...unitGroupSlice.groups[index], name: editedNames[index] || unitGroupSlice.groups[index].name };
+      console.log("updatedGroup", updatedGroup);
       dispatch(updateGroup({ index, group: updatedGroup }));
     }
   };
 
+  const editCancel = (index: number) => {
+    setEditMode(prev => ({ ...prev, [index]: !prev[index] }));
+  
+    if (editMode[index]) {
+      const arrName = unitGroupSlice.groups.map((obj, pos) => {
+        return obj.name;
+      });
+
+      setEditedNames(arrName);
+    }
+  };
+
+  useEffect(() => {
+    const arrName = unitGroupSlice.groups.map((obj, pos) => {
+      return obj.name;
+    })
+
+    setEditedNames(arrName)
+
+  }, [unitGroupSlice]);
+
   const handleGroupNameClick = (position: number) => {
-    console.log("handleGroupNameClick", position)
     dispatch(setSelectedGroup(position))
     dispatch(setCurrentGroup(position));
   };
 
   const handleNameChange = (position: number, name: string) => {
-    console.log("handleNameChange", position)
-    setEditedNames(prev => ({ ...prev, [position]: name }));
+    const res = [...editedNames]
+    res[position] = name
+
+    setEditedNames(res);
   };
 
   const handleAdd = () => {
-    const newGroup = { name: "New Group", type: 1, id: 0, st: 0, div: 0, dvList: [] };
+    const newGroup = { name: "New Group", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) };
     dispatch(addGroup(newGroup));
   };
 
   const handleUpdate = (index: number) => {
-    const updatedGroup = { ...unitGroups.groups[index], name: editedNames[index] || unitGroups.groups[index].name };
+    const { name, ...otherProps } = unitGroupSlice.currentGroup;
+    const updatedGroup = { name:editedNames[index] , ...otherProps };
+
     dispatch(updateGroup({ index, group: updatedGroup }));
   };
 
@@ -49,13 +80,23 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
     dispatch(deleteGroup(index));
   };
 
+  const handleApply = (index: number) => {
+    if (viewMode) {
+      const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
+
+      currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
+
+      dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
+    }
+  };
+
   const renderEmptyRows = () => {
     const emptyRows = [];
     for (let i = 0; i < 10; i++) {
       emptyRows.push(
-        <BaseFlexRow key={i}>
+        <BaseFlex1Row key={i}>
           <span>Group {i + 1}</span>
-        </BaseFlexRow>
+        </BaseFlex1Row>
       );
     }
     return emptyRows;
@@ -64,89 +105,137 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   return (
     <Container>
       <ListContainer>
-        {unitGroups.groups.length > 0
-          ? unitGroups.groups.map((group:Unit, index:number) => (
-            <BaseFlexRow key={index}  onDoubleClick={() => handleGroupNameClick(index)}>
-              <GroupKey>{index + 1}</GroupKey>
+        {unitGroupSlice.groups.length > 0
+          ? unitGroupSlice.groups.map((group:Unit, index:number) => (
+            <BaseFlex1Row key={index}  onDoubleClick={() => handleGroupNameClick(index)}>
+              <NumberLabelDiv>{index + 1}</NumberLabelDiv>
               <GroupNameContainer>
                 <GroupName 
                   type="text" 
                   disabled={!editMode[index]}
-                  defaultValue={group.name}
+                  value={editedNames[index]}
                   onChange={(e) => handleNameChange(index, e.target.value)}
-                  mode={(index) === unitGroups.selectedPos ? "true" : "false"}
+                  mode={(index) === unitGroupSlice.selectedPos ? "true" : "false"}
                 />
                 {!viewMode && (
-                  <BaseButton onClick={(e) => {
-                    e.stopPropagation(); // Prevents handleGroupNameClick when clicking the button
-                    toggleEdit(index);
-                  }}>
-                    {editMode[index] ? STRING_DEFAULT_SAVE : STRING_DEFAULT_EDIT}
-                  </BaseButton>
+                   editMode[index] ? 
+                    (
+                      <EditButtonsContainer>
+                        <ControlButton onClick={(e) => {
+                            e.stopPropagation();
+                            toggleEdit(index); 
+                          }}>
+                          {<img src={ICON_DAY_CHECK} alt="Check" />}
+                        </ControlButton>
+                        <ControlButton onClick={(e) => {
+                            e.stopPropagation();
+                            editCancel(index);
+                          }}>
+                          {<img src={ICON_DAY_UNDO} alt="Undo" />}
+                        </ControlButton>
+                      </EditButtonsContainer>
+                    ):(
+                      <EditButtonsContainer>
+                        <ControlButton onClick={(e) => {
+                            e.stopPropagation();
+                            toggleEdit(index);
+                          }}>
+                          {<img src={ICON_DAY_EDIT} alt="Edit" />}
+                        </ControlButton>
+                      </EditButtonsContainer>
+                    )
                 )}
               </GroupNameContainer>
-            </BaseFlexRow>
+            </BaseFlex1Row>
           ))
         : renderEmptyRows()
       }
       </ListContainer>
-      {!viewMode && (
+      {!viewMode ? (
       <ButtonsContainer>
-        <CenterButton onClick={handleAdd}>
+        <BaseButton onClick={handleAdd}>
           {STRING_SETTING_GROUP_ADD}
-        </CenterButton>
-        <CenterButton onClick={() => handleDelete(unitGroups.groups.length - 1)}>
+        </BaseButton>
+        <BaseButton onClick={() => handleDelete(unitGroupSlice.selectedPos)}>
           {STRING_SETTING_GROUP_DELETE}
-        </CenterButton>
-        <CenterButton onClick={() => handleUpdate(unitGroups.groups.length - 1)}>
+        </BaseButton>
+        <ActiveButton onClick={() => handleUpdate(unitGroupSlice.selectedPos)}>
           {STRING_SETTING_GROUP_UPDATE}
-        </CenterButton>
+        </ActiveButton>
       </ButtonsContainer>
-      )}
+      ): <ButtonsContainer>
+        <ActiveButton onClick={() => handleApply(unitGroupSlice.selectedPos)}>
+          {STRING_DEFAULT_APPLY}
+        </ActiveButton>
+      </ButtonsContainer>}
     </Container>
   );  
 };
 
-const Container = styled(BaseFlexColumn)`
+const Container = styled(BaseFlexDiv)`
+  flex-direction: column;
+  width: 300px;
+
+  gap: 20px;
   border: 1px solid #3f3;
 `;
-const ListContainer = styled.div`
+
+
+const ListContainer = styled(BaseFlex1Column)`
   display: flex;
   flex-direction: column;
   
   align-items: center;
   justify-content: center;
 
+  margin-top: auto;
 
-  max-height: 600px; // Set the maximum height to 1000px
+  max-height: 500px; // Set the maximum height to 1000px
   overflow-y: auto; // Enable vertical scrolling
 `;
 
-const ButtonsContainer = styled(BaseFlexRow)`
+const ButtonsContainer = styled(BaseFlexDiv)`
   align-items: flex-end;
   justify-content: center;
+
+  margin-top: auto;
   height: 30px;
-  border: 1px solid #3df;
+
 `;
 
-const GroupNameContainer = styled.div`
-  display: flex;
+
+const EditButtonsContainer = styled(BaseFlexDiv)`
+  align-items: flex-end;
+  justify-content: start;
+  
+  width: 80px;
+`;
+
+
+const NumberLabelDiv = styled(BaseFlexDiv)`
+  align-items: center;
+  justify-content: center;
+
+  width:30px;
+`;
+
+const GroupNameContainer = styled(BaseFlex1Div)`
   align-items: center;
 `;
 
-const GroupKey = styled(MiniButton)`
-  border: 0px solid #3f3;
-`;
+const GroupName = styled.input<{ mode: string, heightsize?: string, fontsize?: string }>`
+  display: flex;
 
-const GroupName = styled.input<{ mode: string }>`
   width: 85%;
-  height: 30px;
-  background-color: #b44054;
+  height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
 
-  background-color: ${(props) => (props.mode === "true" ? "#ff0080" : "white")};
+  padding: 1px;
+
+  color: ${(props) => (props.mode === "true" ? "white" : "black")};
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
+  
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : "white")};
 `;
 
-const CenterButton = styled(BaseButton)`
-`
 
 export default UnitGroupListControl;
