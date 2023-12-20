@@ -1,31 +1,41 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_FONT_HIGHLIGHT, COLORSET_HEADER_BG } from "../../static/colorSet";
-
 
 interface MainMenuProps {
   onClickCallback: (id: string) => void;
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
+  const [mainMenu, setMainMenu] = useState(
+    Array.from({ length: 5 }, (_, i) => (
+      { id: (i + 1).toString(), enable: "false" }))
+  );
+
   return (
     <>
-      {["1", "2", "3", "4", "5"].map((id) => {
-        if (process.env[`REACT_APP_INIT_REPORT_TYPE${id}`]) {
+      {mainMenu.map((obj) => {
+        if (process.env[`REACT_APP_INIT_REPORT_TYPE${obj.id}`]) {
           return (
             <FlatButton
-              key={id}
-              onClick={() => {
-                onClickCallback(id);
+              key={obj.id}
+              id={obj.id}
+              enable={obj.enable} 
+              onClick={(e) => {
+                const target = e.target as HTMLElement;
+                onClickCallback(obj.id);
+                setMainMenu(Array.from({ length: 5 }, (_, i) => ({
+                  id: (i + 1).toString(), 
+                  enable: target.id === (i + 1).toString() ? "true" : "false" })));
               }}
             >
-              {process.env[`REACT_APP_INIT_REPORT_TYPE${id}`] ||
-                `REPORT_TYPE${id}`}
+              {process.env[`REACT_APP_INIT_REPORT_TYPE${obj.id}`] ||
+                `REPORT_TYPE${obj.id}`}
             </FlatButton>
           );
         } else {
-          return <div key={id} />;
+          return <div key={obj.id} />;
         }
       })}
     </>
@@ -41,41 +51,62 @@ export const SubMenu: React.FC<SubMenuProps> = ({
   mainId,
   onClickCallback,
 }) => {
+  const [subMenu, setSubMenu] = useState(
+    Array.from({ length: 5 }, (_, i) => (
+      { id: (i + 1).toString(), enable: "false" }))
+  );
+
+  console.log("subMenu", subMenu)
+
   return (
     <>
-      {["1", "2", "3", "4", "5"].map((id) => {
-        if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${id}`]) {
+      {subMenu.map((obj) => {
+        if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`]) {
           return (
             <MarginButton
-              key={id}
-              onClick={() => {
-                onClickCallback(mainId, id);
+              key={obj.id}
+              id={obj.id}
+              enable={obj.enable} 
+              onClick={(e) => {
+                const target = e.target as HTMLElement;
+                onClickCallback(mainId, obj.id);
+                setSubMenu(Array.from({ length: 5 }, (_, i) => ({
+                  id: (i + 1).toString(), 
+                  enable: target.id === (i + 1).toString() ? "true" : "false" 
+                })));
               }}
             >
-              {process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${id}`] ||
-                `TYPE${mainId}_Sub${id}`}
+              {process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`] ||
+                `TYPE${mainId}_Sub${obj.id}`}
             </MarginButton>
           );
         } else {
-          return <div key={id} />;
+          return <div key={obj.id} />;
         }
       })}
     </>
   );
 };
 
-const FlatButton = styled.button<{BGColor?: string, fontcolor?: string, fontsize?: string }>`
+const FlatButton = styled.button<{ BGColor?: string, fontcolor?: string, fontsize?: string, enable?: string }>`
   height: 45px;
   color:  ${(props) => props.fontsize || COLORSET_FONT_HIGHLIGHT};
   background-color: ${(props) => props.fontsize || COLORSET_HEADER_BG};
-  border: 0px solid #333;
+  border: 2px solid black;
+  border-color: ${(props) => props.fontsize || COLORSET_HEADER_BG};
+
+  border-bottom: ${(props) => props.enable === "true" ? "3px solid #500" : "0px solid #d55"};
   font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
 `;
 
-const MarginButton = styled.button<{ fontsize?: string }>`
+const MarginButton = styled.button<{ fontsize?: string, enable?: string }>`
   height: 25px;
   color:  ${(props) => props.fontsize || COLORSET_FONT_HIGHLIGHT};
   background-color: ${(props) => props.fontsize || COLORSET_HEADER_BG};
-  border: 0px solid #333;
+
+  border: 2px solid black;
+  border-color: ${(props) => props.fontsize || COLORSET_HEADER_BG};
+
+  border-bottom: ${(props) => props.enable === "true" ? "3px solid #500" : "0px solid #d55"};
   font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
 `;
