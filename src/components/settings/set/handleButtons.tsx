@@ -1,5 +1,5 @@
 import { CONST_TABINFO_NAME, CONST_UNITGROUP_NAME, INIT_TABPAGE_SETTING, INIT_UNITGROUP_SETTING } from "../../../env";
-import { setInitSettings } from "../../../features/api";
+import { setInitSettings, setDeleteSettings } from "../../../features/api";
 import { resetXmlDevice } from "../../../features/api/device";
 
 
@@ -11,6 +11,8 @@ export const handleInitSettings = async () => {
 
       if (isConfirmed) {
         let id = 1;
+
+        await setDeleteSettings();
         
         ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
           ["1", "2", "3", "4", "5"].forEach( async (subId)=>{

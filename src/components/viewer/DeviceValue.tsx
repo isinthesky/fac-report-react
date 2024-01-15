@@ -36,6 +36,10 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
       try {
         if (devId > 0) {
           const result =  await readDeviceLog(devId, settingSet.date);
+
+          if (result.deviceLog === undefined) 
+            return;
+
           const date = new Date(settingSet.date);
           const devYear = date.getFullYear();
           const devMonth = date.getMonth();

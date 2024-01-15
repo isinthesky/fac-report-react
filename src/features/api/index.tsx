@@ -31,6 +31,16 @@ export const setInitSettings = async (
 };
 
 
+export const setDeleteSettings = async (): Promise<Boolean> => {
+  try {
+    await axiosInstance.delete("/general");
+    return true;
+  } catch (error) {
+    console.error("setDeleteSettings", error);
+    return false;
+  }
+};
+
 export const setUpdateSettingsColRow = async (
   row: number,
   column: number

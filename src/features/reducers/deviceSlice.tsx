@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IDevice, IDivision, IStation } from "../../static/types";
 
 export interface DeviceState {
-    devices: IDevice[];
+    devices: { [key: string]: IDevice };
     divisions: IDivision[];
     stations: IStation[];
 }
 
 const initialState: DeviceState = {
-    devices: [],
+    devices: {},
     divisions: [],
     stations: [],
 };

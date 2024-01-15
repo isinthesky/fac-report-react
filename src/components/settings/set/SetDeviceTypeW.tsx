@@ -13,7 +13,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
   const [currUnit, setCurrUnit] = useState<Unit>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index])
 
   const deviceinfo = (deviceId: number) => {
-    return deviceSet.devices[deviceId]
+    return deviceSet.devices[deviceId.toString()]
   }
   const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"];
 

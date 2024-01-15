@@ -19,7 +19,7 @@ const DeviceInfo: React.FC<Unit> = ({
 
   const getDevName = (id:number) => {
     if (true === Object.hasOwn(deviceSet.devices, id)) {
-      return deviceSet.devices[id].name;
+      return deviceSet.devices[id.toString()].name;
     } else {
       return ""
     }
@@ -37,7 +37,7 @@ const DeviceInfo: React.FC<Unit> = ({
       </NameGroup>
 
       <Group>
-      {dvList.map((dv, index) => (
+      {dvList&&dvList.map((dv, index) => (
           <ItemDiv key={index}>
             <BaseLabel>{`dv${index + 1}`}</BaseLabel>
             <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv)} readOnly={true}/>
