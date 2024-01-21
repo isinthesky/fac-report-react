@@ -8,6 +8,8 @@ import { setTabPage } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_TITLESIZE } from "../../static/fontSet";
+import { getDeviceInfo } from "../../features/api/device";
+import { loadDeviceList } from "../../features/reducers/deviceSlice";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -56,6 +58,9 @@ export default function Header() {
               })
             })
           }
+
+          const resDeviceSet = await getDeviceInfo();
+          dispatch(loadDeviceList(resDeviceSet));
         }
       } catch (error) {
         console.error(error);

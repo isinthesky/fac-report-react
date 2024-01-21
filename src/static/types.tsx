@@ -2,6 +2,7 @@ export type IDevice = {
   id: number;
   xmlId: string;
   name: string;
+  pathId: number;
   type: number;
   stationId: number;
   divisionId: number;
@@ -36,6 +37,12 @@ export type updateCurrentTabPageType = {
 export type updateCurrentTabPageUnit = {
   position: number;
   unit: Unit;
+};
+
+export type updateCurrenUnitDevice = {
+  unitPosition: number;
+  devicePosition: number; 
+  deviceId: number;
 };
 
 export type Unit = {

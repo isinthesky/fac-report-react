@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { TabPageInfotype, Unit } from "../../static/types";
+import { IDevice, TabPageInfotype, Unit } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -12,6 +12,7 @@ export const resetXmlDevice = async (): Promise<any> => {
       await axiosInstance.post("/resetXml");
     } catch (error) {
       console.error("resetXmlDevice");
+      
     }
   };
 
@@ -20,16 +21,19 @@ export const getDeviceInfo = async (): Promise<any> => {
     try {
       const response = await axiosInstance.get("device/deviceInfo");
       
-      const devices: { [key: number]: any } = {};
+      const devices: { [key: number]: IDevice } = {};
           
       for (const dev of response.data.deviceInfo.device) {
-        const key = Number(dev.id);
-        devices[key] = dev;
+        if (dev.pathId !== 0) {
+          const key = Number(dev.id);
+          devices[key] = dev;
+        } 
       }
-  
+
       response.data.deviceInfo.device = devices
-  
+
       return response.data.deviceInfo;
+      
     } catch (error) {
       console.error(error);
       return false;
@@ -57,8 +61,6 @@ export const getUnitGroupList = async (): Promise<any> => {
     try {
       const response = await axiosInstance.get("device/unitGroupList");
 
-      console.log("api: getUnitGroupList", response)
-
       return response.data;
     } catch (error) {
       console.error(error);
@@ -81,16 +83,21 @@ export const updateUnitGroupList = async (
   };
 
 
-export const readDeviceLog = async (
+export const readDevicesStatus = async (
     deviceId: number,
-    timeStamp: number
+    date: number
   ): Promise<any> => {
     try {
-      const res =  await axiosInstance.get(`device/readDeviceLog/${deviceId}/${timeStamp}`);
-      return res.data;
+      const res = await axiosInstance.get(`device/readDeviceLog/${deviceId.toString()}/${date.toString()}`);
+
+      if (res.data) {
+        return (res.data.ok === true) ? res.data.data : null;
+      }
+      
+      return null;
     } catch (error) {
       console.error(error);
-      return false;
+      return null;
     }
   };
   

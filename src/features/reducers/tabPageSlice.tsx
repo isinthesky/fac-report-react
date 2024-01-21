@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, AddDropDownType, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, TabKeys } from "../../static/types";
+import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitDevice, AddDropDownType, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, TabKeys } from "../../static/types";
 
 
 export interface TabPageState {
@@ -41,11 +41,14 @@ export const tabPageSlice = createSlice({
       state.currentTabPage.unitList[action.payload.position] = action.payload.unit;
     },
 
+    setCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
+      state.currentTabPage.unitList[action.payload.unitPosition].dvList[action.payload.devicePosition] = action.payload.deviceId;
+    },
+
     updateCurrentUnit: (
       state,
       action: PayloadAction<updateCurrentTabPageType>
     ) => {
-      console.log("updateCurrentTab", action.payload)
       if (action.payload.arrKey in state.currentTabPage.unitList[action.payload.arrPos]) {
         (state.currentTabPage.unitList[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
       }
@@ -118,5 +121,5 @@ export const tabPageSlice = createSlice({
   },
 });
 
-export const { setCurrentTab, updateCurrentUnit, setCurrentUnit, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setUnitPostion } = tabPageSlice.actions;
+export const { setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setUnitPostion } = tabPageSlice.actions;
 export default tabPageSlice.reducer;

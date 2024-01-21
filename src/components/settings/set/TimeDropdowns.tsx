@@ -68,8 +68,6 @@ const Container = styled(BaseFlexDiv)`
 
   margin-top: auto;
 
-  
-
 
   padding: 0px 20px;
 `;

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootStore } from "../../store/congifureStore";
-import { readDeviceLog } from "../../features/api/device";
+import { readDevicesStatus } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 
@@ -14,6 +14,7 @@ interface DeviceValueProps {
 
 const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   
   const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
@@ -35,10 +36,15 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
     (async () => {
       try {
         if (devId > 0) {
-          const result =  await readDeviceLog(devId, settingSet.date);
+          const result = await readDevicesStatus(deviceSet.devices[devId.toString()].pathId, settingSet.date);
 
-          if (result.deviceLog === undefined) 
+          if (!result) {
             return;
+          }
+
+          if (Object.keys(result).length === 0) {
+            return;
+          }
 
           const date = new Date(settingSet.date);
           const devYear = date.getFullYear();
@@ -46,13 +52,16 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
           const devDate = date.getDate();
 
           const deviceData = times.map((time: string) => {
-            return new Date(devYear, devMonth, devDate, 
-                            Number(time.slice(0,2)), Number(time.slice(-2))).getTime();
-          }).map((devTime: number) => {
-            return getLogByTimestamp(result.deviceLog, devTime);
-          });
+            const date = new Date(devYear, devMonth, devDate, 
+              Number(time.slice(0,2)), Number(time.slice(-2))).getTime();
 
-          console.log("deviceData", deviceData)
+            return date;
+          }).map((devTime: number) => {
+            return getLogByTimestamp(result, devTime);
+          }).map((value: string) => {
+            const numericValue = parseFloat(value);
+            return !isNaN(numericValue) ? numericValue.toFixed(1) : value;
+          });
           
           setDeviceValue(deviceData);
           setDeviceSave(deviceData);

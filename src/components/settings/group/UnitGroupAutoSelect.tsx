@@ -3,7 +3,7 @@ import { IDevice, IDivision, IStation, Unit } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { BaseFlex1Row, BaseOption, BaseSelect } from "../../../static/componentSet";
-import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
 import { updateCurrentGroup } from "../../../features/reducers/unitGroupSlice";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
@@ -29,6 +29,7 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
     {id: 0,
     xmlId: "",
     name: "",
+    pathId: 0,
     type: 0,
     stationId: 0,
     divisionId: 0});
@@ -67,18 +68,8 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newDeviceId = Number(e.target.value);
-    setSelectedDevice(newDeviceId);
-    setDevice(devicelist.devices[newDeviceId])
 
-    // Create a copy of the dvList array and update the specific element
-    const updatedDvList = [...unitGroupSlice.currentGroup.dvList];
-    updatedDvList[pos] = newDeviceId;
-
-    // Create a new object with the updated dvList
-    const updatedCurrentGroup = { ...unitGroupSlice.currentGroup, dvList: updatedDvList };
-
-    // Dispatch the action to update the state
-    dispatch(updateCurrentGroup(updatedCurrentGroup));
+    dispatch(setCurrentUnitDevice({unitPosition : 0 , devicePosition: pos, deviceId: newDeviceId }));
   };
   
   console.log("selecteddevice", selecteddevice)
