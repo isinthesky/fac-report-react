@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootStore } from "../../store/congifureStore";
-import { readDevicesStatus } from "../../features/api/device";
+import { readDevicesData } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 
@@ -36,7 +36,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
     (async () => {
       try {
         if (devId > 0) {
-          const result = await readDevicesStatus(deviceSet.devices[devId.toString()].pathId, settingSet.date);
+          const result = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
 
           if (!result) {
             return;

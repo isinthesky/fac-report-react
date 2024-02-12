@@ -37,7 +37,6 @@ export default function Header() {
     (async () => {
       try {
         const response = await getSettings();
-        console.log("getSettings res: ", response);
 
         if (response) {
           dispatch(setReportTable(response.settings));
@@ -48,11 +47,11 @@ export default function Header() {
           const keyName = CONST_TABINFO_NAME;
 
           if (response.tabSettings.length) {
-            ["1", "2", "3", "4", "5"].forEach((mainId)=>{
-              ["1", "2", "3", "4", "5"].forEach((subId)=>{
+            [1, 2, 3, 4, 5].forEach((mainId)=>{
+              [1, 2, 3, 4, 5].forEach((subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
-                  dispatch(setTabPage({name: keyName + `${mainId}${subId}`, 
+                  dispatch(setTabPage({mainTab: mainId, subTab: subId, 
                                        object: response[keyName + `${count++}`]}));
                 }
               })

@@ -29,11 +29,7 @@ const TimeDropdowns: React.FC = () => {
     dispatch(setTimes({mainTab:mainTab, subTab:subTab, index:index, time:e.target.value}));
   };
 
-
-  const key = process.env.REACT_APP_CONST_TABINFO_NAME || "tabPageInfo"
-  const tabkey = `${key}${mainTab}${subTab}`;
-
-  const tabPageInfo = tabPageSlice[tabkey] as TabPageInfotype;
+  const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab] as TabPageInfotype;
 
   return (
     <Container>

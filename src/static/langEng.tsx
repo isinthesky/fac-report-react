@@ -24,3 +24,5 @@ export const ENG_SETTING_SET_PRINT_TITLE = "Print Title";
 export const ENG_SETTING_GROUP_ADD = "Add";
 export const ENG_SETTING_GROUP_DELETE = "Delete";
 export const ENG_SETTING_GROUP_UPDATE = "Update";
+
+export const ENG_ERR_SERVER_CONNECT = "Failed to connect to server"

@@ -14,12 +14,13 @@ export type IStation = { id: number; name: string };
 export type TabKeys = 'tabPageInfo11' | 'tabPageInfo12' | 'tabPageInfo13' | `tabPageInfo14` | 'tabPageInfo21' | 'tabPageInfo22' | 'tabPageInfo23' | `tabPageInfo24` | 'tabPageInfo31' | 'tabPageInfo32' | 'tabPageInfo33' | `tabPageInfo34` | 'tabPageInfo41' | 'tabPageInfo42' | 'tabPageInfo43' | `tabPageInfo44`;
 
 export type SetDeviceType = {
-  unitPos: number;
+  name: string;
 };
 
 export type ViewUnitProps = {
   key: number;
-  tabKey: string;
+  mainTab: number;
+subTab: number;
   unit: Unit;
 };
 
@@ -43,6 +44,12 @@ export type updateCurrenUnitDevice = {
   unitPosition: number;
   devicePosition: number; 
   deviceId: number;
+};
+
+
+export type updateCurrentGroupType = {
+  arrKey: string;
+  value: number|string;
 };
 
 export type Unit = {
@@ -94,6 +101,12 @@ export type ViewModeProp = {
   viewMode: boolean;
 }
 
+export type setCurrnetUnitProp = {
+  index: number;
+  row: number;
+  column: number;
+}
+
 
 export interface DailySetting {
   row: number;
@@ -110,6 +123,7 @@ export interface TabSetting {
 }
 
 export interface SetTabPageProp {
-  name: string;
+  mainTab: number;
+  subTab: number;
   object: any;
 }

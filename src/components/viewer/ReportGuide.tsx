@@ -1,29 +1,39 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ViewDeviceTypeV from "./ViewDeviceTypeV";
 import ViewDeviceTypeW from "./ViewDeviceTypeW";
 import { RootStore } from "../../store/congifureStore";
 import { TabPageInfotype } from "../../static/types";
-import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from "../../static/langSet";
+import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 
 type ReportGuideProps = {
   row: number;
   column: number;
-  mainTab: string;
-  subTab: string;
 };
 
-const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab }) => {
+const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const tabPageSlice = useSelector((state :RootStore) => state.tabPageReducer);
+  const settingSlice = useSelector((state :RootStore) => state.settingReducer);
+  const mainTab = settingSlice.selectedTab.main;
+  const subTab = settingSlice.selectedTab.sub;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        renderDevice();
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  },[settingSlice.selectedTab]);
 
   const renderDevice = () => {
-    const tabKey = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
-    const tabPageInfo = tabPageSlice[tabKey] as TabPageInfotype;
-
-    if (tabPageInfo.unitList[0] === undefined) {
-      return <></>
+    const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab]
+  
+    if (!tabPageInfo.unitList[0]) {
+      return <>{STRING_ERR_SERVER_CONNECT}</>
     }
 
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
@@ -45,7 +55,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column, mainTab, subTab 
                 ))}
               </TimeContainer>
               <DeviceContainer>
-                <TypeComp key={index} tabKey={tabKey} unit={tabPageInfo.unitList[index]} />
+                <TypeComp key={index} mainTab={rowIndex} subTab={colIndex} unit={tabPageInfo.unitList[index]} />
               </DeviceContainer>
             </Container>
           );

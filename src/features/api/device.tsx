@@ -83,7 +83,7 @@ export const updateUnitGroupList = async (
   };
 
 
-export const readDevicesStatus = async (
+export const readDevicesData = async (
     deviceId: number,
     date: number
   ): Promise<any> => {
@@ -96,7 +96,7 @@ export const readDevicesStatus = async (
       
       return null;
     } catch (error) {
-      console.error(error);
+      console.error("readDevicesData", error);
       return null;
     }
   };

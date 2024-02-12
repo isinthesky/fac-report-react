@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setTableDate, setViewType } from "../../features/reducers/settingSlice";
+import { setTableDate, setViewType, setSelectTab } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
 import PrintModal from "../PrintModal";
@@ -21,17 +21,19 @@ function Daily() {
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
 
-  // console.log("Daily settingSet", settingSet)
-
   useEffect(() => {
     dispatch(setTableDate(date))
   }, [date]);
 
+  useEffect(() => {
+    if (id1 && id2) {
+      dispatch(setSelectTab({main: Number(id1), sub: Number(id2)}))
+    }
+  }, [id1, id2]);
+
   const handleDaily = () => {
     dispatch(setViewType(settingSet.viewType === 0 ? 1 : 0))
   };
-
-  const handleWeekly = async () => {};
 
   const handleOpenPrint = () => {
     const isConfirmed = window.confirm("인쇄하시겠습니까??");
@@ -69,8 +71,6 @@ function Daily() {
         <ReportGuide
           row={settingSet.daily.row}
           column={settingSet.daily.column}
-          mainTab={id1 ? id1 : "1"}
-          subTab={id2 ? id2 : "1"}
         ></ReportGuide>
       </ReportLine>
       {isOpen ? 
@@ -83,8 +83,8 @@ function Daily() {
             </Header>
             <PrintModal row={settingSet.daily.row}
                         column={settingSet.daily.column}
-                        mainTab={id1 ? id1 : "1"}
-                        subTab={id2 ? id2 : "1"}
+                        mainTab={Number(id1 ? id1 : "1")}
+                        subTab={Number(id2 ? id2 : "1")}
                         ref={componentRef} />
           </ModalView>
         </BaseModalBack>

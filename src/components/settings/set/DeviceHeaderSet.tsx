@@ -4,17 +4,68 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column, BaseFlex1Row, BaseLabel, BaseButton, ControlButton, MiniButton } from "../../../static/componentSet";
+import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column, BaseFlex1Row, BaseLabel, BaseButton, ControlButton, MiniButton, BaseFlexDiv } from "../../../static/componentSet";
 import { IDivision, IStation } from "../../../static/types";
+import { CONST_TYPE_INFO_NAMES } from "../../../env";
+import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
+import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 
 const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].div);
+  const [selectedStation, setSelectedStation] = useState<number>(0);
+  const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].name);
+  const [searchWord, setSearchWord] = useState("");
+
+  useEffect(() => {
+
+    const currentUnit = tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
+
+    if (currentUnit.type === 0) {
+      setDeviceType(1);
+      dispatch(updateCurrentUnit({arrPos:tabPageSlice.unitPosition.index,
+          arrKey:"type",
+          deviceId: 1
+      }));
+    }
+
+    if (currentUnit.st === 0) {
+      setSelectedStation(deviceSet.stations[0].id);
+      dispatch(
+        updateCurrentUnit({
+          arrPos: tabPageSlice.unitPosition.index,
+          arrKey: "st",
+          deviceId: deviceSet.stations[0].id,
+        })
+      );
+    }
+
+    setSearchWord("");
+    dispatch(setdeviceSearchWord(""))
+
+  }, []);
+
+  useEffect(() => {
+    if (selectedStation === 0) 
+      return;
+    
+    const currentUnit = tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
+
+    if (currentUnit.div === 0) {
+      setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
+      dispatch(
+        updateCurrentUnit({
+          arrPos: tabPageSlice.unitPosition.index,
+          arrKey: "div",
+          deviceId: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
+        })
+      );
+    }
+  }, [selectedStation]);
+
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = Number(e.target.value);
@@ -38,6 +89,7 @@ const DeviceHeaderSet = () => {
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
+
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
@@ -58,6 +110,27 @@ const DeviceHeaderSet = () => {
     );
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchWord(e.target.value);
+  };
+
+  const handleSearchClick = () => {
+    dispatch(setdeviceSearchWord(searchWord))
+  };
+
+  const handleClearInput = () => {
+    setSearchWord("");
+    dispatch(setdeviceSearchWord(""))
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchClick();
+    } else if (e.key === 'Escape') {
+      handleClearInput();
+    }
+  };
+
   return (
     <Container>
       <BaseFlex1Column>
@@ -66,11 +139,12 @@ const DeviceHeaderSet = () => {
           <BaseInput type="text" onChange={handleNameChange} value={deviceName} />
           <NameButton>Type</NameButton>
           <BaseSelect onChange={handleTypeChange} value={deviceType}>
-            <BaseOption value={1}>Type 1</BaseOption>
-            <BaseOption value={2}>Type 2</BaseOption>
+            { CONST_TYPE_INFO_NAMES.map((item, index) => (
+              <BaseOption key={index} value={index+1}>
+                {item}
+              </BaseOption>
+            ))}
           </BaseSelect>
-        </BaseFlex1Row>
-        <BaseFlex1Row>
           <BaseSelect onChange={handleStationChange} value={selectedStation}>
             {deviceSet.stations.map((st: IStation) => (
               <BaseOption key={st.id} value={st.id}>
@@ -87,6 +161,19 @@ const DeviceHeaderSet = () => {
               )
             )}
           </BaseSelect>
+
+          <SearchContainer> 
+            <BaseInput 
+              type="text" 
+              value={searchWord} 
+              onChange={handleInputChange} 
+              onKeyDown={handleSearchKeyDown} />
+            <ControlButton onClick={handleSearchClick}> <img src={ICON_DAY_SEARCH} alt="Search" />
+            </ControlButton>
+              <ControlButton onClick={handleClearInput}><img src={ICON_DAY_CLOSE} alt="Close" />
+            </ControlButton>
+          </SearchContainer>
+
         </BaseFlex1Row>
       </BaseFlex1Column>
     </Container>
@@ -98,6 +185,13 @@ const Container = styled(BaseFlex1Column)`
   gap: 10px;
 
   border: 1px solid #ccc;
+`;
+
+const SearchContainer = styled(BaseFlexDiv)`
+  flex-direction: row;
+  justify-content: center;
+
+  margin: 0px 30px;
 `;
 
 const NameButton = styled(MiniButton)`

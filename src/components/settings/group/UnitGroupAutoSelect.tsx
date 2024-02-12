@@ -23,16 +23,8 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
 
   const [selectedSt, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
-  const [selectedDiv, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
+  const [selectedDiv, setSelectedDivision] = useState<number>(0);
   const [selecteddevice, setSelectedDevice] = useState<number>(unitGroupSlice.currentGroup.dvList[pos]);
-  const [device, setDevice] = useState<IDevice>(
-    {id: 0,
-    xmlId: "",
-    name: "",
-    pathId: 0,
-    type: 0,
-    stationId: 0,
-    divisionId: 0});
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
 
@@ -41,12 +33,8 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
     // For example, if currentGroup has stationId and divisionId, you can set them:
     if (unitGroupSlice.currentGroup) {
       if (unitGroupSlice.currentGroup.dvList[pos] > 0) {
-
-        setDevice(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]])
         setSelectedStation(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]].stationId);
-        
         setSelectedDivision(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]].divisionId);
-
         setSelectedDevice(devicelist.devices[unitGroupSlice.currentGroup.dvList[pos]].id);
       }
       else{
@@ -64,15 +52,19 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
+
+
+    if (selecteddevice === 0) {
+      setSelectedDevice(0);
+    }
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newDeviceId = Number(e.target.value);
+    const devId = Number(e.target.value);
 
-    dispatch(setCurrentUnitDevice({unitPosition : 0 , devicePosition: pos, deviceId: newDeviceId }));
+    dispatch(setCurrentUnitDevice({unitPosition : 0 , devicePosition: pos, deviceId: devId }));
+    setSelectedDevice(devId);
   };
-  
-  console.log("selecteddevice", selecteddevice)
   
   return (
     <InnerDiv>
@@ -85,19 +77,12 @@ const UnitGroupAutoSelect: React.FC<UnitGroupAutoSelectProps> = ({
       </SelectDivision>
       <SelectDivision onChange={handleDivisionChange} value={selectedDiv}>
         {
-          (selectedDiv > 0) ? ( 
-            devicelist.divisions.filter((div: IDivision) => div.id === selectedDiv)
-            .map((div: IDivision) => (
-              <BaseOption key={div.id} value={div.id}>
-                {div.name}
-              </BaseOption>)
-            )) : ( 
-              devicelist.divisions.filter((div: IDivision) => div.stationId === selectedSt)
-              .map((div: IDivision) => (
-                <BaseOption key={div.id} value={div.id}>
-                  {div.name}
-                </BaseOption>)
-            ))
+          devicelist.divisions.filter((div: IDivision) => div.stationId === selectedSt)
+          .map((div: IDivision) => (
+            <BaseOption key={div.id} value={div.id}>
+              {div.name}
+            </BaseOption>)
+        )
         }
       </SelectDivision> 
       <SelectDevice onChange={handleDeviceChange} value={selecteddevice}>

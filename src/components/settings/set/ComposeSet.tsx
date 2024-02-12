@@ -5,7 +5,7 @@ import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
-import { setCurrentUnit, setUnitPostion, updateCurrentUnit, updateTabPage } from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnit, setTabUnitPosition, updateCurrentUnit, updateTabPage } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
@@ -15,6 +15,7 @@ import { ActiveButton, BaseButton, BaseFlexCenterDiv } from "../../../static/com
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
 import { COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
+import { CONST_TYPE_INFO_NAMES } from "../../../env";
 
 interface GridContainerProps {
   column: number;
@@ -22,81 +23,64 @@ interface GridContainerProps {
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch();
-  const [deviceRow, setDeviceRow] = useState(1);
-  const [deviceColumn, setDeviceColumn] = useState(1);
-  const [deviceType, setDeviceType] = useState(0);
-  const [unitPosition, setUnitPosition] = useState(0);
   
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
+  const deviceRow = settingSet.unitPostion.row;
+  const deviceColumn = settingSet.unitPostion.column;
 
   const position = deviceColumn + (deviceRow - 1) * column - 1;
-  const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`; 
+  const tabPageInfo = tabPageSlice.tabPageInfo[settingSet.selectedTab.main][settingSet.selectedTab.sub];
 
-  const tabPageInfo = tabPageSlice[key] as TabPageInfotype;
+  const [deviceType, setDeviceType] = useState(() => {
+    if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
+      return tabPageSlice.currentTabPage.unitList[position]?.type || 0;
+    }
+    return 0;
+  });
 
-  const handleSave = () => {
-    dispatch(updateTabPage({name:key, object:tabPageSlice.currentTabPage}));
+  const handleSave = async () => {
+    dispatch(updateTabPage({mainTab: settingSet.selectedTab.main, subTab: settingSet.selectedTab.sub, object: tabPageSlice.currentTabPage}));
 
     let count = 1;
 
-    [1, 2, 3, 4, 5].forEach( async (mainId)=>{
-      [1, 2, 3, 4, 5].forEach( async (subId)=>{
-        const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`
+    for (let mainId = 1; mainId <= 5; mainId++) {
+      for (let subId = 1; subId <= 5; subId++) {
+        const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
         if (process.env[TabKey]) {
-          if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId ) {
+          if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId) {
             const keyNumber = process.env.REACT_APP_CONST_TABINFO_NAME + `${count}`; 
-            if (false !== await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage)){
+            if (false !== await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage)) {
               alert('저장 되었습니다.');
               return;
             }
           }
           count += 1;
         }
-      })
-    })
+      }
+    }
   };
 
-  console.log("tabcurrent", tabPageSlice.currentTabPage)
-
   const handleCancel = () => {
-    console.log("unit", key, position, tabPageInfo.unitList[position])
     if (deviceColumn !== 0 && deviceRow !== 0) {
       dispatch(setCurrentUnit({position: position, unit: tabPageInfo.unitList[position]}));
     }
   }
 
   useEffect(() => {
-      if (deviceColumn !== 0 && deviceRow !== 0) {
-        if (position >= 0) {
-          setDeviceType(tabPageSlice.currentTabPage.unitList[position].type);
-          setUnitPosition(position);
-        }
-      }
-  }, [deviceRow, deviceColumn]);
-
-  useEffect(() => {
-    const postion = deviceColumn + (deviceRow - 1) * column - 1;
-
-    if (postion >= 0) {
-      dispatch(updateCurrentUnit({arrPos: postion,
-                                arrKey: "type",
-                                deviceId: deviceType})
-      );
+    if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
+      setDeviceType(tabPageSlice.currentTabPage.unitList[position]?.type || 0);
     }
-  }, [deviceType]);
+  }, [tabPageSlice, deviceColumn, deviceRow, position]);
 
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
-    console.log(`Button clicked at row ${rowIndex}, column ${columnIndex}`);
-
-    setDeviceRow(rowIndex)
-    setDeviceColumn(columnIndex)
-
     const position = columnIndex + (rowIndex - 1) * column - 1;
 
     dispatch(setUnitSelectPosition({row:rowIndex, column:columnIndex}));
-    dispatch(setUnitPostion(position));
+    dispatch(setTabUnitPosition({row:settingSet.selectedTab.main, column:settingSet.selectedTab.sub, index:position}));
   };
+
+  console.log("ComposeSet type", deviceType);
 
   // Create grid buttons
   const renderGridButtons = () => {
@@ -131,8 +115,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       </SettingsContainer>
       <SettingsContainer>
         <ColumnDiv>
-          {deviceType === 1 && <SetDeviceTypeV unitPos={unitPosition} />}
-          {deviceType === 2 && <SetDeviceTypeW unitPos={unitPosition} />}
+          {deviceType === 1 && <SetDeviceTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {deviceType === 2 && <SetDeviceTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
           <TimeDropdowns/>
           <UnitGroupListControl viewMode={true}/>
         </ColumnDiv>

@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { TabPageInfotype, ViewUnitProps } from "../../static/types";
+import { TabPageInfotype, Unit, ViewUnitProps } from "../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 
-const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ unit, tabKey }) => {
+const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ unit, mainTab, subTab }) => {
   const sections = [
     { label: "V", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -16,15 +16,25 @@ const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ unit, tabKey }) => {
     { label: "/", values: ["kW"] },
   ];
 
+  const [curunit, setUnit] = useState<Unit>(unit);
+
+  useEffect(() => {
+    setUnit(unit);
+  }, [unit]);
+
+  // const [main, setMainTab] = useState<number>(mainTab);
+
+  // console.log("ViewDeviceTypeV", mainTab, subTab)
+
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
-  const tabPageInfo = tabPageSlice[tabKey] as TabPageInfotype;
+  const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab];
 
   let pos = 0;
 
   return (
     <Container>
       <Row>
-        <TitleColumn>{unit.name}</TitleColumn>
+        <TitleColumn>{curunit.name}</TitleColumn>
       </Row>
       <Row>
         {sections.map((section, sectionIdx) => (
@@ -36,7 +46,7 @@ const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ unit, tabKey }) => {
               {section.values.map((value, valueIdx) => (
                 <DeviceTypeValueDiv  key={`value-${sectionIdx}-${valueIdx}`}>
                   <DevTypeDiv>{value}</DevTypeDiv>
-                  <DeviceValue times={tabPageInfo.times} devId={unit.dvList[pos++]}  />
+                  <DeviceValue times={tabPageInfo.times} devId={curunit.dvList[pos++]}  />
                 </DeviceTypeValueDiv>
               ))}
             </Row>

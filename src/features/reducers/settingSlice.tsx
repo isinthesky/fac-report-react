@@ -20,8 +20,8 @@ twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
 const initialState: SettingState = {
   date: twoMonthsAgo.getTime(),
-  daily: { row: 3, column: 2 },
-  unitPostion: { row: 0, column: 0 },
+  daily: { row: 2, column: 2 },
+  unitPostion: { row: 1, column: 1 },
   tabPosition: { row: 1, column: 1 },
   tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
   selectedTab: {main:1, sub:1},

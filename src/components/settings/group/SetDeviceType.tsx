@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Column, BaseOption, BaseFlex1Row, BaseSelect, BaseInput, ControlButton } from "../../../static/componentSet";
+import { BaseFlex1Column, BaseOption, BaseFlex1Row, BaseSelect, BaseInput, ControlButton, BaseFlexDiv } from "../../../static/componentSet";
 import UnitGroupAutoSelect from "./UnitGroupAutoSelect";
-import { updateCurrentGroup } from "../../../features/reducers/unitGroupSlice";
+import { updateCurrentGroup, updateCurrentGroupUnit } from "../../../features/reducers/unitGroupSlice";
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
 
@@ -17,28 +17,58 @@ const SetDeviceType: React.FC = () => {
   const [searchWord, setSearchWord] = useState("");
 
   const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
+  const [selectedDivision, setSelectedDivision] = useState<number>(0);
 
   useEffect(() => {
+    const currentGroup = unitGroupSlice.currentGroup;
+
+    if (currentGroup.st === 0) {
+      setSelectedStation(deviceSet.stations[0].id);
+      
+      dispatch(
+        updateCurrentGroupUnit(
+          {
+            arrKey: "st",
+            value: deviceSet.stations[0].id,
+          }
+        ))
+      return;
+    }
+
     setSelectedStation(unitGroupSlice.currentGroup.st);
-    setSelectedDivision(unitGroupSlice.currentGroup.div);
-  }, [unitGroupSlice]);
+  }, []);
+
+  useEffect(() => {
+    if (selectedStation === 0) 
+      return;
+    
+    const currentGroup = unitGroupSlice.currentGroup;
+
+    if (currentGroup.div === 0) {
+      setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
+      dispatch(
+        updateCurrentGroupUnit(
+          {
+            arrKey: "div",
+            value: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
+          }
+        ))
+    }
+  }, [selectedStation]);
 
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStationId = Number(e.target.value);
-    setSelectedStation(newStationId);
+    const stId = Number(e.target.value);
+    setSelectedStation(stId);
 
-    const updatedCurrentGroup = { ...unitGroupSlice.currentGroup, st: newStationId };
-    dispatch(updateCurrentGroup(updatedCurrentGroup))
+    dispatch(updateCurrentGroupUnit({arrKey: "st", value: stId}))
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSDivisionId = Number(e.target.value);
-    setSelectedDivision(newSDivisionId);
+    const divId = Number(e.target.value);
+    setSelectedDivision(divId);
 
-    const updatedCurrentGroup = { ...unitGroupSlice.currentGroup, div: newSDivisionId };
-    dispatch(updateCurrentGroup(updatedCurrentGroup))
+    dispatch(updateCurrentGroupUnit({arrKey: "div", value: divId}))
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,17 +84,25 @@ const SetDeviceType: React.FC = () => {
     dispatch(setdeviceSearchWord(""))
   };
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchClick();
+    } else if (e.key === 'Escape') {
+      handleClearInput();
+    }
+  };
+
   const renderSection = (index1: number, values: number[]) => (
     <BaseFlex1Column>
-     {values.map((value, idx) => (
-      <ValueSection key={idx}>
-        <ControlButton>{idx + 1}</ControlButton>
-        <UnitGroupAutoSelect
-          pos={idx}
-          devicelist={deviceSet}
-        />
-      </ValueSection>
-    ))}
+      {values.map((value, idx) => (
+        <ValueSection key={idx}>
+          <ControlButton>{idx + 1}</ControlButton>
+          <UnitGroupAutoSelect
+            pos={idx}
+            devicelist={deviceSet}
+          />
+        </ValueSection>
+      ))}
     </BaseFlex1Column>
   );
 
@@ -87,13 +125,21 @@ const SetDeviceType: React.FC = () => {
             )
           )}
         </BaseSelect>
-        <ControlButton onClick={handleSearchClick}> <img src={ICON_DAY_SEARCH} alt="Search" />
-        </ControlButton>
-          <BaseInput type="text" value={searchWord} onChange={handleInputChange} />
-          <ControlButton onClick={handleClearInput}><img src={ICON_DAY_CLOSE} alt="Close" />
-        </ControlButton>
+        <SearchContainer>
+          <BaseInput 
+            type="text" 
+            value={searchWord} 
+            onChange={handleInputChange} 
+            onKeyDown={handleSearchKeyDown} />
+          <ControlButton onClick={handleSearchClick}> 
+            <img src={ICON_DAY_SEARCH} alt="Search" />
+          </ControlButton>
+          <ControlButton onClick={handleClearInput}>
+            <img src={ICON_DAY_CLOSE} alt="Close" />
+          </ControlButton>
+        </SearchContainer>
       </CenterRow>
-      { renderSection(0, unitGroupSlice.currentGroup.dvList)}
+      { renderSection(0, unitGroupSlice.currentGroup.dvList) }
     </Container>
   );
 };
@@ -104,7 +150,6 @@ const Container = styled(BaseFlex1Column)`
   border: 1px solid #ccc;
 `;
 
-
 const CenterRow = styled(BaseFlex1Row)`
   justify-content: center;
   align-items: stretch;
@@ -114,6 +159,13 @@ const CenterRow = styled(BaseFlex1Row)`
 
 const ValueSection = styled(BaseFlex1Row)`
   margin: 10px;
+`;
+
+const SearchContainer = styled(BaseFlexDiv)`
+  flex-direction: row;
+  justify-content: center;
+
+  margin: 0px 30px;
 `;
 
 export default SetDeviceType;

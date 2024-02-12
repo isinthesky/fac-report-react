@@ -7,7 +7,7 @@ import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Div, BaseFlex1Row } from "../../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../../static/fontSet";
 
-const SetDeviceTypeV: React.FC<SetDeviceType> = ({ unitPos }) => {
+const SetDeviceTypeV: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(
@@ -26,7 +26,7 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ unitPos }) => {
   return (
     <Container>
       <Section>
-        <TitleDiv>{"W"}</TitleDiv>
+        <TitleDiv>{name}</TitleDiv>
       </Section>
 
       {unitKeys.map((value, idx) => {
@@ -50,7 +50,7 @@ const SetDeviceTypeV: React.FC<SetDeviceType> = ({ unitPos }) => {
               stationValue={currUnit.st}
               initDivisionId={initDivisionId}
               divisionValue={currUnit.div}
-              currentDevice={currUnit}
+              currentDeviceId={currUnit.dvList[idx]}
             />
           </ValueSection>
         );

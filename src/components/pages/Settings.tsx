@@ -46,12 +46,11 @@ function Settings() {
           const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
           let count = 1;
           if (response.tabSettings.length) {
-            ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
-              ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
+            [1, 2, 3, 4, 5].forEach( async (mainId)=>{
+              [1, 2, 3, 4, 5].forEach( async (subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
-                  dispatch(setTabPage({name: keyName + `${mainId}${subId}`, 
-                                       object: response[keyName + `${count++}`]}));
+                  dispatch(setTabPage({mainTab: mainId, subTab: subId, object: response[keyName + `${count++}`]}));
                 }
               })
             })
@@ -93,7 +92,7 @@ function Settings() {
   useEffect(() => {
     const key = CONST_TABINFO_NAME + `${settingSlice.selectedTab.main}${settingSlice.selectedTab.sub}` as TabKeys;
 
-    dispatch(setCurrentTab(tabPageSlice[key] as TabPageInfotype)) 
+    dispatch(setCurrentTab(tabPageSlice.tabPageInfo[settingSlice.selectedTab.main][settingSlice.selectedTab.sub] as TabPageInfotype)) 
   }, [settingSlice]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -17,7 +17,7 @@ type DeviceSelectProps = {
   stationValue: number;
   initDivisionId: number;
   divisionValue: number;
-  currentDevice: Unit;
+  currentDeviceId: number;
 };
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
@@ -26,19 +26,24 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   devicelist,
   initStationId,
   initDivisionId,
-  currentDevice,
+  currentDeviceId,
 }) => {
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selecteddevice, setSelectedDevice] = useState<number>(currentDevice as any);
+  const [selecteddevice, setSelectedDevice] = useState<number>(currentDeviceId);
+
 
   useEffect(() => {
-    setSelectedStation(initStationId);
+    setSelectedStation( (initStationId === 0) 
+                        ? devicelist.stations[0].id
+                        : initStationId);
   }, [initStationId]);
 
   useEffect(() => {
-    setSelectedDivision(initDivisionId);
+    setSelectedDivision( (currentDeviceId === 0) 
+                         ? initDivisionId
+                         : devicelist.devices[currentDeviceId].divisionId);
   }, [initDivisionId]);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -50,10 +55,9 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newDeviceId = Number(e.target.value);
-    setSelectedDevice(newDeviceId);    
+    setSelectedDevice(Number(e.target.value));    
 
-    dispatch(setCurrentUnitDevice({ unitPosition, devicePosition, deviceId: newDeviceId }));
+    dispatch(setCurrentUnitDevice({ unitPosition, devicePosition, deviceId: Number(e.target.value) }));
   };
 
   return (

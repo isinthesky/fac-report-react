@@ -20,14 +20,23 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
     })();
   }, [deviceSet]);
 
+
+  useEffect(() => {
+    (async () => {
+      try {
+        renderButtons();
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [settingSet.selectedTab]);
+
+
   const renderButtons = () => {
     const rows = [];
     let keyCounter = 0;
 
-    const key = process.env.REACT_APP_CONST_TABINFO_NAME + `${settingSet.selectedTab.main}${settingSet.selectedTab.sub}`;
-    const tabPageInfo = tabPageSlice[key] as TabPageInfotype;
-
-    console.log("optionlist[key].unitList", tabPageSlice, key, tabPageSlice[key])
+    const tabPageInfo = tabPageSlice.tabPageInfo[settingSet.selectedTab.main][settingSet.selectedTab.sub];
     
     for (let r = 0; r < row * column; r++) {
 

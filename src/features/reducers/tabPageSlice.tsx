@@ -1,32 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitDevice, AddDropDownType, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, TabKeys } from "../../static/types";
-
+import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitDevice, AddDropDownType, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, setCurrnetUnitProp } from "../../static/types";
 
 export interface TabPageState {
-  unitPosition: {index:number, times:string[]};
+  unitPosition: {index:number};
   currentTabPage: TabPageInfotype;
-  [key: string]: TabPageInfotype | {index:number};
+  tabPageInfo: TabPageInfotype[][];
 }
 
 const initialState: TabPageState = {
-  unitPosition: {index: 0, times:[]},
+  unitPosition: {index: 0},
   currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo11: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo12: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo13: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo14: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo21: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo22: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo23: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo24: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo31: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo32: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo33: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo34: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo41: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo42: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo43: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo44: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
+  tabPageInfo: Array(4).fill(Array(4).fill({id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) }))
 };
 
 export const tabPageSlice = createSlice({
@@ -55,30 +39,27 @@ export const tabPageSlice = createSlice({
     },
 
     updateTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
-      const key = action.payload.name as TabKeys;
-      if (state[key]) {
-        state[key] = action.payload.object;
+      if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
+        state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
       }
     },
+    
     setTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
-      const key = action.payload.name as TabKeys;
-      if (state[key]) {
-        state[key] = action.payload.object;
+      if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
+        state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
       }
     },
 
-    setUnitPostion: (state, action: PayloadAction<number>) => {
-      state.unitPosition.index = action.payload
+    setTabUnitPosition: (state, action: PayloadAction<setCurrnetUnitProp>) => {
+      state.unitPosition.index = action.payload.index;
+      state.currentTabPage = state.tabPageInfo[action.payload.row][action.payload.column];
     },
 
     addDropdown: (
       state,
       action: PayloadAction<AddDropDownType>
     ) => {
-      const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
-      const key = keyName + `${action.payload.mainTab}${action.payload.subTab}` as TabKeys;
-      
-      const tabPage = state[key] as TabPageInfotype;
+      const tabPage = state.tabPageInfo[action.payload.mainTab][action.payload.subTab];
 
       if (tabPage.times.length < 12) {
         tabPage.times.push('00:00');
@@ -90,10 +71,7 @@ export const tabPageSlice = createSlice({
       state,
       action: PayloadAction<DeleteDropDownType>
     ) => {
-      const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
-      const key = keyName + `${action.payload.mainTab}${action.payload.subTab}` as TabKeys;
-
-      const tabPage = state[key] as TabPageInfotype;
+      const tabPage = state.tabPageInfo[action.payload.mainTab][action.payload.subTab];
       const index = action.payload.index;
 
       if (tabPage.times.length > 4) {
@@ -106,10 +84,7 @@ export const tabPageSlice = createSlice({
       state,
       action: PayloadAction<SetDropDownType>
     ) => {
-      const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
-      const key = keyName + `${action.payload.mainTab}${action.payload.subTab}` as TabKeys;
-
-      const tabPage = state[key] as TabPageInfotype;
+      const tabPage = state.tabPageInfo[action.payload.mainTab][action.payload.subTab];
       const index = action.payload.index;
 
       tabPage.times[index] = String(action.payload.time);
@@ -121,5 +96,5 @@ export const tabPageSlice = createSlice({
   },
 });
 
-export const { setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setUnitPostion } = tabPageSlice.actions;
+export const { setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, updateTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setTabUnitPosition } = tabPageSlice.actions;
 export default tabPageSlice.reducer;

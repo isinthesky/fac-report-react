@@ -7,7 +7,7 @@ import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Div, BaseFlex1Row } from "../../../static/componentSet";
 
 
-const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
+const SetDeviceTypeW: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index])
@@ -26,7 +26,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
   return (
     <Container>
        <Section>
-         <TitleDiv>{"W"}</TitleDiv>
+         <TitleDiv>{name}</TitleDiv>
        </Section>
 
        {unitKeys.map((value, idx) => {
@@ -44,7 +44,7 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ unitPos }) => {
             stationValue={currUnit.st}
             initDivisionId={initDivisionId}
             divisionValue={currUnit.div}
-            currentDevice={tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
+            currentDeviceId={currUnit.dvList[idx]}
           />
         </ValueSection>
       )}

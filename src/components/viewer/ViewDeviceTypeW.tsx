@@ -7,7 +7,7 @@ import { RootStore } from "../../store/congifureStore";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 
-const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ unit, tabKey }) => {
+const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ unit, mainTab, subTab }) => {
   const sections = [
     { label: "W", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -16,8 +16,10 @@ const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ unit, tabKey }) => {
     { label: "/", values: ["kW"] },
   ];
 
+  // console.log("ViewDeviceTypeV", mainTab, subTab)
+
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
-  const tabPageInfo = tabPageSlice[tabKey] as TabPageInfotype;
+  const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab];
 
   let pos = 0;
 
@@ -34,6 +36,7 @@ const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ unit, tabKey }) => {
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
+
                 <DeviceTypeValueDiv  key={`value-${sectionIdx}-${valueIdx}`}>
                   <DevTypeDiv>{value}</DevTypeDiv>
                   <DeviceValue times={tabPageInfo.times} devId={unit.dvList[pos++]}  />

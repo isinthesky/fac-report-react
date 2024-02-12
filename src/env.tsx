@@ -26,4 +26,7 @@ export const CONST_LANG = process.env.REACT_APP_CONST_LANG
 export const INIT_TABPAGE_SETTING = {"times":["05:00","11:00","17:00","23:00"], "unitList":[{"id": 1, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 2, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 3, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 4, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 5, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 6, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 7, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 8, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 9, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 10, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 11, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 12, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]}]}
 export const INIT_UNITGROUP_SETTING = {"id": 0, "type":1, "name":"device", "st":0, "div":0, "dvList": [0,0,0,0,0,0,0,0,0]};
 
+export const CONST_TYPE_INFO_NAMES = ["전압", "전력량"]
+export const CONST_TYPE_INFO_KEYWORDS = ["V", "W"]
+
 

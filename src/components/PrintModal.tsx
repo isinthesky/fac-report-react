@@ -11,8 +11,8 @@ import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '.
 type PrintGuideProps = {
   row: number;
   column: number;
-  mainTab: string;
-  subTab: string;
+  mainTab: number;
+  subTab: number;
 };
 
 const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab }, ref) => {
@@ -20,9 +20,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
   const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
 
   const renderDevice = () => {
-    const tabKey = process.env.REACT_APP_CONST_TABINFO_NAME + `${mainTab}${subTab}`;
-
-    const tabPageInfo = tabPageSlice[tabKey] as TabPageInfotype;
+    const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab] as TabPageInfotype;
 
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
       times.push(...tabPageInfo.times.map((time: string) => time));
@@ -43,7 +41,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
                 ))}
               </TimeContainer>)}
               <DeviceContainer>
-                <TypeComp key={index} tabKey={tabKey} unit={tabPageInfo.unitList[index]} />
+                <TypeComp key={index} mainTab={rowIndex} subTab={colIndex} unit={tabPageInfo.unitList[index]} />
               </DeviceContainer>
             </Container>
           );

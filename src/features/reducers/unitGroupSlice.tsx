@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Unit } from "../../static/types";
+import { Unit, updateCurrentGroupType } from "../../static/types";
 
 
 export interface UnitGroupState {
   groups: Unit[],
-  currentGroup: Unit
+  currentGroup: Unit,
   selectedPos: number
 }
 
@@ -52,8 +52,16 @@ export const unitGroupSlice = createSlice({
     setSelectedGroup: (state, action: PayloadAction<number>) => {
       state.selectedPos = action.payload
     },
+    updateCurrentGroupUnit: (
+      state,
+      action: PayloadAction<updateCurrentGroupType>
+    ) => {
+      if (action.payload.arrKey in state.currentGroup) {
+        (state.currentGroup as any)[action.payload.arrKey] = action.payload.value;
+      }
+    },
   },
 });
 
-export const {addGroup, updateGroup, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup } = unitGroupSlice.actions;
+export const {addGroup, updateGroup, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit } = unitGroupSlice.actions;
 export default unitGroupSlice.reducer;

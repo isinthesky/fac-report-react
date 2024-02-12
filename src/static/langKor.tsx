@@ -24,3 +24,6 @@ export const KOR_SETTING_SET_PRINT_TITLE = "인쇄 제목";
 export const KOR_SETTING_GROUP_ADD = "추가";
 export const KOR_SETTING_GROUP_DELETE = "삭제";
 export const KOR_SETTING_GROUP_UPDATE = "업데이트";
+
+
+export const KOR_ERR_SERVER_CONNECT = "서버 연결에 실패했습니다."
