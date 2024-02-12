@@ -1,5 +1,6 @@
 
 export const FONTSET_MAIN_MENU_TITLESIZE = "30px"
+export const FONTSET_MAIN_MENU_VERSIONSIZE = "10px"
 export const FONTSET_MAIN_MENU_SIZE = "13px"
 
 

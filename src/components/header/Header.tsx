@@ -7,7 +7,7 @@ import { setApproves, setReportTable, setTabSetting } from "../../features/reduc
 import { setTabPage } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME } from "../../env";
-import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_TITLESIZE } from "../../static/fontSet";
+import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_TITLESIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
 import { getDeviceInfo } from "../../features/api/device";
 import { loadDeviceList } from "../../features/reducers/deviceSlice";
 
@@ -70,6 +70,7 @@ export default function Header() {
   return (
     <TopHeader>
       <Title>Fac-Report</Title>
+      <Version>0.13</Version>
       <PageControls>
         <MainMenu onClickCallback={handleFlatButtonClick} />
         <SubMenu mainId={selectedFlatId} onClickCallback={subcallback} />
@@ -93,6 +94,13 @@ const Title = styled.button<{ fontsize?: string }>`
   height: 70px;
   font-weight: bold;
   font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_TITLESIZE};
+  border: 0px solid #333;
+`;
+
+const Version = styled.button<{ fontsize?: string }>`
+  width: 50px;
+  height: 70px;
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_VERSIONSIZE};
   border: 0px solid #333;
 `;
 

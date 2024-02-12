@@ -16,7 +16,7 @@ export interface SettingState {
 }
 
 const twoMonthsAgo = new Date();
-twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+twoMonthsAgo.setFullYear(twoMonthsAgo.getFullYear() - 1); // for test
 
 const initialState: SettingState = {
   date: twoMonthsAgo.getTime(),
