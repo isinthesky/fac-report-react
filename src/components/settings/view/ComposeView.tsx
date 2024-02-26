@@ -8,7 +8,7 @@ import { RootStore } from "../../../store/congifureStore";
 const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
+  const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +36,7 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
     const rows = [];
     let keyCounter = 0;
 
-    const tabPageInfo = tabPageSlice.tabPageInfo[settingSet.selectedTab.main][settingSet.selectedTab.sub];
+    const tabPageInfo = currentTab;
     
     for (let r = 0; r < row * column; r++) {
 

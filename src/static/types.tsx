@@ -19,9 +19,8 @@ export type SetDeviceType = {
 
 export type ViewUnitProps = {
   key: number;
-  mainTab: number;
-subTab: number;
-  unit: Unit;
+  tabPage: TabPageInfotype
+  index: number;
 };
 
 export type ComposeProps = {
@@ -73,20 +72,11 @@ export type TabPageInfotype = {
   unitList: Unit[]
 }
 
-export type AddDropDownType = {
-  mainTab: number;
-  subTab: number;
-};
-
 export type DeleteDropDownType = {
-  mainTab: number;
-  subTab: number;
   index: number;
 };
 
 export type SetDropDownType = {
-  mainTab: number;
-  subTab: number;
   index: number;
   time: string;
 };
@@ -96,17 +86,13 @@ export type ApprovalsType = {
   text: string;
 }
 
-
 export type ViewModeProp = {
   viewMode: boolean;
 }
 
 export type setCurrnetUnitProp = {
   index: number;
-  row: number;
-  column: number;
 }
-
 
 export interface DailySetting {
   row: number;

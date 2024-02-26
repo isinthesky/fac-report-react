@@ -1,9 +1,8 @@
 import { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceTypeV from "./viewer/ViewDeviceTypeV";
-import ViewDeviceTypeW from "./viewer/ViewDeviceTypeW";
-import { ApprovalsType, TabPageInfotype } from '../static/types';
+import ViewDeviceType from './viewer/ViewDeviceType';
+import { ApprovalsType } from '../static/types';
 import { RootStore } from '../store/congifureStore';
 import { BaseFlexCenterDiv, BaseFlexDiv } from '../static/componentSet';
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../static/langSet';
@@ -17,10 +16,10 @@ type PrintGuideProps = {
 
 const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab }, ref) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
+  const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
   const renderDevice = () => {
-    const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab] as TabPageInfotype;
+    const tabPageInfo = currentTab;
 
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
       times.push(...tabPageInfo.times.map((time: string) => time));
@@ -30,8 +29,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
 
-          const TypeComp = 
-          tabPageInfo.unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+          const TypeComp = tabPageInfo.unitList[index].type === 1 ? 'V' : 'W';
 
           return (
             <Container key={colIndex}>
@@ -41,7 +39,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
                 ))}
               </TimeContainer>)}
               <DeviceContainer>
-                <TypeComp key={index} mainTab={rowIndex} subTab={colIndex} unit={tabPageInfo.unitList[index]} />
+                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
             </Container>
           );

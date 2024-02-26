@@ -1,36 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setSelectTab } from "../../features/reducers/settingSlice";
+import { setMenus } from "../../features/reducers/settingSlice";
+import { setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { RootStore } from "../../store/congifureStore";
-import { COLORSET_BUTTON_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
+import { COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE } from "../../static/fontSet";
 
 const TabControlBar: React.FC = () => {
   const dispatch =  useDispatch()
-  const [menus, setMenus] = useState<string[]>([]);
-
-
-  const selectedTab = useSelector((state: RootStore) => state.settingReducer.selectedTab);
+  const menus = useSelector((state: RootStore) => state.settingReducer.menus);
+  const tabPosition = useSelector((state: RootStore) => state.tabPageReducer.settingPosition);
 
   useEffect(() => {
-    const buttons:string[] = [];
+    const buttons: string[] = [];
 
-    ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
-      ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
+    ["1", "2", "3", "4", "5"].forEach((mainId) => {
+      ["1", "2", "3", "4", "5"].forEach((subId) => {
         const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
         if (process.env[key]) {
-          buttons.push(`${mainId}${subId}`)
+          buttons.push(`${mainId}${subId}`);
         }
-      })
-    })
+      });
+    });
 
-    setMenus(buttons);
-  }, []);
+    dispatch(setMenus(buttons));
+  }, [dispatch]);
 
   const handleTabClick = (main:string, sub:string) => {
-    console.log("tabClick", main, sub)
-    dispatch(setSelectTab({main: Number(main), sub: Number(sub)}));
+    console.log('handleTabClick', main, sub)
+    dispatch(setSettingSelect({mainTab: Number(main), subTab: Number(sub)}));
   }
   
   const processArray = (arr:string[]) => {
@@ -52,7 +51,7 @@ const TabControlBar: React.FC = () => {
         <TabButton
           key={number}
           onClick={() => handleTabClick(ten, one)}
-          mode={(Number(ten) === selectedTab.main && Number(one) === selectedTab.sub) ? "true" : "false"}
+          mode={(Number(ten) === tabPosition.main && Number(one) === tabPosition.sub) ? "true" : "false"}
         >
           {process.env[`REACT_APP_INIT_REPORT_TYPE${ten}_SUB${one}`]}
         </TabButton>

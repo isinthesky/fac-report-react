@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setTableDate, setViewType, setSelectTab } from "../../features/reducers/settingSlice";
+import { setTableDate, setViewType } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
 import PrintModal from "../PrintModal";
@@ -9,12 +9,12 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
-import { ActiveButton, BaseButton, BaseFlex1Column, BaseModalBack, ControlButton, MiniButton } from "../../static/componentSet";
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseModalBack, MiniButton } from "../../static/componentSet";
 import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT } from "../../static/langSet";
 import { COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 
 function Daily() {
-  const dispatch = useDispatch()  
+  const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const [date, setDate] = useState(settingSet.date);
   const [isOpen, setIsOpen] = useState(false);
@@ -22,35 +22,23 @@ function Daily() {
   const componentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    dispatch(setTableDate(date))
-  }, [date]);
-
-  useEffect(() => {
-    if (id1 && id2) {
-      dispatch(setSelectTab({main: Number(id1), sub: Number(id2)}))
-    }
-  }, [id1, id2]);
-
-  const handleDaily = () => {
-    dispatch(setViewType(settingSet.viewType === 0 ? 1 : 0))
-  };
+    dispatch(setTableDate(date));
+  }, [date, dispatch]);
 
   const handleOpenPrint = () => {
     const isConfirmed = window.confirm("인쇄하시겠습니까??");
 
     if (isConfirmed) {
-      setIsOpen(true) 
+      setIsOpen(true);
     }
   };
 
-
   const handleIdCheck = async () => {
-    dispatch(setViewType(settingSet.viewType === 0 ? 1 : 0))
+    dispatch(setViewType(settingSet.idViewMode === 0 ? 1 : 0));
   };
 
-
   const handlePrintClose = () => {
-    setIsOpen(false) 
+    setIsOpen(false);
   };
 
   const handlePrint = useReactToPrint({
@@ -92,6 +80,8 @@ function Daily() {
     </Flat>
   );
 }
+
+// Styled components remain unchanged
 
 const Flat = styled(BaseFlex1Column)`
   background-color: #F5F5F5;

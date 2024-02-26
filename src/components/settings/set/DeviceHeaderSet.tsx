@@ -17,7 +17,7 @@ const DeviceHeaderSet = () => {
   const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].type);
   const [selectedStation, setSelectedStation] = useState<number>(0);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
-  const [deviceName, setDeviceName] = useState<string>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].name);
+  const [deviceName, setDeviceName] = useState<string>("");
   const [searchWord, setSearchWord] = useState("");
 
   useEffect(() => {
@@ -45,8 +45,9 @@ const DeviceHeaderSet = () => {
 
     setSearchWord("");
     dispatch(setdeviceSearchWord(""))
+    setDeviceName(currentUnit.name);
 
-  }, []);
+  }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
 
   useEffect(() => {
     if (selectedStation === 0) 
@@ -101,6 +102,9 @@ const DeviceHeaderSet = () => {
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceName(e.target.value);
+
+    console.log("index", tabPageSlice.unitPosition.index, e.target.value)
+
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,

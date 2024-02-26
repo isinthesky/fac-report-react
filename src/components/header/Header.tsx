@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getSettings } from "../../features/api";
 import { setApproves, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
-import { setTabPage } from "../../features/reducers/tabPageSlice";
+import { setViewSelect, setTabPage } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_TITLESIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
@@ -25,8 +25,9 @@ export default function Header() {
     handleGoReport();
   };
 
-  const subcallback = (id: string, id2: string) => {
-    navigate(`/daily/${id}/${id2}`);
+  const subcallback = (id1: string, id2: string) => {
+    dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
+    navigate(`/daily/${id1}/${id2}`);
   };
 
   const handleGoSetting = useCallback(() => {
@@ -51,6 +52,7 @@ export default function Header() {
               [1, 2, 3, 4, 5].forEach((subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
+                  console.log("resSetting", key)
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 
                                        object: response[keyName + `${count++}`]}));
                 }

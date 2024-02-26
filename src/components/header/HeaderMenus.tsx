@@ -56,8 +56,6 @@ export const SubMenu: React.FC<SubMenuProps> = ({
       { id: (i + 1).toString(), enable: "false" }))
   );
 
-  console.log("subMenu", subMenu)
-
   return (
     <>
       {subMenu.map((obj) => {

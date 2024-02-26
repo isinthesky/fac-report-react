@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
@@ -8,19 +8,18 @@ import { getSettings, setUpdateSettingsColRow } from "../../features/api";
 import { getDeviceInfo, getUnitGroupList } from "../../features/api/device";
 import { loadDeviceList } from "../../features/reducers/deviceSlice";
 import { setReportTable } from "../../features/reducers/settingSlice";
-import { setCurrentTab, setTabPage } from "../../features/reducers/tabPageSlice";
+import { updateGroup } from "../../features/reducers/unitGroupSlice";
+import { setTabPage } from "../../features/reducers/tabPageSlice";
 import TabControlBar from "../settings/TabControlBar";
 import PrintSetting from "../PrintSetting";
-import { RootStore } from "../../store/congifureStore";
-import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
 import { STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../../static/langSet";
-import UnitGroupSet from "../settings/group/UnitGroupSet";
-import { TabKeys, TabPageInfotype, Unit } from "../../static/types";
-import { handleInitSettings } from "../settings/set/handleButtons";
 import { BaseFlex1Column, BaseModalBack, BaseFlex1Row, BaseButton, MiniButton, BaseLabel, BaseFlexDiv } from "../../static/componentSet";
-import { CONST_TABINFO_NAME } from "../../env";
-import { updateGroup } from "../../features/reducers/unitGroupSlice";
 import { COLORSET_DISABLE_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
+import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
+import { Unit } from "../../static/types";
+import UnitGroupSet from "../settings/group/UnitGroupSet";
+import { handleInitSettings } from "../settings/set/handleButtons";
+import { CONST_TABINFO_NAME } from "../../env";
 
 
 function Settings() {
@@ -31,56 +30,48 @@ function Settings() {
   const [edit, setEdit] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
-
-  const settingSlice = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
   
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const response = await getSettings();
-        // console.log("settings getSettings:", response)
-        if (response) {
-          dispatch(setReportTable(response.settings));
-
-          const keyName = process.env.REACT_APP_CONST_TABINFO_NAME;
+        const resSetting = await getSettings();
+        console.log("settings getSettings:", resSetting)
+        
+        if (resSetting) {
+          dispatch(setReportTable(resSetting.settings));
+          
           let count = 1;
-          if (response.tabSettings.length) {
+          
+          if (resSetting.tabSettings.length) {
             [1, 2, 3, 4, 5].forEach( async (mainId)=>{
               [1, 2, 3, 4, 5].forEach( async (subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
-                  dispatch(setTabPage({mainTab: mainId, subTab: subId, object: response[keyName + `${count++}`]}));
+                  dispatch(setTabPage({mainTab: mainId, subTab: subId, 
+                                       object: resSetting[CONST_TABINFO_NAME + `${count++}`]}));
                 }
               })
             })
           }
 
-          setRow(response.settings.row);
-          setColumn(response.settings.column);
+          setRow(resSetting.settings.row);
+          setColumn(resSetting.settings.column);
         }
+
+        const resDev = await getDeviceInfo();
+        dispatch(loadDeviceList(resDev));
+
+        const resGroupList = await getUnitGroupList();
+
+        resGroupList.data.forEach((item: Unit, pos: number) => {
+          dispatch(updateGroup({index: pos, group: item}));
+        });
       } catch (error) {
         console.error(error);
       }
-
-      try {
-        const response = await getDeviceInfo();
-        dispatch(loadDeviceList(response));
-      } catch (error) {
-        console.error(error);
-      }
-
-      try {
-        const response = await getUnitGroupList();
-
-        response.data.map((item:Unit, pos:number) => {
-          dispatch(updateGroup({index: pos, group: item}))
-        })
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+    };
+    fetchData();
+  }, [dispatch]);
 
 
   useEffect(() => {
@@ -88,12 +79,6 @@ function Settings() {
       setMode(0);
     }
   }, [params]);
-
-  useEffect(() => {
-    const key = CONST_TABINFO_NAME + `${settingSlice.selectedTab.main}${settingSlice.selectedTab.sub}` as TabKeys;
-
-    dispatch(setCurrentTab(tabPageSlice.tabPageInfo[settingSlice.selectedTab.main][settingSlice.selectedTab.sub] as TabPageInfotype)) 
-  }, [settingSlice]);
 
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRow(Number(e.target.value));
@@ -107,8 +92,8 @@ function Settings() {
     setEdit(!edit);
   };
 
-  const handleApply = () => {
-    setUpdateSettingsColRow(rows, columns);
+  const handleApply = async () => {
+    await setUpdateSettingsColRow(rows, columns);
     dispatch(setReportTable({ row: rows, column: columns }));
   };
 
@@ -131,7 +116,6 @@ function Settings() {
       console.error("getDeviceInfo", error);
     }
   };
-
 
   const handleSignPopup = () => {
     setIsOpen(true) 

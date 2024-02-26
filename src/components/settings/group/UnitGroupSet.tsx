@@ -14,7 +14,6 @@ const UnitGroupSet: React.FC = () => {
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
   const handleSave = async  () => {
     try {
-      
       await updateUnitGroupList(unitGroupSlice.groups)
     } catch (error) {
       console.error(error);

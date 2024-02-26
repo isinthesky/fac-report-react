@@ -5,7 +5,7 @@ import SetDeviceTypeW from "./SetDeviceTypeW";
 import SetDeviceTypeV from "./SetDeviceTypeV";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
-import { setCurrentUnit, setTabUnitPosition, updateCurrentUnit, updateTabPage } from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnit, setTabUnitPosition, saveTabPage, updateTabPage } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
@@ -15,7 +15,8 @@ import { ActiveButton, BaseButton, BaseFlexCenterDiv } from "../../../static/com
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
 import { COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES } from "../../../env";
+import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME } from "../../../env";
+
 
 interface GridContainerProps {
   column: number;
@@ -40,7 +41,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   });
 
   const handleSave = async () => {
-    dispatch(updateTabPage({mainTab: settingSet.selectedTab.main, subTab: settingSet.selectedTab.sub, object: tabPageSlice.currentTabPage}));
+    dispatch(saveTabPage())
 
     let count = 1;
 
@@ -49,14 +50,17 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
         if (process.env[TabKey]) {
           if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId) {
-            const keyNumber = process.env.REACT_APP_CONST_TABINFO_NAME + `${count}`; 
-            if (false !== await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage)) {
-              alert('저장 되었습니다.');
+            try {
+              const keyNumber = CONST_TABINFO_NAME + `${count}`; 
+              await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
               return;
             }
+            catch (e) {
+              console.error("updateSettingsTabPage error:", e);
+            }
           }
-          count += 1;
         }
+        count += 1;
       }
     }
   };
@@ -76,8 +80,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
     const position = columnIndex + (rowIndex - 1) * column - 1;
 
-    dispatch(setUnitSelectPosition({row:rowIndex, column:columnIndex}));
-    dispatch(setTabUnitPosition({row:settingSet.selectedTab.main, column:settingSet.selectedTab.sub, index:position}));
+    dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
+    dispatch(setTabUnitPosition({index: position}));
   };
 
   console.log("ComposeSet type", deviceType);

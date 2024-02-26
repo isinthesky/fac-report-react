@@ -82,9 +82,8 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
 
   const handleApply = (index: number) => {
     if (viewMode) {
-      const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
-
-      currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
+      const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]};
+      currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList;
 
       dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
     }
