@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceType from './viewer/ViewDeviceType';
+import ViewDeviceType from './viewer/UnitType';
 import { ApprovalsType } from '../static/types';
 import { RootStore } from '../store/congifureStore';
 import { BaseFlexCenterDiv, BaseFlexDiv } from '../static/componentSet';

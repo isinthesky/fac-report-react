@@ -9,7 +9,6 @@ export interface SettingState {
   unitPostion: DailySetting;
   tabPosition: DailySetting;
   tabSetting: TabSetting;
-  selectedTab: SelectedTab;
   idViewMode: number;
   printTitle: string;
   deviceSearchWord: string;
@@ -26,7 +25,6 @@ const initialState: SettingState = {
   unitPostion: { row: 1, column: 1 },
   tabPosition: { row: 1, column: 1 },
   tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
-  selectedTab: {main:1, sub:1},
   idViewMode: 0,
   printTitle: "",
   deviceSearchWord: "",
@@ -63,9 +61,6 @@ export const settingSlice = createSlice({
     setdeviceSearchWord: (state, action: PayloadAction<string>) => {
       state.deviceSearchWord = action.payload;
     },
-    setSelectTab: (state, action: PayloadAction<SelectedTab>) => {
-      state.selectedTab = action.payload;
-    },
     setPrintTitle: (state, action: PayloadAction<string>) => {
       state.printTitle = action.payload;
     },
@@ -75,5 +70,5 @@ export const settingSlice = createSlice({
   },
 });
 
-export const { setMenus, setReportTable,setUnitSelectPosition, setTabSelectPosition, setTabSetting, setSelectTab, setTableDate, setViewType, setPrintTitle, setApproves, setdeviceSearchWord } = settingSlice.actions;
+export const { setMenus, setReportTable,setUnitSelectPosition, setTabSelectPosition, setTabSetting, setTableDate, setViewType, setPrintTitle, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;

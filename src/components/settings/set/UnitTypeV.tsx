@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types";
-import DeviceAutoSelect from "./DeviceAutoSelect";
+import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Div, BaseFlex1Row } from "../../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../../static/fontSet";

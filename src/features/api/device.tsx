@@ -45,11 +45,14 @@ export const updateSettingsTabPage = async (
     name: string,
     object: TabPageInfotype
   ): Promise<any> => {
+
+    console.log("updateSettingsTabPage" ,name)
     try {
-      return await axiosInstance.put("device/updateTabPage", {
+      await axiosInstance.put("device/updateTabPage", {
         name: name,
         object: object
       });
+      return true;
     } catch (error) {
       console.error(error);
       return false;

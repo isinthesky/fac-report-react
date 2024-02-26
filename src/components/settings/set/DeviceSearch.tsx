@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision } from "../../../static/types";
+import { IStation, IDivision, Unit } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseButton, BaseFlex1Column, BaseOption, BaseFlex1Row, BaseSelect, ControlButton } from "../../../static/componentSet";
-import UnitGroupAutoSelect from "../group/UnitGroupAutoSelect";
+import UnitGroupAutoSelect from "../group/UnitGroupSelector";
 import { updateCurrentGroup } from "../../../features/reducers/unitGroupSlice";
 
 
-const SetDeviceType: React.FC = () => {
+const DeviceType1234: React.FC = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const currentGroup = useSelector((state: RootStore) => state.unitGroupReducer.currentGroup);
@@ -35,17 +35,23 @@ const SetDeviceType: React.FC = () => {
     dispatch(updateCurrentGroup(updatedCurrentGroup))
   };
 
-  const renderSection = (index1: number, values: number[]) => (
+  const renderSection = (index1: number, unit: Unit) => (
     <BaseFlex1Column>
-     {values.map((value, idx) => (
-      <ValueSection key={idx}>
-        <ValueColumn>{idx + 1}</ValueColumn>
-        <UnitGroupAutoSelect
-          pos={idx}
-          devicelist={deviceSet}
-        />
-      </ValueSection>
-    ))}
+     {unit.dvList.map((value: number, idx: number) => (
+        <ValueSection key={idx}>
+          <ControlButton>{idx + 1}</ControlButton>
+          <UnitGroupAutoSelect
+            unitPosition={0}
+            devicePosition={idx}
+            initStationId={unit.st}
+            initDivisionId={unit.div}
+            devicelist={deviceSet}
+            stationValue={unit.st}
+            divisionValue={unit.div}
+            currentDeviceId={value}
+          />
+        </ValueSection>
+      ))}
     </BaseFlex1Column>
   );
 
@@ -69,7 +75,7 @@ const SetDeviceType: React.FC = () => {
           )}
         </BaseSelect>
       </CenterRow>
-      { renderSection(0, currentGroup.dvList)}
+      { renderSection(0, currentGroup)}
     </Container>
   );
 };
@@ -99,4 +105,4 @@ const ValueSection = styled(BaseFlex1Row)`
   margin: 10px;
 `;
 
-export default SetDeviceType;
+export default DeviceType1234;

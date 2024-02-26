@@ -1,60 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision } from "../../../static/types";
+import { IStation, IDivision, Unit } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseOption, BaseFlex1Row, BaseSelect, BaseInput, ControlButton, BaseFlexDiv } from "../../../static/componentSet";
-import UnitGroupAutoSelect from "./UnitGroupAutoSelect";
+import UnitGroupAutoSelect from "./UnitGroupSelector";
 import { updateCurrentGroup, updateCurrentGroupUnit } from "../../../features/reducers/unitGroupSlice";
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
 
 
-const SetDeviceType: React.FC = () => {
+const SettingHeader: React.FC = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
   const [searchWord, setSearchWord] = useState("");
 
   const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(0);
+  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
 
   useEffect(() => {
-    const currentGroup = unitGroupSlice.currentGroup;
+    console.log("group init station", unitGroupSlice.currentGroup, (unitGroupSlice.currentGroup.st === 0) 
+    ? deviceSet.stations[0].id
+    : unitGroupSlice.currentGroup.st, deviceSet.stations[0].id);
 
-    if (currentGroup.st === 0) {
-      setSelectedStation(deviceSet.stations[0].id);
-      
-      dispatch(
-        updateCurrentGroupUnit(
-          {
-            arrKey: "st",
-            value: deviceSet.stations[0].id,
-          }
-        ))
-      return;
-    }
+    setSelectedStation( (unitGroupSlice.currentGroup.st === 0) 
+                        ? deviceSet.stations[0].id
+                        : unitGroupSlice.currentGroup.st);     
+  
 
-    setSelectedStation(unitGroupSlice.currentGroup.st);
-  }, []);
+    setSelectedDivision( (unitGroupSlice.currentGroup.div === 0) 
+                        ? deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id
+                        : unitGroupSlice.currentGroup.div);     
 
-  useEffect(() => {
-    if (selectedStation === 0) 
-      return;
-    
-    const currentGroup = unitGroupSlice.currentGroup;
-
-    if (currentGroup.div === 0) {
-      setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
-      dispatch(
-        updateCurrentGroupUnit(
-          {
-            arrKey: "div",
-            value: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
-          }
-        ))
-    }
-  }, [selectedStation]);
+                    
+  }, [unitGroupSlice.currentGroup]);
 
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -66,6 +46,7 @@ const SetDeviceType: React.FC = () => {
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const divId = Number(e.target.value);
+    console.log("div",divId, e.target.value)
     setSelectedDivision(divId);
 
     dispatch(updateCurrentGroupUnit({arrKey: "div", value: divId}))
@@ -92,14 +73,22 @@ const SetDeviceType: React.FC = () => {
     }
   };
 
-  const renderSection = (index1: number, values: number[]) => (
+  console.log("group setting header", selectedStation)
+
+  const renderSection = (index1: number, unit: Unit) => (
     <BaseFlex1Column>
-      {values.map((value, idx) => (
+      {unit.dvList.map((value: number, idx: number) => (
         <ValueSection key={idx}>
           <ControlButton>{idx + 1}</ControlButton>
           <UnitGroupAutoSelect
-            pos={idx}
+            unitPosition={0}
+            devicePosition={idx}
+            initStationId={selectedStation}
+            initDivisionId={selectedDivision}
             devicelist={deviceSet}
+            stationValue={selectedStation}
+            divisionValue={selectedDivision}
+            currentDeviceId={unitGroupSlice.currentGroup.dvList[idx]}
           />
         </ValueSection>
       ))}
@@ -117,13 +106,13 @@ const SetDeviceType: React.FC = () => {
           ))}
         </BaseSelect>
         <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
-          {deviceSet.divisions.filter((item) => item.stationId === selectedStation).map(
-            (div: IDivision) => (
+          {deviceSet.divisions
+            .filter((item: IDivision) => item.stationId === selectedStation)
+            .map((div: IDivision) => (
               <BaseOption key={div.id} value={div.id}>
                 {div.name}
               </BaseOption>
-            )
-          )}
+            ))}
         </BaseSelect>
         <SearchContainer>
           <BaseInput 
@@ -139,7 +128,8 @@ const SetDeviceType: React.FC = () => {
           </ControlButton>
         </SearchContainer>
       </CenterRow>
-      { renderSection(0, unitGroupSlice.currentGroup.dvList) }
+      { 
+      renderSection(0, unitGroupSlice.currentGroup) }
     </Container>
   );
 };
@@ -168,4 +158,4 @@ const SearchContainer = styled(BaseFlexDiv)`
   margin: 0px 30px;
 `;
 
-export default SetDeviceType;
+export default SettingHeader;

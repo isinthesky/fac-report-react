@@ -1,5 +1,6 @@
 
 export const KOR_DEFALT_SAVE = "저장"
+export const KOR_DEFALT_SAVEALL = "모두 저장"
 export const KOR_DEFALT_CANCEL = "취소"
 export const KOR_DEFALT_EDIT = "변경"
 export const KOR_DEFALT_APPLY = "적용";

@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Unit, IDivision, IStation, IDevice } from "../../../static/types";
+import { Unit, IDivision, IStation, IDevice, DeviceSelectProps } from "../../../static/types";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   updateCurrentUnit,
   setCurrentUnit,
   setCurrentUnitDevice,
 } from "../../../features/reducers/tabPageSlice";
 import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
+import { DeviceState } from "../../../features/reducers/deviceSlice";
+import { RootStore } from "../../../store/congifureStore";
 
-type DeviceSelectProps = {
-  unitPosition: number;
-  devicePosition: number;
-  devicelist: any;
-  initStationId: number;
-  stationValue: number;
-  initDivisionId: number;
-  divisionValue: number;
-  currentDeviceId: number;
-};
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   unitPosition,
@@ -31,8 +23,8 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selecteddevice, setSelectedDevice] = useState<number>(currentDeviceId);
-
+  const [selectedDevice, setSelectedDevice] = useState<number>(currentDeviceId);
+  const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
   useEffect(() => {
     setSelectedStation( (initStationId === 0) 
@@ -46,6 +38,16 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
                          : devicelist.devices[currentDeviceId].divisionId);
   }, [initDivisionId]);
 
+  useEffect(() => {
+    // division 바뀌어도 device가 선택되어 있으면 selected device 유지
+    if (currentDeviceId === 0) {
+      setSelectedDevice(0); 
+      return;
+    }
+
+    setSelectedDevice(currentDeviceId)
+  }, [selectedDiv]);
+
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
   };
@@ -56,8 +58,9 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDevice(Number(e.target.value));    
-
-    dispatch(setCurrentUnitDevice({ unitPosition, devicePosition, deviceId: Number(e.target.value) }));
+    dispatch(setCurrentUnitDevice({ unitPosition, 
+                                    devicePosition, 
+                                    deviceId: Number(e.target.value) }));
   };
 
   return (
@@ -78,13 +81,24 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
             </BaseOption>
           ))}
       </SelectDivision>
-      <SelectDevice onChange={handleDeviceChange} value={selecteddevice}>
+      <SelectDevice onChange={handleDeviceChange} value={selectedDevice}>
+        <BaseOption key={selectedDevice} value={selectedDevice}>
+          {selectedDevice === 0 
+            ? "Select a device" 
+            : devicelist.devices[selectedDevice.toString()]?.name}
+        </BaseOption>
         {Object.values(devicelist.devices)
           .filter(
-            (dev: any) =>
+            (dev: IDevice) => 
               dev.stationId === selectedSt && dev.divisionId === selectedDiv
-          )
-          .map((dev: any) => (
+          ).filter((dev:IDevice) => {
+            if (searchWord.length > 0) {
+              return (dev.name.toLowerCase().includes(searchWord.toLowerCase())
+                      ? true : false);
+            }
+            return true;
+          })
+          .map((dev: IDevice) => (
             <BaseOption key={dev.id} value={dev.id}>
               {dev.name}
             </BaseOption>

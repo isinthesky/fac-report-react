@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SetDeviceType from "./SetDeviceType";
+import SettingHeader from "./SettingHeader";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Row } from "../../../static/componentSet";
 import UnitGroupListControl from "./UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
@@ -27,7 +27,7 @@ const UnitGroupSet: React.FC = () => {
   return (
     <BaseFlex1Column>
       <BaseFlex1Row>
-        <SetDeviceType />
+        <SettingHeader />
         <UnitGroupListControl viewMode={false} />
       </BaseFlex1Row>
       <ButtonsContainer>

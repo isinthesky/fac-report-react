@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Unit, updateCurrentGroupType } from "../../static/types";
+import { Unit, updateCurrentGroupType, updateCurrenUnitDevice } from "../../static/types";
 
 
 export interface UnitGroupState {
@@ -10,16 +10,16 @@ export interface UnitGroupState {
 
 const initialState: UnitGroupState = {
   groups: [
-    { name: "name1", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name2", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name3", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name4", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name5", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name6", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name7", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name8", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name9", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name10", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) }
+    { name: "name1", type: 1, id: 1, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name2", type: 1, id: 2, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name3", type: 1, id: 3, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name4", type: 1, id: 4, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name5", type: 1, id: 5, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name6", type: 1, id: 6, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name7", type: 1, id: 7, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name8", type: 1, id: 8, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name9", type: 1, id: 9, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { name: "name10", type: 1, id: 10, st: 0, div: 0, dvList: Array(9).fill(0) }
   ],
   currentGroup: { name: "", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
   selectedPos: 0,
@@ -40,8 +40,17 @@ export const unitGroupSlice = createSlice({
         state.groups.push(group)
       }
     },
+    updateFromCurrent: (state, action: PayloadAction<{ index: number }>) => {
+      const { index} = action.payload;
+      if (state.groups[index]) {
+        state.groups[index] = state.currentGroup;
+      }
+    },
     deleteGroup: (state, action: PayloadAction<number>) => {
       state.groups.splice(action.payload, 1);
+    },
+    setSelectedGroup: (state, action: PayloadAction<number>) => {
+      state.selectedPos = action.payload
     },
     setCurrentGroup: (state, action: PayloadAction<number>) => {
       state.currentGroup = state.groups[action.payload];
@@ -49,8 +58,9 @@ export const unitGroupSlice = createSlice({
     updateCurrentGroup: (state, action: PayloadAction<Unit>) => {
       state.currentGroup = action.payload;
     },
-    setSelectedGroup: (state, action: PayloadAction<number>) => {
-      state.selectedPos = action.payload
+    updateCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
+
+      state.currentGroup.dvList[action.payload.devicePosition] = action.payload.deviceId;
     },
     updateCurrentGroupUnit: (
       state,
@@ -63,5 +73,5 @@ export const unitGroupSlice = createSlice({
   },
 });
 
-export const {addGroup, updateGroup, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit } = unitGroupSlice.actions;
+export const {addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit, updateCurrentUnitDevice } = unitGroupSlice.actions;
 export default unitGroupSlice.reducer;

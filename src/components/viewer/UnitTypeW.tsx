@@ -7,7 +7,7 @@ import { RootStore } from "../../store/congifureStore";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 
-const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ index }) => {
+const UnitTypeW: React.FC<ViewUnitProps> = ({ index }) => {
   const sections = [
     { label: "W", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -102,4 +102,4 @@ const DevTypeDiv = styled(BaseFlexCenterDiv)`
   border: 1px solid #ccc;
 `;
 
-export default ViewDeviceTypeW;
+export default UnitTypeW;

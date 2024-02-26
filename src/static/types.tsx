@@ -1,3 +1,5 @@
+import { DeviceState } from "../features/reducers/deviceSlice";
+
 export type IDevice = {
   id: number;
   xmlId: string;
@@ -113,3 +115,14 @@ export interface SetTabPageProp {
   subTab: number;
   object: any;
 }
+
+export type DeviceSelectProps = {
+  unitPosition: number;
+  devicePosition: number;
+  devicelist: DeviceState;
+  initStationId: number;
+  stationValue: number;
+  initDivisionId: number;
+  divisionValue: number;
+  currentDeviceId: number;
+};

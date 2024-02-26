@@ -67,6 +67,7 @@ const SelectDiv = styled(BaseFlex1Row)`
   flex-direction: row;
   
   margin-top: auto;
+  gap: 0px;
 `;
 
 const TimeSelect = styled(BaseSelect)`

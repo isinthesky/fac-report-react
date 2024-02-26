@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import SetDeviceTypeW from "./SetDeviceTypeW";
-import SetDeviceTypeV from "./SetDeviceTypeV";
+import UnitTypeW from "./UnitTypeW";
+import UnitTypeV from "./UnitTypeV";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
 import { setCurrentUnit, setTabUnitPosition, saveTabPage, updateTabPage } from "../../../features/reducers/tabPageSlice";
@@ -13,7 +13,7 @@ import DeviceHeaderSet from "./DeviceHeaderSet";
 import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
-import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL } from "../../../static/langSet";
 import { COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME } from "../../../env";
 
@@ -31,7 +31,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const deviceColumn = settingSet.unitPostion.column;
 
   const position = deviceColumn + (deviceRow - 1) * column - 1;
-  const tabPageInfo = tabPageSlice.tabPageInfo[settingSet.selectedTab.main][settingSet.selectedTab.sub];
+  const tabPageInfo = tabPageSlice.tabPageInfo[tabPageSlice.settingPosition.main][tabPageSlice.settingPosition.sub];
 
   const [deviceType, setDeviceType] = useState(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
@@ -48,8 +48,9 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     for (let mainId = 1; mainId <= 5; mainId++) {
       for (let subId = 1; subId <= 5; subId++) {
         const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
+
         if (process.env[TabKey]) {
-          if (settingSet.selectedTab.main === mainId && settingSet.selectedTab.sub === subId) {
+          if (tabPageSlice.settingPosition.main === mainId && tabPageSlice.settingPosition.sub === subId) {
             try {
               const keyNumber = CONST_TABINFO_NAME + `${count}`; 
               await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
@@ -58,6 +59,29 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
             catch (e) {
               console.error("updateSettingsTabPage error:", e);
             }
+          }
+          count += 1;
+        }
+      }
+    }
+  };
+
+  const handleSaveAll = async () => {
+    dispatch(saveTabPage())
+
+    let count = 1;
+
+    for (let mainId = 1; mainId <= 5; mainId++) {
+      for (let subId = 1; subId <= 5; subId++) {
+        const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
+        if (process.env[TabKey]) {
+          try {
+            const keyNumber = CONST_TABINFO_NAME + `${count}`; 
+            await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
+            return;
+          }
+          catch (e) {
+            console.error("updateSettingsTabPage error:", e);
           }
         }
         count += 1;
@@ -119,8 +143,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       </SettingsContainer>
       <SettingsContainer>
         <ColumnDiv>
-          {deviceType === 1 && <SetDeviceTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
-          {deviceType === 2 && <SetDeviceTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {deviceType === 1 && <UnitTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {deviceType === 2 && <UnitTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
           <TimeDropdowns/>
           <UnitGroupListControl viewMode={true}/>
         </ColumnDiv>
@@ -128,6 +152,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       <ButtonGroup>
         <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
         <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
+        <ActiveButton onClick={handleSaveAll}>{STRING_DEFAULT_SAVEALL}</ActiveButton>
       </ButtonGroup>
     </Wrapper>
   );

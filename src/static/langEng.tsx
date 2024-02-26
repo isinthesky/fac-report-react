@@ -1,5 +1,6 @@
 
 export const ENG_DEFALT_SAVE = "Save"
+export const ENG_DEFALT_SAVEALL = "Save All"
 export const ENG_DEFALT_CANCEL = "Cancel"
 export const ENG_DEFALT_EDIT = "Edit"
 export const ENG_DEFALT_APPLY = "Apply";

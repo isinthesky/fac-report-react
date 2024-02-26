@@ -15,7 +15,7 @@ const DeviceHeaderSet = () => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(0);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].st);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>("");
   const [searchWord, setSearchWord] = useState("");
@@ -43,8 +43,6 @@ const DeviceHeaderSet = () => {
       );
     }
 
-    setSearchWord("");
-    dispatch(setdeviceSearchWord(""))
     setDeviceName(currentUnit.name);
 
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
@@ -52,19 +50,17 @@ const DeviceHeaderSet = () => {
   useEffect(() => {
     if (selectedStation === 0) 
       return;
-    
-    const currentUnit = tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
 
-    if (currentUnit.div === 0) {
-      setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
-      dispatch(
-        updateCurrentUnit({
-          arrPos: tabPageSlice.unitPosition.index,
-          arrKey: "div",
-          deviceId: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
-        })
-      );
-    }
+    setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
+
+    dispatch(
+      updateCurrentUnit({
+        arrPos: tabPageSlice.unitPosition.index,
+        arrKey: "div",
+        deviceId: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
+      })
+    );
+
   }, [selectedStation]);
 
 
@@ -115,6 +111,7 @@ const DeviceHeaderSet = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("input searchWord", searchWord)
     setSearchWord(e.target.value);
   };
 
