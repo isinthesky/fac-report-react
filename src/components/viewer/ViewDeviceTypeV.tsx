@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { TabPageInfotype, Unit, ViewUnitProps } from "../../static/types";
-import { useSelector } from "react-redux";
+import { Unit, ViewUnitProps } from "../../static/types";
+import { shallowEqual, useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 
-const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ unit, mainTab, subTab }) => {
+const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ index }) => {
   const sections = [
     { label: "V", values: ["R-S", "S-T", "T-R"] },
     { label: "A", values: ["R", "S", "T"] },
@@ -16,20 +16,17 @@ const ViewDeviceTypeV: React.FC<ViewUnitProps> = ({ unit, mainTab, subTab }) => 
     { label: "/", values: ["kW"] },
   ];
 
-  const [curunit, setUnit] = useState<Unit>(unit);
+  
+  const tabPageInfo = useSelector((state: RootStore) => state.tabPageReducer.currentTabPage, shallowEqual);
+  const [curunit, setUnit] = useState<Unit>(tabPageInfo.unitList[index]);
 
   useEffect(() => {
-    setUnit(unit);
-  }, [unit]);
-
-  // const [main, setMainTab] = useState<number>(mainTab);
-
-  // console.log("ViewDeviceTypeV", mainTab, subTab)
-
-  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
-  const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab];
+    setUnit(tabPageInfo.unitList[index]);
+  }, [tabPageInfo, index]);
 
   let pos = 0;
+
+  console.log("curunit", curunit)
 
   return (
     <Container>

@@ -16,8 +16,11 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   
-  const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
-  const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "-")); 
+  const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
+  const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
+
+    console.log('DeviceValue', devId);
+
 
   const getLogByTimestamp = (devLog:any, timestamp:any) => {
     if (devLog[timestamp]) {
@@ -33,8 +36,11 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   }
 
   useEffect(() => {
-    (async () => {
-      try {
+    const fetchData = async () => {
+      try{
+
+        let deviceData = []
+
         if (devId > 0) {
           const result = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
 
@@ -51,7 +57,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
           const devMonth = date.getMonth();
           const devDate = date.getDate();
 
-          const deviceData = times.map((time: string) => {
+          deviceData = times.map((time: string) => {
             const date = new Date(devYear, devMonth, devDate, 
               Number(time.slice(0,2)), Number(time.slice(-2))).getTime();
 
@@ -61,31 +67,30 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
           }).map((value: string) => {
             const numericValue = parseFloat(value);
             return !isNaN(numericValue) ? numericValue.toFixed(1) : value;
-          });
-          
-          setDeviceValue(deviceData);
-          setDeviceSave(deviceData);
+          }); 
         }
-      }
-      catch (error) {
+        else
+        {
+          deviceData = times.map((_:string) => "-") as []
+        }
+        
+        console.log(deviceData)
+          
+        setDeviceValue(deviceData);
+        setDeviceSave(deviceData);
+        
+      } catch (error) {
         console.error(error);
       }
-    })();
-  }, [settingSet.date]);
+    };
+    fetchData();
+  }, [devId, times]);
 
   useEffect(() => {
-    if (settingSet.viewType === 0) {
-      setDeviceValue(deviceSave);
-      return;
-    }
-
-    const deviceId = []
-    for (let i = 0; i < deviceSave.length; i += 1) {
-      deviceId.push(devId);
-    }
-    setDeviceValue(deviceId);
-    
-  }, [settingSet.viewType]);
+    settingSet.idViewMode === 0
+    ? setDeviceValue(deviceSave)
+    : setDeviceValue(deviceSave.map(() => devId));
+  }, [settingSet.idViewMode]);
 
   return (
     <>

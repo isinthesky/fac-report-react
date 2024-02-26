@@ -1,34 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, {useMemo} from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { Unit,  ViewUnitProps } from "../../static/types";
-import { useSelector } from "react-redux";
-import { RootStore } from "../../store/congifureStore";
+import { ViewUnitProps } from "../../static/types";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 
-const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ index }) => {
-  const sections = [
-    { label: "W", values: ["R-S", "S-T", "T-R"] },
-    { label: "A", values: ["R", "S", "T"] },
-    { label: "/", values: ["PF"] },
-    { label: "/", values: ["Hz"] },
-    { label: "/", values: ["kW"] },
-  ];
+const ViewDeviceType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPage, type }) => {
+  const sections = useMemo(() => ({
+      V: [
+          { label: "V", values: ["R-S", "S-T", "T-R"] },
+          { label: "A", values: ["R", "S", "T"] },
+          { label: "/", values: ["PF"] },
+          { label: "/", values: ["Hz"] },
+          { label: "/", values: ["kW"] },
+      ],
+      W: [
+          { label: "W", values: ["R-S", "S-T", "T-R"] },
+          { label: "A", values: ["R", "S", "T"] },
+          { label: "/", values: ["PF"] },
+          { label: "/", values: ["Hz"] },
+          { label: "/", values: ["kW"] },
+      ]
+      }[type]), [type]);
 
-  const tabPageInfo = useSelector((state: RootStore) => state.tabPageReducer.currentTabPage);
-  const [curunit, setUnit] = useState<Unit>(tabPageInfo.unitList[index]);
-
-  useEffect(() => {
-    setUnit(tabPageInfo.unitList[index]);
-  }, [tabPageInfo, index]);
+  console.log("cur tabpage", tabPage)
 
   let pos = 0;
 
   return (
     <Container>
       <Row>
-        <TitleColumn>{curunit.name}</TitleColumn>
+        <TitleColumn>{tabPage.unitList[index].name}</TitleColumn>
       </Row>
       <Row>
         {sections.map((section, sectionIdx) => (
@@ -38,10 +40,9 @@ const ViewDeviceTypeW: React.FC<ViewUnitProps> = ({ index }) => {
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
-
                 <DeviceTypeValueDiv  key={`value-${sectionIdx}-${valueIdx}`}>
                   <DevTypeDiv>{value}</DevTypeDiv>
-                  <DeviceValue times={tabPageInfo.times} devId={curunit.dvList[pos++]}  />
+                  <DeviceValue times={tabPage.times} devId={tabPage.unitList[index].dvList[pos++]}  />
                 </DeviceTypeValueDiv>
               ))}
             </Row>
@@ -69,7 +70,7 @@ const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
   width: calc(100% - 2px);
 
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
-  border: 1px solid #aaa;
+  border: 1px solid #ccc;
 `;
 
 const Column = styled(BaseFlexCenterDiv)`
@@ -97,9 +98,11 @@ const DevTypeDiv = styled(BaseFlexCenterDiv)`
 
   height: 25px;
   width: calc(100% - 2px);
-  min-width: 27px;
+  min-width: 25px;
 
   border: 1px solid #ccc;
 `;
 
-export default ViewDeviceTypeW;
+export default ViewDeviceType;
+
+

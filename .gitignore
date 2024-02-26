@@ -8,9 +8,12 @@
 
 # testing
 /coverage
+/src-lge
+/src-date
 
 # production
 /build
+
 
 # misc
 .DS_Store

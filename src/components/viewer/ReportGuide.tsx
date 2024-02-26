@@ -1,10 +1,8 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceTypeV from "./ViewDeviceTypeV";
-import ViewDeviceTypeW from "./ViewDeviceTypeW";
+import ViewDeviceType from "./ViewDeviceType";
 import { RootStore } from "../../store/congifureStore";
-import { TabPageInfotype } from "../../static/types";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 
@@ -14,38 +12,21 @@ type ReportGuideProps = {
 };
 
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
-  const tabPageSlice = useSelector((state :RootStore) => state.tabPageReducer);
-  const settingSlice = useSelector((state :RootStore) => state.settingReducer);
-  const mainTab = settingSlice.selectedTab.main;
-  const subTab = settingSlice.selectedTab.sub;
+  const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        renderDevice();
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  },[settingSlice.selectedTab]);
-
-  const renderDevice = () => {
-    const tabPageInfo = tabPageSlice.tabPageInfo[mainTab][subTab]
-  
-    if (!tabPageInfo.unitList[0]) {
-      return <>{STRING_ERR_SERVER_CONNECT}</>
+  const renderDevice = (() => {
+    if (!currentTab.unitList[0]) {
+      return <>{STRING_ERR_SERVER_CONNECT}</>;
     }
 
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
-    times.push(...tabPageInfo.times.map((time: string) => time));
-    
+    times.push(...currentTab.times.map((time: string) => time));
+
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
-
-          const TypeComp = 
-          tabPageInfo.unitList[index].type === 1 ? ViewDeviceTypeV : ViewDeviceTypeW;
+          const TypeComp = currentTab.unitList[index].type === 1 ? 'V' : 'W';
 
           return (
             <Container key={colIndex}>
@@ -55,14 +36,14 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                 ))}
               </TimeContainer>
               <DeviceContainer>
-                <TypeComp key={index} mainTab={rowIndex} subTab={colIndex} unit={tabPageInfo.unitList[index]} />
+                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
             </Container>
           );
         })}
       </RowContainer>
     ));
-  };
+  });
 
   return <>{renderDevice()}</>;
 };
