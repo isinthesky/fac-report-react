@@ -20,22 +20,16 @@ const SettingHeader: React.FC = () => {
   const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
 
   useEffect(() => {
-    console.log("group init station", unitGroupSlice.currentGroup, (unitGroupSlice.currentGroup.st === 0) 
-    ? deviceSet.stations[0].id
-    : unitGroupSlice.currentGroup.st, deviceSet.stations[0].id);
-
+    console.log("group init station", unitGroupSlice.currentGroup)
     setSelectedStation( (unitGroupSlice.currentGroup.st === 0) 
-                        ? deviceSet.stations[0].id
+                        ? deviceSet.stations[0]?.id
                         : unitGroupSlice.currentGroup.st);     
   
-
     setSelectedDivision( (unitGroupSlice.currentGroup.div === 0) 
-                        ? deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id
+                        ? deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0]?.id
                         : unitGroupSlice.currentGroup.div);     
-
                     
   }, [unitGroupSlice.currentGroup]);
-
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const stId = Number(e.target.value);
@@ -46,7 +40,6 @@ const SettingHeader: React.FC = () => {
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const divId = Number(e.target.value);
-    console.log("div",divId, e.target.value)
     setSelectedDivision(divId);
 
     dispatch(updateCurrentGroupUnit({arrKey: "div", value: divId}))

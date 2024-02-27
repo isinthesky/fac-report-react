@@ -41,6 +41,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   });
 
   const handleSave = async () => {
+
     dispatch(saveTabPage())
 
     let count = 1;
@@ -51,13 +52,18 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
         if (process.env[TabKey]) {
           if (tabPageSlice.settingPosition.main === mainId && tabPageSlice.settingPosition.sub === subId) {
-            try {
-              const keyNumber = CONST_TABINFO_NAME + `${count}`; 
-              await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
+            const confirmed = window.confirm(`Do you want to save changes for ${process.env[TabKey]}?`);
+            if (confirmed) {
+              try {
+                const keyNumber = CONST_TABINFO_NAME + `${count}`; 
+                await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
+                return;
+              }
+              catch (e) {
+                console.error("updateSettingsTabPage error:", e);
+              }
+            } else {
               return;
-            }
-            catch (e) {
-              console.error("updateSettingsTabPage error:", e);
             }
           }
           count += 1;
@@ -67,6 +73,11 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   };
 
   const handleSaveAll = async () => {
+    const confirmed = window.confirm(`Do you want to save changes for all tabs?`);
+    if (!confirmed) {
+      return;
+    }
+
     dispatch(saveTabPage())
 
     let count = 1;

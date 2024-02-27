@@ -12,7 +12,7 @@ const ApproveSetModal = () => {
 
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
 
-  const [groups, setGroups] = useState([
+  const [approvals, setApprovals] = useState([
     { checked: false, text: '' },
     { checked: false, text: '' },
     { checked: false, text: '' }
@@ -20,44 +20,41 @@ const ApproveSetModal = () => {
 
   const [print, setTitle] = useState(settingSet.printTitle); // printTitle을 로컬 state로 관리합니다.
 
-
   useEffect(() => {
     if (settingSet.savedApprovals.length > 0) {
-      setGroups(settingSet.savedApprovals);
+      setApprovals(settingSet.savedApprovals);
     }
   }, [settingSet.savedApprovals]);
 
   const handleCheckboxChange = (index: number) => {
-    const newGroups = groups.map((group, idx) => {
+    const newGroups = approvals.map((group, idx) => {
       if (idx === index) {
         return { ...group, checked: !group.checked };
       }
       return group;
     });
-    setGroups(newGroups);
+    setApprovals(newGroups);
   };
-
 
   const handlePrintTitleChange = (title: string) => {
     setTitle(title); // printTitle 값을 업데이트합니다.
   };
 
-
   const handleInputChange = (index: number, value: string) => {
-    const newGroups = groups.map((group, idx) => {
+    const newGroups = approvals.map((group, idx) => {
       if (idx === index) {
         return { ...group, text: value };
       }
       return group;
     });
-    setGroups(newGroups);
+    setApprovals(newGroups);
   };
 
   const handleSave = async () => {
-    dispatch(setApproves(groups));
+    dispatch(setApproves(approvals));
     dispatch(setPrintTitle(print));
     try {
-      await setUpdateSettingsApprove(groups);
+      await setUpdateSettingsApprove(approvals);
     } catch (error) {
       console.error(error);
     }
@@ -77,7 +74,7 @@ const ApproveSetModal = () => {
         />
       </TitleContainer>
       <ControlContainer>
-        {groups.map((group, index) => (
+        {approvals.map((group, index) => (
           <BaseFlex1Row key={index}>
             <BaseInput
               type="checkbox"
@@ -126,6 +123,6 @@ const InputJobTitle = styled(BaseInput)`
 
 const ControlContainer = styled(BaseFlex1Row)`
   gap: 20px;
-  `
+`
 
 export default ApproveSetModal;

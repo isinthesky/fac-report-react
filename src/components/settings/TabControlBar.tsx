@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setMenus } from "../../features/reducers/settingSlice";
@@ -25,14 +25,14 @@ const TabControlBar: React.FC = () => {
     });
 
     dispatch(setMenus(buttons));
-  }, [dispatch]);
+  }, []); // Removed dispatch from dependency array
 
-  const handleTabClick = (main:string, sub:string) => {
+  const handleTabClick = useCallback((main:string, sub:string) => {
     console.log('handleTabClick', main, sub)
     dispatch(setSettingSelect({mainTab: Number(main), subTab: Number(sub)}));
-  }
+  }, [dispatch]);
   
-  const processArray = (arr:string[]) => {
+  const processArray = useCallback((arr:string[]) => {
     const tens = new Set(); // 10의 자리 수를 저장할 Set
     const ones = []; // 1의 자리 수를 저장할 배열
   
@@ -59,7 +59,7 @@ const TabControlBar: React.FC = () => {
     }
   
     return ones;
-  };
+  }, [menus, tabPosition, handleTabClick]);
 
     
   return <TopBar>{processArray(menus)}</TopBar>;
@@ -96,4 +96,4 @@ const TabButton = styled.button<{ mode: string, fontsize?: string }>`
   border-bottom: 2px solid #333;
 `;
 
-export default TabControlBar;
+export default React.memo(TabControlBar);

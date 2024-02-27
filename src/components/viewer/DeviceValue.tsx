@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootStore } from "../../store/congifureStore";
@@ -22,7 +22,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
     console.log('DeviceValue', devId);
 
 
-  const getLogByTimestamp = (devLog:any, timestamp:any) => {
+  const getLogByTimestamp = useCallback((devLog:any, timestamp:any) => {
     if (devLog[timestamp]) {
       return devLog[timestamp];
     }
@@ -33,7 +33,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
       .sort((a, b) => b - a)[0];
   
     return precedingTimestamp ? devLog[precedingTimestamp] : "-";
-  }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,13 +84,13 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
       }
     };
     fetchData();
-  }, [devId, times]);
+  }, [devId, times, getLogByTimestamp]);
 
   useEffect(() => {
     settingSet.idViewMode === 0
     ? setDeviceValue(deviceSave)
     : setDeviceValue(deviceSave.map(() => devId));
-  }, [settingSet.idViewMode]);
+  }, [settingSet.idViewMode, deviceSave, devId]);
 
   return (
     <>
@@ -111,5 +111,5 @@ const ValueColumn3 = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
   border: 1px solid #ccc;
 `;
 
-export default DeviceValue;
+export default React.memo(DeviceValue);
   

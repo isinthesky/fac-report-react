@@ -25,12 +25,13 @@ function Daily() {
     dispatch(setTableDate(date));
   }, [date, dispatch]);
 
-  const handleOpenPrint = () => {
-    const isConfirmed = window.confirm("인쇄하시겠습니까??");
+  // Call useReactToPrint at the top level and store the returned function
+  const handlePrintFunction = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
-    if (isConfirmed) {
-      setIsOpen(true);
-    }
+  const handleOpenPrint = () => {
+    setIsOpen(true);
   };
 
   const handleIdCheck = async () => {
@@ -41,9 +42,12 @@ function Daily() {
     setIsOpen(false);
   };
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
+  // Use the stored function inside handlePrint
+  const handlePrint = () => {
+    if (window.confirm("Do you want to proceed with printing?")) {
+      handlePrintFunction();
+    }
+  };
 
   return (
     <Flat>
