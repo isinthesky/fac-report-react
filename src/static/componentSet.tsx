@@ -135,7 +135,7 @@ export const BaseInput = styled.input<{ fontsize?:string,  heightsize?: string }
 
 
 export const BaseSelect = styled.select<{ fontsize?:string, heightsize?: string }>`
-  height:  ${(props) => props.fontsize || SIZESET_DEFAULT_SELECT_HEIGHT};
+  height:  ${(props) => props.heightsize || SIZESET_DEFAULT_SELECT_HEIGHT};
   padding:3px;
   
   gap: 10px;
