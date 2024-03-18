@@ -14,7 +14,7 @@ import TabControlBar from "../settings/TabControlBar";
 import PrintSetting from "../PrintSetting";
 import { STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../../static/langSet";
 import { BaseFlex1Column, BaseModalBack, BaseFlex1Row, BaseButton, MiniButton, BaseLabel, BaseFlexDiv } from "../../static/componentSet";
-import { COLORSET_DISABLE_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
+import { COLORSET_BACKGROUND_COLOR, COLORSET_DISABLE_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
 import { Unit } from "../../static/types";
 import UnitGroupSet from "../settings/group/UnitGroupSet";
@@ -192,7 +192,7 @@ const Flat = styled(BaseFlex1Column)`
 
   padding: 20px;
 
-  background-color: #F5F5F5;
+  background-color: ${COLORSET_BACKGROUND_COLOR};
 `;
 
 

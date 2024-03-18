@@ -1,12 +1,26 @@
 
 import styled from "styled-components";
-import { COLORSET_SIGNITURE_COLOR } from "./colorSet";
+import { COLORSET_SIGNITURE_COLOR, COLORSET_FONT_BASE,
+        COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_FONT, 
+        COLORSET_ACTIVE_CONTROL_BG, COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_FONT } from "./colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DEFAULT_DIV_SIZE, FONTSET_DEFAULT_INPUT_SIZE, FONTSET_DEFAULT_LABEL_SIZE, FONTSET_DEFAULT_OPTION_SIZE, FONTSET_DEFAULT_SELECT_SIZE } from "./fontSet";
 import { SIZESET_CONTROL_BUTTON_HEIGHT, SIZESET_CONTROL_BUTTON_WIDTH, SIZESET_CONTROL_CENTER_LABEL_HEIGHT, SIZESET_CONTROL_CENTER_LABEL_WIDTH, SIZESET_DEFAULT_BUTTON_HEIGHT, SIZESET_DEFAULT_BUTTON_WIDTH, SIZESET_DEFAULT_INPUT_HEIGHT, SIZESET_DEFAULT_OPTION_HEIGHT, SIZESET_DEFAULT_SELECT_HEIGHT } from "./constSet";
 
 
 export const BaseFlexDiv = styled.div`
   display: flex;
+  gap: 10px;
+`;
+
+export const BaseFlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+`;
+
+export const BaseFlexColumn = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 `;
 
@@ -63,10 +77,11 @@ export const BaseModalBack = styled.div`
 export const BaseButton = styled.button<{ heightsize?:string, widthsize?:string, fontsize?:string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_BUTTON_HEIGHT};
   width: ${(props) => props.widthsize || SIZESET_DEFAULT_BUTTON_WIDTH};
-
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
 
-  border-radius: 7px;
+  background-color: ${COLORSET_NORMAL_CONTROL_BG};
+  border: 1px solid ${COLORSET_NORMAL_CONTROL_BORDER};
+  color: ${COLORSET_NORMAL_CONTROL_FONT};
 `;
 
 
@@ -74,11 +89,10 @@ export const ActiveButton = styled.button<{heightsize?:string, widthsize?:string
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_BUTTON_HEIGHT};
   width: ${(props) => props.widthsize || SIZESET_DEFAULT_BUTTON_WIDTH};
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
-  font-weight: bold;
-  color: #eeeeee;
-  background-color: ${(props) => props.bgColor || COLORSET_SIGNITURE_COLOR};
 
-  border-radius: 7px;
+  background-color: ${COLORSET_ACTIVE_CONTROL_BG};
+  border: 1px solid ${COLORSET_ACTIVE_CONTROL_BG};
+  color: ${COLORSET_ACTIVE_CONTROL_FONT};
 `;
 
 
@@ -120,11 +134,12 @@ export const CenterLabel = styled.button<{ heightsize?:string, fontsize?:string 
 export const BaseLabel = styled.label<{ fontsize?:string }>`
   display: flex
 
-  height: 30px;
+  // height: 30px;
   padding: 1px;
 
+  color: ${COLORSET_FONT_BASE};
+
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_LABEL_SIZE};
-  // border: 1px solid #444;
 `;
 
 

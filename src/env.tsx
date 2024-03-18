@@ -23,6 +23,14 @@ export const CONST_UNITGROUP_NAME = process.env.REACT_APP_CONST_UNITGROUP_NAME;
 
 export const CONST_LANG = process.env.REACT_APP_CONST_LANG
 
+export const DEFAULT_LOCATION_NAME = "하이퍼 버스터즈빌딩 강동"
+export const DEFAULT_CI_PATH = "images/main_ci.png"
+export const DEFAULT_MAINLOGO_COLUMN_PATH = "images/bg/main_logo_col.png"
+export const DEFAULT_MAINLOGO_ROW_PATH = "images/bg/main_logo_row.png"
+
+export const DEFAULT_BGIMG_PATH = "images/bg/main_bg.png"
+export const DEFAULT_BGIMG_HEADER= "images/controlls/header_btn2.png"
+
 export const INIT_TABPAGE_SETTING = {"times":["05:00","11:00","17:00","23:00"], "unitList":[{"id": 1, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 2, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 3, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 4, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 5, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 6, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 7, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 8, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 9, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 10, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 11, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 12, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]}]}
 export const INIT_UNITGROUP_SETTING = {"id": 0, "type":1, "name":"device", "st":0, "div":0, "dvList": [0,0,0,0,0,0,0,0,0]};
 

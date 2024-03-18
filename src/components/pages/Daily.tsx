@@ -9,9 +9,10 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
-import { ActiveButton, BaseButton, BaseFlex1Column, BaseModalBack, MiniButton } from "../../static/componentSet";
-import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT } from "../../static/langSet";
-import { COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
+import { ActiveButton, BaseButton, BaseLabel, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton } from "../../static/componentSet";
+import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE } from "../../static/langSet";
+import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
+import Header from "../header/Header";
 
 function Daily() {
   const dispatch = useDispatch();
@@ -51,14 +52,25 @@ function Daily() {
 
   return (
     <Flat>
-      <Controls>
-        <DatePicker
-          selected={new Date(date)}
-          onChange={(value: Date) => setDate(value.getTime())}
-        />
-        <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
-        <BaseButton onClick={handleIdCheck}>{STRING_DAILY_MAIN_BTN_IDCHECK}</BaseButton>
+      <Header />
+      <Title>일일 보고</Title>
+      <ControlContainer>
+        <BaseFlexDiv>
+          <DateLabel>{STRING_DAILY_MAIN_SELECT_DATE}</DateLabel>
+        </BaseFlexDiv>
+        <Controls>
+          <BaseFlexDiv>
+            <DatePicker
+              selected={new Date(date)}
+              onChange={(value: Date) => setDate(value.getTime())}
+            />
+          </BaseFlexDiv>
+          <ButtonControls>
+            <BaseButton onClick={handleIdCheck}>{STRING_DAILY_MAIN_BTN_IDCHECK}</BaseButton>
+            <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
+          </ButtonControls>
       </Controls>
+      </ControlContainer>
       <ReportLine>
         <ReportGuide
           row={settingSet.daily.row}
@@ -68,11 +80,11 @@ function Daily() {
       {isOpen ? 
         <BaseModalBack onClick={handlePrintClose}>
           <ModalView onClick={(e) => e.stopPropagation()}>
-            <Header>
+            <DivHeader>
               <HideBtn></HideBtn>
               <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
-            </Header>
+            </DivHeader>
             <PrintModal row={settingSet.daily.row}
                         column={settingSet.daily.column}
                         mainTab={Number(id1 ? id1 : "1")}
@@ -88,34 +100,52 @@ function Daily() {
 // Styled components remain unchanged
 
 const Flat = styled(BaseFlex1Column)`
-  background-color: #F5F5F5;
+  background-color: ${COLORSET_BACKGROUND_COLOR};
 `;
 
-const Header = styled.div`
+
+const Title = styled(BaseFlexDiv)`
+  justify-content: start;
+
+  margin: 15px 10px 0px 20px;
+  gap: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  background-color: ${COLORSET_BACKGROUND_COLOR};
+`;
+
+const DateLabel = styled(BaseLabel)`
+`;
+
+const DivHeader = styled.div`
   display: flex;
   flex-direction: row;
   align-self: stretch;
   justify-content: space-between;
 `;
 
-const Controls = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+const ControlContainer = styled(BaseFlexColumn)`
+  justify-content: center;
+  gap: 5px;
+  margin: 20px 20px 0px 20px;
+`;
 
-  margin: 20px;
-  padding: 10px;
 
-  border: 1px solid #555;
+const Controls = styled(BaseFlexRow)`
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ButtonControls = styled(BaseFlexRow)`
+  justify-content: end;
 `;
 
 const ReportLine = styled(BaseFlex1Column)`
   justify-content: start;
 
   margin: 0px 20px;
-  gap: 5px;
-  
-  border: 1px solid #555;
+  gap: 10px;
 `;
 
 

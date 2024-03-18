@@ -5,6 +5,10 @@ export const KOR_DEFALT_CANCEL = "취소"
 export const KOR_DEFALT_EDIT = "변경"
 export const KOR_DEFALT_APPLY = "적용";
 
+export const KOR_MAIN_LOGIN_ID = "아이디";
+export const KOR_MAIN_LOGIN_PW = "비밀번호";
+export const KOR_MAIN_LOGIN_BTN = "로그인";
+
 export const KOR_DAILY_MAIN_BTN_IDCHECK = "ID 확인";
 export const KOR_DAILY_MAIN_BTN_PRINT = "인쇄";
 export const KOR_DAILY_MAIN_VIEW_SORTATION = "구분";
@@ -16,6 +20,8 @@ export const KOR_SETTING_MAIN_BTN_DEVSET = "장치 설정"
 export const KOR_SETTING_MAIN_BTN_INIT = "초기화"
 export const KOR_SETTING_MAIN_BTN_GROUPSET = "그룹 설정"
 export const KOR_SETTING_MAIN_BTN_PRINTSET = "인쇄 설정"
+
+export const KOR_DAILY_MAIN_SELECT_DATE = "날짜 선택";
 
 export const KOR_SETTING_SET_TIME_ADD = "시간 추가";
 export const KOR_SETTING_SET_TIME_DELETE = "삭제";

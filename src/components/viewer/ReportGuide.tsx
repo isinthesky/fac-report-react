@@ -5,6 +5,7 @@ import ViewDeviceType from "./UnitType";
 import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
 
 type ReportGuideProps = {
   row: number;
@@ -51,17 +52,16 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
 const RowContainer = styled(BaseFlexDiv)`
   align-items: stretch;
 
-  width: calc(100% - 10px);
+  width: calc(100%);
 
-  margin: 5px;
-  gap: 5px;
+  // margin: 5px;
+  gap: 10px;
 `;
 
 const Container = styled(BaseFlexDiv)`
   flex-direction: row;
   
   width: 100%;
-  
   gap: 0px;
 `;
 
@@ -84,7 +84,8 @@ const TimeDiv = styled(BaseFlexCenterDiv)`
   height: 25px;
 
   padding: 0px;
-  border: 1px solid #ccc;
+  background-color: ${COLORSET_GRID_HEADER_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 export default ReportGuide;

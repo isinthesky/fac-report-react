@@ -4,6 +4,7 @@ import DeviceValue from "./DeviceValue";
 import { ViewUnitProps } from "../../static/types";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE } from "../../static/colorSet";
 
 const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPage, type }) => {
   const sections = useMemo(() => ({
@@ -55,7 +56,6 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
 
 const Container = styled(BaseFlexCenterDiv)`
   flex-direction: column;
-
   width: 100%;
 `;
 
@@ -70,7 +70,9 @@ const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
   width: calc(100% - 2px);
 
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
-  border: 1px solid #ccc;
+  color: ${COLORSET_FONT_BASE};
+  background-color: ${COLORSET_GRID_HEADER_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const Column = styled(BaseFlexCenterDiv)`
@@ -90,7 +92,9 @@ const SectionDiv = styled(BaseFlexCenterDiv)`
   height: 25px;
   width: calc(100% - 2px);
 
-  border: 1px solid #ccc;
+  color: ${COLORSET_FONT_BASE};
+  background-color: ${COLORSET_GRID_HEADER_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const DevTypeDiv = styled(BaseFlexCenterDiv)`
@@ -100,7 +104,9 @@ const DevTypeDiv = styled(BaseFlexCenterDiv)`
   width: calc(100% - 2px);
   min-width: 25px;
 
-  border: 1px solid #ccc;
+  color: ${COLORSET_FONT_BASE};
+  background-color: ${COLORSET_GRID_HEADER_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 export default UnitType;

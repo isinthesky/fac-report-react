@@ -20,10 +20,10 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <div className="App">
         <GlobalStyle />
-        <Header />
         <RowContainer>
           <Routes>
             <Route path="/" element={<Main />} />
+            <Route path="/daily/" element={<Daily />} />
             <Route path="/daily/:id1/:id2" element={<Daily />} />
             <Route path="/weekly/:id1/:id2" element={<Weekly />} />
             <Route path="/settings" element={<Settings />} />

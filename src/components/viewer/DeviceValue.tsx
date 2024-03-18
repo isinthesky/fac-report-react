@@ -5,6 +5,7 @@ import { RootStore } from "../../store/congifureStore";
 import { readDevicesData } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
+import { COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
 
 
 interface DeviceValueProps {
@@ -108,7 +109,8 @@ const ValueColumn3 = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
   width: calc(100% - 2px);
   min-width: 25px;
 
-  border: 1px solid #ccc;
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+  background-color: #2E323B;
 `;
 
 export default React.memo(DeviceValue);
