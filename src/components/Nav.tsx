@@ -30,9 +30,6 @@ const LeftNav = styled.nav`
 `;
 
 const PageButton = styled.button`
-  justify-content: center;
-  align-items: center;
-
   height: 40px;
   width: 100px;
 
