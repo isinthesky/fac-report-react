@@ -3,25 +3,27 @@ import styled from "styled-components";
 import { COLORSET_SIGNITURE_COLOR, COLORSET_FONT_BASE,
         COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_FONT, 
         COLORSET_ACTIVE_CONTROL_BG, COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_FONT } from "./colorSet";
-import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DEFAULT_DIV_SIZE, FONTSET_DEFAULT_INPUT_SIZE, FONTSET_DEFAULT_LABEL_SIZE, FONTSET_DEFAULT_OPTION_SIZE, FONTSET_DEFAULT_SELECT_SIZE } from "./fontSet";
+import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DEFAULT_DIV_SIZE, FONTSET_DEFAULT_INPUT_SIZE, FONTSET_DEFAULT_BIG_LABEL_SIZE, FONTSET_DEFAULT_MIDIUM_LABEL_SIZE, FONTSET_DEFAULT_SMALL_LABEL_SIZE, FONTSET_DEFAULT_OPTION_SIZE, FONTSET_DEFAULT_SELECT_SIZE } from "./fontSet";
 import { SIZESET_CONTROL_BUTTON_HEIGHT, SIZESET_CONTROL_BUTTON_WIDTH, SIZESET_CONTROL_CENTER_LABEL_HEIGHT, SIZESET_CONTROL_CENTER_LABEL_WIDTH, SIZESET_DEFAULT_BUTTON_HEIGHT, SIZESET_DEFAULT_BUTTON_WIDTH, SIZESET_DEFAULT_INPUT_HEIGHT, SIZESET_DEFAULT_OPTION_HEIGHT, SIZESET_DEFAULT_SELECT_HEIGHT } from "./constSet";
 
 
-export const BaseFlexDiv = styled.div`
+export const BaseFlexDiv = styled.div<{ gap?: string }>`
   display: flex;
-  gap: 10px;
+  gap: ${(props) => props.gap || "10px"};
 `;
 
-export const BaseFlexRow = styled.div`
+export const BaseFlexRow = styled.div<{ gap?: string, bgColor?: string }>`
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: ${(props) => props.gap || "10px"};
+  background-color: ${(props) => props.bgColor || "transparent"};
 `;
 
-export const BaseFlexColumn = styled.div`
+export const BaseFlexColumn = styled.div<{ gap?: string, bgColor?: string }>`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: ${(props) => props.gap || "10px"};
+  background-color: ${(props) => props.bgColor || "transparent"};
 `;
 
 export const BaseFlexCenterDiv = styled.div`
@@ -131,15 +133,36 @@ export const CenterLabel = styled.button<{ heightsize?:string, fontsize?:string 
 `;
 
 
-export const BaseLabel = styled.label<{ fontsize?:string }>`
+export const BigLabel = styled.label<{ fontsize?:string }>`
   display: flex
 
-  // height: 30px;
   padding: 1px;
 
   color: ${COLORSET_FONT_BASE};
 
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_LABEL_SIZE};
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BIG_LABEL_SIZE};
+`;
+
+
+export const MediumLabel = styled.label<{ fontsize?:string }>`
+  display: flex
+
+  padding: 1px;
+
+  color: ${COLORSET_FONT_BASE};
+
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_MIDIUM_LABEL_SIZE};
+`;
+
+
+export const SmallLabel = styled.label<{ fontsize?:string }>`
+  display: flex
+
+  padding: 1px;
+
+  color: ${COLORSET_FONT_BASE};
+
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_SMALL_LABEL_SIZE};
 `;
 
 

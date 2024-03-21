@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { Unit } from "../../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseButton, BaseFlex1Column, BaseFlex1Div, BaseLabel, CenterLabel } from "../../../static/componentSet";
+import { BaseButton, BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
+import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_HEADER_BG } from "../../../static/colorSet";
 
 
 const DeviceInfo: React.FC<Unit> = ({
@@ -26,36 +27,35 @@ const DeviceInfo: React.FC<Unit> = ({
   }
 
   return (
-    <Container>
-      <NameGroup>
-        <BaseLabel>id</BaseLabel>
+    <UnitContainer>
+      <NameContainer>
+        <MediumLabel>id</MediumLabel>
         <ButtonUnitInfo>{id}</ButtonUnitInfo>
-        <BaseLabel>type</BaseLabel>
+        <MediumLabel>type</MediumLabel>
         <ButtonUnitInfo>{type}</ButtonUnitInfo>
-        <BaseLabel>name</BaseLabel>
+        <MediumLabel>name</MediumLabel>
         <NameLabel>{name}</NameLabel>
-      </NameGroup>
+      </NameContainer>
 
       <Group>
       {dvList&&dvList.map((dv, index) => (
           <ItemDiv key={index}>
-            <BaseLabel>{`dv${index + 1}`}</BaseLabel>
+            <MediumLabel>{`dv${index + 1}`}</MediumLabel>
             <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv)} readOnly={true}/>
           </ItemDiv>
       ))}
       </ Group>
       
-    </Container>
+    </UnitContainer>
   );
 }; 
 
-const Container = styled.div`
+const UnitContainer = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   padding: 10px;
 
-  border-radius: 10px;
   background-color: white;
 `;
 
@@ -70,15 +70,19 @@ const Group = styled.div`
   border-radius: 5px;
 `;
 
-const NameLabel = styled(CenterLabel)`
-  width:100px;
+const NameLabel = styled(MediumLabel)`
+  height: 25px;
+  color:white;
+  background-color: transparent;
+  border: 1px solid white;
 `;
 
 
-const NameGroup = styled(BaseFlex1Div)`
+const NameContainer = styled(BaseFlex1Div)`
   align-items: center; 
   justify-self: start;
-  margin: 10px;
+
+  background-color: ${COLORSET_GRID_HEADER_BG};
 `;
 
 const ItemDiv = styled(BaseFlex1Column)`
@@ -86,7 +90,9 @@ const ItemDiv = styled(BaseFlex1Column)`
 `;
 
 const ButtonUnitInfo = styled(CenterLabel)`
-  border: 0px;
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
 `;
 
 const DeviceInput = styled.input<{ heightsize?: string }>`

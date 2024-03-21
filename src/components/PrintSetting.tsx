@@ -4,7 +4,7 @@ import { setApproves, setPrintTitle } from '../features/reducers/settingSlice';
 import { setUpdateSettingsApprove } from '../features/api';
 import { RootStore } from '../store/congifureStore';
 import styled from "styled-components";
-import { BaseButton, BaseInput, BaseFlex1Column, BaseFlex1Row, BaseLabel, ActiveButton, BaseFlexDiv } from '../static/componentSet';
+import { BaseButton, BaseInput, BaseFlex1Column, BaseFlex1Row, MediumLabel, ActiveButton, BaseFlexDiv } from '../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE } from '../static/langSet';
 
 const ApproveSetModal = () => {
@@ -107,7 +107,7 @@ const TitleContainer = styled(BaseFlex1Column)`
   gap: 3px;
 `
 
-const TitleLabel = styled(BaseLabel)`
+const TitleLabel = styled(MediumLabel)`
   font-size: 16px;
 `
 

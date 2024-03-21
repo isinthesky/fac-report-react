@@ -15,14 +15,15 @@ import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { getDeviceInfo } from "../../features/api/device";
 import { loadDeviceList } from "../../features/reducers/deviceSlice";
 import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
+import { HeaderProps } from "../../static/interfaces";
 
 const baseUrl = "http://localhost:3005/"; // Example base URL
 
 
-export default function Header() {
+export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [selectedFlatId, setSelectedFlatId] = useState<string>("");
+  const [selectedFlatId, setSelectedFlatId] = useState<string>(mainTab.toString());
   const [logoSrc, setLogoSrc] = useState(DEFAULT_MAINLOGO_ROW_PATH);
 
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
@@ -61,6 +62,8 @@ export default function Header() {
     navigate(`/daily/${id1}/${id2}`);
   };
 
+  // console.log("id1", id1, "id2", id2)
+
   const handleGoSetting = useCallback(() => {
     navigate("/settings");
   }, [navigate]);
@@ -98,8 +101,6 @@ export default function Header() {
       }
     })();
   }, []);
-
-  console.log("DEFAULT_MAINLOGO_ROW_PATH", DEFAULT_MAINLOGO_ROW_PATH)
 
   return (
     <TopHeader>

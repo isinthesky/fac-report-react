@@ -6,6 +6,7 @@ import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
+import { time } from "console";
 
 type ReportGuideProps = {
   row: number;
@@ -15,6 +16,8 @@ type ReportGuideProps = {
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
+  console.log("currentTab", currentTab)
+
   const renderDevice = (() => {
     if (!currentTab.unitList[0]) {
       return <>{STRING_ERR_SERVER_CONNECT}</>;
@@ -22,6 +25,8 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
 
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
     times.push(...currentTab.times.map((time: string) => time));
+
+    console.log("times", times, row, column)
 
     return Array.from({ length: row }).map((_, rowIndex) => (
       <RowContainer key={rowIndex}>

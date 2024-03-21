@@ -42,3 +42,9 @@ export interface ApprovalsType {
   checked: boolean;
   text: string;
 }
+
+
+export interface HeaderProps {
+  mainTab: number;
+  // other props
+}

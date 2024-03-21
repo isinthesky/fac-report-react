@@ -5,7 +5,12 @@ export const FONTSET_MAIN_MENU_SIZE = "13px"
 
 
 export const FONTSET_DEFAULT_BUTTON_SIZE = "12px"
-export const FONTSET_DEFAULT_LABEL_SIZE = "12px"
+
+export const FONTSET_DEFAULT_BIG_LABEL_SIZE = "20px"
+export const FONTSET_DEFAULT_MIDIUM_LABEL_SIZE = "12px"
+export const FONTSET_DEFAULT_SMALL_LABEL_SIZE = "10px"
+
+export const FONTSET_DESCRIPTION_LABEL_SIZE = "10px"
 export const FONTSET_DEFAULT_INPUT_SIZE = "13px"
 export const FONTSET_DEFAULT_SELECT_SIZE = "12px"
 export const FONTSET_DEFAULT_OPTION_SIZE = "12px"

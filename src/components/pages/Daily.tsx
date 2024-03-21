@@ -9,7 +9,7 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
-import { ActiveButton, BaseButton, BaseLabel, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton } from "../../static/componentSet";
+import { ActiveButton, BaseButton, MediumLabel, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton } from "../../static/componentSet";
 import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
@@ -52,7 +52,7 @@ function Daily() {
 
   return (
     <Flat>
-      <Header />
+      <Header mainTab={Number(id1 ? id1 : "1")} />
       <Title>일일 보고</Title>
       <ControlContainer>
         <BaseFlexDiv>
@@ -115,7 +115,7 @@ const Title = styled(BaseFlexDiv)`
   background-color: ${COLORSET_BACKGROUND_COLOR};
 `;
 
-const DateLabel = styled(BaseLabel)`
+const DateLabel = styled(MediumLabel)`
 `;
 
 const DivHeader = styled.div`
