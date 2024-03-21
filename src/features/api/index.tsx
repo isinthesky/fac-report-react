@@ -7,9 +7,9 @@ const axiosInstance = axios.create({
 
 export const getSettings = async (): Promise<any> => {
   try {
-    const response = await axiosInstance.get("/settings");
+    const response = await axiosInstance.get("/report/general/getSettings");
     console.log("settings", response);
-    return response.data.settings;
+    return response.data.data;
   } catch (error) {
     console.error(error);
     return false;
@@ -21,7 +21,7 @@ export const setInitSettings = async (
   valueData: string
 ): Promise<any> => {
   try {
-    await axiosInstance.post("/createSettings", {
+    await axiosInstance.post("/report/general/createSetting", {
       type: keyString,
       value: JSON.parse(valueData),
     });
@@ -30,10 +30,19 @@ export const setInitSettings = async (
   }
 };
 
+export const setResetSettings = async (): Promise<Boolean> => {
+  try {
+    await axiosInstance.put("/report/general/resetSettings");
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 export const setDeleteSettings = async (): Promise<Boolean> => {
   try {
-    await axiosInstance.delete("/general");
+    await axiosInstance.delete("/report/general/deleteSettings");
     return true;
   } catch (error) {
     console.error("setDeleteSettings", error);
@@ -46,10 +55,12 @@ export const setUpdateSettingsColRow = async (
   column: number
 ): Promise<any> => {
   try {
-    return await axiosInstance.put("/updateSettingsColRow", {
-      row: row,
-      column: column,
+    const value = JSON.stringify({"row": row, "column": column});
+    const response = await axiosInstance.put("/report/general/updateSetting", {
+      type: "settings",
+      value: value,
     });
+    return response.data.success;
   } catch (error) {
     console.error(error);
     return false;
@@ -60,8 +71,9 @@ export const setUpdateSettingsApprove = async (
   approves: ApprovalsType[]
 ): Promise<any> => {
   try {
-    return await axiosInstance.put("/updateSettingsApprove", {
-      datas: approves
+    return await axiosInstance.put("/report/general/updateSetting", {
+      type: "approves",
+      value: approves
     });
   } catch (error) {
     console.error(error);

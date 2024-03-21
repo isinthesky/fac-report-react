@@ -81,7 +81,7 @@ export default function Header({ mainTab }: HeaderProps) {
           let count = 1;
           const keyName = CONST_TABINFO_NAME;
 
-          if (response.tabSettings.length) {
+          if (response.tabSetting.length) {
             [1, 2, 3, 4, 5].forEach((mainId)=>{
               [1, 2, 3, 4, 5].forEach((subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;

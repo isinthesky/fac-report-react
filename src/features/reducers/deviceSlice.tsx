@@ -18,9 +18,15 @@ export const deviceSlice = createSlice({
   initialState,
   reducers: {
     loadDeviceList: (state, action: PayloadAction<any>) => {
-      state.devices = action.payload.device;
-      state.divisions = action.payload.division;
-      state.stations = action.payload.station;
+      if (action.payload && action.payload.devices) {
+        state.devices = action.payload.devices;
+      }
+      if (action.payload && action.payload.divisions) {
+        state.divisions = action.payload.divisions;
+      }
+      if (action.payload && action.payload.stations) {
+        state.stations = action.payload.stations;
+      }
     },
   },
 });

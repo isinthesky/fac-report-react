@@ -44,7 +44,7 @@ function Settings() {
           
           let count = 1;
           
-          if (resSetting.tabSettings.length) {
+          if (resSetting.tabSetting.length) {
             [1, 2, 3, 4, 5].forEach( async (mainId)=>{
               [1, 2, 3, 4, 5].forEach( async (subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
@@ -65,7 +65,7 @@ function Settings() {
 
         const resGroupList = await getUnitGroupList();
 
-        resGroupList.data.forEach((item: Unit, pos: number) => {
+        resGroupList.value.forEach((item: Unit, pos: number) => {
           dispatch(updateGroup({index: pos, group: item}));
         });
       } catch (error) {

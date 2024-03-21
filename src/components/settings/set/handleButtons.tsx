@@ -1,5 +1,5 @@
 import { CONST_TABINFO_NAME, CONST_UNITGROUP_NAME, INIT_TABPAGE_SETTING, INIT_UNITGROUP_SETTING } from "../../../env";
-import { setInitSettings, setDeleteSettings } from "../../../features/api";
+import { setInitSettings, setResetSettings, setDeleteSettings } from "../../../features/api";
 import { resetXmlDevice } from "../../../features/api/device";
 
 
@@ -12,22 +12,24 @@ export const handleInitSettings = async () => {
       if (isConfirmed) {
         let id = 1;
 
-        await setDeleteSettings();
+        //await setDeleteSettings();
         
-        ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
-          ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
-            if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`]) {
-              await setInitSettings(CONST_TABINFO_NAME + `${id++}`, JSON.stringify(INIT_TABPAGE_SETTING));
-            }
-          })
-        })
+        // ["1", "2", "3", "4", "5"].forEach( async (mainId)=>{
+        //   ["1", "2", "3", "4", "5"].forEach( async (subId)=>{
+        //     if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`]) {
+        //       await setInitSettings(CONST_TABINFO_NAME + `${id++}`, JSON.stringify(INIT_TABPAGE_SETTING));
+        //     }
+        //   })
+        // })
 
-        await setInitSettings("approves", String(process.env.REACT_APP_INIT_APPROVES_SETTING));
-        await setInitSettings("settings", String(process.env.REACT_APP_INIT_GENERAL_SETTING));
-        await setInitSettings("tabSetting", String(process.env.REACT_APP_INIT_TAB_SETTING));
+        // await setInitSettings("approves", String(process.env.REACT_APP_INIT_APPROVES_SETTING));
+        // await setInitSettings("settings", String(process.env.REACT_APP_INIT_GENERAL_SETTING));
+        // await setInitSettings("tabSetting", String(process.env.REACT_APP_INIT_TAB_SETTING));
 
-        const initUnitGroup = Array(10).fill(INIT_UNITGROUP_SETTING)
-        await setInitSettings(String(CONST_UNITGROUP_NAME), JSON.stringify(initUnitGroup) );
+        // const initUnitGroup = Array(10).fill(INIT_UNITGROUP_SETTING)
+        // await setInitSettings(String(CONST_UNITGROUP_NAME), JSON.stringify(initUnitGroup) );
+
+        await setResetSettings();
 
         await resetXmlDevice();
 

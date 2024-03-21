@@ -9,7 +9,10 @@ const axiosInstance = axios.create({
 
 export const resetXmlDevice = async (): Promise<any> => {
     try {
-      await axiosInstance.post("/resetXml");
+      const download = await axiosInstance.get("/xml/downloadXml");
+      if (download.data.success) {
+        await axiosInstance.put("/report/device/resetDeviceInfo");
+      }
     } catch (error) {
       console.error("resetXmlDevice");
       
@@ -19,21 +22,18 @@ export const resetXmlDevice = async (): Promise<any> => {
   
 export const getDeviceInfo = async (): Promise<any> => {
     try {
-      const response = await axiosInstance.get("device/deviceInfo");
-      
-      const devices: { [key: number]: IDevice } = {};
-          
-      for (const dev of response.data.deviceInfo.device) {
-        if (dev.pathId !== 0) {
-          const key = Number(dev.id);
-          devices[key] = dev;
-        } 
+      const response = await axiosInstance.get("/report/device/getDeviceInfo");      
+      response.data.data.devices = response.data.data.devices.filter((dev: IDevice) => dev.pathId !== 0);
+
+      const devices: { [key: number]: IDevice } = {};          
+      for (const dev of response.data.data.devices) {
+        const key = Number(dev.id);
+        devices[key] = dev;
       }
 
-      response.data.deviceInfo.device = devices
+      response.data.data.devices = devices
 
-      return response.data.deviceInfo;
-      
+        return response.data.data;
     } catch (error) {
       console.error(error);
       return false;
@@ -48,9 +48,9 @@ export const updateSettingsTabPage = async (
 
     console.log("updateSettingsTabPage" ,name)
     try {
-      await axiosInstance.put("device/updateTabPage", {
-        name: name,
-        object: object
+      await axiosInstance.put("/report/general/updateSetting", {
+        type: name,
+        value: object
       });
       return true;
     } catch (error) {
@@ -62,9 +62,9 @@ export const updateSettingsTabPage = async (
 
 export const getUnitGroupList = async (): Promise<any> => {
     try {
-      const response = await axiosInstance.get("device/unitGroupList");
+      const response = await axiosInstance.get("/report/general/getSetting/unitGroup");
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.error(error);
       return false;
@@ -76,8 +76,9 @@ export const updateUnitGroupList = async (
     object: Unit[]
   ): Promise<any> => {
     try {
-      return await axiosInstance.put("/device/UnitGroupList", {
-        object: object
+      return await axiosInstance.put("/report/general/updateSetting", {
+        type: "unitGroup",
+        value: object
       });
     } catch (error) {
       console.error(error);
@@ -91,10 +92,13 @@ export const readDevicesData = async (
     date: number
   ): Promise<any> => {
     try {
-      const res = await axiosInstance.get(`device/readDeviceLog/${deviceId.toString()}/${date.toString()}`);
+      const response = await axiosInstance.post("/bms/getPointHistory", {
+        path_id: deviceId.toString(),
+        timestamp: date.toString()
+      });
 
-      if (res.data) {
-        return (res.data.ok === true) ? res.data.data : null;
+      if (response.data.success) {
+        return response.data.data;
       }
       
       return null;
