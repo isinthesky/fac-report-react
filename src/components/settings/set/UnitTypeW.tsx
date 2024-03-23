@@ -5,9 +5,10 @@ import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types"
 import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Div, BaseFlex1Row } from "../../../static/componentSet";
+import { FONTSET_DEFAULT_DIV_SIZE } from "../../../static/fontSet";
+import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_HEADER_BG } from "../../../static/colorSet";
 
-
-const SetDeviceTypeW: React.FC<SetDeviceType> = ({ name }) => {
+const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index])
@@ -24,37 +25,36 @@ const SetDeviceTypeW: React.FC<SetDeviceType> = ({ name }) => {
 
 
   return (
-    <Container>
-       <Section>
-         <TitleDiv>{name}</TitleDiv>
-       </Section>
+    <UnitContainer>
+      <Section>
+        <TitleDiv>{name}</TitleDiv>
+      </Section>
 
        {unitKeys.map((value, idx) => {
         const initStationId = currUnit.dvList[idx] !== 0 ? deviceinfo(currUnit.dvList[idx]).stationId : currUnit.st;
         const initDivisionId = currUnit.dvList[idx] !== 0 ? deviceinfo(currUnit.dvList[idx]).divisionId : currUnit.div;
 
-        return(
-        <ValueSection key={idx}>
-          <ValueColumn>{value}</ValueColumn>
-          <DeviceAutoSelect
-            unitPosition={tabPageSlice.unitPosition.index}
-            devicePosition={idx}
-            devicelist={deviceSet}
-            initStationId={initStationId}
-            stationValue={currUnit.st}
-            initDivisionId={initDivisionId}
-            divisionValue={currUnit.div}
-            currentDeviceId={currUnit.dvList[idx]}
-          />
-        </ValueSection>
-      )}
-      )}
-      
-    </Container>
+        return (
+          <DivicesContainer key={idx}>
+            <ValueColumn>{value}</ValueColumn>
+            <DeviceAutoSelect
+              unitPosition={tabPageSlice.unitPosition.index}
+              devicePosition={idx}
+              devicelist={deviceSet}
+              initStationId={initStationId}
+              stationValue={currUnit.st}
+              initDivisionId={initDivisionId}
+              divisionValue={currUnit.div}
+              currentDeviceId={currUnit.dvList[idx]}
+            />
+          </DivicesContainer>
+        );
+      })}
+    </UnitContainer>
   );
 };
 
-const Container = styled.div`
+const UnitContainer = styled.div`
   flex-grow: 1;
   display: flex;
   justify-content: center;
@@ -66,9 +66,8 @@ const Container = styled.div`
 
 const TitleDiv = styled(BaseFlex1Div)`
   align-items: center;
-  justify-content: center;
-  padding: 3px;
-  border: 1px solid #ccc;
+  justify-content: start;
+  padding: 3px 10px;
 `;
 
 const ValueColumn = styled.div`
@@ -80,15 +79,13 @@ const ValueColumn = styled.div`
   width: 50px;
 `;
 
-const Section = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+const Section = styled(BaseFlex1Div)`
+  background-color: ${COLORSET_GRID_HEADER_BG};
 `;
 
-const ValueSection = styled(BaseFlex1Row)`
+const DivicesContainer = styled(BaseFlex1Row)`
   margin: 10px;
-  gap 20px;
+  background-color: ${COLORSET_GRID_CONTROL_BG};
 `;
 
-export default SetDeviceTypeW;
+export default UnitTypeW;

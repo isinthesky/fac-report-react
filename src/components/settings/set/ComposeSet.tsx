@@ -5,22 +5,18 @@ import UnitTypeW from "./UnitTypeW";
 import UnitTypeV from "./UnitTypeV";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
-import { setCurrentUnit, setTabUnitPosition, saveTabPage, updateTabPage } from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnit, setTabUnitPosition, saveTabPage } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
-import DeviceHeaderSet from "./DeviceHeaderSet";
+import DeviceHeaderSet from "./UnitSettingHeader";
 import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
-import { ActiveButton, BaseButton, BaseFlexCenterDiv } from "../../../static/componentSet";
+import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv, BaseFlexDiv, BaseFlexRow } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL } from "../../../static/langSet";
-import { COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
+import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME } from "../../../env";
-
-
-interface GridContainerProps {
-  column: number;
-}
+import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch();
@@ -143,73 +139,62 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   };
 
   return (
-    <Wrapper>
-      <SettingsContainer>
-        <DefalutDiv>
+    <PageContainer>
+      <BaseFlex1Row>
+        <SettingsContainer>
+          <SelectUnitContainer>  
+            <UnitSelectLabel>
+              <MediumLabel>Unit Select</MediumLabel>
+            </UnitSelectLabel>
+            <GridContainer column={column}>
+                {renderGridButtons()}
+            </GridContainer>
+          </SelectUnitContainer>
           <DeviceHeaderSet />
-          <GridContainer column={column}>
-            {renderGridButtons()}
-          </GridContainer>
-        </DefalutDiv>
-      </SettingsContainer>
-      <SettingsContainer>
-        <ColumnDiv>
+        </SettingsContainer>
+        <TimeDropdowns/>
+        <BaseFlex1Row>
           {deviceType === 1 && <UnitTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
           {deviceType === 2 && <UnitTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
-          <TimeDropdowns/>
-          <UnitGroupListControl viewMode={true}/>
-        </ColumnDiv>
-      </SettingsContainer>
+        </BaseFlex1Row>
+        <BaseButton widthsize="40px"> {"<--"}</BaseButton>
+        <UnitGroupListControl viewMode={"apply"}/>
+      </BaseFlex1Row>
       <ButtonGroup>
         <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
         <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
         <ActiveButton onClick={handleSaveAll}>{STRING_DEFAULT_SAVEALL}</ActiveButton>
       </ButtonGroup>
-    </Wrapper>
+    </PageContainer>
   );
 };
 
-const Wrapper = styled.div`
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  align-items: center; // Center children horizontally
-  justify-content: center; // Center children vertically
-  width: 95vw;
+const PageContainer = styled(BaseFlex1Column)`
+  padding: 15px 30px;
 `;
 
-const SettingsContainer = styled.div`
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  justify-content: center; // Center children horizontally
-  align-items: center; // Center children vertically
-  padding: 10px;
-  border-radius: 5px;
+const SettingsContainer = styled(BaseFlexColumn)`
+  gap: 10px;
+`;
+
+const SelectUnitContainer = styled(BaseFlexColumn)`
+  gap: 10px;
+  padding: 10px 10px 15px 10px;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${COLORSET_GRID_CONTROL_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+`;
+
+const UnitSelectLabel = styled(MediumLabel)`
+  align-self: flex-start;
 `;
 
 const ButtonGroup = styled(BaseFlexCenterDiv)`
   flex-wrap: wrap;
-  
   padding: 10px;
-  margin: 20px;
-
   gap: 50px;
-`;
-
-const DefalutDiv = styled.div`
-  display: flex;
-  justify-content: start;
-
-  gap: 20px;
-  
-  border: 1px solid #111;
-`;
-
-const ColumnDiv = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: row;
 `;
 
 const GridButton = styled.button<{ mode: string }>`
@@ -223,7 +208,7 @@ const GridButton = styled.button<{ mode: string }>`
   border: 1px solid #ccc;
 `;
 
-const GridContainer = styled.div<GridContainerProps>`
+const GridContainer = styled.div< {column: number}>`
   display: grid;
   grid-template-columns: repeat(${props => props.column}, 1fr);
   grid-gap: 10px;

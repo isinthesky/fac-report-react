@@ -89,7 +89,7 @@ export type ApprovalsType = {
 }
 
 export type ViewModeProp = {
-  viewMode: boolean;
+  viewMode: string;
 }
 
 export type setCurrnetUnitProp = {

@@ -11,24 +11,24 @@ import { setReportTable } from "../../features/reducers/settingSlice";
 import { updateGroup } from "../../features/reducers/unitGroupSlice";
 import { setTabPage } from "../../features/reducers/tabPageSlice";
 import TabControlBar from "../settings/TabControlBar";
-import PrintSetting from "../PrintSetting";
 import { STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET } from "../../static/langSet";
 import { BaseFlex1Column, BaseModalBack, BaseFlex1Row, BaseButton, MiniButton, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_DISABLE_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
-import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
+import { SIZESET_DEFAULT_INPUT_HEIGHT, CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
 import { Unit } from "../../static/types";
 import UnitGroupSet from "../settings/group/UnitGroupSet";
 import { handleInitSettings } from "../settings/set/handleButtons";
 import { CONST_TABINFO_NAME } from "../../env";
 import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
+import PrintSetting from "../settings/PrintSetting";
 
 
 function Settings() {
   const dispatch = useDispatch();
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
-  const [mode, setMode] = useState(0);
+  const [mode, setMode] = useState("view");
   const [edit, setEdit] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
@@ -78,73 +78,30 @@ function Settings() {
 
   useEffect(() => {
     if (Object.keys(params).length === 0) {
-      setMode(0);
+      setMode("view");
     }
   }, [params]);
-
-  const handleEdit = () => {
-    setEdit(!edit);
-  };
-
-  const handleApply = async () => {
-    await setUpdateSettingsColRow(rows, columns);
-    dispatch(setReportTable({ row: rows, column: columns }));
-  };
-
-  const handleApproveSetting = () => {
-    setIsOpen(false) 
-  }
-
-  const handleSetDevice = () => {
-    try {
-      setMode(1);
-    } catch (error) {
-      console.error("getDeviceInfo", error);
-    }
-  };
-
-  const handleUnitGroup = () => {
-    try {
-      setMode(2);
-    } catch (error) {
-      console.error("getDeviceInfo", error);
-    }
-  };
-
-  const handleSignPopup = () => {
-    setIsOpen(true) 
-  };
 
   return (
     <Flat>
       <Header mainTab={0} />
+      <PageControlBar modeCallback={setMode} mode={mode} />
       
-      {mode === 1 ? (
+      {mode === CONST_SETTING_MODE_VIEW ? (
+        <>
+          <TabControlBar />
+          <ComposeView row={rows} column={columns}></ComposeView>
+        </>
+      ) : mode === CONST_SETTING_MODE_DEVICE ? (
         <>
           <TabControlBar />
           <ComposeSet row={rows} column={columns}></ComposeSet>
         </>
-      ) : mode === 0 ? (
-        <>
-          <PageControlBar />
-          <TabControlBar />
-          <ComposeView row={rows} column={columns}></ComposeView>
-          {isOpen ? 
-            <BaseModalBack onClick={handleApproveSetting}>
-              <ModalView onClick={(e) => e.stopPropagation()}>
-                <PrintHeader>
-                  <ExitBtn onClick={handleApproveSetting}>x</ExitBtn>
-                </PrintHeader>
-                <PrintSetting />
-              </ModalView>
-            </BaseModalBack>
-            : null
-          } 
-      </>
-      
-      ) : mode === 2 ? (
+      ) : mode === CONST_SETTING_MODE_UNIT ? (
         // <></>
         <UnitGroupSet />
+      ) : mode === CONST_SETTING_MODE_PRINT ? (
+        <PrintSetting />
       ) : null
       }
     </Flat>
@@ -179,7 +136,7 @@ const Input = styled.input<{ mode: string, heightsize?: string, disable?:string 
 `;
 
 const SettingButton = styled(BaseButton)`
-  padding: 5px 15px;
+  padding: 5px 15px;m
   margin: 0px 10px;
   
   border: none;

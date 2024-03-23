@@ -7,21 +7,17 @@ import { STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_S
 import { COLORSET_DISABLE_COLOR, COLORSET_BACKGROUND_COLOR, COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER } from "../../static/colorSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
 import { handleInitSettings } from "./set/handleButtons";
+import { PageControlBarProps } from "../../static/interfaces";
 
 
-const PageControlBar: React.FC = () => {
-  const [mode, setMode] = useState("array");
-  const [edit, setEdit] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-
-
-  const handleSignPopup = () => {
-    // setIsOpen(true)  
+const PageControlBar: React.FC<PageControlBarProps> = ({ mode, modeCallback }) => {
+  const handleSetPrint = () => {
+    modeCallback("print");
   };
 
-  const handleUnitGroup = () => {
+  const handleSetGroup = () => {
     try {
-      setMode("unit");
+      modeCallback("unit");
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
@@ -29,7 +25,7 @@ const PageControlBar: React.FC = () => {
 
   const handleSetDevice = () => {
     try {
-      setMode("device");
+      modeCallback("device");
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
@@ -37,7 +33,7 @@ const PageControlBar: React.FC = () => {
 
   const handleSetArray = () => {
     try {
-      setMode("array");
+      modeCallback("view");
     } catch (error) {
       console.error("getDeviceInfo", error);
     }
@@ -47,10 +43,10 @@ const PageControlBar: React.FC = () => {
     <TopBar>
       <Title>설정</Title>
       <PageButtonContainer>
-        <TabControlButton id="array" page={mode} onClick={handleSetArray}>{STRING_SETTING_MAIN_BTN_ARRAY}</TabControlButton>
+        <TabControlButton id="view" page={mode} onClick={handleSetArray}>{STRING_SETTING_MAIN_BTN_ARRAY}</TabControlButton>
         <TabControlButton id="device" page={mode} onClick={handleSetDevice}>{STRING_SETTING_MAIN_BTN_DEVSET}</TabControlButton>
-        <TabControlButton id="unit" page={mode} onClick={handleUnitGroup}>{STRING_SETTING_MAIN_BTN_GROUPSET}</TabControlButton>
-        <TabControlButton id="print" page={mode}onClick={handleSignPopup}>{STRING_SETTING_MAIN_BTN_PRINTSET}</TabControlButton>
+        <TabControlButton id="unit" page={mode} onClick={handleSetGroup}>{STRING_SETTING_MAIN_BTN_GROUPSET}</TabControlButton>
+        <TabControlButton id="print" page={mode}onClick={handleSetPrint}>{STRING_SETTING_MAIN_BTN_PRINTSET}</TabControlButton>
       </PageButtonContainer>
       <InitButton id="init" onClick={handleInitSettings}>{STRING_SETTING_MAIN_BTN_INIT}</InitButton>
     </TopBar>

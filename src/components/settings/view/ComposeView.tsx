@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import DeviceInfo from "./DeviceInfo";
+import UnitInfo from "./UnitInfo";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import {  setUpdateSettingsColRow } from "../../../features/api";
 import { RootStore } from "../../../store/congifureStore";
@@ -76,7 +76,7 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
 
           if (tabPageInfo.unitList.length > 0) {
             rows.push(
-              <DeviceInfo
+              <UnitInfo
                 key={keyCounter}
                 type={tabPageInfo.unitList[keyCounter].type}
                 name={tabPageInfo.unitList[keyCounter].name}
@@ -137,7 +137,7 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
 };
 
 const SettingViewContainer = styled(BaseFlex1Row)`
-  padding: 0px 30px;
+  padding: 15px 30px;
 `
 
 const ArraySettingContainer = styled(BaseFlexColumn)`

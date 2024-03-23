@@ -10,6 +10,7 @@ import {
 import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
 import { DeviceState } from "../../../features/reducers/deviceSlice";
 import { RootStore } from "../../../store/congifureStore";
+import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT } from "../../../static/colorSet";
 
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
@@ -39,7 +40,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   }, [initDivisionId]);
 
   useEffect(() => {
-    // division 바뀌어도 device가 선택되어 있으면 selected device 유지
     if (currentDeviceId === 0) {
       setSelectedDevice(0); 
       return;
@@ -64,15 +64,15 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   return (
-    <InnerDiv>
-      <SelectDivision onChange={handleStationChange} value={selectedSt}>
+    <DeviceInfoContainer>
+      <DivisionSelector onChange={handleStationChange} value={selectedSt}>
         {devicelist.stations.map((st: IStation) => (
           <BaseOption key={st.id} value={st.id}>
             {st.name}
           </BaseOption>
         ))}
-      </SelectDivision>
-      <SelectDivision onChange={handleDivisionChange} value={selectedDiv}>
+      </DivisionSelector>
+      <DivisionSelector onChange={handleDivisionChange} value={selectedDiv}>
         {devicelist.divisions
           .filter((div: IDivision) => div.stationId === selectedSt)
           .map((div: IDivision) => (
@@ -80,8 +80,8 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
               {div.name}
             </BaseOption>
           ))}
-      </SelectDivision>
-      <SelectDevice onChange={handleDeviceChange} value={selectedDevice}>
+      </DivisionSelector>
+      <DeviceSelector onChange={handleDeviceChange} value={selectedDevice}>
         <BaseOption key={selectedDevice} value={selectedDevice}>
           {selectedDevice === 0 
             ? "Select a device" 
@@ -103,26 +103,30 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
               {dev.name}
             </BaseOption>
           ))}
-      </SelectDevice>
-    </InnerDiv>
+      </DeviceSelector>
+    </DeviceInfoContainer>
   );
 };
 
-const InnerDiv = styled(BaseFlex1Row)`
+const DeviceInfoContainer = styled(BaseFlex1Row)`
   justify-content: center;
   align-items: stretch;
   text-align: center;
+  background-color: transparent;
 `;
 
-const SelectDivision = styled(BaseSelect)`
+const DivisionSelector = styled(BaseSelect)`
   min-width: 70px;
   text-align: center;
+  color: ${COLORSET_DARK_CONTROL_FONT};
+  background-color: ${COLORSET_DARK_CONTROL_BG};
 `;
 
-const SelectDevice = styled(BaseSelect)`
-  flex: 1;
-  min-width: 200px;
+const DeviceSelector = styled(BaseSelect)`
+  width: 100%;
   text-align: center;
+  color: ${COLORSET_DARK_CONTROL_FONT};
+  background-color: ${COLORSET_DARK_CONTROL_BG};
 `;
 
 export default DeviceAutoSelect;

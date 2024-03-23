@@ -1,108 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import styled from "styled-components";
-import { IStation, IDivision, Unit } from "../../../static/types";
-import { RootStore } from "../../../store/congifureStore";
-import { BaseButton, BaseFlex1Column, BaseOption, BaseFlex1Row, BaseSelect, ControlButton } from "../../../static/componentSet";
-import UnitGroupAutoSelect from "../group/UnitGroupSelector";
-import { updateCurrentGroup } from "../../../features/reducers/unitGroupSlice";
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { BaseInput, ControlButton, BaseFlexDiv } from '../../../static/componentSet';
+import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from '../../../static/constSet';
+import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
+
+const DeviceSearch: React.FC = () => {
+  const dispatch = useDispatch()
+  const [searchWord, setSearchWord] = useState("");
 
 
-const DeviceType1234: React.FC = () => {
-  const dispatch = useDispatch();
-  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const currentGroup = useSelector((state: RootStore) => state.unitGroupReducer.currentGroup);
-
-
-  const [selectedStation, setSelectedStation] = useState<number>(currentGroup.st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(currentGroup.div);
-
-  console.log("currentGroup", currentGroup)
-
-  const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStationId = Number(e.target.value);
-    setSelectedStation(newStationId);
-
-    const updatedCurrentGroup = { ...currentGroup, st: newStationId };
-    dispatch(updateCurrentGroup(updatedCurrentGroup))
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("input searchWord", searchWord)
+    setSearchWord(e.target.value);
   };
 
-  const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newSDivisionId = Number(e.target.value);
-    setSelectedDivision(newSDivisionId);
-
-    const updatedCurrentGroup = { ...currentGroup, div: newSDivisionId };
-    dispatch(updateCurrentGroup(updatedCurrentGroup))
+  const handleSearchClick = () => {
+    dispatch(setdeviceSearchWord(searchWord))
   };
 
-  const renderSection = (index1: number, unit: Unit) => (
-    <BaseFlex1Column>
-     {unit.dvList.map((value: number, idx: number) => (
-        <ValueSection key={idx}>
-          <ControlButton>{idx + 1}</ControlButton>
-          <UnitGroupAutoSelect
-            unitPosition={0}
-            devicePosition={idx}
-            initStationId={unit.st}
-            initDivisionId={unit.div}
-            devicelist={deviceSet}
-            stationValue={unit.st}
-            divisionValue={unit.div}
-            currentDeviceId={value}
-          />
-        </ValueSection>
-      ))}
-    </BaseFlex1Column>
-  );
+  const handleClearInput = () => {
+    setSearchWord("");
+    dispatch(setdeviceSearchWord(""))
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearchClick();
+    } else if (e.key === 'Escape') {
+      handleClearInput();
+    }
+  };
 
   return (
-    <Container>
-      <CenterRow>
-        <BaseSelect onChange={handleStationChange} value={selectedStation}>
-          {deviceSet.stations.map((st: IStation) => (
-            <BaseOption key={st.id} value={st.id}>
-              {st.name}
-            </BaseOption>
-          ))}
-        </BaseSelect>
-        <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
-          {deviceSet.divisions.filter((item) => item.stationId === selectedStation).map(
-            (div: IDivision) => (
-              <BaseOption key={div.id} value={div.id}>
-                {div.name}
-              </BaseOption>
-            )
-          )}
-        </BaseSelect>
-      </CenterRow>
-      { renderSection(0, currentGroup)}
-    </Container>
+    <SearchContainer>
+      <BaseInput
+        type="text"
+        value={searchWord}
+        onChange={handleInputChange}
+        onKeyDown={handleSearchKeyDown}
+      />
+      <ControlButton onClick={handleSearchClick}><img src={ICON_DAY_SEARCH} alt="Search" /></ControlButton>
+      <ControlButton onClick={handleClearInput}><img src={ICON_DAY_CLOSE} alt="Close" /></ControlButton>
+    </SearchContainer>
   );
 };
 
-const Container = styled(BaseFlex1Column)`
-  justify-content: center;
-  align-items: stretch;
-  border: 1px solid #ccc;
+const SearchContainer = styled(BaseFlexDiv)`
+  flex-direction: row;  
 `;
 
-
-const CenterRow = styled(BaseFlex1Row)`
-  justify-content: center;
-  align-items: stretch;
-
-  bottom-margin: 10px;
-`;
-
-
-const ValueColumn = styled(ControlButton)`
-  border: 1px solid #ccc;
-  max-width: 70px;
-`;
-
-
-const ValueSection = styled(BaseFlex1Row)`
-  margin: 10px;
-`;
-
-export default DeviceType1234;
+export default DeviceSearch;

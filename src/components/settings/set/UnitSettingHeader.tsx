@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column, BaseFlex1Row, ControlButton, MiniButton, BaseFlexDiv } from "../../../static/componentSet";
+import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column,BaseFlexRow, BaseFlex1Row, MediumLabel, MiniButton, BaseFlexColumn, } from "../../../static/componentSet";
 import { IDivision, IStation } from "../../../static/types";
 import { CONST_TYPE_INFO_NAMES } from "../../../env";
-import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
-import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
+import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
+import DeviceSearch from "./DeviceSearch";
 
 const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
@@ -18,10 +18,8 @@ const DeviceHeaderSet = () => {
   const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].st);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>("");
-  const [searchWord, setSearchWord] = useState("");
 
   useEffect(() => {
-
     const currentUnit = tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
 
     if (currentUnit.type === 0) {
@@ -44,7 +42,6 @@ const DeviceHeaderSet = () => {
     }
 
     setDeviceName(currentUnit.name);
-
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
 
   useEffect(() => {
@@ -52,7 +49,6 @@ const DeviceHeaderSet = () => {
       return;
 
     setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
-
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
@@ -60,7 +56,6 @@ const DeviceHeaderSet = () => {
         deviceId: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
       })
     );
-
   }, [selectedStation]);
 
 
@@ -86,7 +81,6 @@ const DeviceHeaderSet = () => {
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
-
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
@@ -99,8 +93,6 @@ const DeviceHeaderSet = () => {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeviceName(e.target.value);
 
-    console.log("index", tabPageSlice.unitPosition.index, e.target.value)
-
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
@@ -110,42 +102,25 @@ const DeviceHeaderSet = () => {
     );
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("input searchWord", searchWord)
-    setSearchWord(e.target.value);
-  };
-
-  const handleSearchClick = () => {
-    dispatch(setdeviceSearchWord(searchWord))
-  };
-
-  const handleClearInput = () => {
-    setSearchWord("");
-    dispatch(setdeviceSearchWord(""))
-  };
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearchClick();
-    } else if (e.key === 'Escape') {
-      handleClearInput();
-    }
-  };
-
   return (
-    <Container>
-      <BaseFlex1Column>
-        <BaseFlex1Row>
-          <NameButton>Name</NameButton>
-          <BaseInput type="text" onChange={handleNameChange} value={deviceName} />
-          <NameButton>Type</NameButton>
-          <BaseSelect onChange={handleTypeChange} value={deviceType}>
-            { CONST_TYPE_INFO_NAMES.map((item, index) => (
-              <BaseOption key={index} value={index+1}>
-                {item}
-              </BaseOption>
-            ))}
-          </BaseSelect>
+    <UnitSettingContainer>
+      <OptionContainer>
+        <MediumLabel>Name</MediumLabel>
+        <BaseInput type="text" onChange={handleNameChange} value={deviceName} />
+      </OptionContainer>
+      <OptionContainer>
+        <MediumLabel>Type</MediumLabel>
+        <BaseSelect onChange={handleTypeChange} value={deviceType}>
+          { CONST_TYPE_INFO_NAMES.map((item, index) => (
+            <BaseOption key={index} value={index+1}>
+              {item}
+            </BaseOption>
+          ))}
+        </BaseSelect>
+      </OptionContainer>
+      <FilterContainer>
+        <MediumLabel>Filter</MediumLabel>
+        <BaseFlexRow>
           <BaseSelect onChange={handleStationChange} value={selectedStation}>
             {deviceSet.stations.map((st: IStation) => (
               <BaseOption key={st.id} value={st.id}>
@@ -162,42 +137,29 @@ const DeviceHeaderSet = () => {
               )
             )}
           </BaseSelect>
-
-          <SearchContainer> 
-            <BaseInput 
-              type="text" 
-              value={searchWord} 
-              onChange={handleInputChange} 
-              onKeyDown={handleSearchKeyDown} />
-            <ControlButton onClick={handleSearchClick}> <img src={ICON_DAY_SEARCH} alt="Search" />
-            </ControlButton>
-              <ControlButton onClick={handleClearInput}><img src={ICON_DAY_CLOSE} alt="Close" />
-            </ControlButton>
-          </SearchContainer>
-
-        </BaseFlex1Row>
-      </BaseFlex1Column>
-    </Container>
+        </BaseFlexRow>
+        <DeviceSearch />
+      </FilterContainer>
+    </UnitSettingContainer>
   );
 };
 
-const Container = styled(BaseFlex1Column)`
-  justify-content : end;
+const UnitSettingContainer = styled(BaseFlex1Column)`
+  justify-content: start;
+`;
+
+const OptionContainer = styled(BaseFlexColumn)`
   gap: 10px;
-
-  border: 1px solid #ccc;
+  padding: 10px 10px 15px 10px;
+  background-color: ${COLORSET_GRID_CONTROL_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const SearchContainer = styled(BaseFlexDiv)`
-  flex-direction: row;
-  justify-content: center;
-
-  margin: 0px 30px;
+const FilterContainer = styled(BaseFlexColumn)`
+  gap: 10px;
+  padding: 10px 10px 15px 10px;
+  background-color: ${COLORSET_GRID_CONTROL_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
-
-const NameButton = styled(MiniButton)`
-
-  border: 0px solid #ccc;
-`
 
 export default DeviceHeaderSet;

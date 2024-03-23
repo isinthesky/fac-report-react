@@ -43,8 +43,13 @@ export interface ApprovalsType {
   text: string;
 }
 
-
 export interface HeaderProps {
   mainTab: number;
   // other props
+}
+
+export interface PageControlBarProps {
+  mode: string;
+  modeCallback: React.Dispatch<React.SetStateAction<string>>;
+  // Add other props as needed
 }

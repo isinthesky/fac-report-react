@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 
-import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BaseInput, CenterLabel, ControlButton, MiniButton } from '../../../static/componentSet';
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BaseInput, BigLabel, CenterLabel, ControlButton, MediumLabel, MiniButton, SmallLabel } from '../../../static/componentSet';
 import { ICON_DAY_CHECK, ICON_DAY_CLOSE, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
   
 import { STRING_DEFAULT_APPLY, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
 import { Unit, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
-import { COLORSET_SIGNITURE_COLOR } from '../../../static/colorSet';
+import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from '../../../static/colorSet';
 import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
 
 
@@ -21,7 +21,6 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   const [editMode, setEditMode] = useState<{ [key: string]: boolean }>({});
   const [editedNames, setEditedNames] = useState< string[] >(Array(unitGroupSlice.groups.length).fill('-'));
   const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
-
 
   const toggleEdit = (index: number) => {
     setEditMode(prev => ({ ...prev, [index]: !prev[index] }));
@@ -56,7 +55,6 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
     })
 
     setEditedNames(arrName)
-
   }, [unitGroupSlice]);
 
   const handleGroupNameClick = (position: number) => {
@@ -86,7 +84,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   };
 
   const handleApply = (index: number) => {
-    if (viewMode) {
+    if (viewMode === "apply") {
       const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
       currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
 
@@ -107,16 +105,19 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   };
 
   return (
-    <Container>
+    <GroupContainer>
       <ListContainer>
+        <BaseFlex1Column>
+          <BigLabel>{"Unit Group List"}</BigLabel>
+        </BaseFlex1Column>
         {unitGroupSlice.groups.length > 0
           ? unitGroupSlice.groups.map((group:Unit, index:number) => (
-            <BaseFlex1Row key={index}  onDoubleClick={() => handleGroupNameClick(index)}>
-              <NumberLabelDiv>{index + 1}</NumberLabelDiv>
+            <SaveUnitContainer key={index}  onDoubleClick={() => handleGroupNameClick(index)}>
+              <IndexLabel heightSize="20px">{index + 1}</IndexLabel>
               <GroupNameContainer>
-                <GroupName 
-                  ref={(el) => (inputRefs.current[index] = el)} // Set the ref for the input
-                  type="text" 
+                <NameInput
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  type="text"
                   disabled={!editMode[index]}
                   value={editedNames[index]}
                   onChange={(e) => handleNameChange(index, e.target.value)}
@@ -129,7 +130,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
                   }}
                   mode={(index) === unitGroupSlice.selectedPos ? "true" : "false"}
                 />
-                {!viewMode && (
+                {viewMode === "setting" && (
                    editMode[index] ? 
                     (
                       <EditButtonsContainer>
@@ -158,20 +159,20 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
                     )
                 )}
               </GroupNameContainer>
-            </BaseFlex1Row>
+            </SaveUnitContainer>
           ))
         : renderEmptyRows()
       }
       </ListContainer>
-      {!viewMode ? (
+      {viewMode === "setting" ? (
       <ButtonsContainer>
-        <BaseButton onClick={handleAdd}>
+        <BaseButton onClick={handleAdd} widthsize={"60px"}>
           {STRING_SETTING_GROUP_ADD}
         </BaseButton>
-        <BaseButton onClick={() => handleDelete(unitGroupSlice.selectedPos)}>
+        <BaseButton onClick={() => handleDelete(unitGroupSlice.selectedPos)} widthsize={"60px"}>
           {STRING_SETTING_GROUP_DELETE}
         </BaseButton>
-        <ActiveButton onClick={() => handleUpdate(unitGroupSlice.selectedPos)}>
+        <ActiveButton onClick={() => handleUpdate(unitGroupSlice.selectedPos)} widthsize={"60px"}>
           {STRING_SETTING_GROUP_UPDATE}
         </ActiveButton>
       </ButtonsContainer>
@@ -180,30 +181,33 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
           {STRING_DEFAULT_APPLY}
         </ActiveButton>
       </ButtonsContainer>}
-    </Container>
+    </GroupContainer>
   );  
 };
 
-const Container = styled(BaseFlexDiv)`
+const GroupContainer = styled(BaseFlexDiv)`
   flex-direction: column;
-  width: 300px;
 
-  gap: 20px;
-  border: 1px solid #3f3;
+  padding: 15px 10px;
+
+  background-color: ${COLORSET_GROUP_CONTROL_BG};
+  border: 1px solid ${COLORSET_GROUP_CONTROL_BORDER};
 `;
 
-
 const ListContainer = styled(BaseFlex1Column)`
-  display: flex;
-  flex-direction: column;
-  
-  align-items: center;
-  justify-content: center;
-
+  justify-content: flex-start;
   margin-top: auto;
 
-  max-height: 500px; // Set the maximum height to 1000px
-  overflow-y: auto; // Enable vertical scrolling
+  gap: 5px;
+
+  background-color: transparent;
+`;
+
+const SaveUnitContainer = styled(BaseFlex1Row)`
+  justify-content: space-between;
+  align-items: flex-start;
+
+  background-color: transparent;
 `;
 
 const ButtonsContainer = styled(BaseFlexDiv)`
@@ -212,43 +216,41 @@ const ButtonsContainer = styled(BaseFlexDiv)`
 
   margin-top: auto;
   height: 30px;
-
+  background-color: transparent;
 `;
-
 
 const EditButtonsContainer = styled(BaseFlexDiv)`
   align-items: flex-end;
   justify-content: start;
+
+  gap: 3px;
   
-  width: 80px;
-`;
+  width: 55px;
 
-
-const NumberLabelDiv = styled(BaseFlexDiv)`
-  align-items: center;
-  justify-content: center;
-
-  width:30px;
+  background-color: transparent;
 `;
 
 const GroupNameContainer = styled(BaseFlex1Div)`
+  justify-content: space-between;
   align-items: center;
+
+  background-color: transparent;
 `;
 
-const GroupName = styled.input<{ mode: string, heightsize?: string, fontsize?: string }>`
-  display: flex;
+const IndexLabel = styled(MediumLabel)`  
+  text-align: center;
+  width: 10px;
+`;
 
-  width: 85%;
+const NameInput = styled.input<{ mode: string, heightsize?: string, fontsize?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
-
-  padding: 1px;
 
   color: ${(props) => (props.mode === "true" ? "white" : "black")};
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
   
-  background-color: ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : "white")};
+  background-color: ${COLORSET_DARK_CONTROL_BG};
+  border: 1px solid ${COLORSET_GROUP_CONTROL_BORDER};
   pointer-events: ${(props) => (props.mode === "true" ? "true" : "none")}; 
 `;
-
 
 export default UnitGroupListControl;

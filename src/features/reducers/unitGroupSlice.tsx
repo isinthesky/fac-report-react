@@ -19,7 +19,6 @@ const initialState: UnitGroupState = {
     { name: "name7", type: 1, id: 7, st: 0, div: 0, dvList: Array(9).fill(0) },
     { name: "name8", type: 1, id: 8, st: 0, div: 0, dvList: Array(9).fill(0) },
     { name: "name9", type: 1, id: 9, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name10", type: 1, id: 10, st: 0, div: 0, dvList: Array(9).fill(0) }
   ],
   currentGroup: { name: "", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
   selectedPos: 0,

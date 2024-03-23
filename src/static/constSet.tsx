@@ -5,6 +5,10 @@ export const MAIN_TAB_ENV_NAME = "REACT_APP_INIT_REPORT_TYPE";
 export const CONST_UNIT_TYPE_1 = "전압";
 export const CONST_UNIT_TYPE_2 = "전력";
 
+export const CONST_SETTING_MODE_VIEW = "view";
+export const CONST_SETTING_MODE_DEVICE = "device";
+export const CONST_SETTING_MODE_UNIT = "unit";
+export const CONST_SETTING_MODE_PRINT = "print";
 
 export const SIZESET_DEFAULT_INPUT_HEIGHT = "21px";
 export const SIZESET_DEFAULT_SELECT_HEIGHT = "25px";

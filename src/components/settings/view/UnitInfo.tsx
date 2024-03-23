@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { Unit } from "../../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseButton, BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel } from "../../../static/componentSet";
+import { BaseButton, BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
-import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_HEADER_BG } from "../../../static/colorSet";
+import { COLORSET_GRID_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 
 
-const DeviceInfo: React.FC<Unit> = ({
+const UnitInfo: React.FC<Unit> = ({
   type,
   name,
   id,
@@ -29,18 +29,18 @@ const DeviceInfo: React.FC<Unit> = ({
   return (
     <UnitContainer>
       <NameContainer>
-        <MediumLabel>id</MediumLabel>
-        <ButtonUnitInfo>{id}</ButtonUnitInfo>
-        <MediumLabel>type</MediumLabel>
-        <ButtonUnitInfo>{type}</ButtonUnitInfo>
-        <MediumLabel>name</MediumLabel>
-        <NameLabel>{name}</NameLabel>
+        <NameLabel>ID</NameLabel>
+        <UnitInfoLabel>{id}</UnitInfoLabel>
+        <MediumLabel>Type</MediumLabel>
+        <UnitInfoLabel>{type}</UnitInfoLabel>
+        <MediumLabel>Name</MediumLabel>
+        <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
 
       <Group>
       {dvList&&dvList.map((dv, index) => (
           <ItemDiv key={index}>
-            <MediumLabel>{`dv${index + 1}`}</MediumLabel>
+            <DescriptLabel>{`dv${index + 1}`}</DescriptLabel>
             <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv)} readOnly={true}/>
           </ItemDiv>
       ))}
@@ -54,9 +54,8 @@ const UnitContainer = styled.div`
   flex: 1;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  padding: 10px;
-
-  background-color: white;
+  
+  background-color: ${COLORSET_GRID_HEADER_BG};
 `;
 
 const Group = styled.div`
@@ -64,19 +63,17 @@ const Group = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+  
+  background-color: ${COLORSET_GRID_CONTROL_BG2};
 
   padding: 10px;
-  
-  border-radius: 5px;
 `;
 
 const NameLabel = styled(MediumLabel)`
-  height: 25px;
-  color:white;
+  padding: 5px 10px;
+  // color:white;
   background-color: transparent;
-  border: 1px solid white;
 `;
-
 
 const NameContainer = styled(BaseFlex1Div)`
   align-items: center; 
@@ -87,19 +84,27 @@ const NameContainer = styled(BaseFlex1Div)`
 
 const ItemDiv = styled(BaseFlex1Column)`
   gap: 1px;
+  background-color: transparent;
 `;
 
-const ButtonUnitInfo = styled(CenterLabel)`
+const UnitInfoLabel = styled(CenterLabel)`
+  width: 80px;
   color: white;
   background-color: transparent;
-  border: 1px solid white;
+`;
+
+const DescriptLabel = styled(SmallLabel)`
+  padding: 2px;
+  background-color: transparent;
 `;
 
 const DeviceInput = styled.input<{ heightsize?: string }>`
   flex:1;
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
+  padding: 5px;
 
-  padding:5px;
+  background-color: ${COLORSET_GRID_INPUT_BG};
+  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-export default DeviceInfo;
+export default UnitInfo;
