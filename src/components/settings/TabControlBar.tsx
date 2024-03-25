@@ -84,13 +84,12 @@ const TopBar = styled(BaseFlexRow)`
   justify-content: start;
 
   gap: 20px;
-
   padding: 0px 30px;
-  // border: 1px solid #222;
 `;
 
 const MainTabLabel = styled(MediumLabel)`
-  margin: 5px;
+  padding: 0px 3px;
+  height: 15px;
   font-size: ${FONTSET_DESCRIPTION_LABEL_SIZE};
 `;
 

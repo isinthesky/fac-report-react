@@ -90,13 +90,13 @@ const Section = styled(BaseFlexDiv)`
 
 const DivicesContainer = styled(BaseFlex1Column)`
   padding: 10px;
-  gap: 7px;
-  
+  gap: 5px;
+
   background-color: ${COLORSET_GRID_CONTROL_BG2};
 `;
 
 const DiviceDiv = styled(BaseFlexColumn)`
-  gap: 2px;
+  gap: 0px;
 `;
 
 export default UnitTypeV;

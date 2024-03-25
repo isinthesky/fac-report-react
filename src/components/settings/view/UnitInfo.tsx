@@ -5,8 +5,7 @@ import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseButton, BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
-import { COLORSET_GRID_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
-
+import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 
 const UnitInfo: React.FC<Unit> = ({
   type,
@@ -103,7 +102,8 @@ const DeviceInput = styled.input<{ heightsize?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
   padding: 5px;
 
-  background-color: ${COLORSET_GRID_INPUT_BG};
+  color:${COLORSET_GRID_CONTROL_BORDER};
+  background-color: ${COLORSET_NORMAL_INPUT_BG};
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 

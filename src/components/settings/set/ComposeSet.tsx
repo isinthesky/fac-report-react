@@ -157,7 +157,9 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
           {deviceType === 1 && <UnitTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
           {deviceType === 2 && <UnitTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
         </BaseFlex1Row>
-        <BaseButton widthsize="40px"> {"<--"}</BaseButton>
+        <BaseFlexCenterDiv>
+          <BaseButton widthsize="40px"> {"< <"}</BaseButton>
+        </BaseFlexCenterDiv>
         <UnitGroupListControl viewMode={"apply"}/>
       </BaseFlex1Row>
       <ButtonGroup>

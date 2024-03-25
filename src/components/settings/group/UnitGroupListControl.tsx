@@ -188,7 +188,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
 const GroupContainer = styled(BaseFlexDiv)`
   flex-direction: column;
 
-  padding: 15px 10px;
+  padding: 10px;
 
   background-color: ${COLORSET_GROUP_CONTROL_BG};
   border: 1px solid ${COLORSET_GROUP_CONTROL_BORDER};
