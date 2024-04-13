@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 
-import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BaseInput, BigLabel, CenterLabel, ControlButton, MediumLabel, MiniButton, SmallLabel } from '../../../static/componentSet';
-import { ICON_DAY_CHECK, ICON_DAY_CLOSE, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BigLabel, ControlButton, MediumLabel } from '../../../static/componentSet';
+import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
   
 import { STRING_DEFAULT_APPLY, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
 import { Unit, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
-import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from '../../../static/colorSet';
+import { COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER } from '../../../static/colorSet';
 import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
 
 
@@ -65,7 +65,6 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   const handleNameChange = (position: number, name: string) => {
     const res = [...editedNames]
     res[position] = name
-
     setEditedNames(res);
   };
 
@@ -76,7 +75,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
 
   const handleUpdate = (index: number) => {
     console.log(index)
-    dispatch(updateFromCurrent({ index }));
+    dispatch(updateFromCurrent(index));
   };
   
   const handleDelete = (index: number) => {

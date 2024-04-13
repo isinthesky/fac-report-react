@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { BaseFlex1Row, BaseOption, BaseSelect, BigLabel } from "../../../static/componentSet";
 import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
-import { updateCurrentGroup, updateCurrentGroupUnit, updateCurrentUnitDevice } from "../../../features/reducers/unitGroupSlice";
+import { updateCurrentGroup, updateCurrentGroupUnit, updateCurrentUnitDevice, updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
 import { DeviceState } from "../../../features/reducers/deviceSlice";
@@ -25,31 +25,16 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
   const [selectedDevice, setSelectedDevice] = useState<number>(currentDeviceId);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
-  const deviceinfo = (deviceId: number) => {
-    if (!deviceId)
-      return null;
-
-    return devicelist.devices[deviceId.toString()];
-  };
-
-  console.log("UnitGroupAutoSelect",devicePosition, selectedSt)
-
   useEffect(() => {
-    const st = devicelist.devices[currentDeviceId]?.divisionId === 0 
-                ? initStationId
-                : deviceinfo(devicelist.devices[currentDeviceId]?.divisionId)?.stationId;
-    if (st) {
-      setSelectedStation(st);
-    }
+    setSelectedStation( (initStationId === 0) 
+                        ? devicelist.stations[0].id
+                        : initStationId);
   }, [initStationId]);
 
   useEffect(() => {
-    const div = devicelist.devices[currentDeviceId]?.divisionId === 0 
-                ? initDivisionId 
-                : deviceinfo(devicelist.devices[currentDeviceId]?.divisionId)?.divisionId;
-    if (div) {
-      setSelectedDivision(div)
-    }
+    setSelectedDivision( (currentDeviceId === 0) 
+                         ? initDivisionId
+                         : devicelist.devices[currentDeviceId].divisionId);
   }, [initDivisionId]);
 
   useEffect(() => {
@@ -59,7 +44,7 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
     }
 
     setSelectedDevice(currentDeviceId)
-  }, [selectedDiv, currentDeviceId]);
+  }, [selectedDiv]);
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -70,12 +55,13 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const devId = Number(e.target.value);
+    console.log("handleDeviceChange", e.target.value);
+    setSelectedDevice(Number(e.target.value));    
+    dispatch(updateCurrentUnitDevice({ unitPosition, 
+                                       devicePosition, 
+                                       deviceId: Number(e.target.value) }));
 
-    setSelectedDevice(devId);
-    dispatch(updateCurrentUnitDevice({unitPosition : 0,
-                                      devicePosition: devicePosition, 
-                                      deviceId: devId }))
+    dispatch(updateFromCurrent(unitPosition));
   };
   
   return (

@@ -15,7 +15,6 @@ const UnitTypeV: React.FC<ViewUnitProps> = ({ index }) => {
     { label: "/", values: ["Hz"] },
     { label: "/", values: ["kW"] },
   ];
-
   
   const tabPageInfo = useSelector((state: RootStore) => state.tabPageReducer.currentTabPage, shallowEqual);
   const [curunit, setUnit] = useState<Unit>(tabPageInfo.unitList[index]);

@@ -66,6 +66,7 @@ export const tabPageSlice = createSlice({
 
     saveTabPage: (state) => {
       if (state.currentTabPage) {
+        console.log("saveTabPage", state.currentTabPage, state.settingPosition.main, state.settingPosition.sub);
         if (state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub] ) {
           state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub] = state.currentTabPage;
         }

@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitInfo from "./UnitInfo";
-import { ComposeProps, TabPageInfotype } from "../../../static/types";
-import {  setUpdateSettingsColRow } from "../../../features/api";
+import { ComposeProps } from "../../../static/types";
+import { setUpdateSettingsColRow } from "../../../features/api";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Column, BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton } from "../../../static/componentSet";
+import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton } from "../../../static/componentSet";
 import { FONTSET_DESCRIPTION_LABEL_SIZE } from "../../../static/fontSet"
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet"
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DISABLE_COLOR } from "../../../static/colorSet"
 import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY} from "../../../static/langSet"
-
 import { setReportTable } from "../../../features/reducers/settingSlice";
-import { useDispatch } from "react-redux";
 
 const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch()
@@ -117,7 +115,7 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
                         value={columns}
                         mode={String(edit)}
                         min="1"
-                        max="3" />
+                        max="4" />
           </BaseFlexColumn>
           <BaseFlexColumn gap="5px">
             <DescriptLabel>'</DescriptLabel>

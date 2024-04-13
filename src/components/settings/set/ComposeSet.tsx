@@ -11,11 +11,11 @@ import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
 import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
-import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv, BaseFlexDiv, BaseFlexRow } from "../../../static/componentSet";
+import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL } from "../../../static/langSet";
-import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME } from "../../../env";
+import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
+import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
@@ -36,26 +36,28 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     return 0;
   });
 
+  console.log("tabPageSlice", tabPageSlice);
+
   const handleSave = async () => {
-
-    dispatch(saveTabPage())
-
     let count = 1;
-
-    for (let mainId = 1; mainId <= 5; mainId++) {
-      for (let subId = 1; subId <= 5; subId++) {
+  
+    for (let mainId = 1; mainId <= MAX_TABPAGE_COUNT; mainId++) {
+      for (let subId = 1; subId <= MAX_TABPAGE_COUNT; subId++) {
         const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
 
         if (process.env[TabKey]) {
           if (tabPageSlice.settingPosition.main === mainId && tabPageSlice.settingPosition.sub === subId) {
             const confirmed = window.confirm(`Do you want to save changes for ${process.env[TabKey]}?`);
+            
             if (confirmed) {
               try {
-                const keyNumber = CONST_TABINFO_NAME + `${count}`; 
-                await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
+                const keyNumber = CONST_TABINFO_NAME + `${count}`;
+
+                console.log("keyNumber", keyNumber);
+                
+                await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage as TabPageInfotype);
                 return;
-              }
-              catch (e) {
+              } catch (e) {
                 console.error("updateSettingsTabPage error:", e);
               }
             } else {
@@ -66,6 +68,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         }
       }
     }
+    
+    dispatch(saveTabPage());
   };
 
   const handleSaveAll = async () => {
@@ -85,7 +89,6 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
           try {
             const keyNumber = CONST_TABINFO_NAME + `${count}`; 
             await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
-            return;
           }
           catch (e) {
             console.error("updateSettingsTabPage error:", e);
@@ -115,9 +118,6 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     dispatch(setTabUnitPosition({index: position}));
   };
 
-  console.log("ComposeSet type", deviceType);
-
-  // Create grid buttons
   const renderGridButtons = () => {
     let gridButtons = [];
     for (let r = 0; r < row; r++) {

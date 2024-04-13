@@ -66,6 +66,7 @@ const UnitContainer = styled(BaseFlex1Column)`
   justify-content: space-between;
   flex-direction: column;
   align-items: stretch;
+  gap: 0px;
 
   background-color: ${COLORSET_GRID_CONTROL_BG2};
 `;
@@ -90,7 +91,7 @@ const Section = styled(BaseFlexDiv)`
 
 const DivicesContainer = styled(BaseFlex1Column)`
   padding: 10px;
-  gap: 5px;
+  gap: 7px;
 
   background-color: ${COLORSET_GRID_CONTROL_BG2};
 `;

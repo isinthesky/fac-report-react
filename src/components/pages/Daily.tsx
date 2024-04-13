@@ -50,6 +50,8 @@ function Daily() {
     }
   };
 
+  console.log("settingSet", settingSet);
+
   return (
     <Flat>
       <Header mainTab={Number(id1 ? id1 : "1")} />

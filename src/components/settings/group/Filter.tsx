@@ -3,15 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { IStation, IDivision } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Column, BaseOption, BaseFlex1Row, BaseSelect, BaseInput, ControlButton, BaseFlexDiv, BigLabel, BaseFlexRow, SmallLabel, BaseFlexColumn } from "../../../static/componentSet";
-import UnitGroupAutoSelect from "./UnitGroupSelector";
-import { updateCurrentGroup, updateCurrentGroupUnit } from "../../../features/reducers/unitGroupSlice";
+import { BaseOption, BaseSelect, BaseInput, ControlButton, BigLabel, BaseFlexRow, SmallLabel, BaseFlexColumn } from "../../../static/componentSet";
+import { updateCurrentGroupUnit } from "../../../features/reducers/unitGroupSlice";
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 
 
-const SettingHeader: React.FC = () => {
+const Filter: React.FC = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
@@ -66,29 +65,6 @@ const SettingHeader: React.FC = () => {
       handleClearInput();
     }
   };
-
-  // <FilterContainer>
-  //       <MediumLabel>Filter</MediumLabel>
-  //       <BaseFlexRow>
-  //         <BaseSelect onChange={handleStationChange} value={selectedStation}>
-  //           {deviceSet.stations.map((st: IStation) => (
-  //             <BaseOption key={st.id} value={st.id}>
-  //               {st.name}
-  //             </BaseOption>
-  //           ))}
-  //         </BaseSelect>
-  //         <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
-  //           {deviceSet.divisions.filter((item) => item.stationId === selectedStation).map(
-  //             (div: IDivision) => (
-  //               <BaseOption key={div.id} value={div.id}>
-  //                 {div.name}
-  //               </BaseOption>
-  //             )
-  //           )}
-  //         </BaseSelect>
-  //       </BaseFlexRow>
-  //       <DeviceSearch />
-  //     </FilterContainer>
 
   return (
     <FilterContainer>
@@ -153,7 +129,4 @@ const CenterRow = styled(BaseFlexRow)`
   bottom-margin: 10px;
 `;
 
-// const SearchContainer = styled(BaseFlexD)`
-// `;
-
-export default SettingHeader;
+export default Filter;

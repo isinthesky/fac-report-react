@@ -16,8 +16,6 @@ type ReportGuideProps = {
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
-  console.log("currentTab", currentTab)
-
   const renderDevice = (() => {
     if (!currentTab.unitList[0]) {
       return <>{STRING_ERR_SERVER_CONNECT}</>;

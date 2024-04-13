@@ -46,12 +46,13 @@ export const updateSettingsTabPage = async (
     object: TabPageInfotype
   ): Promise<any> => {
 
-    console.log("updateSettingsTabPage" ,name)
+    console.log("updateSettingsTabPage" ,name, object)
     try {
-      await axiosInstance.put("/report/general/updateSetting", {
+      const response = await axiosInstance.put("/report/general/updateSetting", {
         type: name,
         value: object
       });
+      console.log("res updateSettingsTabPage" ,response)
       return true;
     } catch (error) {
       console.error(error);

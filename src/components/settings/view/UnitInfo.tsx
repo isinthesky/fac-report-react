@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Unit } from "../../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseButton, BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
+import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
 import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 

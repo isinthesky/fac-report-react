@@ -6,6 +6,7 @@ import { readDevicesData } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
+import { DeviceLog, LogData } from "../../static/types";
 
 
 interface DeviceValueProps {
@@ -20,12 +21,9 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
 
-    console.log('DeviceValue', devId);
-
-
-  const getLogByTimestamp = useCallback((devLog:any, timestamp:any) => {
-    if (devLog[timestamp]) {
-      return devLog[timestamp];
+  const getLogByTimestamp = useCallback((devLog:DeviceLog, timestamp:number) => {
+    if (devLog[timestamp.toString()]) {
+      return devLog[timestamp.toString()];
     }
 
     const precedingTimestamp = Object.keys(devLog)
@@ -43,13 +41,19 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
         let deviceData = []
 
         if (devId > 0) {
-          const result = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
+          const result: DeviceLog = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
 
           if (!result) {
+            deviceData = times.map((_:string) => "x") as []
+            setDeviceValue(deviceData);
+            setDeviceSave(deviceData);
             return;
           }
 
           if (Object.keys(result).length === 0) {
+            deviceData = times.map((_:string) => "x") as []
+            setDeviceValue(deviceData);
+            setDeviceSave(deviceData);
             return;
           }
 
@@ -65,9 +69,12 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
             return date;
           }).map((devTime: number) => {
             return getLogByTimestamp(result, devTime);
-          }).map((value: string) => {
-            const numericValue = parseFloat(value);
-            return !isNaN(numericValue) ? numericValue.toFixed(1) : value;
+          }).map((value: LogData | string) => {
+            if (typeof value === "string") {
+              return value;
+            }
+            const numericValue = parseFloat(value.changed_value);
+            return !isNaN(numericValue) ? numericValue.toFixed(1) : numericValue;
           }); 
         }
         else
@@ -75,17 +82,15 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
           deviceData = times.map((_:string) => "-") as []
         }
         
-        console.log(deviceData)
-          
         setDeviceValue(deviceData);
         setDeviceSave(deviceData);
         
       } catch (error) {
-        console.error(error);
+        console.error("DeviceValue get device log: ", error);
       }
     };
     fetchData();
-  }, [devId, times, getLogByTimestamp]);
+  }, [devId, times]);
 
   useEffect(() => {
     settingSet.idViewMode === 0

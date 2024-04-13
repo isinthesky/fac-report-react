@@ -126,3 +126,13 @@ export type DeviceSelectProps = {
   divisionValue: number;
   currentDeviceId: number;
 };
+
+export type LogData = {
+  issued_date: number;
+  changed_value: string;
+}
+
+export type DeviceLog = {
+  [key: string]: LogData 
+};
+

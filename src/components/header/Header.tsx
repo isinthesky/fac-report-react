@@ -73,6 +73,8 @@ export default function Header({ mainTab }: HeaderProps) {
       try {
         const response = await getSettings();
 
+        console.log("response", response);
+
         if (response) {
           dispatch(setReportTable(response.settings));
           dispatch(setTabSetting(response.tabSetting));

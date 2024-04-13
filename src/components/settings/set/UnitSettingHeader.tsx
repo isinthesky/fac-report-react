@@ -45,7 +45,7 @@ const DeviceHeaderSet = () => {
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
 
   useEffect(() => {
-    if (selectedStation === 0) 
+    if (!selectedStation) 
       return;
 
     setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);

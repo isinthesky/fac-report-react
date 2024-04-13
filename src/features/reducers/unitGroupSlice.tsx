@@ -39,10 +39,9 @@ export const unitGroupSlice = createSlice({
         state.groups.push(group)
       }
     },
-    updateFromCurrent: (state, action: PayloadAction<{ index: number }>) => {
-      const { index} = action.payload;
-      if (state.groups[index]) {
-        state.groups[index] = state.currentGroup;
+    updateFromCurrent: (state, action: PayloadAction<number>) => {
+      if (state.groups[action.payload]) {
+        state.groups[action.payload] = state.currentGroup;
       }
     },
     deleteGroup: (state, action: PayloadAction<number>) => {
@@ -58,7 +57,6 @@ export const unitGroupSlice = createSlice({
       state.currentGroup = action.payload;
     },
     updateCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
-
       state.currentGroup.dvList[action.payload.devicePosition] = action.payload.deviceId;
     },
     updateCurrentGroupUnit: (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ApprovalsType, TabPageInfotype, Unit } from "../../static/types";
+import { ApprovalsType} from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 export const getSettings = async (): Promise<any> => {
   try {
     const response = await axiosInstance.get("/report/general/getSettings");
-    console.log("settings", response);
+    console.log("getSettings", response);
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -55,7 +55,7 @@ export const setUpdateSettingsColRow = async (
   column: number
 ): Promise<any> => {
   try {
-    const value = JSON.stringify({"row": row, "column": column});
+    const value = {"row": row, "column": column};
     const response = await axiosInstance.put("/report/general/updateSetting", {
       type: "settings",
       value: value,

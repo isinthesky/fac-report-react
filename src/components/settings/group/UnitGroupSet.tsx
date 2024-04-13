@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SettingHeader from "./SettingHeader";
+import Filter from "./Filter";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Row, BaseFlexCenterDiv, BaseFlexColumn, BigLabel, ControlButton, MediumLabel } from "../../../static/componentSet";
 import UnitGroupListControl from "./UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
@@ -10,18 +10,29 @@ import { updateUnitGroupList } from "../../../features/api/device";
 import { RootStore } from "../../../store/congifureStore";
 import { Unit } from "../../../static/types";
 import UnitGroupAutoSelect from "./UnitGroupSelector";
-import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
+import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
+import { updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
 
 const UnitGroupSet: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
+  const [deviceList, setDeviceList] = useState<Unit>(unitGroupSlice.currentGroup);
+
+  useEffect(() => {
+    console.log("unitGroupSlice.currentGroup", unitGroupSlice.currentGroup);
+    setDeviceList(unitGroupSlice.currentGroup);
+  }, [unitGroupSlice.currentGroup, unitGroupSlice.selectedPos]);
+
 
   const handleSave = async  () => {
     try {
       await updateUnitGroupList(unitGroupSlice.groups)
+      dispatch(updateFromCurrent(unitGroupSlice.selectedPos));
+      
+      console.log("unitGroupSlice.selectedPos", unitGroupSlice.selectedPos);
+      console.log(unitGroupSlice.groups, unitGroupSlice.currentGroup);
     } catch (error) {
       console.error(error);
     }
@@ -31,34 +42,47 @@ const UnitGroupSet: React.FC = () => {
     navigate("/settings");
   }
 
-  const renderSection = (index1: number, unit: Unit) => (
-    <BaseFlex1Column>
-      {unit.dvList.map((value: number, idx: number) => (
-        <ValueSection key={idx}>
-          <IndexLabel fontsize="14px">{idx + 1}</IndexLabel>
-          <UnitGroupAutoSelect
-            unitPosition={0}
-            devicePosition={idx}
-            initStationId={selectedStation}
-            initDivisionId={selectedDivision}
-            devicelist={deviceSet}
-            stationValue={selectedStation}
-            divisionValue={selectedDivision}
-            currentDeviceId={unitGroupSlice.currentGroup.dvList[idx]}
-          />
-        </ValueSection>
-      ))}
-    </BaseFlex1Column>
-  );
+  const deviceinfo = (deviceId: number) => {
+    return deviceSet.devices[deviceId.toString()];
+  };
+
+  const renderSection = (index1: number, unit: Unit) => {
+    return <>
+      {unit.dvList.map((value: number, idx: number) => {
+          const initStationId = (value !== 0) 
+                                ? deviceinfo(value).stationId
+                                : unit.st;
+          const initDivisionId = (value !== 0)
+                                ? deviceinfo(value).divisionId
+                                : unit.div;
+
+          return( <ValueSection key={idx}>
+                    <IndexLabel fontsize="14px">{idx + 1}</IndexLabel>
+                    <UnitGroupAutoSelect
+                      unitPosition={unitGroupSlice.selectedPos}
+                      devicePosition={idx}
+                      initStationId={initStationId}
+                      initDivisionId={initDivisionId}
+                      devicelist={deviceSet}
+                      stationValue={unit.st}
+                      divisionValue={unit.div}
+                      currentDeviceId={value}
+                    />
+                  </ValueSection>)
+      })}
+    </>
+  }
 
   return (
     <UnitGroupContainer>
       <BaseFlex1Row>
         <UnitGroupListControl viewMode={"setting"} />
-        <SettingHeader />
+        <Filter />
         <DevicesContainer>
           <BigLabel>Device List</BigLabel>
-          { renderSection(0, unitGroupSlice.currentGroup) }
+          <BaseFlex1Column>
+            { renderSection(0, deviceList) }
+          </BaseFlex1Column>
         </DevicesContainer>
       </BaseFlex1Row>
       <ButtonsContainer>
