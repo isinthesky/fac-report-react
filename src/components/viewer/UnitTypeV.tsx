@@ -42,7 +42,7 @@ const UnitTypeV: React.FC<ViewUnitProps> = ({ index }) => {
               {section.values.map((value, valueIdx) => (
                 <DeviceTypeValueDiv  key={`value-${sectionIdx}-${valueIdx}`}>
                   <DevTypeDiv>{value}</DevTypeDiv>
-                  <DeviceValue times={tabPageInfo.times} devId={curunit.dvList[pos++]}  />
+                  <DeviceValue mode="view" times={tabPageInfo.times} devId={curunit.dvList[pos++]}  />
                 </DeviceTypeValueDiv>
               ))}
             </Row>

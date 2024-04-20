@@ -4,7 +4,7 @@ import styled from "styled-components";
 import ViewDeviceType from './viewer/UnitType';
 import { ApprovalsType } from '../static/types';
 import { RootStore } from '../store/congifureStore';
-import { BaseFlexCenterDiv, BaseFlexDiv } from '../static/componentSet';
+import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../static/componentSet';
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../static/langSet';
 
 type PrintGuideProps = {
@@ -25,26 +25,26 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
       times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
-      <RowContainer key={rowIndex}>
+      <UnitCountainerLine key={rowIndex} gap="5px">
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
 
           const TypeComp = tabPageInfo.unitList[index].type === 1 ? 'V' : 'W';
 
           return (
-            <Container key={colIndex}>
-              {colIndex === 0 && (<TimeContainer>
+            <UnitCountainerRow key={colIndex} gap="0px">
+              {colIndex === 0 && (<TimeContainer gap="0px">
                 {times.map((time: string, index: number) => (
                   <TimeDiv key={index}>{time}</TimeDiv>
                 ))}
               </TimeContainer>)}
               <DeviceContainer>
-                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
+                <ViewDeviceType mode="print" key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
-            </Container>
+            </UnitCountainerRow>
           );
         })}
-      </RowContainer>
+      </UnitCountainerLine>
     ));
   };
 
@@ -57,7 +57,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
           {settingSet?.savedApprovals.filter(
             (item:ApprovalsType) => item.checked).map(
               (item:ApprovalsType, idx:number) => {
-                return (<ApproveDiv key={idx}>
+                return (<ApproveDiv key={idx} gap="0px">
                   <NameDiv> {item.text} </NameDiv>
                   <SignDiv />
                 </ApproveDiv>)
@@ -72,10 +72,8 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
 });
 
 
-const PrintArea = styled.div`
+const PrintArea = styled(BaseFlexColumn)`
   position: relative;
-  display: flex;
-  flex-direction: column;
   
   width: 287mm;
   height: 200mm;
@@ -83,14 +81,14 @@ const PrintArea = styled.div`
   padding: 5px;
   
   border: 2px solid #777;
+  background-color: #FFF;
 `;
 
-const TitleArea =  styled.div`
+const TitleArea =  styled(BaseFlexRow)`
   position: relative;
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
   justify-self: stretch;
+  background-color: #FFF;
 `;
 
 const TitleBox =  styled.button`
@@ -101,24 +99,19 @@ const TitleBox =  styled.button`
   border: 1px solid #cc2;
 `;
 
-const ApproveTable = styled.div`
-  display: flex;
+const ApproveTable = styled(BaseFlexRow)`
   position: relative;
-  flex-direction: row;
-
   justify-content: flex-end;
 
   height: 80px;
   width: 300px;
   margin : 5px;
+  background-color: #FFF;
 `;
 
-const ApproveDiv = styled(BaseFlexDiv)`
-  flex-direction: column;
+const ApproveDiv = styled(BaseFlexColumn)`
   align-items: stretch;
   justify-items: stretch;
-
-  gap: 0px;
 
   width: 100px;
 `;
@@ -128,9 +121,7 @@ const NameDiv = styled.button`
   border: 1px solid #555;
 `;
 
-const SignDiv = styled.div`
-  // flex: 1;
-  display: flex;
+const SignDiv = styled(BaseFlexDiv)`
   align-self: stretch;
   justify-self: stretch;
   
@@ -138,36 +129,26 @@ const SignDiv = styled.div`
   border: 1px solid #888;
 `;
 
-const RowContainer = styled.div`
-  display: flex;
-  flex-direction: row;
+const UnitCountainerLine = styled(BaseFlexRow)`
   align-items: start;
   justify-items: stretch;
   margin: 5px;
-  gap: 5px;
   border: 1px solid #C33;
 `;
 
-const Container = styled(BaseFlexDiv)`
-  flex-direction: row;
-  
+const UnitCountainerRow = styled(BaseFlexRow)`
   width: 100%;
-  
-  gap: 0px;
 `;
 
-const TimeContainer = styled(BaseFlexDiv)`
-  flex-direction: column;
-
+const TimeContainer = styled(BaseFlexColumn)`
   width: 50px;
-
-  gap: 0px;
 `;
 
 const DeviceContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  background-color: #FFF;
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)`
@@ -176,6 +157,7 @@ const TimeDiv = styled(BaseFlexCenterDiv)`
 
   padding: 0px;
   border: 1px solid #ccc;
+  background-color: #FFF;
 `;
 
 const HideDiv = styled.div`

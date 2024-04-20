@@ -66,7 +66,7 @@ export const tabPageSlice = createSlice({
 
     saveTabPage: (state) => {
       if (state.currentTabPage) {
-        console.log("saveTabPage", state.currentTabPage, state.settingPosition.main, state.settingPosition.sub);
+        // console.log("saveTabPage", state.currentTabPage, state.settingPosition.main, state.settingPosition.sub);
         if (state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub] ) {
           state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub] = state.currentTabPage;
         }
@@ -75,7 +75,7 @@ export const tabPageSlice = createSlice({
     
     setTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
       if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
-        console.log("setTabPage", action.payload.subTab, action.payload.object)
+        // console.log("setTabPage", action.payload.subTab, action.payload.object)
         state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
       }
     },

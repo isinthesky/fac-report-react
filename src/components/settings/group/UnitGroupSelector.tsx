@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { DeviceSelectProps, IDevice, IDivision, IStation, Unit } from "../../../static/types";
+import { DeviceSelectProps, IDevice, IDivision, IStation } from "../../../static/types";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { BaseFlex1Row, BaseOption, BaseSelect, BigLabel } from "../../../static/componentSet";
-import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
-import { updateCurrentGroup, updateCurrentGroupUnit, updateCurrentUnitDevice, updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
+import { BaseFlex1Row, BaseOption, BaseSelect } from "../../../static/componentSet";
+import { updateCurrentUnitDevice, updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
-import { DeviceState } from "../../../features/reducers/deviceSlice";
 import {COLORSET_DARK_CONTROL_FONT, COLORSET_DARK_CONTROL_BG} from "../../../static/colorSet"
 
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision, SetDeviceType, Unit } from "../../../static/types";
+import { SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, SmallLabel } from "../../../static/componentSet";

@@ -1,9 +1,9 @@
 
 
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { BaseButton, BaseFlex1Row, BaseFlexDiv } from "../../static/componentSet";
-import { STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET, STRING_SETTING_MAIN_BTN_ARRAY } from "../../static/langSet";
+import { STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_INIT, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET, STRING_SETTING_MAIN_BTN_ARRAY } from "../../static/langSet";
 import { COLORSET_DISABLE_COLOR, COLORSET_BACKGROUND_COLOR, COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER } from "../../static/colorSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
 import { handleInitSettings } from "./set/handleButtons";

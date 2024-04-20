@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 export const getSettings = async (): Promise<any> => {
   try {
     const response = await axiosInstance.get("/report/general/getSettings");
-    console.log("getSettings", response);
+    // console.log("getSettings", response);
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ export const setInitSettings = async (
   }
 };
 
-export const setResetSettings = async (): Promise<Boolean> => {
+export const setResetSettings = async (): Promise<boolean> => {
   try {
     await axiosInstance.put("/report/general/resetSettings");
     return true;
@@ -40,7 +40,7 @@ export const setResetSettings = async (): Promise<Boolean> => {
   }
 };
 
-export const setDeleteSettings = async (): Promise<Boolean> => {
+export const setDeleteSettings = async (): Promise<boolean> => {
   try {
     await axiosInstance.delete("/report/general/deleteSettings");
     return true;

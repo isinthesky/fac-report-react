@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Unit, IDivision, IStation, IDevice, DeviceSelectProps } from "../../../static/types";
+import { IDivision, IStation, IDevice, DeviceSelectProps } from "../../../static/types";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  updateCurrentUnit,
-  setCurrentUnit,
-  setCurrentUnitDevice,
-} from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
 import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
-import { DeviceState } from "../../../features/reducers/deviceSlice";
 import { RootStore } from "../../../store/congifureStore";
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT } from "../../../static/colorSet";
 

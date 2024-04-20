@@ -20,6 +20,7 @@ export type SetDeviceType = {
 };
 
 export type ViewUnitProps = {
+  mode: string;
   key: number;
   tabPage: TabPageInfotype
   index: number;

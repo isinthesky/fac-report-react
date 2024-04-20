@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setTableDate, setViewType } from "../../features/reducers/settingSlice";
+import { setApproves, setReportTable, setTabSetting, setTableDate, setViewType } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
 import PrintModal from "../PrintModal";
@@ -13,6 +13,11 @@ import { ActiveButton, BaseButton, MediumLabel, BaseFlex1Column, BaseFlexColumn,
 import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
+import { getDeviceInfo } from "../../features/api/device";
+import { loadDeviceList } from "../../features/reducers/deviceSlice";
+import { getSettings } from "../../features/api";
+import { CONST_TABINFO_NAME } from "../../env";
+import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
 
 function Daily() {
   const dispatch = useDispatch();
@@ -21,6 +26,38 @@ function Daily() {
   const [isOpen, setIsOpen] = useState(false);
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    (async () => {
+      const response = await getSettings();
+  
+      if (response) {
+        dispatch(setReportTable(response.settings));
+        dispatch(setTabSetting(response.tabSetting));
+        dispatch(setApproves(response.approves))
+
+        let count = 1;
+        const keyName = CONST_TABINFO_NAME;
+
+        if (response.tabSetting.length) {
+          [1, 2, 3, 4, 5].forEach((mainId)=>{
+            [1, 2, 3, 4, 5].forEach((subId)=>{
+              const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+              if (process.env[key]) {
+                dispatch(setTabPage({mainTab: mainId, subTab: subId, 
+                                     object: response[keyName + `${count++}`]}));
+              }
+            })
+          })
+        }
+      }
+
+      const resDeviceSet = await getDeviceInfo();
+      dispatch(loadDeviceList(resDeviceSet));
+
+      dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
+    })();
+  }, []);
 
   useEffect(() => {
     dispatch(setTableDate(date));
@@ -50,7 +87,7 @@ function Daily() {
     }
   };
 
-  console.log("settingSet", settingSet);
+  console.log("settingSet", settingSet, );
 
   return (
     <Flat>

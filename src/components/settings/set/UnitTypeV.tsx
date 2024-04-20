@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceSelector";

@@ -1,5 +1,4 @@
-import { CONST_TABINFO_NAME, CONST_UNITGROUP_NAME, INIT_TABPAGE_SETTING, INIT_UNITGROUP_SETTING } from "../../../env";
-import { setInitSettings, setResetSettings, setDeleteSettings } from "../../../features/api";
+import { setResetSettings } from "../../../features/api";
 import { resetXmlDevice } from "../../../features/api/device";
 
 

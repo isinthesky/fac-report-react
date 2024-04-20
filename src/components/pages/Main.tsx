@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH } from "../../env";
 import { STRING_MAIN_LOGIN_BTN, STRING_MAIN_LOGIN_ID, STRING_MAIN_LOGIN_PW } from "../../static/langSet";
 import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { useNavigate } from "react-router-dom";
+import { setViewSelect } from '../../features/reducers/tabPageSlice';
 
 function Main() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +29,14 @@ function Main() {
   } : {};
 
   const handleLogin = () => {
-    navigate("/daily/1/1"); // Navigate to the daily router page
+    
+    // dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
+    dispatch(setViewSelect({mainTab: 1, subTab: 1}));
+
+    // navigate("/daily/1/1"); // Navigate to the daily router page
+    setTimeout(() => {
+      navigate("/daily/1/1"); // Navigate to the daily router page
+    }, 0);
   };
 
   return (
@@ -101,7 +111,6 @@ const MainRow_INPUT = styled(BaseFlexRow)`
   width: 100%;
 `;
 
-
 const MainColumn = styled(BaseFlexColumn)`
   margin-top: 10px;
   gap: 10px;
@@ -116,7 +125,6 @@ const LocationLabel = styled.label`
   text-align: center;
   margin-top: 20px;
 `;
-
 
 const InputLabel = styled.button`
   background-color: transparent;

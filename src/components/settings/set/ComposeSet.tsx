@@ -119,7 +119,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   };
 
   const renderGridButtons = () => {
-    let gridButtons = [];
+    const gridButtons = [];
     for (let r = 0; r < row; r++) {
       for (let c = 0; c < column; c++) {
         gridButtons.push(

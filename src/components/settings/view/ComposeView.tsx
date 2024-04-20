@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitInfo from "./UnitInfo";
@@ -61,35 +61,35 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
   }, [settingSet.selectedTab]);
 
 
-  const getUnitList = () => {
-    const rows = [];
+  const getUnitList = useCallback(() => {
+    const rowlist = [];
     let keyCounter = 0;
 
     const tabPageInfo = currentTab;
     
-    for (let r = 0; r < row * column; r++) {
-
+    for (let r = 0; r < rows * columns; r++) {
       if (tabPageInfo) {
-          if (tabPageInfo.unitList.length < 1) return;
+        if (tabPageInfo.unitList.length < 1) return;
 
-          if (tabPageInfo.unitList.length > 0) {
-            rows.push(
-              <UnitInfo
-                key={keyCounter}
-                type={tabPageInfo.unitList[keyCounter].type}
-                name={tabPageInfo.unitList[keyCounter].name}
-                id={keyCounter+1}
-                st={tabPageInfo.unitList[keyCounter].st}
-                div={tabPageInfo.unitList[keyCounter].div}
-                dvList={tabPageInfo.unitList[keyCounter].dvList}
-              />
-            );
-          } 
-          keyCounter++;
+        if (tabPageInfo.unitList.length > 0) {
+          rowlist.push(
+            <UnitInfo
+              key={keyCounter}
+              type={tabPageInfo.unitList[keyCounter].type}
+              name={tabPageInfo.unitList[keyCounter].name}
+              id={keyCounter+1}
+              st={tabPageInfo.unitList[keyCounter].st}
+              div={tabPageInfo.unitList[keyCounter].div}
+              dvList={tabPageInfo.unitList[keyCounter].dvList}
+            />
+          );
+        } 
+        keyCounter++;
       }
     }
-    return rows;
-  };
+    return rowlist;
+  }, [currentTab, rows, columns]); // Add dependencies here
+
 
   return (
     <SettingViewContainer>

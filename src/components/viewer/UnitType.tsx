@@ -6,7 +6,7 @@ import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE } from "../../static/colorSet";
 
-const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPage, type }) => {
+const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, tabPage, type }) => {
   const sections = useMemo(() => ({
       V: [
           { label: "V", values: ["R-S", "S-T", "T-R"] },
@@ -24,26 +24,24 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
       ]
       }[type]), [type]);
 
-  console.log("cur tabpage", tabPage)
-
   let pos = 0;
 
   return (
     <Container>
       <Row>
-        <TitleColumn>{tabPage.unitList[index].name}</TitleColumn>
+        <TitleColumn mode={mode}>{tabPage.unitList[index].name}</TitleColumn>
       </Row>
       <Row>
         {sections.map((section, sectionIdx) => (
           <Column key={`section-${sectionIdx}`} >
             <Row>
-              <SectionDiv>{section.label}</SectionDiv>
+              <SectionDiv mode={mode}>{section.label}</SectionDiv>
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
                 <DeviceTypeValueDiv  key={`value-${sectionIdx}-${valueIdx}`}>
-                  <DevTypeDiv>{value}</DevTypeDiv>
-                  <DeviceValue times={tabPage.times} devId={tabPage.unitList[index].dvList[pos++]}  />
+                  <DevTypeDiv mode={mode}>{value}</DevTypeDiv>
+                  <DeviceValue mode={mode} times={tabPage.times} devId={tabPage.unitList[index].dvList[pos++]}  />
                 </DeviceTypeValueDiv>
               ))}
             </Row>
@@ -61,43 +59,40 @@ const Container = styled(BaseFlexCenterDiv)`
 
 const Row = styled(BaseFlexCenterDiv)`
   flex-direction: row;
-
   width: 100%;
 `;
 
-const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
+const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
   height: 25px;
   width: calc(100% - 2px);
 
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
   color: ${COLORSET_FONT_BASE};
-  background-color: ${COLORSET_GRID_HEADER_BG};
+  background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const Column = styled(BaseFlexCenterDiv)`
   flex-direction: column;
-
   width: 100%;
 `;
 
 const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)`
   flex-direction: column;
-  
   width: 100%;
   min-width: 25px;
 `;
 
-const SectionDiv = styled(BaseFlexCenterDiv)`
+const SectionDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   height: 25px;
   width: calc(100% - 2px);
 
   color: ${COLORSET_FONT_BASE};
-  background-color: ${COLORSET_GRID_HEADER_BG};
+  background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const DevTypeDiv = styled(BaseFlexCenterDiv)`
+const DevTypeDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: column;
 
   height: 25px;
@@ -105,10 +100,8 @@ const DevTypeDiv = styled(BaseFlexCenterDiv)`
   min-width: 25px;
 
   color: ${COLORSET_FONT_BASE};
-  background-color: ${COLORSET_GRID_HEADER_BG};
+  background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 export default UnitType;
-
-

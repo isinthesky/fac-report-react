@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DailySetting, TabSetting, SelectedTab, ApprovalsType } from "../../static/types";
+import { DailySetting, TabSetting, ApprovalsType } from "../../static/types";
 
 export interface SettingState {
   [x: string]: any;

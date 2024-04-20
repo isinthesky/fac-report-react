@@ -10,11 +10,12 @@ import { DeviceLog, LogData } from "../../static/types";
 
 
 interface DeviceValueProps {
+  mode: string;
   times: string[];
   devId: number;
 }
 
-const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
+const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   
@@ -101,13 +102,13 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   return (
     <>
       {deviceValue.map((value:any, index:number) => (
-        <ValueColumn3 key={index}>{value}</ValueColumn3>
+        <ValueColumn mode={mode} key={index}>{value}</ValueColumn>
       ))}
     </>
   );
 };
 
-const ValueColumn3 = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
+const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
 
   height: 25px;  
@@ -115,7 +116,7 @@ const ValueColumn3 = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
   min-width: 25px;
 
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
-  background-color: #2E323B;
+  background-color: ${(props) => props.mode === 'print' ? 'white' : '#2E323B'};
 `;
 
 export default React.memo(DeviceValue);

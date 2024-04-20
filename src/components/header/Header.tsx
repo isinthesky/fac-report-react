@@ -7,24 +7,21 @@ import { setApproves, setReportTable, setTabSetting } from "../../features/reduc
 import { setViewSelect, setTabPage } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_BGIMG_HEADER, DEFAULT_LOCATION_NAME } from "../../env";
-import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_TITLESIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
+import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 
-
-import { getDeviceInfo } from "../../features/api/device";
-import { loadDeviceList } from "../../features/reducers/deviceSlice";
 import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 
-const baseUrl = "http://localhost:3005/"; // Example base URL
+// const baseUrl = "http://192.168.18:5003/"; // Example base URL
+const baseUrl = "http://facreport.iptime.org:5003/"; // Example base URL
 
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedFlatId, setSelectedFlatId] = useState<string>(mainTab.toString());
-  const [logoSrc, setLogoSrc] = useState(DEFAULT_MAINLOGO_ROW_PATH);
 
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
 
@@ -51,8 +48,7 @@ export default function Header({ mainTab }: HeaderProps) {
     navigate(`/daily/${id}/1`);
   }, [navigate]);
 
-  const handleFlatButtonClick = (id: string) => {
-    console.log("id", id)
+  const handleFlatButtonClick = (id: string) => {    
     setSelectedFlatId(id);
     handleGoReport(id);
   };
@@ -62,8 +58,6 @@ export default function Header({ mainTab }: HeaderProps) {
     navigate(`/daily/${id1}/${id2}`);
   };
 
-  // console.log("id1", id1, "id2", id2)
-
   const handleGoSetting = useCallback(() => {
     navigate("/settings");
   }, [navigate]);
@@ -72,17 +66,15 @@ export default function Header({ mainTab }: HeaderProps) {
     (async () => {
       try {
         const response = await getSettings();
-
-        console.log("response", response);
-
+  
         if (response) {
           dispatch(setReportTable(response.settings));
           dispatch(setTabSetting(response.tabSetting));
           dispatch(setApproves(response.approves))
-
+  
           let count = 1;
           const keyName = CONST_TABINFO_NAME;
-
+  
           if (response.tabSetting.length) {
             [1, 2, 3, 4, 5].forEach((mainId)=>{
               [1, 2, 3, 4, 5].forEach((subId)=>{
@@ -94,15 +86,12 @@ export default function Header({ mainTab }: HeaderProps) {
               })
             })
           }
-
-          const resDeviceSet = await getDeviceInfo();
-          dispatch(loadDeviceList(resDeviceSet));
         }
       } catch (error) {
         console.error(error);
       }
     })();
-  }, []);
+  }, [dispatch]); // Added dispatch to the dependency array
 
   return (
     <TopHeader>

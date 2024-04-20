@@ -6,7 +6,6 @@ import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
-import { time } from "console";
 
 type ReportGuideProps = {
   row: number;
@@ -15,6 +14,8 @@ type ReportGuideProps = {
 
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
+
+  console.log("currentTab", currentTab)
 
   const renderDevice = (() => {
     if (!currentTab.unitList[0]) {
@@ -40,7 +41,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                 ))}
               </TimeContainer>
               <DeviceContainer>
-                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
+                <ViewDeviceType mode="view" key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
             </Container>
           );

@@ -11,7 +11,6 @@ import Weekly from "./components/pages/Weekly";
 import Settings from "./components/pages/Settings";
 import Login from "./components/pages/Login";
 import Signup from "./components/pages/Signup";
-import Header from "./components/header/Header";
 import store from "./store/congifureStore";
 
 export default function App() {

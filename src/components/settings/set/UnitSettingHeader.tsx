@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column,BaseFlexRow, BaseFlex1Row, MediumLabel, MiniButton, BaseFlexColumn, } from "../../../static/componentSet";
+import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column,BaseFlexRow, MediumLabel, BaseFlexColumn, } from "../../../static/componentSet";
 import { IDivision, IStation } from "../../../static/types";
 import { CONST_TYPE_INFO_NAMES } from "../../../env";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
