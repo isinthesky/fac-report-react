@@ -34,9 +34,7 @@ const TabControlBar: React.FC = () => {
   }, [dispatch]);
   
   const processArray = useCallback((arr: string[]) => {
-    console.log("arr", arr)
     if (arr.length === 0 ) return;
-    // arr.sort(); // Sort the array to ensure the order is correct.
   
     const settingTabpageButtons = arr.reduce((acc, code) => {
       const mainTab = code[0]; // Extract the main tab digit.
@@ -49,8 +47,6 @@ const TabControlBar: React.FC = () => {
       acc[mainTab].push(subTab);
       return acc;
     }, {} as { [key: string]: string[] });
-
-    console.log("tabcontrol", tabPosition)
   
     return Object.entries(settingTabpageButtons).map(([mainTab, subTabs]) => (
       <div key={mainTab} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -72,8 +68,6 @@ const TabControlBar: React.FC = () => {
       </div>
     ));
   }, [menus, tabPosition, handleTabClick]);
-
-  console.log("menus", menus)
 
   return <TopBar>
     {processArray(menus)}</TopBar>;
@@ -110,48 +104,3 @@ const TabButton = styled.button<{ mode: string, fontsize?: string }>`
 `;
 
 export default React.memo(TabControlBar);
-
-// const processArray = useCallback((arr:string[]) => {
-//   const tens = new Set(); // 10의 자리 수를 저장할 Set
-//   const ones = []; // 1의 자리 수를 저장할 배열
-
-//   for (const number of arr) {
-//     const ten = number[0];
-//     const one = number[1];
-
-//     if (!tens.has(ten)) {
-//       tens.add(ten); // 10의 자리 수가 중복되지 않으면 Set에 추가
-//       ones.push(<MainTabLabel key={number[0]} >
-//         {process.env[`REACT_APP_INIT_REPORT_TYPE${ten}`]}
-//       </MainTabLabel>); // 결과 배열에 10의 자리 수를 먼저 삽입
-//     }
-
-//     ones.push(
-//       <TabButton
-//         key={number}
-//         onClick={() => handleTabClick(ten, one)}
-//         mode={(Number(ten) === tabPosition.main && Number(one) === tabPosition.sub) ? "true" : "false"}
-//       >
-//         {process.env[`REACT_APP_INIT_REPORT_TYPE${ten}_SUB${one}`]}
-//       </TabButton>
-//     );
-//   }
-
-
-// const processArray = useCallback((arr:string[]) => {
-//   // arr sorting
-//   // arr mapping 10digit position is key, 1digit position is value
-//   // value of arr map is array , if 10digit is same, 1digit is push to array
-//   // all key and value attech by object.entries
-//   // return div element like menu bar
-//   // 1. main tab label
-//   // 2. sub tab button
-//   // 3. sub tab button is active or not
-//   // 4. sub tab button click event
-//   // 5. sub tab button label
-//   // 6. same key element group column flex start
-//   // 7. 10digit is key, 1digit is value
-//   // 8. value element of same group is row flex start  
-
-//   return ones;
-// }, [menus, tabPosition, handleTabClick]);

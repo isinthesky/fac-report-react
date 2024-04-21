@@ -58,11 +58,11 @@ export const tabPageSlice = createSlice({
       }
     },
 
-    updateTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
-      if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
-        state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
-      }
-    },
+    // updateTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
+    //   if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
+    //     state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
+    //   }
+    // },
 
     saveTabPage: (state) => {
       if (state.currentTabPage) {
@@ -124,5 +124,5 @@ export const tabPageSlice = createSlice({
   },
 });
 
-export const { setViewSelect, setSettingSelect, setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, updateTabPage, saveTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setTabUnitPosition } = tabPageSlice.actions;
+export const { setViewSelect, setSettingSelect, setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, saveTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setTabUnitPosition } = tabPageSlice.actions;
 export default tabPageSlice.reducer;

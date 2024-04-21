@@ -1,17 +1,32 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootStore } from "../../store/congifureStore";
 import styled from "styled-components";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_HEADER_SUB_BTN_LINEAR3, COLORSET_HEADER_SUB_BTN_LINEAR4 } from "../../static/colorSet";
+import { SelectedTab } from "../../static/types";
 
 interface MainMenuProps {
-  onClickCallback: (id: string) => void;
+  onClickCallback: (id: number) => void;
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
+  const tabPositionSlice = useSelector((state: RootStore) => state.tabPageReducer.viewPosition) as SelectedTab;
+
   const [mainMenu, setMainMenu] = useState(
-    Array.from({ length: 5 }, (_, i) => (
-      { id: (i + 1).toString(), enable: "false" }))
+    Array.from({ length: 5 }, (_, i) => ({
+      id: i + 1,
+      enable: "false"
+    }))
   );
+
+  // Update enable state based on tabPositionSlice
+  useEffect(() => {
+    setMainMenu(mainMenu.map(menu => ({
+      ...menu,
+      enable: menu.id === tabPositionSlice.main ? "true" : "false"
+    })));
+  }, [tabPositionSlice.main]);
 
   return (
     <>
@@ -20,22 +35,21 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
           return (
             <MainButton
               key={obj.id}
-              id={obj.id}
+              id={obj.id.toString()}
               enable={obj.enable}
-              onClick={(e) => {
-                const target = e.target as HTMLElement;
+              onClick={() => {
                 onClickCallback(obj.id);
-                setMainMenu(Array.from({ length: 5 }, (_, i) => ({
-                  id: (i + 1).toString(), 
-                  enable: target.id === (i + 1).toString() ? "true" : "false" })));
+                setMainMenu(mainMenu.map(menu => ({
+                  ...menu,
+                  enable: menu.id === obj.id ? "true" : "false"
+                })));
               }}
             >
-              {process.env[`REACT_APP_INIT_REPORT_TYPE${obj.id}`] ||
-                `REPORT_TYPE${obj.id}`}
+              {process.env[`REACT_APP_INIT_REPORT_TYPE${obj.id}`] || `REPORT_TYPE${obj.id}`}
             </MainButton>
-          );
+          )
         } else  {
-          return <MainButton key={obj.id} id={obj.id} enable="false" />
+          return <MainButton key={obj.id} id={obj.id.toString()} enable="false" />
         }
       })}
     </>
@@ -43,8 +57,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
 };
 
 interface SubMenuProps {
-  mainId: string;
-  onClickCallback: (mainId: string, subId: string) => void;
+  mainId: number;
+  onClickCallback: (mainId: number, subId: number) => void;
 }
 
 export const SubMenu: React.FC<SubMenuProps> = ({
@@ -52,44 +66,54 @@ export const SubMenu: React.FC<SubMenuProps> = ({
   onClickCallback,
 }) => {
   const [subMenu, setSubMenu] = useState(
-    Array.from({ length: 5 }, (_, i) => (
-      { id: (i + 1).toString(), enable: "false" }))
+    Array.from({ length: 5 }, (_, i) => ({
+      id: i + 1,
+      enable: "false"
+    }))
   );
 
-  if (mainId === "0") {
-    return <></>
-  }
+  // Update enable state based on tabPositionSlice
+  useEffect(() => {
+    setSubMenu(subMenu.map(sub => ({
+      ...sub,
+      enable: sub.id === mainId ? "true" : "false"
+    })));
+  }, [mainId]);
 
-  return (
-    <>
-      {subMenu.map((obj) => {
-        if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`]) {
-          return (
-            <SubButton
-              key={obj.id}
-              id={obj.id}
-              enable={obj.enable} 
-              onClick={(e) => {
-                const target = e.target as HTMLElement;
-                onClickCallback(mainId, obj.id);
-                setSubMenu(Array.from({ length: 5 }, (_, i) => ({
-                  id: (i + 1).toString(), 
-                  enable: target.id === (i + 1).toString() ? "true" : "false" 
-                })));
-              }}
-            >
-              {process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`] ||
-                `TYPE${mainId}_Sub${obj.id}`}
-            </SubButton>
-          );
-        } else {
-          return <div key={obj.id} />;
-        }
-      })}
-    </>
-  );
+  console.log("subMenu", subMenu, mainId)
+
+  if (mainId === 0) {
+    return <></>;
+  } else {
+    return (
+      <>
+        {subMenu.map((obj) => {
+          if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`]) {
+            console.log(obj.id);
+            return (
+              <SubButton
+                key={obj.id}
+                id={obj.id.toString()}
+                enable={obj.enable}
+                onClick={() => {
+                  onClickCallback(mainId, obj.id);
+                  setSubMenu(subMenu.map(sub => ({
+                    ...sub,
+                    enable: sub.id === obj.id ? "true" : "false"
+                  })));
+                }}
+              >
+                {process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`] || `TYPE${mainId}_Sub${obj.id}`}
+              </SubButton>
+            )
+          } else {
+            return <div key={obj.id} />
+          }
+        })}
+      </>
+    );
+  }  
 };
-
 
 const FlatButtonBase = styled.button<{ BGColor?: string, fontColor?: string, fontSize?: string }>`
   height: 50px;
@@ -102,7 +126,7 @@ const FlatButtonBase = styled.button<{ BGColor?: string, fontColor?: string, fon
 
 const MainButton = styled(FlatButtonBase)<{ enable?: string }>`
   color: ${(props) => props.enable === "true" ? "white" : "#444"};
-  background: ${(props) => props.enable === "true" 
+  background: ${(props) => props.enable === "true"
     ? `linear-gradient(to bottom, #3D252B, #3D252B)`  // Enabled background color
     : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
 `;
@@ -111,8 +135,8 @@ const SubButton = styled.button<{ fontSize?: string, enable?: string }>`
   height: 30px;
   border: 1px solid #444; /* Consolidated border property */
   font-size: ${(props) => props.fontSize || FONTSET_MAIN_MENU_SIZE};
-  background: ${(props) => props.enable === "true" 
-    ? `linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR1}, ${COLORSET_HEADER_SUB_BTN_LINEAR2})` 
+  background: ${(props) => props.enable === "true"
+    ? `linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR1}, ${COLORSET_HEADER_SUB_BTN_LINEAR2})`
     : `linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR3}, ${COLORSET_HEADER_SUB_BTN_LINEAR4})`};
   color: ${(props) => props.enable === "true" ? "white" : "#444"};
 `;

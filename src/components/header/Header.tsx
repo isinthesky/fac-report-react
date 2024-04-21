@@ -6,7 +6,7 @@ import { getSettings } from "../../features/api";
 import { setApproves, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
 import { setViewSelect, setTabPage } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
-import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_BGIMG_HEADER, DEFAULT_LOCATION_NAME } from "../../env";
+import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
@@ -21,24 +21,8 @@ const baseUrl = "http://facreport.iptime.org:5003/"; // Example base URL
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [selectedFlatId, setSelectedFlatId] = useState<string>(mainTab.toString());
+  const [selectedFlatId, setSelectedFlatId] = useState<number>(mainTab);
 
-  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
-
-  useEffect(() => {
-    const img = new Image();
-    img.src = DEFAULT_BGIMG_HEADER; // 이미지 URL
-    img.onload = () => {
-      setBackgroundLoaded(true);
-    };
-  }, []);
-
-
-  const containerStyle = backgroundLoaded ? {
-    backgroundImage: `url(${DEFAULT_BGIMG_HEADER})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  } : {};
 
   const handleTitle = useCallback(() => {
     navigate("/");
@@ -48,17 +32,18 @@ export default function Header({ mainTab }: HeaderProps) {
     navigate(`/daily/${id}/1`);
   }, [navigate]);
 
-  const handleFlatButtonClick = (id: string) => {    
+  const handleFlatButtonClick = (id: number) => {    
     setSelectedFlatId(id);
-    handleGoReport(id);
+    handleGoReport(id.toString());
   };
 
-  const subcallback = (id1: string, id2: string) => {
-    dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
-    navigate(`/daily/${id1}/${id2}`);
+  const subcallback = (id1: number, id2: number) => {
+    dispatch(setViewSelect({mainTab: id1, subTab: id2}));
+    navigate(`/daily/${id1.toString()}/${id2.toString()}`);
   };
 
   const handleGoSetting = useCallback(() => {
+    dispatch(setViewSelect({mainTab: 0, subTab: 0}));
     navigate("/settings");
   }, [navigate]);
 
@@ -95,7 +80,7 @@ export default function Header({ mainTab }: HeaderProps) {
 
   return (
     <TopHeader>
-      <TitleContainer style={containerStyle}>
+      <TitleContainer>
         <TitleImg src={`${baseUrl}${DEFAULT_MAINLOGO_ROW_PATH}`} onClick={handleTitle}  alt="main_logo" />
         <TitleTextContainer>
           <Title>{DEFAULT_LOCATION_NAME}</Title>
@@ -168,7 +153,6 @@ const PageControls = styled.div`
   height: 80px;
   width: calc(100% - 300px);
   gap: 0px;
-  background-image: url(${DEFAULT_BGIMG_HEADER});
 `;
 
 const SettingButton = styled.button<{ fontSize?: string }>`
