@@ -12,7 +12,6 @@
 
 ## Report Viewer
 
- - ID Check : STRING_DAILY_MAIN_BTN_IDCHECK
  - Print Popup : STRING_DAILY_MAIN_BTN_PRINT
 
 ### Print Popup

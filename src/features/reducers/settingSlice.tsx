@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DailySetting, TabSetting, ApprovalsType } from "../../static/types";
+import { INIT_PRINT_TITLE } from "../../env";
 
 export interface SettingState {
   [x: string]: any;
@@ -26,11 +27,11 @@ const initialState: SettingState = {
   tabPosition: { row: 1, column: 1 },
   tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
   idViewMode: 0,
-  printTitle: "",
+  printTitle: INIT_PRINT_TITLE as string,
   deviceSearchWord: "",
-  approvals: [ {checked:false, text:""},
-                    {checked:false, text:""},
-                    {checked:false, text:""}],
+  approvals: [{checked:false, text:""},
+              {checked:false, text:""},
+              {checked:false, text:""}],
 };
 
 export const settingSlice = createSlice({

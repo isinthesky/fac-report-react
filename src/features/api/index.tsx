@@ -50,6 +50,22 @@ export const setDeleteSettings = async (): Promise<boolean> => {
   }
 };
 
+export const updateSettings = async (
+  name: string,
+  object: string
+): Promise<any> => {
+  try {
+    await axiosInstance.put("/report/general/updateSetting", {
+      type: name,
+      value: object
+    });
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
 export const setUpdateSettingsColRow = async (
   row: number,
   column: number

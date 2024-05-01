@@ -3,9 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 import { BaseButton, BaseFlex1Row, BaseFlexDiv } from "../../static/componentSet";
-import { STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET, STRING_SETTING_MAIN_BTN_ARRAY } from "../../static/langSet";
+import { STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET, STRING_SETTING_MAIN_BTN_INFO, STRING_DEFAULT_SETTING } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG } from "../../static/colorSet";
 import { PageControlBarProps } from "../../static/interfaces";
+import { FONTSET_DEFAULT_TAB_SIZE } from "../../static/fontSet";
+import { CONST_LANG } from "../../env";
 
 
 const PageControlBar: React.FC<PageControlBarProps> = ({ mode, modeCallback }) => {
@@ -39,9 +41,9 @@ const PageControlBar: React.FC<PageControlBarProps> = ({ mode, modeCallback }) =
 
   return (
     <TopBar>
-      <Title>설정</Title>
+      <Title>{STRING_DEFAULT_SETTING}</Title>
       <PageButtonContainer>
-        <TabControlButton id="view" page={mode} onClick={handleSetArray}>{STRING_SETTING_MAIN_BTN_ARRAY}</TabControlButton>
+        <TabControlButton id="view" page={mode} onClick={handleSetArray}>{STRING_SETTING_MAIN_BTN_INFO}</TabControlButton>
         <TabControlButton id="device" page={mode} onClick={handleSetDevice}>{STRING_SETTING_MAIN_BTN_DEVSET}</TabControlButton>
         <TabControlButton id="unit" page={mode} onClick={handleSetGroup}>{STRING_SETTING_MAIN_BTN_GROUPSET}</TabControlButton>
         <TabControlButton id="print" page={mode}onClick={handleSetPrint}>{STRING_SETTING_MAIN_BTN_PRINTSET}</TabControlButton>
@@ -75,15 +77,19 @@ const PageButtonContainer = styled(BaseFlex1Row)`
 `;
 
 const TabControlButton = styled(BaseButton)<{ id: string, page: string }>`
-  width: 80px;
-  height: 30px;
-  border: none;
+  padding: 10px;
 
-  border-bottom: ${(props) => (props.id === props.page ? `1px solid ${COLORSET_ACTIVE_CONTROL_BG}` : "none")};
+  width: ${CONST_LANG === "eng" ? 120 : 80}px;
+  height: 30px;
+
+  font-size: ${FONTSET_DEFAULT_TAB_SIZE};
   font-weight: ${(props) => (props.id === props.page ? "bold" : "normal")};
+
+  border: none;
+  border-bottom: ${(props) => (props.id === props.page ? `1px solid ${COLORSET_ACTIVE_CONTROL_BG}` : "none")};
   
   background-color: transparent;
-  color:  ${(props) => (props.id === props.page ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_NORMAL_CONTROL_FONT)};
+  color:  ${(props) => (props.id === props.page ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_NORMAL_CONTROL_FONT)};  
 `;
 
 export default PageControlBar;

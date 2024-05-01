@@ -8,7 +8,7 @@ import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, Act
 import { FONTSET_DESCRIPTION_LABEL_SIZE } from "../../../static/fontSet"
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet"
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DISABLE_COLOR } from "../../../static/colorSet"
-import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY} from "../../../static/langSet"
+import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_SET_GRID_ARRAY, STRING_DEFAULT_ROW, STRING_DEFAULT_COL} from "../../../static/langSet"
 import { setReportTable } from "../../../features/reducers/settingSlice";
 
 const ComposeView: React.FC = () => {
@@ -88,15 +88,15 @@ const ComposeView: React.FC = () => {
     }
     return rowlist;
   }, [tabSlice, rows, columns]); // Add dependencies here
-  
+
   return (
     <SettingViewContainer>
-      <ArraySettingContainer>
+      <BaseFlexColumn>
         <ArrayEditContainer>
-          <MediumLabel>배열 설정</MediumLabel>
-          <BaseFlexRow gap="10px">
+          <MediumLabel>{STRING_SETTING_SET_GRID_ARRAY}</MediumLabel>
+          <BaseFlexRow>
             <BaseFlexColumn gap="5px">
-              <DescriptLabel>Row</DescriptLabel>
+              <DescriptLabel>{STRING_DEFAULT_ROW}</DescriptLabel>
               <ArrayInput type="number"
                           onChange={handleRow}
                           readOnly={edit}
@@ -106,7 +106,7 @@ const ComposeView: React.FC = () => {
                           max="3" />
             </BaseFlexColumn>
             <BaseFlexColumn gap="5px">
-              <DescriptLabel>column</DescriptLabel>
+              <DescriptLabel>{STRING_DEFAULT_COL}</DescriptLabel>
               <ArrayInput type="number"
                           onChange={handleColumn}
                           readOnly={edit}
@@ -115,16 +115,15 @@ const ComposeView: React.FC = () => {
                           min="1"
                           max="4" />
             </BaseFlexColumn>
-            <BaseFlexColumn gap="5px">
-              <DescriptLabel>&apos;</DescriptLabel>
+            <ArraySettingContainer>
               <BaseButton widthsize="70px" heightsize="23px" onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</BaseButton>
-            </BaseFlexColumn>
+            </ArraySettingContainer>
           </BaseFlexRow>
         </ArrayEditContainer>
-      <ArrayApplyContainer>
-        <ArrayApplyButton widthsize="80px" heightsize="25px" onClick={handleApply}>{STRING_SETTING_MAIN_BTN_APPLY}</ArrayApplyButton>
-      </ArrayApplyContainer>
-      </ArraySettingContainer>
+        <ArrayApplyContainer>
+          <ArrayApplyButton widthsize="80px" heightsize="25px" onClick={handleApply}>{STRING_SETTING_MAIN_BTN_APPLY}</ArrayApplyButton>
+        </ArrayApplyContainer>
+      </BaseFlexColumn>
       <ColumnContainer>
         {getUnitList()}
       </ColumnContainer>
@@ -133,15 +132,16 @@ const ComposeView: React.FC = () => {
 };
 
 const SettingViewContainer = styled(BaseFlex1Row)`
+  gap: 15px;
   padding: 15px 30px;
 `
 
 const ArraySettingContainer = styled(BaseFlexColumn)`
-//  border: 1px solid #eee;
-//  padding: 5px;
+  justify-content: flex-end;
 `
 
 const ArrayEditContainer = styled(BaseFlexColumn)`
+  justify-content: flex-end;
   border: 1px solid #eee;
   padding: 10px;
   background-color: ${COLORSET_DARK_CONTROL_BG}
@@ -153,8 +153,10 @@ const ArrayApplyContainer = styled(BaseFlexColumn)`
 `
 
 const DescriptLabel = styled(MediumLabel)`
+  display: flex;
+  align-self: center;
+  justify-content: center;
   font-size: ${FONTSET_DESCRIPTION_LABEL_SIZE};
-  // background-color: transparent;
 `;
 
 const ArrayInput = styled.input<{ mode: string, heightsize?: string, disable?: string }>`

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Filter from "./Filter";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Row, BaseFlexCenterDiv, BigLabel } from "../../../static/componentSet";
 import UnitGroupListControl from "./UnitGroupListControl";
-import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from "../../../static/langSet";
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_DEVICE_LIST } from "../../../static/langSet";
 import { updateUnitGroupList } from "../../../features/api/device";
 import { RootStore } from "../../../store/congifureStore";
 import { Unit } from "../../../static/types";
@@ -79,7 +79,7 @@ const UnitGroupSet: React.FC = () => {
         <UnitGroupListControl viewMode={"setting"} />
         <Filter />
         <DevicesContainer>
-          <BigLabel>Device List</BigLabel>
+          <BigLabel>{STRING_SETTING_GROUP_DEVICE_LIST}</BigLabel>
           <BaseFlex1Column>
             { renderSection(0, deviceList) }
           </BaseFlex1Column>

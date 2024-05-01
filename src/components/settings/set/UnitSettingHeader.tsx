@@ -9,6 +9,7 @@ import { IDivision, IStation } from "../../../static/types";
 import { CONST_TYPE_INFO_NAMES } from "../../../env";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import DeviceSearch from "./DeviceSearch";
+import { STRING_SETTING_DEVICE_FILTER, STRING_SETTING_DEVICE_NAME_SETTING, STRING_SETTING_DEVICE_TYPE_SELECT } from "../../../static/langSet";
 
 const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
@@ -105,11 +106,11 @@ const DeviceHeaderSet = () => {
   return (
     <UnitSettingContainer>
       <OptionContainer>
-        <MediumLabel>Name</MediumLabel>
+        <MediumLabel>{STRING_SETTING_DEVICE_NAME_SETTING}</MediumLabel>
         <BaseInput type="text" onChange={handleNameChange} value={deviceName} />
       </OptionContainer>
       <OptionContainer>
-        <MediumLabel>Type</MediumLabel>
+        <MediumLabel>{STRING_SETTING_DEVICE_TYPE_SELECT}</MediumLabel>
         <BaseSelect onChange={handleTypeChange} value={deviceType}>
           { CONST_TYPE_INFO_NAMES.map((item, index) => (
             <BaseOption key={index} value={index+1}>
@@ -119,7 +120,7 @@ const DeviceHeaderSet = () => {
         </BaseSelect>
       </OptionContainer>
       <FilterContainer>
-        <MediumLabel>Filter</MediumLabel>
+        <MediumLabel>{STRING_SETTING_DEVICE_FILTER}</MediumLabel>
         <BaseFlexRow>
           <BaseSelect onChange={handleStationChange} value={selectedStation}>
             {deviceSet.stations.map((st: IStation) => (

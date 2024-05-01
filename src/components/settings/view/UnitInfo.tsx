@@ -93,6 +93,9 @@ const UnitInfoLabel = styled(CenterLabel)`
 `;
 
 const DescriptLabel = styled(SmallLabel)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 2px;
   background-color: transparent;
 `;

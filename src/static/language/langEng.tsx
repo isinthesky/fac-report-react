@@ -5,29 +5,43 @@ export const ENG_DEFALT_CANCEL = "Cancel"
 export const ENG_DEFALT_EDIT = "Edit"
 export const ENG_DEFALT_APPLY = "Apply";
 export const ENG_DEFALT_REFRESH = "Refresh";
+export const ENG_DEFALT_DELETE = "Delete";
+export const ENG_DEFALT_ROW = "Row";
+export const ENG_DEFALT_COL = "Column";
+export const ENG_DEFALT_SETTING = "Setting";
 
 export const ENG_MAIN_LOGIN_ID = "ID";
 export const ENG_MAIN_LOGIN_PW = "Password";
 export const ENG_MAIN_LOGIN_BTN = "Login";
 
+export const ENG_DAILY_MAIN_TITLE = "Daily Report";
 export const ENG_DAILY_MAIN_BTN_IDCHECK = "ID Check";
 export const ENG_DAILY_MAIN_BTN_PRINT = "Print";
 export const ENG_DAILY_MAIN_VIEW_SORTATION = "Sortation";
 export const ENG_DAILY_MAIN_VIEW_TIME = "Time";
 
 export const ENG_SETTING_MAIN_BTN_EDIT = "Edit"
+export const ENG_SETTING_MAIN_BTN_INFO = "Device Info";
 export const ENG_SETTING_MAIN_BTN_APPLY = "Apply";
 export const ENG_SETTING_MAIN_BTN_DEVSET = "Device Setting";
-export const ENG_SETTING_MAIN_BTN_INIT = "Initialize";
 export const ENG_SETTING_MAIN_BTN_GROUPSET = "Group Setting";
 export const ENG_SETTING_MAIN_BTN_PRINTSET = "Print Setting";
+export const ENG_SETTING_MAIN_BTN_INIT = "Initialize";
 
 export const ENG_DAILY_MAIN_SELECT_DATE = "Select Date";
 
 export const ENG_SETTING_SET_TIME_ADD = "Add Time";
 export const ENG_SETTING_SET_TIME_DELETE = "Delete";
 export const ENG_SETTING_SET_PRINT_TITLE = "Print Title";
-
+export const ENG_SETTING_SET_GRID_ARRAY = "Grid Array Setting";
+export const ENG_SETTING_SET_PRINT_APPROVE = "Approval";
+export const ENG_SETTING_DEVICE_UNIT_SELECT = "Unit Select";
+export const ENG_SETTING_DEVICE_NAME_SETTING = "Name Setting";
+export const ENG_SETTING_DEVICE_TYPE_SELECT = "Type Select";
+export const ENG_SETTING_DEVICE_FILTER = "Filter";
+export const ENG_SETTING_GROUP_LIST = "Group List";
+export const ENG_SETTING_GROUP_FILTER = "Filter / Search";
+export const ENG_SETTING_GROUP_DEVICE_LIST = "Group Device List";
 
 export const ENG_SETTING_GROUP_ADD = "Add";
 export const ENG_SETTING_GROUP_DELETE = "Delete";

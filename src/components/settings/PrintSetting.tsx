@@ -5,8 +5,8 @@ import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row } 
 import { RootStore } from '../../store/congifureStore';
 import { setPrintTitle, setApproves } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
 import { BaseFlexColumn, MediumLabel } from '../../static/componentSet';
-import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from '../../static/langSet';
-import { setUpdateSettingsApprove } from '../../features/api';
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE, STRING_SETTING_SET_PRINT_APPROVE } from '../../static/langSet';
+import { setUpdateSettingsApprove, updateSettings } from '../../features/api';
 
 const PrintSetting: React.FC = () => {
   const dispatch = useDispatch();
@@ -47,6 +47,7 @@ const PrintSetting: React.FC = () => {
 
     try {
       await setUpdateSettingsApprove(approvals)
+      await updateSettings("printTitle", title)
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +61,7 @@ const PrintSetting: React.FC = () => {
     <SettingContainer>
       <BaseFlexColumn>
         <BaseFlexColumn>
-          <DescriptLabel>제목</DescriptLabel>
+          <DescriptLabel>{STRING_SETTING_SET_PRINT_TITLE}</DescriptLabel>
           <BaseInput
             type="text"
             value={title}
@@ -71,7 +72,7 @@ const PrintSetting: React.FC = () => {
       <BaseFlex1Row>
         {approvals.map((approval, index) => (
           <BaseFlexColumn key={index}>
-            <DescriptLabel>결제선{index + 1}</DescriptLabel>
+            <DescriptLabel>{STRING_SETTING_SET_PRINT_APPROVE}{"-"}{index + 1}</DescriptLabel>
             <BaseFlex1Row>
               <BaseInput
                 type="checkbox"

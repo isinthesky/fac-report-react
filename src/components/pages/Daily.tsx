@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
 import { ActiveButton, BaseButton, MediumLabel, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton } from "../../static/componentSet";
-import { STRING_DAILY_MAIN_BTN_IDCHECK, STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE } from "../../static/langSet";
+import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
 import { getDeviceInfo } from "../../features/api/device";
@@ -104,7 +104,7 @@ function Daily() {
   return (
     <Flat>
       <Header mainTab={Number(id1 ? id1 : "1")} />
-      <Title>일일 보고</Title>
+      <Title>{STRING_DAILY_MAIN_TITLE}</Title>
       <ControlContainer>
         <BaseFlexDiv>
           <DateLabel>{STRING_DAILY_MAIN_SELECT_DATE}</DateLabel>

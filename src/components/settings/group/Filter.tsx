@@ -8,6 +8,7 @@ import { updateCurrentGroupUnit } from "../../../features/reducers/unitGroupSlic
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
+import { STRING_SETTING_GROUP_FILTER } from "../../../static/langSet";
 
 
 const Filter: React.FC = () => {
@@ -68,7 +69,7 @@ const Filter: React.FC = () => {
 
   return (
     <FilterContainer>
-      <BigLabel>Filter</BigLabel>
+      <BigLabel>{STRING_SETTING_GROUP_FILTER}</BigLabel>
       <CenterRow>
       <BaseFlexColumn gap="1px">
         <SmallLabel>Station</SmallLabel>
