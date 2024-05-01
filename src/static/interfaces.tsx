@@ -53,3 +53,9 @@ export interface PageControlBarProps {
   modeCallback: React.Dispatch<React.SetStateAction<string>>;
   // Add other props as needed
 }
+
+export interface DeviceValueProps  {
+  mode: string;
+  times: string[];
+  devId: number;
+}

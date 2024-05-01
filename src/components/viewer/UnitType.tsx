@@ -31,7 +31,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, 
       <Row>
         <TitleColumn mode={mode}>{tabPage.unitList[index].name}</TitleColumn>
       </Row>
-      <Row>
+      <UnitGrid>
         {sections.map((section, sectionIdx) => (
           <Column key={`section-${sectionIdx}`} >
             <Row>
@@ -47,7 +47,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, 
             </Row>
           </Column>
         ))}
-      </Row>
+      </UnitGrid>
     </Container>
   );
 };
@@ -59,6 +59,13 @@ const Container = styled(BaseFlexCenterDiv)`
 
 const Row = styled(BaseFlexCenterDiv)`
   flex-direction: row;
+  width: 100%;
+`;
+
+const UnitGrid = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
+
   width: 100%;
 `;
 

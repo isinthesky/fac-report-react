@@ -53,8 +53,6 @@ const RowContainer = styled(BaseFlexDiv)`
   align-items: stretch;
 
   width: calc(100%);
-
-  // margin: 5px;
   gap: 10px;
 `;
 

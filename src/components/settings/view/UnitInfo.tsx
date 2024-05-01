@@ -30,10 +30,10 @@ const UnitInfo: React.FC<Unit> = ({
     <UnitContainer>
       <NameContainer>
         <NameLabel>ID</NameLabel>
-        <UnitInfoLabel>{id}</UnitInfoLabel>
-        <MediumLabel>Type</MediumLabel>
+        <UnitIDLabel>{id}</UnitIDLabel>
+        <NameLabel>Type</NameLabel>
         <UnitInfoLabel>{CONST_TYPE_INFO_NAMES[type-1]}</UnitInfoLabel>
-        <MediumLabel>Name</MediumLabel>
+        <NameLabel>Name</NameLabel>
         <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
 
@@ -69,8 +69,11 @@ const Group = styled.div`
 `;
 
 const NameLabel = styled(MediumLabel)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 5px 10px;
-  // color:white;
   background-color: transparent;
 `;
 
@@ -83,6 +86,12 @@ const NameContainer = styled(BaseFlex1Div)`
 
 const ItemDiv = styled(BaseFlex1Column)`
   gap: 1px;
+  background-color: transparent;
+`;
+
+const UnitIDLabel = styled(CenterLabel)`
+  width: 30px;
+  color: white;
   background-color: transparent;
 `;
 

@@ -32,7 +32,7 @@ const UnitTypeV: React.FC<ViewUnitProps> = ({ index }) => {
       <Row>
         <TitleColumn>{curunit.name}</TitleColumn>
       </Row>
-      <Row>
+      <UnitGrid>
         {sections.map((section, sectionIdx) => (
           <Column key={`section-${sectionIdx}`} >
             <Row>
@@ -48,19 +48,24 @@ const UnitTypeV: React.FC<ViewUnitProps> = ({ index }) => {
             </Row>
           </Column>
         ))}
-      </Row>
+      </UnitGrid>
     </Container>
   );
 };
 
 const Container = styled(BaseFlexCenterDiv)`
   flex-direction: column;
-
   width: 100%;
 `;
 
 const Row = styled(BaseFlexCenterDiv)`
   flex-direction: row;
+  width: 100%;
+`;
+
+const UnitGrid = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
 
   width: 100%;
 `;

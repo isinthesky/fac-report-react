@@ -7,13 +7,8 @@ import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
 import { DeviceLog, LogData } from "../../static/types";
+import { DeviceValueProps } from "../../static/interfaces";
 
-
-interface DeviceValueProps {
-  mode: string;
-  times: string[];
-  devId: number;
-}
 
 const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
