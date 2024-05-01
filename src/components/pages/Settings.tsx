@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -11,12 +11,11 @@ import { setReportTable } from "../../features/reducers/settingSlice";
 import { updateGroup } from "../../features/reducers/unitGroupSlice";
 import { setTabPage } from "../../features/reducers/tabPageSlice";
 import TabControlBar from "../settings/TabControlBar";
-import { BaseFlex1Column, BaseFlex1Row, BaseButton, MiniButton, BaseFlexDiv } from "../../static/componentSet";
-import { COLORSET_BACKGROUND_COLOR, COLORSET_DISABLE_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
-import { SIZESET_DEFAULT_INPUT_HEIGHT, CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
+import { BaseFlex1Column } from "../../static/componentSet";
+import { COLORSET_BACKGROUND_COLOR } from "../../static/colorSet";
+import { CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
 import { Unit } from "../../static/types";
 import UnitGroupSet from "../settings/group/UnitGroupSet";
-import { handleInitSettings } from "../settings/set/handleButtons";
 import { CONST_TABINFO_NAME } from "../../env";
 import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
@@ -28,8 +27,6 @@ function Settings() {
   const [rows, setRow] = useState(0);
   const [columns, setColumn] = useState(0);
   const [mode, setMode] = useState("view");
-  const [edit, setEdit] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
   const params  = useParams();
   
   useEffect(() => {
@@ -88,16 +85,15 @@ function Settings() {
       
       {mode === CONST_SETTING_MODE_VIEW ? (
         <>
-          <TabControlBar />
-          <ComposeView row={rows} column={columns}></ComposeView>
+          <TabControlBar showInit={true} />
+          <ComposeView />
         </>
       ) : mode === CONST_SETTING_MODE_DEVICE ? (
         <>
-          <TabControlBar />
+          <TabControlBar showInit={false} />
           <ComposeSet row={rows} column={columns}></ComposeSet>
         </>
       ) : mode === CONST_SETTING_MODE_UNIT ? (
-        // <></>
         <UnitGroupSet />
       ) : mode === CONST_SETTING_MODE_PRINT ? (
         <PrintSetting />
@@ -109,70 +105,6 @@ function Settings() {
 
 const Flat = styled(BaseFlex1Column)`
   background-color: ${COLORSET_BACKGROUND_COLOR};
-`;
-
-
-const TopBar = styled(BaseFlex1Row)`
-  align-items: center;
-  justify-content: center;
-
-  padding: 10px;
-`;
-
-const InputGroup = styled(BaseFlex1Row)`
-  align-items: center;
-  padding-left: 25px;
-`;
-
-const Input = styled.input<{ mode: string, heightsize?: string, disable?:string }>`
-  text-align: center;
-  width: 50px;
-  height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
-
-  background-color: ${(props) => (props.mode === "true" ? COLORSET_DISABLE_COLOR : "white")};
-
-  margin: 0px 10px; 
-`;
-
-const SettingButton = styled(BaseButton)`
-  padding: 5px 15px;m
-  margin: 0px 10px;
-  
-  border: none;
-  border-radius: 5px;
-
-  background-color: white;
-`;
-
-
-const ModalView = styled.div.attrs((props) => ({
-  role: 'dialog',
-}))`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 20px;
-  width: 500px;
-  height: 260px;
-  background-color: #ffffff;
-`;
-
-const PrintHeader = styled(BaseFlexDiv)`
-  flex-direction: row;
-  align-self: stretch;
-  justify-content: end;
-`;
-
-const ExitBtn = styled(MiniButton)<{ bgColor?: string }>`
-  margin: 10px;
-  width: 30px;
-  height: 30px;
-
-  font-size: 20px;
-
-  color: white;
-  background-color: ${(props) => props.bgColor || COLORSET_SIGNITURE_COLOR};
-  border-radius: 10px;
 `;
 
 export default Settings;

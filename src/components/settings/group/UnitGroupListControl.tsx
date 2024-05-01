@@ -10,7 +10,7 @@ import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEI
 import { STRING_DEFAULT_APPLY, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
 import { Unit, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
-import { COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER } from '../../../static/colorSet';
+import { COLORSET_GROUP_INPUT_NOMAL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_GROUP_INPUT_ACTIVE_BORDER, COLORSET_GROUP_INPUT_ACTIVE_FONT, COLORSET_GROUP_INPUT_NOMAL_BORDER, COLORSET_GROUP_INPUT_NOMAL_FONT } from '../../../static/colorSet';
 import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
 
 
@@ -41,7 +41,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
     setEditMode(prev => ({ ...prev, [index]: !prev[index] }));
   
     if (editMode[index]) {
-      const arrName = unitGroupSlice.groups.map((obj, pos) => {
+      const arrName = unitGroupSlice.groups.map((obj) => {
         return obj.name;
       });
 
@@ -50,7 +50,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   };
 
   useEffect(() => {
-    const arrName = unitGroupSlice.groups.map((obj, pos) => {
+    const arrName = unitGroupSlice.groups.map((obj) => {
       return obj.name;
     })
 
@@ -82,7 +82,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
     dispatch(deleteGroup(index));
   };
 
-  const handleApply = (index: number) => {
+  const handleApply = () => {
     if (viewMode === "apply") {
       const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
       currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
@@ -111,7 +111,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
         </BaseFlex1Column>
         {unitGroupSlice.groups.length > 0
           ? unitGroupSlice.groups.map((group:Unit, index:number) => (
-            <SaveUnitContainer key={index}  onDoubleClick={() => handleGroupNameClick(index)}>
+            <SaveUnitContainer key={index}  onClick={() => handleGroupNameClick(index)}>
               <IndexLabel heightSize="20px">{index + 1}</IndexLabel>
               <GroupNameContainer>
                 <NameInput
@@ -176,7 +176,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
         </ActiveButton>
       </ButtonsContainer>
       ): <ButtonsContainer>
-        <ActiveButton onClick={() => handleApply(unitGroupSlice.selectedPos)}>
+        <ActiveButton onClick={() => handleApply()}>
           {STRING_DEFAULT_APPLY}
         </ActiveButton>
       </ButtonsContainer>}
@@ -243,12 +243,11 @@ const IndexLabel = styled(MediumLabel)`
 
 const NameInput = styled.input<{ mode: string, heightsize?: string, fontsize?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
-
-  color: ${(props) => (props.mode === "true" ? "white" : "black")};
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
   
-  background-color: ${COLORSET_DARK_CONTROL_BG};
-  border: 1px solid ${COLORSET_GROUP_CONTROL_BORDER};
+  color: ${(props) => (props.mode === "true" ? COLORSET_GROUP_INPUT_ACTIVE_FONT : COLORSET_GROUP_INPUT_NOMAL_FONT)};
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_DARK_CONTROL_BG : COLORSET_GROUP_INPUT_NOMAL_BG)};
+  border: 1px solid ${(props) => (props.mode === "true" ? COLORSET_GROUP_INPUT_ACTIVE_BORDER : COLORSET_GROUP_INPUT_NOMAL_BORDER)};
   pointer-events: ${(props) => (props.mode === "true" ? "true" : "none")}; 
 `;
 

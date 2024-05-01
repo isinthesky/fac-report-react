@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setApproves, setReportTable, setTabSetting, setTableDate, setViewType } from "../../features/reducers/settingSlice";
@@ -26,6 +26,25 @@ function Daily() {
   const [isOpen, setIsOpen] = useState(false);
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
+
+
+  const handleIdCheck = useCallback(() => {
+    dispatch(setViewType(settingSet.idViewMode === 0 ? 1 : 0));
+  }, [dispatch, settingSet.idViewMode]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key.toLowerCase() === 'k') {
+        handleIdCheck();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleIdCheck]);
 
   useEffect(() => {
     (async () => {
@@ -66,28 +85,21 @@ function Daily() {
   // Call useReactToPrint at the top level and store the returned function
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
+    pageStyle: `@page { size: A4 landscape; }`,
+    documentTitle: settingSet.printTitle + "_" + new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')
   });
 
   const handleOpenPrint = () => {
     setIsOpen(true);
   };
 
-  const handleIdCheck = async () => {
-    dispatch(setViewType(settingSet.idViewMode === 0 ? 1 : 0));
-  };
-
   const handlePrintClose = () => {
     setIsOpen(false);
   };
 
-  // Use the stored function inside handlePrint
   const handlePrint = () => {
-    if (window.confirm("Do you want to proceed with printing?")) {
-      handlePrintFunction();
-    }
+    handlePrintFunction();
   };
-
-  console.log("settingSet", settingSet, );
 
   return (
     <Flat>
@@ -105,7 +117,6 @@ function Daily() {
             />
           </BaseFlexDiv>
           <ButtonControls>
-            <BaseButton onClick={handleIdCheck}>{STRING_DAILY_MAIN_BTN_IDCHECK}</BaseButton>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
           </ButtonControls>
       </Controls>
@@ -125,9 +136,7 @@ function Daily() {
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
             </DivHeader>
             <PrintModal row={settingSet.daily.row}
-                        column={settingSet.daily.column}
-                        mainTab={Number(id1 ? id1 : "1")}
-                        subTab={Number(id2 ? id2 : "1")}
+                        column={settingSet.daily.column} 
                         ref={componentRef} />
           </ModalView>
         </BaseModalBack>
@@ -135,8 +144,6 @@ function Daily() {
     </Flat>
   );
 }
-
-// Styled components remain unchanged
 
 const Flat = styled(BaseFlex1Column)`
   background-color: ${COLORSET_BACKGROUND_COLOR};
@@ -170,7 +177,6 @@ const ControlContainer = styled(BaseFlexColumn)`
   margin: 20px 20px 0px 20px;
 `;
 
-
 const Controls = styled(BaseFlexRow)`
   justify-content: space-between;
   align-items: center;
@@ -187,20 +193,18 @@ const ReportLine = styled(BaseFlex1Column)`
   gap: 10px;
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ExitBtn = styled(MiniButton)<{ bgColor?: string }>(props => ({
+  margin: '20px',
+  width: '30px',
+  height: '30px',
+  fontSize: '20px',
+  color: 'white',
+  backgroundColor: props.bgColor || COLORSET_SIGNITURE_COLOR,
+  borderRadius: '10px',
+}));
 
-const ExitBtn = styled(MiniButton)<{ bgColor?: string }>`
-  margin: 20px;
-  width: 30px;
-  height: 30px;
-
-  font-size: 20px;
-
-  color: white;
-  background-color: ${(props) => props.bgColor || COLORSET_SIGNITURE_COLOR};
-  border-radius: 10px;
-`;
-
-  const PrintBtn = styled(ActiveButton) `
+const PrintBtn = styled(ActiveButton) `
   margin: 20px;
   border-radius: 10px;
 `;
@@ -210,7 +214,7 @@ const HideBtn = styled(BaseButton) `
   border: 0px solid #555;
 `;
 
-const ModalView = styled.div.attrs((props) => ({
+const ModalView = styled.div.attrs(() => ({
   role: 'dialog',
 }))`
   // Modal창 CSS를 구현합니다.

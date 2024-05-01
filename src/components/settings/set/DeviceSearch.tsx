@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { BaseInput, ControlButton, BaseFlexDiv } from '../../../static/componentSet';
-import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from '../../../static/constSet';
+import { ICON_DAY_SEARCH, ICON_DAY_REFRESH } from '../../../static/constSet';
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 
 const DeviceSearch: React.FC = () => {
@@ -41,7 +41,7 @@ const DeviceSearch: React.FC = () => {
         onKeyDown={handleSearchKeyDown}
       />
       <ControlButton onClick={handleSearchClick}><img src={ICON_DAY_SEARCH} alt="Search" /></ControlButton>
-      <ControlButton onClick={handleClearInput}><img src={ICON_DAY_CLOSE} alt="Close" /></ControlButton>
+      <ControlButton onClick={handleClearInput}><img src={ICON_DAY_REFRESH} alt="Close" /></ControlButton>
     </SearchContainer>
   );
 };

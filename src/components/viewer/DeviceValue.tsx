@@ -45,14 +45,14 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
           const result: DeviceLog = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
 
           if (!result) {
-            deviceData = times.map((_:string) => "x") as []
+            deviceData = times.map(() => "x") as []
             setDeviceValue(deviceData);
             setDeviceSave(deviceData);
             return;
           }
 
           if (Object.keys(result).length === 0) {
-            deviceData = times.map((_:string) => "x") as []
+            deviceData = times.map(() => "x") as []
             setDeviceValue(deviceData);
             setDeviceSave(deviceData);
             return;
@@ -80,7 +80,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
         }
         else
         {
-          deviceData = times.map((_:string) => "-") as []
+          deviceData = times.map(() => "-") as []
         }
         
         setDeviceValue(deviceData);

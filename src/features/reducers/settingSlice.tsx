@@ -12,7 +12,7 @@ export interface SettingState {
   idViewMode: number;
   printTitle: string;
   deviceSearchWord: string;
-  savedApprovals: ApprovalsType[];
+  approvals: ApprovalsType[];
 }
 
 const twoMonthsAgo = new Date();
@@ -28,7 +28,7 @@ const initialState: SettingState = {
   idViewMode: 0,
   printTitle: "",
   deviceSearchWord: "",
-  savedApprovals: [ {checked:false, text:""},
+  approvals: [ {checked:false, text:""},
                     {checked:false, text:""},
                     {checked:false, text:""}],
 };
@@ -65,7 +65,7 @@ export const settingSlice = createSlice({
       state.printTitle = action.payload;
     },
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
-      state.savedApprovals = action.payload;
+      state.approvals = action.payload;
     },
   },
 });

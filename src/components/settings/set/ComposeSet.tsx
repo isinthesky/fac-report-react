@@ -5,7 +5,7 @@ import UnitTypeW from "./UnitTypeW";
 import UnitTypeV from "./UnitTypeV";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
-import { setCurrentUnit, setTabUnitPosition, saveTabPage } from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnit, setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
@@ -13,7 +13,7 @@ import DeviceHeaderSet from "./UnitSettingHeader";
 import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
-import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL } from "../../../static/langSet";
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL } from "../../../static/langSet";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
@@ -99,9 +99,9 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
     }
   };
 
-  const handleCancel = () => {
+  const handleRefresh = () => {
     if (deviceColumn !== 0 && deviceRow !== 0) {
-      dispatch(setCurrentUnit({position: position, unit: tabPageInfo.unitList[position]}));
+      dispatch(setSettingSelect({mainTab: deviceRow, subTab: deviceColumn}));
     }
   }
 
@@ -163,9 +163,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         <UnitGroupListControl viewMode={"apply"}/>
       </BaseFlex1Row>
       <ButtonGroup>
-        <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
+        <BaseButton onClick={handleRefresh}>{STRING_DEFAULT_REFRESH}</BaseButton>
         <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
-        <ActiveButton onClick={handleSaveAll}>{STRING_DEFAULT_SAVEALL}</ActiveButton>
       </ButtonGroup>
     </PageContainer>
   );

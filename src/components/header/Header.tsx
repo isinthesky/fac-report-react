@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getSettings } from "../../features/api";
 import { setApproves, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
-import { setViewSelect, setTabPage } from "../../features/reducers/tabPageSlice";
+import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
@@ -44,6 +44,7 @@ export default function Header({ mainTab }: HeaderProps) {
 
   const handleGoSetting = useCallback(() => {
     dispatch(setViewSelect({mainTab: 0, subTab: 0}));
+    dispatch(setSettingSelect({mainTab: 1, subTab: 1}));
     navigate("/settings");
   }, [navigate]);
 

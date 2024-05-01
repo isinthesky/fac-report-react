@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitInfo from "./UnitInfo";
-import { ComposeProps } from "../../../static/types";
 import { setUpdateSettingsColRow } from "../../../features/api";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton } from "../../../static/componentSet";
@@ -12,14 +11,14 @@ import { COLORSET_DARK_CONTROL_BG, COLORSET_DISABLE_COLOR } from "../../../stati
 import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY} from "../../../static/langSet"
 import { setReportTable } from "../../../features/reducers/settingSlice";
 
-const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
+const ComposeView: React.FC = () => {
   const dispatch = useDispatch()
-  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
+  const deviceSlice = useSelector((state: RootStore) => state.deviceReducer);
+  const settingSlice = useSelector((state: RootStore) => state.settingReducer);
+  const tabSlice = useSelector((state : RootStore) => state.tabPageReducer);
 
-  const [rows, setRow] = useState(settingSet.daily.row);
-  const [columns, setColumn] = useState(settingSet.daily.column);
+  const [rows, setRow] = useState(settingSlice.daily.row);
+  const [columns, setColumn] = useState(settingSlice.daily.column);
   const [edit, setEdit] = useState(true);
   
   const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +46,7 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
         console.error(error);
       }
     })();
-  }, [deviceSet]);
+  }, [deviceSlice]);
 
 
   useEffect(() => {
@@ -58,14 +57,14 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
         console.error(error);
       }
     })();
-  }, [settingSet.selectedTab]);
+  }, [tabSlice.settingPosition]);
 
 
   const getUnitList = useCallback(() => {
     const rowlist = [];
     let keyCounter = 0;
 
-    const tabPageInfo = currentTab;
+    const tabPageInfo = tabSlice.currentTabPage;
     
     for (let r = 0; r < rows * columns; r++) {
       if (tabPageInfo) {
@@ -88,41 +87,40 @@ const ComposeView: React.FC<ComposeProps> = ({ row, column}) => {
       }
     }
     return rowlist;
-  }, [currentTab, rows, columns]); // Add dependencies here
-
-
+  }, [tabSlice, rows, columns]); // Add dependencies here
+  
   return (
     <SettingViewContainer>
       <ArraySettingContainer>
-      <ArrayEditContainer>
-        <MediumLabel>배열 설정</MediumLabel>
-        <BaseFlexRow gap="10px">
-          <BaseFlexColumn gap="5px">
-            <DescriptLabel>Row</DescriptLabel>
-            <ArrayInput type="number"
-                        onChange={handleRow}
-                        readOnly={edit}
-                        value={rows}
-                        mode={String(edit)}
-                        min="1"
-                        max="3" />
-          </BaseFlexColumn>
-          <BaseFlexColumn gap="5px">
-            <DescriptLabel>column</DescriptLabel>
-            <ArrayInput type="number"
-                        onChange={handleColumn}
-                        readOnly={edit}
-                        value={columns}
-                        mode={String(edit)}
-                        min="1"
-                        max="4" />
-          </BaseFlexColumn>
-          <BaseFlexColumn gap="5px">
-            <DescriptLabel>'</DescriptLabel>
-            <BaseButton widthsize="70px" heightsize="23px" onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</BaseButton>
-          </BaseFlexColumn>
-        </BaseFlexRow>
-      </ArrayEditContainer>
+        <ArrayEditContainer>
+          <MediumLabel>배열 설정</MediumLabel>
+          <BaseFlexRow gap="10px">
+            <BaseFlexColumn gap="5px">
+              <DescriptLabel>Row</DescriptLabel>
+              <ArrayInput type="number"
+                          onChange={handleRow}
+                          readOnly={edit}
+                          value={rows}
+                          mode={String(edit)}
+                          min="1"
+                          max="3" />
+            </BaseFlexColumn>
+            <BaseFlexColumn gap="5px">
+              <DescriptLabel>column</DescriptLabel>
+              <ArrayInput type="number"
+                          onChange={handleColumn}
+                          readOnly={edit}
+                          value={columns}
+                          mode={String(edit)}
+                          min="1"
+                          max="4" />
+            </BaseFlexColumn>
+            <BaseFlexColumn gap="5px">
+              <DescriptLabel>&apos;</DescriptLabel>
+              <BaseButton widthsize="70px" heightsize="23px" onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</BaseButton>
+            </BaseFlexColumn>
+          </BaseFlexRow>
+        </ArrayEditContainer>
       <ArrayApplyContainer>
         <ArrayApplyButton widthsize="80px" heightsize="25px" onClick={handleApply}>{STRING_SETTING_MAIN_BTN_APPLY}</ArrayApplyButton>
       </ArrayApplyContainer>

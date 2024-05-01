@@ -6,6 +6,7 @@ import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
 import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
+import { CONST_TYPE_INFO_NAMES } from "../../../env";
 
 const UnitInfo: React.FC<Unit> = ({
   type,
@@ -31,7 +32,7 @@ const UnitInfo: React.FC<Unit> = ({
         <NameLabel>ID</NameLabel>
         <UnitInfoLabel>{id}</UnitInfoLabel>
         <MediumLabel>Type</MediumLabel>
-        <UnitInfoLabel>{type}</UnitInfoLabel>
+        <UnitInfoLabel>{CONST_TYPE_INFO_NAMES[type-1]}</UnitInfoLabel>
         <MediumLabel>Name</MediumLabel>
         <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
@@ -44,7 +45,6 @@ const UnitInfo: React.FC<Unit> = ({
           </ItemDiv>
       ))}
       </ Group>
-      
     </UnitContainer>
   );
 }; 

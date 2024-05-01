@@ -4,6 +4,7 @@ export const KOR_DEFALT_SAVEALL = "모두 저장"
 export const KOR_DEFALT_CANCEL = "취소"
 export const KOR_DEFALT_EDIT = "변경"
 export const KOR_DEFALT_APPLY = "적용";
+export const KOR_DEFALT_REFRESH = "새로 고침";
 
 export const KOR_MAIN_LOGIN_ID = "아이디";
 export const KOR_MAIN_LOGIN_PW = "비밀번호";

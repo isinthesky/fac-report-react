@@ -1,96 +1,104 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { BaseInput, ControlButton, BaseFlexDiv, BaseFlexCenterDiv, BaseButton, ActiveButton } from '../../static/componentSet';
-import { setdeviceSearchWord } from "../../features/reducers/settingSlice";
-import { BaseFlexColumn, BaseFlexRow, MediumLabel } from '../../static/componentSet';
+import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row } from '../../static/componentSet';
+import { RootStore } from '../../store/congifureStore';
+import { setPrintTitle, setApproves } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
+import { BaseFlexColumn, MediumLabel } from '../../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE } from '../../static/langSet';
+import { setUpdateSettingsApprove } from '../../features/api';
 
 const PrintSetting: React.FC = () => {
-  const dispatch = useDispatch()
-  const [searchWord, setSearchWord] = useState("");
+  const dispatch = useDispatch();
+  
+  
+  const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const [title, setTitle] = useState(settingSet.printTitle);
+  
+  const [approvals, setApprovals] = useState(settingSet.approvals);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("input searchWord", searchWord)
-    setSearchWord(e.target.value);
+  const handleInputChange = (index: number, value: string) => {
+    const newApprovals = approvals.map((approval, idx) => {
+      if (idx === index) {
+        return { ...approval, text: value };
+      }
+      return approval;
+    });
+    setApprovals(newApprovals);
   };
 
-  const handleSearchClick = () => {
-    dispatch(setdeviceSearchWord(searchWord))
+  const handleCheckboxChange = (index: number) => {
+    const newGroups = approvals.map((group, idx) => {
+      if (idx === index) {
+        return { ...group, checked: !group.checked };
+      }
+      return group;
+    });
+    setApprovals(newGroups);
   };
 
-  const handleClearInput = () => {
-    setSearchWord("");
-    dispatch(setdeviceSearchWord(""))
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
   };
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearchClick();
-    } else if (e.key === 'Escape') {
-      handleClearInput();
+  const handleSave = async () => {
+    dispatch(setApproves(approvals));
+    dispatch(setPrintTitle(title));
+
+    try {
+      await setUpdateSettingsApprove(approvals)
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const handleCancel = () => {
-    console.log("handleCancel")
-  }
-
-  const handleSave = () => {
-    console.log("handleSave")
-  }
+    // Handle cancel logic
+  };
 
   return (
     <SettingContainer>
       <BaseFlexColumn>
-        <BaseFlexRow>
         <BaseFlexColumn>
-        <MediumLabel>title</MediumLabel>
-        <BaseInput
-        type="text"
-        value={searchWord}
-        onChange={handleInputChange}
-        onKeyDown={handleSearchKeyDown}
-        />
+          <DescriptLabel>제목</DescriptLabel>
+          <BaseInput
+            type="text"
+            value={title}
+            onChange={(e) => handleTitleChange(e.target.value)}
+          />
         </BaseFlexColumn>
-        <BaseFlexColumn>
-          <MediumLabel>결제선1</MediumLabel>
-          <BaseInput
-            type="text"
-            value={searchWord}
-            onChange={handleInputChange}
-            onKeyDown={handleSearchKeyDown}
-            />
-          <MediumLabel>결제선2</MediumLabel>
-          <BaseInput
-            type="text"
-            value={searchWord}
-            onChange={handleInputChange}
-            onKeyDown={handleSearchKeyDown}
-            />
-          <MediumLabel>결제선3</MediumLabel>
-          <BaseInput
-            type="text"
-            value={searchWord}
-            onChange={handleInputChange}
-            onKeyDown={handleSearchKeyDown}
-            />
-        </BaseFlexColumn>
-      </BaseFlexRow>
-      <ButtonsContainer>
-        <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
-        <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
-      </ButtonsContainer>
+
+      <BaseFlex1Row>
+        {approvals.map((approval, index) => (
+          <BaseFlexColumn key={index}>
+            <DescriptLabel>결제선{index + 1}</DescriptLabel>
+            <BaseFlex1Row>
+              <BaseInput
+                type="checkbox"
+                checked={approval.checked}
+                onChange={() => handleCheckboxChange(index)}
+              />
+              <BaseInput
+                type="text"
+                value={approval.text}
+                disabled={!approval.checked}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+              />
+            </BaseFlex1Row>
+          </BaseFlexColumn>
+        ))}
+        </BaseFlex1Row>
+
+        <ButtonsContainer>
+          <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
+          <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
+        </ButtonsContainer>
       </BaseFlexColumn>
     </SettingContainer>
   );
 };
 
-const SettingContainer = styled(BaseFlexDiv)`
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;  
-`;
+const SettingContainer = styled(BaseFlexCenterDiv)``;
 
 const ButtonsContainer = styled(BaseFlexCenterDiv)`
   flex-wrap: wrap;
@@ -98,5 +106,11 @@ const ButtonsContainer = styled(BaseFlexCenterDiv)`
   gap: 50px;
 `;
 
-export default PrintSetting;
+const DescriptLabel = styled(MediumLabel)`
+  display: flex;  
+  align-items: flex-start;
+  text-align: left;
+  vertical-align: baseline;
+`;
 
+export default PrintSetting;

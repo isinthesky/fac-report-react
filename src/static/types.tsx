@@ -114,7 +114,7 @@ export interface TabSetting {
 export interface SetTabPageProp {
   mainTab: number;
   subTab: number;
-  object: any;
+  object: TabPageInfotype;
 }
 
 export type DeviceSelectProps = {

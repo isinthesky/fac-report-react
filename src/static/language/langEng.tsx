@@ -4,6 +4,7 @@ export const ENG_DEFALT_SAVEALL = "Save All"
 export const ENG_DEFALT_CANCEL = "Cancel"
 export const ENG_DEFALT_EDIT = "Edit"
 export const ENG_DEFALT_APPLY = "Apply";
+export const ENG_DEFALT_REFRESH = "Refresh";
 
 export const ENG_MAIN_LOGIN_ID = "ID";
 export const ENG_MAIN_LOGIN_PW = "Password";

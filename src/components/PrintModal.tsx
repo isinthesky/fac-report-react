@@ -10,11 +10,9 @@ import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '.
 type PrintGuideProps = {
   row: number;
   column: number;
-  mainTab: number;
-  subTab: number;
 };
 
-const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, mainTab, subTab }, ref) => {
+const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }, ref) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
@@ -54,7 +52,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
         <HideDiv></HideDiv>
         <TitleBox>{settingSet.printTitle}</TitleBox>
         <ApproveTable>
-          {settingSet?.savedApprovals.filter(
+          {settingSet?.approvals.filter(
             (item:ApprovalsType) => item.checked).map(
               (item:ApprovalsType, idx:number) => {
                 return (<ApproveDiv key={idx} gap="0px">
@@ -75,8 +73,8 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column, m
 const PrintArea = styled(BaseFlexColumn)`
   position: relative;
   
-  width: 287mm;
-  height: 200mm;
+  width: 257mm;
+  height: 170mm;
 
   padding: 5px;
   

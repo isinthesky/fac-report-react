@@ -80,8 +80,6 @@ export const SubMenu: React.FC<SubMenuProps> = ({
     })));
   }, [mainId]);
 
-  console.log("subMenu", subMenu, mainId)
-
   if (mainId === 0) {
     return <></>;
   } else {
@@ -89,7 +87,6 @@ export const SubMenu: React.FC<SubMenuProps> = ({
       <>
         {subMenu.map((obj) => {
           if (process.env[`REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${obj.id}`]) {
-            console.log(obj.id);
             return (
               <SubButton
                 key={obj.id}

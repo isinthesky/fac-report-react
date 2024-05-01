@@ -4,11 +4,13 @@ import styled from "styled-components";
 import { setMenus } from "../../features/reducers/settingSlice";
 import { setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { RootStore } from "../../store/congifureStore";
-import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_NORMAL_CONTROL_BG, COLORSET_DARK_CONTROL_BG } from "../../static/colorSet";
+import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER } from "../../static/colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DESCRIPTION_LABEL_SIZE } from "../../static/fontSet";
-import { BaseFlexRow, MediumLabel } from "../../static/componentSet";
+import { BaseButton, BaseFlexRow, MediumLabel } from "../../static/componentSet";
+import { handleInitSettings } from "./set/handleButtons";
+import { STRING_SETTING_MAIN_BTN_INIT } from "../../static/langSet";
 
-const TabControlBar: React.FC = () => {
+const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
   const dispatch =  useDispatch()
   const menus = useSelector((state: RootStore) => state.settingReducer.menus);
   const tabPosition = useSelector((state: RootStore) => state.tabPageReducer.settingPosition);
@@ -29,7 +31,6 @@ const TabControlBar: React.FC = () => {
   }, []); // Removed dispatch from dependency array
 
   const handleTabClick = useCallback((main:string, sub:string) => {
-    console.log('handleTabClick', main, sub)
     dispatch(setSettingSelect({mainTab: Number(main), subTab: Number(sub)}));
   }, [dispatch]);
   
@@ -69,13 +70,17 @@ const TabControlBar: React.FC = () => {
     ));
   }, [menus, tabPosition, handleTabClick]);
 
-  return <TopBar>
-    {processArray(menus)}</TopBar>;
+  return(
+    <TopBar>
+      {processArray(menus)}
+      {showInit && <InitButton id="init" onClick={handleInitSettings}>{STRING_SETTING_MAIN_BTN_INIT}</InitButton>}
+    </TopBar>
+  ) 
 }
 
 const TopBar = styled(BaseFlexRow)`
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
 
   gap: 20px;
   padding: 0px 30px;
@@ -102,5 +107,13 @@ const TabButton = styled.button<{ mode: string, fontsize?: string }>`
   border: 0px solid #333;
   border-bottom: ${(props) => props.mode === "true" ? `1px solid ${COLORSET_ACTIVE_CONTROL_BG}` : "1px solid #000"};
 `;
+
+const InitButton = styled(BaseButton)`
+  height: 25px;
+  width: 80px;
+  color: ${COLORSET_NORMAL_CONTROL_FONT};
+  background-color: ${COLORSET_NORMAL_CONTROL_BG};
+  border: 1px solid ${COLORSET_NORMAL_CONTROL_BORDER};
+`
 
 export default React.memo(TabControlBar);

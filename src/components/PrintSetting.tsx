@@ -4,7 +4,7 @@ import { setApproves, setPrintTitle } from '../features/reducers/settingSlice';
 import { setUpdateSettingsApprove } from '../features/api';
 import { RootStore } from '../store/congifureStore';
 import styled from "styled-components";
-import { BaseButton, BaseInput, BaseFlex1Column, BaseFlex1Row, MediumLabel, ActiveButton, BaseFlexDiv } from '../static/componentSet';
+import { BaseButton, BaseInput, BaseFlex1Column, BaseFlex1Row, MediumLabel, ActiveButton, BaseFlexColumn } from '../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE } from '../static/langSet';
 
 const ApproveSetModal = () => {
@@ -21,10 +21,10 @@ const ApproveSetModal = () => {
   const [print, setTitle] = useState(settingSet.printTitle); // printTitle을 로컬 state로 관리합니다.
 
   useEffect(() => {
-    if (settingSet.savedApprovals.length > 0) {
-      setApprovals(settingSet.savedApprovals);
+    if (settingSet.approvals.length > 0) {
+      setApprovals(settingSet.approvals);
     }
-  }, [settingSet.savedApprovals]);
+  }, [settingSet.approvals]);
 
   const handleCheckboxChange = (index: number) => {
     const newGroups = approvals.map((group, idx) => {
@@ -98,13 +98,14 @@ const ApproveSetModal = () => {
   );
 };
 
-const CenterContainer = styled(BaseFlexDiv)`
-  flex-direction: column;
+const CenterContainer = styled(BaseFlexColumn)`
   gap: 30px;
+  border: 1px solid red;
 `
 
 const TitleContainer = styled(BaseFlex1Column)`
   gap: 3px;
+  border: 1px solid blue;
 `
 
 const TitleLabel = styled(MediumLabel)`
