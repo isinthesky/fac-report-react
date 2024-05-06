@@ -13,7 +13,7 @@ import DeviceHeaderSet from "./UnitSettingHeader";
 import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
-import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SETTING, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
+import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
@@ -27,7 +27,6 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const deviceColumn = settingSet.unitPostion.column;
 
   const position = deviceColumn + (deviceRow - 1) * column - 1;
-  const tabPageInfo = tabPageSlice.tabPageInfo[tabPageSlice.settingPosition.main][tabPageSlice.settingPosition.sub];
 
   const [deviceType, setDeviceType] = useState(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
@@ -162,7 +161,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
       </BaseFlex1Row>
       <ButtonGroup>
         <BaseButton onClick={handleRefresh}>{STRING_DEFAULT_REFRESH}</BaseButton>
-        <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
+        <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>      
+        <HideButton onClick={handleSaveAll}>{STRING_DEFAULT_SAVEALL}</HideButton>
       </ButtonGroup>
     </PageContainer>
   );
@@ -196,6 +196,12 @@ const ButtonGroup = styled(BaseFlexCenterDiv)`
   gap: 50px;
 `;
 
+const GridContainer = styled.div< {column: number}>`
+  display: grid;
+  grid-template-columns: repeat(${props => props.column}, 1fr);
+  grid-gap: 10px;
+`;
+
 const GridButton = styled.button<{ mode: string }>`
   width : 30px;
 
@@ -207,10 +213,8 @@ const GridButton = styled.button<{ mode: string }>`
   border: 1px solid #ccc;
 `;
 
-const GridContainer = styled.div< {column: number}>`
-  display: grid;
-  grid-template-columns: repeat(${props => props.column}, 1fr);
-  grid-gap: 10px;
+const HideButton = styled(BaseButton)`
+  display: none;
 `;
 
 export default ComposeSet;

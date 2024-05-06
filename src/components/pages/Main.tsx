@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH } from "../../env";
-import { STRING_MAIN_LOGIN_BTN, STRING_MAIN_LOGIN_ID, STRING_MAIN_LOGIN_PW } from "../../static/langSet";
+import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH, CONST_LOGIN_PW, CONST_KEY_VALUE } from "../../env";
+import { STRING_MAIN_LOGIN_BTN, STRING_MAIN_LOGIN_ID, STRING_MAIN_LOGIN_PW, STRING_MAIN_LOGIN_ERROR } from "../../static/langSet";
 import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { useNavigate } from "react-router-dom";
 import { setViewSelect } from '../../features/reducers/tabPageSlice';
+import sha256 from 'crypto-js/sha256'; // Import the sha256 function
+
 
 function Main() {
   const dispatch = useDispatch();
@@ -13,14 +15,22 @@ function Main() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
+  const [toggle, setToggle] = useState(false);
 
-  useEffect(() => {
-    const img = new Image();
-    img.src = DEFAULT_BGIMG_PATH; // 이미지 URL
-    img.onload = () => {
-      setBackgroundLoaded(true);
+  useEffect(() => {    
+    // Correct the event type here
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.code === 'KeyR') {
+        setToggle(!toggle);
+      }
     };
-  }, []);
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [toggle]);
 
   const containerStyle = backgroundLoaded ? {
     backgroundImage: `url(${DEFAULT_BGIMG_PATH})`,
@@ -29,14 +39,23 @@ function Main() {
   } : {};
 
   const handleLogin = () => {
-    
-    // dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
-    dispatch(setViewSelect({mainTab: 1, subTab: 1}));
+    if (!toggle) {
+      const hashedPassword = sha256(password + CONST_KEY_VALUE).toString();
 
-    // navigate("/daily/1/1"); // Navigate to the daily router page
-    setTimeout(() => {
-      navigate("/daily/1/1"); // Navigate to the daily router page
-    }, 0);
+      if (username === "admin" && hashedPassword === CONST_LOGIN_PW) {
+        dispatch(setViewSelect({mainTab: 1, subTab: 1}));
+        setTimeout(() => {
+          navigate("/daily/1/1");
+        }, 0);
+      } else {
+        alert(STRING_MAIN_LOGIN_ERROR);
+      }
+    } else {
+      dispatch(setViewSelect({mainTab: 1, subTab: 1}));
+      setTimeout(() => {
+        navigate("/daily/1/1");
+      }, 0);
+    }
   };
 
   return (
@@ -47,30 +66,44 @@ function Main() {
     <MainRow>
       <MainColumn>
         <MainRow_INPUT>
-          <InputLabel>{STRING_MAIN_LOGIN_ID}</InputLabel>
+          <InputLabel tabIndex={-1} >{STRING_MAIN_LOGIN_ID}</InputLabel>
           <Input
+            tabIndex={1}
             type="text"
             id="username"
             placeholder="Enter ID"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleLogin();
+              }
+            }}
             required
           />
         </MainRow_INPUT>
         <MainRow_INPUT>
-          <InputLabel>{STRING_MAIN_LOGIN_PW}</InputLabel>
+          <InputLabel tabIndex={-1}>{STRING_MAIN_LOGIN_PW}</InputLabel>
           <Input
+            tabIndex={2}
             type="password"
             id="password"
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleLogin();
+              }
+            }}
             required
           />
         </MainRow_INPUT>
       </MainColumn>
       <MainRow>
-        <LoginButton onClick={handleLogin}>{STRING_MAIN_LOGIN_BTN}</LoginButton>
+        <LoginButton tabIndex={3} onClick={handleLogin}>
+          {STRING_MAIN_LOGIN_BTN}
+        </LoginButton>
       </MainRow>
     </MainRow>
   </Flat>

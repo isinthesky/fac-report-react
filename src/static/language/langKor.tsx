@@ -13,6 +13,7 @@ export const KOR_DEFALT_SETTING = "설정";
 export const KOR_MAIN_LOGIN_ID = "아이디";
 export const KOR_MAIN_LOGIN_PW = "비밀번호";
 export const KOR_MAIN_LOGIN_BTN = "로그인";
+export const KOR_MAIN_LOGIN_ERROR = "ID 또는 비밀번호가 잘못되었습니다.";
 
 export const KOR_DAILY_MAIN_TITLE = "일일 보고";
 export const KOR_DAILY_MAIN_BTN_IDCHECK = "ID 확인";

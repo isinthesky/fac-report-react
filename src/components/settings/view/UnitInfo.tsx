@@ -102,15 +102,17 @@ const UnitInfoLabel = styled(CenterLabel)`
 `;
 
 const DescriptLabel = styled(SmallLabel)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: left;
+  width: 25px;
   padding: 2px;
   background-color: transparent;
 `;
 
 const DeviceInput = styled.input<{ heightsize?: string }>`
-  flex:1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
   padding: 5px;
 

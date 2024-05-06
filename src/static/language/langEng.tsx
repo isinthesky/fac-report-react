@@ -12,6 +12,7 @@ export const ENG_DEFALT_SETTING = "Setting";
 export const ENG_MAIN_LOGIN_ID = "ID";
 export const ENG_MAIN_LOGIN_PW = "Password";
 export const ENG_MAIN_LOGIN_BTN = "Login";
+export const ENG_MAIN_LOGIN_ERROR = "Invalid credentials";
 
 export const ENG_DAILY_MAIN_TITLE = "Daily Report";
 export const ENG_DAILY_MAIN_BTN_IDCHECK = "ID Check";

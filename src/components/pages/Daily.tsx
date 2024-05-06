@@ -27,7 +27,6 @@ function Daily() {
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
 
-
   const handleIdCheck = useCallback(() => {
     dispatch(setViewType(settingSet.idViewMode === 0 ? 1 : 0));
   }, [dispatch, settingSet.idViewMode]);
@@ -73,7 +72,6 @@ function Daily() {
 
       const resDeviceSet = await getDeviceInfo();
       dispatch(loadDeviceList(resDeviceSet));
-
       dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
     })();
   }, []);
@@ -122,10 +120,7 @@ function Daily() {
       </Controls>
       </ControlContainer>
       <ReportLine>
-        <ReportGuide
-          row={settingSet.daily.row}
-          column={settingSet.daily.column}
-        ></ReportGuide>
+        <ReportGuide row={settingSet.daily.row} column={settingSet.daily.column} />
       </ReportLine>
       {isOpen ? 
         <BaseModalBack onClick={handlePrintClose}>

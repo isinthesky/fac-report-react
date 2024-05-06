@@ -154,8 +154,7 @@ const ArrayApplyContainer = styled(BaseFlexColumn)`
 
 const DescriptLabel = styled(MediumLabel)`
   display: flex;
-  align-self: center;
-  justify-content: center;
+  align-items: flex-end;
   font-size: ${FONTSET_DESCRIPTION_LABEL_SIZE};
 `;
 

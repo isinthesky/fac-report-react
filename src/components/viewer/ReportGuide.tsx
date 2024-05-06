@@ -68,7 +68,7 @@ const TimeContainer = styled(BaseFlexDiv)`
 
   width: 50px;
 
-  gap: 0px;
+  gap: 1px;
 `;
 
 const DeviceContainer = styled.div`
@@ -78,12 +78,11 @@ const DeviceContainer = styled.div`
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)`
-  width: calc(100% - 2px);
-  height: 25px;
+  width: 100%;
 
-  padding: 0px;
+  padding: 5px 0px;
   background-color: ${COLORSET_GRID_HEADER_BG};
-  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 export default ReportGuide;

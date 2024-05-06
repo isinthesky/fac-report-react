@@ -18,12 +18,17 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
 
   const renderDevice = () => {
     const tabPageInfo = currentTab;
-
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
       times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <UnitCountainerLine key={rowIndex} gap="5px">
+        <TimeContainer gap="1px">
+          {times.map((time: string, index: number) => (
+            <TimeDiv key={index}>{time}</TimeDiv>
+          ))} 
+        </TimeContainer>
+                
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
 
@@ -31,11 +36,6 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
 
           return (
             <UnitCountainerRow key={colIndex} gap="0px">
-              {colIndex === 0 && (<TimeContainer gap="0px">
-                {times.map((time: string, index: number) => (
-                  <TimeDiv key={index}>{time}</TimeDiv>
-                ))}
-              </TimeContainer>)}
               <DeviceContainer>
                 <ViewDeviceType mode="print" key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
@@ -55,10 +55,11 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
           {settingSet?.approvals.filter(
             (item:ApprovalsType) => item.checked).map(
               (item:ApprovalsType, idx:number) => {
-                return (<ApproveDiv key={idx} gap="0px">
-                  <NameDiv> {item.text} </NameDiv>
-                  <SignDiv />
-                </ApproveDiv>)
+                return (
+                  <ApproveDiv key={idx} gap="1px">
+                    <NameDiv> {item.text} </NameDiv>
+                    <SignDiv />
+                  </ApproveDiv>)
               }
             )
           }
@@ -78,7 +79,7 @@ const PrintArea = styled(BaseFlexColumn)`
 
   padding: 5px;
   
-  border: 2px solid #777;
+  border: 2px solid #333;
   background-color: #FFF;
 `;
 
@@ -89,12 +90,15 @@ const TitleArea =  styled(BaseFlexRow)`
   background-color: #FFF;
 `;
 
-const TitleBox =  styled.button`
+const TitleBox =  styled(BaseFlexCenterDiv)`
   position: relative;
   width: 500px;
+  
+  color: #000;
   font-size: 42px;
 
-  border: 1px solid #cc2;
+  background-color: #FFF;
+  border: 1px solid #333;
 `;
 
 const ApproveTable = styled(BaseFlexRow)`
@@ -102,21 +106,28 @@ const ApproveTable = styled(BaseFlexRow)`
   justify-content: flex-end;
 
   height: 80px;
-  width: 300px;
-  margin : 5px;
-  background-color: #FFF;
+  width: 250px;
+  gap: 0px;
+
+  background-color: #333;
 `;
 
 const ApproveDiv = styled(BaseFlexColumn)`
+  flex:1;
+  display: flex;
   align-items: stretch;
   justify-items: stretch;
+  gap: 1px;
+  padding: 1px;
 
-  width: 100px;
+  min-width: 70px;
+  // border: 1px solid #555;
 `;
 
-const NameDiv = styled.button`
-  height : 18px;
-  border: 1px solid #555;
+const NameDiv = styled(BaseFlexCenterDiv)`
+  height : 22px;
+  background-color: #FFF;
+  // border: 1px solid #555;
 `;
 
 const SignDiv = styled(BaseFlexDiv)`
@@ -124,43 +135,50 @@ const SignDiv = styled(BaseFlexDiv)`
   justify-self: stretch;
   
   height : 80px;
-  border: 1px solid #888;
+  background-color: #FFF;
+  // border: 1px solid #555;
 `;
 
 const UnitCountainerLine = styled(BaseFlexRow)`
   align-items: start;
   justify-items: stretch;
-  margin: 5px;
-  border: 1px solid #C33;
+  
+  // border: 1px solid #f55;
 `;
 
 const UnitCountainerRow = styled(BaseFlexRow)`
   width: 100%;
+  background-color: #333;
 `;
 
-const TimeContainer = styled(BaseFlexColumn)`
-  width: 50px;
-`;
-
-const DeviceContainer = styled.div`
+const DeviceContainer = styled(BaseFlexRow)`
   display: flex;
   flex-direction: row;
   width: 100%;
   background-color: #FFF;
 `;
 
-const TimeDiv = styled(BaseFlexCenterDiv)`
-  width: calc(100% - 2px);
-  height: 25px;
 
-  padding: 0px;
-  border: 1px solid #ccc;
+const TimeContainer = styled(BaseFlexColumn)`
+  width: 50px;
+
+  background-color: #333;
+  gap: 1px;
+  padding: 1px;
+`;
+
+const TimeDiv = styled(BaseFlexCenterDiv)`
+  // width: calc(100%);
+
+  padding: 5px 0px;
   background-color: #FFF;
 `;
 
 const HideDiv = styled.div`
   display: flex;
   width: 200px;
+
+  background-color: #FFF;
 `;
 
 export default PrintModal;

@@ -107,10 +107,11 @@ const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
 
   height: 25px;  
-  width: calc(100% - 2px);
+  // width: calc(100% - 2px);
+  width: 100%;
   min-width: 25px;
 
-  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
   background-color: ${(props) => props.mode === 'print' ? 'white' : '#2E323B'};
 `;
 

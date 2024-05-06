@@ -39,7 +39,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, 
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
-                <DeviceTypeValueDiv  key={`value-${sectionIdx}-${valueIdx}`}>
+                <DeviceTypeValueDiv key={`value-${sectionIdx}-${valueIdx}`}>
                   <DevTypeDiv mode={mode}>{value}</DevTypeDiv>
                   <DeviceValue mode={mode} times={tabPage.times} devId={tabPage.unitList[index].dvList[pos++]}  />
                 </DeviceTypeValueDiv>
@@ -55,11 +55,14 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, 
 const Container = styled(BaseFlexCenterDiv)`
   flex-direction: column;
   width: 100%;
+  padding: 0px 1px;
+  gap: 1px;
 `;
 
 const Row = styled(BaseFlexCenterDiv)`
   flex-direction: row;
   width: 100%;
+  gap: 1px;
 `;
 
 const UnitGrid = styled.div`
@@ -67,48 +70,53 @@ const UnitGrid = styled.div`
   grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
 
   width: 100%;
+  gap: 1px;
 `;
 
 const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
-  height: 25px;
-  width: calc(100% - 2px);
+  width: 100%;
+  padding: 5px 0px;
 
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
   color: ${COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
-  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const Column = styled(BaseFlexCenterDiv)`
   flex-direction: column;
   width: 100%;
+  gap: 1px;
 `;
 
 const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)`
   flex-direction: column;
   width: 100%;
   min-width: 25px;
+  gap: 1px;
 `;
 
 const SectionDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
-  height: 25px;
-  width: calc(100% - 2px);
+  width: 100%;
+
+  padding: 5px 0px;
+  gap: 1px;
 
   color: ${COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
-  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const DevTypeDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: column;
+  width: 100%;
+  // min-width: 25px;
 
-  height: 25px;
-  width: calc(100% - 2px);
-  min-width: 25px;
+  padding: 5px 0px;
 
   color: ${COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
-  border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
+  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 export default UnitType;

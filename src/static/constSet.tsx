@@ -24,7 +24,7 @@ export const SIZESET_CONTROL_CENTER_LABEL_HEIGHT = "26px";
 export const SIZESET_CONTROL_CENTER_LABEL_WIDTH= "40px";
 
 
-export const ICON_HEADER_SETTING = "/images/icons/settings.png";
+export const ICON_HEADER_SETTING = "/images/icons/setting_24.png";
 
 export const ICON_DAY_SEARCH = "/images/icons/search_day_24.png";
 export const ICON_DAY_DELETE = "/images/icons/delete_day_24.png";

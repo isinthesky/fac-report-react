@@ -11,11 +11,11 @@ import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../sta
 import { COLORSET_BACKGROUND_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 
-import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
+import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 
 // const baseUrl = "http://192.168.18:5003/"; // Example base URL
-const baseUrl = "http://facreport.iptime.org:5003/"; // Example base URL
+// const baseUrl = "http://facreport.iptime.org:5003/"; // Example base URL
 
 
 export default function Header({ mainTab }: HeaderProps) {
@@ -82,10 +82,11 @@ export default function Header({ mainTab }: HeaderProps) {
   return (
     <TopHeader>
       <TitleContainer>
-        <TitleImg src={`${baseUrl}${DEFAULT_MAINLOGO_ROW_PATH}`} onClick={handleTitle}  alt="main_logo" />
+        <TitleLogoContainer>
+          <img src={DEFAULT_MAINLOGO_ROW_PATH} style={{width: "70%"}} onClick={handleTitle} alt="main_logo" />
+        </TitleLogoContainer>
         <TitleTextContainer>
           <Title>{DEFAULT_LOCATION_NAME}</Title>
-          <Version>v0.13</Version>
         </TitleTextContainer>
       </TitleContainer>
       <PageControls>
@@ -103,7 +104,7 @@ const TopHeader = styled.header`
   top: 0px;
   width: 100%;
   height: 80px;
-  border: 1px solid #333;
+  border: 1px solid #444;
   background: ${COLORSET_BACKGROUND_COLOR};
 `;
 
@@ -113,39 +114,36 @@ const TitleContainer = styled(BaseFlexColumn)`
   align-items: center;
   width: 250px;
   height: 80px;
+  gap: 0px;
   background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
   
-  gap: 10px;
-  border: 0px solid #333;
+  border: 1px solid #444;
 `;
 
-const TitleTextContainer = styled(BaseFlexRow)`
+
+const TitleLogoContainer = styled(BaseFlexCenterDiv)`
   width: 250px;
+  height: 50px;
   background: transparent;
+  border: 1px solid #444;
 `;
 
-const Title = styled.button<{ fontSize?: string }>`
-  width: calc(70%);
+const TitleTextContainer = styled(BaseFlexCenterDiv)`
+  width: 250px;
+  height: 30px;
+  background: transparent;
+  border: 1px solid #444;
+`;
+
+const Title = styled.div<{ fontSize?: string }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 20px;
-  
   background: transparent;
   color: white;
   font-weight: bold;
   font-size: ${(props) => props.fontSize || "10px"};
-  border: none;
-`;
-
-const TitleImg = styled.img`
-  width: calc(70%);
-`;
-
-const Version = styled.button<{ fontsize?: string }>`
-  width: calc(30%);
-  height: 20px;
-  background: transparent;
-  color: white;
-  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_VERSIONSIZE};
-  border: none;
 `;
 
 const PageControls = styled.div`
