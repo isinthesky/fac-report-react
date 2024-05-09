@@ -6,6 +6,7 @@ import { ApprovalsType } from '../static/types';
 import { RootStore } from '../store/congifureStore';
 import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../static/componentSet';
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../static/langSet';
+import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../static/colorSet';
 
 type PrintGuideProps = {
   row: number;
@@ -77,7 +78,8 @@ const PrintArea = styled(BaseFlexColumn)`
   width: 257mm;
   height: 170mm;
 
-  padding: 5px;
+  margin: 10px;
+  padding: 10px;
   
   border: 2px solid #333;
   background-color: #FFF;
@@ -92,42 +94,40 @@ const TitleArea =  styled(BaseFlexRow)`
 
 const TitleBox =  styled(BaseFlexCenterDiv)`
   position: relative;
-  width: 500px;
+  width: 400px;
   
   color: #000;
   font-size: 42px;
 
   background-color: #FFF;
-  border: 1px solid #333;
+  border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const ApproveTable = styled(BaseFlexRow)`
   position: relative;
   justify-content: flex-end;
 
-  height: 80px;
+  height: 60px;
   width: 250px;
-  gap: 0px;
+  gap: 1px;
+  padding: 1px;
 
-  background-color: #333;
+  background-color: ${COLORSET_PRINT_BORDER};
 `;
 
 const ApproveDiv = styled(BaseFlexColumn)`
   flex:1;
-  display: flex;
   align-items: stretch;
   justify-items: stretch;
-  gap: 1px;
-  padding: 1px;
-
   min-width: 70px;
-  // border: 1px solid #555;
+  gap: 1px;
 `;
 
 const NameDiv = styled(BaseFlexCenterDiv)`
-  height : 22px;
+  height : 24px;
+  color: ${COLORSET_PRINT_FONT};
   background-color: #FFF;
-  // border: 1px solid #555;
+  font-size: 11px;
 `;
 
 const SignDiv = styled(BaseFlexDiv)`
@@ -136,49 +136,40 @@ const SignDiv = styled(BaseFlexDiv)`
   
   height : 80px;
   background-color: #FFF;
-  // border: 1px solid #555;
 `;
 
 const UnitCountainerLine = styled(BaseFlexRow)`
   align-items: start;
   justify-items: stretch;
-  
-  // border: 1px solid #f55;
 `;
 
 const UnitCountainerRow = styled(BaseFlexRow)`
   width: 100%;
-  background-color: #333;
+  background-color: ${COLORSET_PRINT_BORDER};
+  border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const DeviceContainer = styled(BaseFlexRow)`
-  display: flex;
-  flex-direction: row;
   width: 100%;
   background-color: #FFF;
 `;
 
-
 const TimeContainer = styled(BaseFlexColumn)`
   width: 50px;
 
-  background-color: #333;
-  gap: 1px;
-  padding: 1px;
+  background-color: ${COLORSET_PRINT_BORDER};
+  border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)`
-  // width: calc(100%);
-
   padding: 5px 0px;
+  color: ${COLORSET_PRINT_FONT};
   background-color: #FFF;
 `;
 
 const HideDiv = styled.div`
-  display: flex;
   width: 200px;
-
-  background-color: #FFF;
+  background-color: transparent;
 `;
 
 export default PrintModal;

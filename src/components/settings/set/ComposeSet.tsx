@@ -14,7 +14,7 @@ import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
-import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
+import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_CONTROL_BUTTON_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
@@ -170,6 +170,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
 const PageContainer = styled(BaseFlex1Column)`
   padding: 15px 30px;
+  background-color: ${COLORSET_SETTING_TAB_BG};
 `;
 
 const SettingsContainer = styled(BaseFlexColumn)`
@@ -194,23 +195,25 @@ const ButtonGroup = styled(BaseFlexCenterDiv)`
   flex-wrap: wrap;
   padding: 10px;
   gap: 50px;
+  background-color: transparent;
 `;
 
 const GridContainer = styled.div< {column: number}>`
   display: grid;
   grid-template-columns: repeat(${props => props.column}, 1fr);
   grid-gap: 10px;
+  background-color: transparent;
 `;
 
 const GridButton = styled.button<{ mode: string }>`
   width : 30px;
 
   padding: 6px;
-  color: ${(props) => (props.mode === "true" ? "white" : "black")};
-  background-color: ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : "white")};
+  color: white;
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_ACTIVE_CONTROL_DISABLE : COLORSET_NORMAL_CONTROL_BG)};
   
   cursor: pointer;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : COLORSET_NORMAL_CONTROL_BG)};
 `;
 
 const HideButton = styled(BaseButton)`

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { setMenus } from "../../features/reducers/settingSlice";
 import { setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { RootStore } from "../../store/congifureStore";
-import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER } from "../../static/colorSet";
+import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_SETTING_TAB_BUTTON_ACTIVE } from "../../static/colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DESCRIPTION_LABEL_SIZE } from "../../static/fontSet";
 import { BaseButton, BaseFlexRow, MediumLabel } from "../../static/componentSet";
 import { handleInitSettings } from "./set/handleButtons";
@@ -54,7 +54,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
         <MainTabLabel>
           {process.env[`REACT_APP_INIT_REPORT_TYPE${mainTab}`]}
         </MainTabLabel>
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+        <div>
           {subTabs.map(subTab => (
             <TabButton
               key={`${mainTab}${subTab}`}
@@ -72,7 +72,9 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
 
   return(
     <TopBar>
-      {processArray(menus)}
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '20px' }}>
+        {processArray(menus)}
+      </div>
       {showInit && <InitButton id="init" onClick={handleInitSettings}>{STRING_SETTING_MAIN_BTN_INIT}</InitButton>}
     </TopBar>
   ) 
@@ -84,6 +86,7 @@ const TopBar = styled(BaseFlexRow)`
 
   gap: 20px;
   padding: 0px 30px;
+  // border: 1px solid #3f3;
 `;
 
 const MainTabLabel = styled(MediumLabel)`
@@ -101,11 +104,12 @@ const TabButton = styled.button<{ mode: string, fontsize?: string }>`
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
   
   background: ${(props) => props.mode === "true" 
-    ? `linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR1}, ${COLORSET_HEADER_SUB_BTN_LINEAR2})`
+    ? COLORSET_SETTING_TAB_BUTTON_ACTIVE
     : COLORSET_DARK_CONTROL_BG};
   
-  border: 0px solid #333;
-  border-bottom: ${(props) => props.mode === "true" ? `1px solid ${COLORSET_ACTIVE_CONTROL_BG}` : "1px solid #000"};
+  // border: 0px solid #333;
+  border: 1px solid #333;
+  border-bottom: ${(props) => props.mode === "true" ? `1px solid ${COLORSET_ACTIVE_CONTROL_BG}` : `1px solid ${COLORSET_DARK_CONTROL_BG}`};
 `;
 
 const InitButton = styled(BaseButton)`

@@ -57,6 +57,7 @@ const TopBar = styled(BaseFlex1Row)`
   align-items: center;
   justify-content: center;
 
+  margin-bottom: 10px;
   padding: 10px 30px;
 `;
 
@@ -75,7 +76,12 @@ const PageButtonContainer = styled(BaseFlex1Row)`
 `;
 
 const TabControlButton = styled(BaseButton)<{ id: string, page: string }>`
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 10px;
+  padding-bottom: 7px;
 
   width: ${CONST_LANG === "eng" ? 120 : 80}px;
   height: 30px;

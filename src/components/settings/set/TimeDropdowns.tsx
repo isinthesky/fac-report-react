@@ -4,7 +4,7 @@ import { addDropdown, removeDropdown, setTimes } from "../../../features/reducer
 import styled from "styled-components";
 import { RootStore } from '../../../store/congifureStore';
 import { STRING_SETTING_SET_TIME_ADD } from '../../../static/langSet';
-import { BaseButton, BaseFlex1Column, BaseFlex1Row, BaseFlexDiv, BaseOption, BaseSelect, MiniButton } from '../../../static/componentSet';
+import { BaseButton, BaseFlex1Column, BaseFlex1Row, BaseFlexColumn, BaseFlexDiv, BaseOption, BaseSelect, MiniButton } from '../../../static/componentSet';
 import { ICON_DAY_DELETE } from '../../../static/constSet';
 import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from '../../../static/colorSet';
 import { COLORSET_DARK_CONTROL_FONT } from '../../../static/colorSet';
@@ -44,23 +44,26 @@ const TimeDropdowns: React.FC = () => {
             
           </SelectDiv>
         ))}
+      </BottomDiv>
         {tabPageInfo.times.length < 12 
         ? <SettingButton onClick={handleAddDropdown}>{STRING_SETTING_SET_TIME_ADD}</SettingButton>
         : null}
-      </BottomDiv>
     </TimeSettingContainer>
   );
 };
 
-const TimeSettingContainer = styled(BaseFlexDiv)`
+const TimeSettingContainer = styled(BaseFlexColumn)`
+  justify-content: space-between;
+  align-items: center;
   width: 110px;
   
   background-color: ${COLORSET_GRID_CONTROL_BG};
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const BottomDiv = styled(BaseFlex1Column)`
-  margin-top: auto;
+const BottomDiv = styled(BaseFlexColumn)`
+  align-items: start;
+  margin-bottom: auto;
   padding: 10px;
 
   background-color: ${COLORSET_GRID_CONTROL_BG};
@@ -71,7 +74,8 @@ const SelectDiv = styled(BaseFlex1Row)`
   margin-top: auto;
   gap: 5px;
 
-  background-color: ${COLORSET_DARK_CONTROL_BG};
+  // background-color: ${COLORSET_DARK_CONTROL_BG};
+  background-color: transparent;
 `;
 
 const TimeSelect = styled(BaseSelect)`
@@ -88,6 +92,7 @@ const DeleteTimeButton = styled(MiniButton)`
 
 const SettingButton = styled(BaseButton)`
   width: 90px;
+  margin-bottom: 10px;
 `;
 
 export default TimeDropdowns;

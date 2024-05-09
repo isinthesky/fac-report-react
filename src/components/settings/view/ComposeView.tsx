@@ -133,7 +133,8 @@ const ComposeView: React.FC = () => {
 
 const SettingViewContainer = styled(BaseFlex1Row)`
   gap: 15px;
-  padding: 15px 30px;
+  padding: 15px 15px;
+
 `
 
 const ArraySettingContainer = styled(BaseFlexColumn)`

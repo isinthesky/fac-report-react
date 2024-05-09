@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import { COLORSET_FONT_BASE,
         COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_FONT, 
-        COLORSET_ACTIVE_CONTROL_BG, COLORSET_ACTIVE_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_HOVER, COLORSET_ACTIVE_CONTROL_ACTIVE, COLORSET_NORMAL_CONTROL_HOVER, COLORSET_CONTROL_BUTTON_BG, COLORSET_CONTROL_BUTTON_BORDER, COLORSET_CONTROL_BUTTON_HOVER, COLORSET_CONTROL_BUTTON_ACTIVE } from "./colorSet";
+        COLORSET_ACTIVE_CONTROL_BG, COLORSET_ACTIVE_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_HOVER, COLORSET_ACTIVE_CONTROL_ACTIVE, COLORSET_NORMAL_CONTROL_HOVER, COLORSET_CONTROL_BUTTON_BG, COLORSET_CONTROL_BUTTON_BORDER, COLORSET_CONTROL_BUTTON_HOVER, COLORSET_CONTROL_BUTTON_ACTIVE, COLORSET_DEFAULT_INPUT_BG, COLORSET_DEFAULT_INPUT_BORDER } from "./colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DEFAULT_DIV_SIZE, FONTSET_DEFAULT_INPUT_SIZE, FONTSET_DEFAULT_BIG_LABEL_SIZE, FONTSET_DEFAULT_MIDIUM_LABEL_SIZE, FONTSET_DEFAULT_SMALL_LABEL_SIZE, FONTSET_DEFAULT_OPTION_SIZE, FONTSET_DEFAULT_SELECT_SIZE } from "./fontSet";
 import { SIZESET_CONTROL_BUTTON_HEIGHT, SIZESET_CONTROL_BUTTON_WIDTH, SIZESET_CONTROL_CENTER_LABEL_HEIGHT, SIZESET_CONTROL_CENTER_LABEL_WIDTH, SIZESET_DEFAULT_BUTTON_HEIGHT, SIZESET_DEFAULT_BUTTON_WIDTH, SIZESET_DEFAULT_INPUT_HEIGHT, SIZESET_DEFAULT_OPTION_HEIGHT, SIZESET_DEFAULT_SELECT_HEIGHT } from "./constSet";
 
@@ -26,10 +26,12 @@ export const BaseFlexColumn = styled.div<{ gap?: string, bgColor?: string }>`
   background-color: ${(props) => props.bgColor || "transparent"};
 `;
 
-export const BaseFlexCenterDiv = styled.div`
+export const BaseFlexCenterDiv = styled.div<{ bgColor?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: ${(props) => props.bgColor || "transparent"};
+
 `;
 
 export const BaseFlex1Div = styled.div<{ fontsize?: string }>`
@@ -187,19 +189,24 @@ export const SmallLabel = styled.label<{ fontsize?:string, heightSize?: string }
 `;
 
 
-export const BaseInput = styled.input<{ fontsize?:string,  heightsize?: string }>`
+export const BaseInput = styled.input<{ fontsize?:string,  heightsize?: string, bgColor?: string, borderColor?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
-`;
+  color: white;
+  background-color: ${(props) => props.bgColor || COLORSET_DEFAULT_INPUT_BG};
+  border: 1px solid ${(props) => props.borderColor || COLORSET_DEFAULT_INPUT_BORDER};
+  `;
 
 
-export const BaseSelect = styled.select<{ fontsize?:string, heightsize?: string }>`
+export const BaseSelect = styled.select<{ fontsize?:string, heightsize?: string, bgColor?: string, borderColor?: string }>`
   height:  ${(props) => props.heightsize || SIZESET_DEFAULT_SELECT_HEIGHT};
   padding:3px;
   
   gap: 10px;
-  
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_SELECT_SIZE};
+  border: 1px solid ${(props) => props.borderColor || COLORSET_DEFAULT_INPUT_BORDER};
+  color: white;
+  background-color: ${(props) => props.bgColor || COLORSET_DEFAULT_INPUT_BG};
 `;
 
 

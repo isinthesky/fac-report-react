@@ -4,7 +4,7 @@ import DeviceValue from "./DeviceValue";
 import { ViewUnitProps } from "../../static/types";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
-import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE } from "../../static/colorSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
 
 const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, tabPage, type }) => {
   const sections = useMemo(() => ({
@@ -52,25 +52,29 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ mode, index, 
   );
 };
 
-const Container = styled(BaseFlexCenterDiv)`
+const Container = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: column;
   width: 100%;
-  padding: 0px 1px;
+  // padding: 0px 1px;
   gap: 1px;
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const Row = styled(BaseFlexCenterDiv)`
+const Row = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: row;
   width: 100%;
   gap: 1px;
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const UnitGrid = styled.div`
+const UnitGrid = styled.div<{ mode?: string }>`
   display: grid;
   grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
 
   width: 100%;
   gap: 1px;
+
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
@@ -78,22 +82,24 @@ const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string
   padding: 5px 0px;
 
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
-  color: ${COLORSET_FONT_BASE};
+  color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const Column = styled(BaseFlexCenterDiv)`
+const Column = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: column;
   width: 100%;
   gap: 1px;
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)`
+const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: column;
   width: 100%;
   min-width: 25px;
   gap: 1px;
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const SectionDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
@@ -102,7 +108,7 @@ const SectionDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   padding: 5px 0px;
   gap: 1px;
 
-  color: ${COLORSET_FONT_BASE};
+  color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
@@ -114,7 +120,7 @@ const DevTypeDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
 
   padding: 5px 0px;
 
-  color: ${COLORSET_FONT_BASE};
+  color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;

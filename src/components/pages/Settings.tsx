@@ -105,6 +105,7 @@ function Settings() {
 
 const Flat = styled(BaseFlex1Column)`
   background-color: ${COLORSET_BACKGROUND_COLOR};
+  gap: 0px;
 `;
 
 export default Settings;

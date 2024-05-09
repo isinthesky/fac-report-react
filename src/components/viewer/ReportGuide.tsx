@@ -5,7 +5,7 @@ import ViewDeviceType from "./UnitType";
 import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
-import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
 
 type ReportGuideProps = {
   row: number;
@@ -30,8 +30,8 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
           const TypeComp = currentTab.unitList[index].type === 1 ? 'V' : 'W';
 
           return (
-            <Container key={colIndex}>
-              <TimeContainer>
+            <Container key={colIndex} mode="view" >
+              <TimeContainer mode="view">
                 {times.map((time: string, index: number) => (
                   <TimeDiv key={index}>{time}</TimeDiv>
                 ))}
@@ -56,19 +56,24 @@ const RowContainer = styled(BaseFlexDiv)`
   gap: 10px;
 `;
 
-const Container = styled(BaseFlexDiv)`
+const Container = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: row;
   
   width: 100%;
-  gap: 0px;
+  gap: 1px;
+  padding: 1px;
+  
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const TimeContainer = styled(BaseFlexDiv)`
+const TimeContainer = styled(BaseFlexDiv)<{ mode?: string }>`
   flex-direction: column;
 
   width: 50px;
 
   gap: 1px;
+
+  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const DeviceContainer = styled.div`
@@ -82,7 +87,6 @@ const TimeDiv = styled(BaseFlexCenterDiv)`
 
   padding: 5px 0px;
   background-color: ${COLORSET_GRID_HEADER_BG};
-  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 export default ReportGuide;

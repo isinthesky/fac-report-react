@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { BaseInput, ControlButton, BaseFlexDiv } from '../../../static/componentSet';
 import { ICON_DAY_SEARCH, ICON_DAY_REFRESH } from '../../../static/constSet';
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
+import { COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_INPUT_BG } from '../../../static/colorSet';
 
 const DeviceSearch: React.FC = () => {
   const dispatch = useDispatch()
   const [searchWord, setSearchWord] = useState("");
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("input searchWord", searchWord)
@@ -34,7 +34,7 @@ const DeviceSearch: React.FC = () => {
 
   return (
     <SearchContainer>
-      <BaseInput
+      <SearchInput
         type="text"
         value={searchWord}
         onChange={handleInputChange}
@@ -48,6 +48,13 @@ const DeviceSearch: React.FC = () => {
 
 const SearchContainer = styled(BaseFlexDiv)`
   flex-direction: row;  
+  background-color: transparent;
+`;
+
+const SearchInput = styled(BaseInput)`
+  color: white;
+  background-color: ${COLORSET_NORMAL_INPUT_BG};
+  border: 1px solid ${COLORSET_NORMAL_CONTROL_BORDER};
 `;
 
 export default DeviceSearch;

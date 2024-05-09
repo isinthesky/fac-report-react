@@ -7,8 +7,8 @@ import { setApproves, setReportTable, setTabSetting } from "../../features/reduc
 import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
-import { FONTSET_MAIN_MENU_SIZE, FONTSET_MAIN_MENU_VERSIONSIZE } from "../../static/fontSet";
-import { COLORSET_BACKGROUND_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "../../static/colorSet";
+import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
+import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 
 import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
@@ -43,6 +43,7 @@ export default function Header({ mainTab }: HeaderProps) {
   };
 
   const handleGoSetting = useCallback(() => {
+    setSelectedFlatId(0);
     dispatch(setViewSelect({mainTab: 0, subTab: 0}));
     dispatch(setSettingSelect({mainTab: 1, subTab: 1}));
     navigate("/settings");
@@ -77,7 +78,7 @@ export default function Header({ mainTab }: HeaderProps) {
         console.error(error);
       }
     })();
-  }, [dispatch]); // Added dispatch to the dependency array
+  }, [dispatch]);
 
   return (
     <TopHeader>
@@ -91,9 +92,9 @@ export default function Header({ mainTab }: HeaderProps) {
       </TitleContainer>
       <PageControls>
         <MainMenu onClickCallback={handleFlatButtonClick} />
-        <SubMenu mainId={selectedFlatId} onClickCallback={subcallback} />
+        <SubMenu mainId={ selectedFlatId} onClickCallback={subcallback} />
       </PageControls>
-      <SettingButton onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
+      <SettingButton enable={selectedFlatId}  onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
     </TopHeader>
   );
 }
@@ -104,8 +105,12 @@ const TopHeader = styled.header`
   top: 0px;
   width: 100%;
   height: 80px;
-  border: 1px solid #444;
-  background: ${COLORSET_BACKGROUND_COLOR};
+
+  margin-bottom: 10px;
+  padding: 1px;
+  gap: 1px; 
+  background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
+  border-bottom: 1px solid ${COLORSET_HEADER_BORDER1};
 `;
 
 const TitleContainer = styled(BaseFlexColumn)`
@@ -114,25 +119,22 @@ const TitleContainer = styled(BaseFlexColumn)`
   align-items: center;
   width: 250px;
   height: 80px;
-  gap: 0px;
+  gap: 1px;
   background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
-  
-  border: 1px solid #444;
 `;
 
 
 const TitleLogoContainer = styled(BaseFlexCenterDiv)`
   width: 250px;
   height: 50px;
-  background: transparent;
-  border: 1px solid #444;
+  background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
 `;
 
 const TitleTextContainer = styled(BaseFlexCenterDiv)`
   width: 250px;
   height: 30px;
   background: transparent;
-  border: 1px solid #444;
+  // border: 1px solid #444;
 `;
 
 const Title = styled.div<{ fontSize?: string }>`
@@ -151,14 +153,17 @@ const PageControls = styled.div`
   grid-template-columns: repeat(5, 1fr);
   height: 80px;
   width: calc(100% - 300px);
+  background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
   gap: 0px;
 `;
 
-const SettingButton = styled.button<{ fontSize?: string }>`
+const SettingButton = styled.button<{ fontSize?: string, enable: number }>`
   height: 50px;
   width: 50px;
   font-size: ${(props) => props.fontSize || FONTSET_MAIN_MENU_SIZE};
-  border: none;
-  border-left: 1px solid #444;
-  background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
+  background: ${(props) => props.enable === 0 ? COLORSET_SIGNITURE_COLOR : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
+  border-right: 0px solid #333;
+  border-top: 0px solid #333;
+  border-left: 1px solid #333;
+  border-bottom: 1px solid #333;
 `;

@@ -5,7 +5,7 @@ import { RootStore } from "../../store/congifureStore";
 import { readDevicesData } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
-import { COLORSET_GRID_CONTROL_BORDER } from "../../static/colorSet";
+import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
 import { DeviceLog, LogData } from "../../static/types";
 import { DeviceValueProps } from "../../static/interfaces";
 
@@ -105,14 +105,13 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
 
 const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
-
-  height: 25px;  
-  // width: calc(100% - 2px);
+  
   width: 100%;
   min-width: 25px;
+  padding: 5px 0px;
 
-  // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
-  background-color: ${(props) => props.mode === 'print' ? 'white' : '#2E323B'};
+  color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
+  background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_CONTROL_BG};
 `;
 
 export default React.memo(DeviceValue);

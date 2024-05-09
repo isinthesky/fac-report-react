@@ -205,7 +205,7 @@ const PrintBtn = styled(ActiveButton) `
 `;
 
 const HideBtn = styled(BaseButton) `
-  background-color : white;
+  background-color : transparent;
   border: 0px solid #555;
 `;
 

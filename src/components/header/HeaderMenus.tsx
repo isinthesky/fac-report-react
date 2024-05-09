@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import styled from "styled-components";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
-import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_HEADER_SUB_BTN_LINEAR3, COLORSET_HEADER_SUB_BTN_LINEAR4 } from "../../static/colorSet";
+import { COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 ,COLORSET_HEADER_BORDER2 } from "../../static/colorSet";
 import { SelectedTab } from "../../static/types";
 
 interface MainMenuProps {
@@ -104,7 +104,7 @@ export const SubMenu: React.FC<SubMenuProps> = ({
               </SubButton>
             )
           } else {
-            return <div key={obj.id} />
+            return <SubButton key={obj.id} />
           }
         })}
       </>
@@ -118,22 +118,22 @@ const FlatButtonBase = styled.button<{ BGColor?: string, fontColor?: string, fon
   background-size: cover;
   background-position: center;
   border: 0px solid black;
-  background: linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR1}, ${COLORSET_HEADER_SUB_BTN_LINEAR2});
 `;
 
 const MainButton = styled(FlatButtonBase)<{ enable?: string }>`
   color: ${(props) => props.enable === "true" ? "white" : "#444"};
   background: ${(props) => props.enable === "true"
-    ? `linear-gradient(to bottom, #3D252B, #3D252B)`  // Enabled background color
+    ? `linear-gradient(to bottom, ${COLORSET_SIGNITURE_COLOR}, ${COLORSET_SIGNITURE_COLOR})`  // Enabled background color
     : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
+  border-bottom: 1px solid ${COLORSET_HEADER_BORDER2};
+  border-left: 1px solid ${COLORSET_HEADER_BORDER2};
 `;
 
 const SubButton = styled.button<{ fontSize?: string, enable?: string }>`
   height: 30px;
-  border: 1px solid #444; /* Consolidated border property */
+  // border: 1px solid #444; /* Consolidated border property */
   font-size: ${(props) => props.fontSize || FONTSET_MAIN_MENU_SIZE};
-  background: ${(props) => props.enable === "true"
-    ? `linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR1}, ${COLORSET_HEADER_SUB_BTN_LINEAR2})`
-    : `linear-gradient(to bottom, ${COLORSET_HEADER_SUB_BTN_LINEAR3}, ${COLORSET_HEADER_SUB_BTN_LINEAR4})`};
+  background-color: transparent;
   color: ${(props) => props.enable === "true" ? "white" : "#444"};
+  border: 0px solid black;
 `;
