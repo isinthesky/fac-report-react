@@ -39,10 +39,13 @@ export const ENG_SETTING_DEVICE_UNIT_SELECT = "Unit Select";
 export const ENG_SETTING_DEVICE_NAME_SETTING = "Name Setting";
 export const ENG_SETTING_DEVICE_TYPE_SELECT = "Type Select";
 export const ENG_SETTING_DEVICE_FILTER = "Filter";
+
 export const ENG_SETTING_GROUP_LIST = "Group List";
+export const ENG_SETTING_GROUP_SETTING = "Group Setting";
 export const ENG_SETTING_GROUP_FILTER = "Filter / Search";
 export const ENG_SETTING_GROUP_DEVICE_LIST = "Group Device List";
 
+export const ENG_SETTING_GROUP_APPLY = "Group Apply";
 export const ENG_SETTING_GROUP_ADD = "Add";
 export const ENG_SETTING_GROUP_DELETE = "Delete";
 export const ENG_SETTING_GROUP_UPDATE = "Update";

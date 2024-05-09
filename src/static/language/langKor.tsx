@@ -40,10 +40,13 @@ export const KOR_SETTING_DEVICE_UNIT_SELECT = "유닛 선택";
 export const KOR_SETTING_DEVICE_NAME_SETTING = "이름 설정";
 export const KOR_SETTING_DEVICE_TYPE_SELECT = "타입 선택";
 export const KOR_SETTING_DEVICE_FILTER = "장치 검색";
-export const KOR_SETTING_GROUP_LIST = "그룹 목록";
-export const KOR_SETTING_GROUP_FILTER = "검색";
-export const KOR_SETTING_GROUP_DEVICE_LIST = "그룹 장치 목록";
 
+export const KOR_SETTING_GROUP_LIST = "그룹 목록";
+export const KOR_SETTING_GROUP_SETTING = "그룹 설정";
+export const KOR_SETTING_GROUP_FILTER = "검색";
+export const KOR_SETTING_GROUP_DEVICE_LIST = "그룹 장치 목록 설정";
+
+export const KOR_SETTING_GROUP_APPLY = "그룹설정적용";
 export const KOR_SETTING_GROUP_ADD = "추가";
 export const KOR_SETTING_GROUP_DELETE = "삭제";
 export const KOR_SETTING_GROUP_UPDATE = "업데이트";

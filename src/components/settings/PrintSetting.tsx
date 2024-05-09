@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row } from '../../static/componentSet';
+import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row, BigLabel } from '../../static/componentSet';
 import { RootStore } from '../../store/congifureStore';
 import { setPrintTitle, setApproves } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
 import { BaseFlexColumn, MediumLabel } from '../../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE, STRING_SETTING_SET_PRINT_APPROVE } from '../../static/langSet';
 import { setUpdateSettingsApprove, updateSettings } from '../../features/api';
+import { COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_SETTING_TAB_BG } from '../../static/colorSet';
 
 const PrintSetting: React.FC = () => {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ const PrintSetting: React.FC = () => {
 
   return (
     <SettingContainer>
-      <BaseFlexColumn>
+      <ControlContainer gap='30px'>
         <BaseFlexColumn>
           <DescriptLabel>{STRING_SETTING_SET_PRINT_TITLE}</DescriptLabel>
           <BaseInput
@@ -69,7 +70,7 @@ const PrintSetting: React.FC = () => {
           />
         </BaseFlexColumn>
 
-      <BaseFlex1Row>
+        <BaseFlex1Row>
         {approvals.map((approval, index) => (
           <BaseFlexColumn key={index}>
             <DescriptLabel>{STRING_SETTING_SET_PRINT_APPROVE}{"-"}{index + 1}</DescriptLabel>
@@ -94,17 +95,33 @@ const PrintSetting: React.FC = () => {
           <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
           <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
         </ButtonsContainer>
-      </BaseFlexColumn>
+      </ControlContainer>
     </SettingContainer>
   );
 };
 
-const SettingContainer = styled(BaseFlexCenterDiv)``;
+const SettingContainer = styled(BaseFlexCenterDiv)`
+  padding: 30px;
+  // border: 1px solid ${COLORSET_ACTIVE_CONTROL_BORDER};
+`;
+
+const ControlContainer = styled(BaseFlexColumn)`
+  padding: 30px;
+  background-color: ${COLORSET_SETTING_TAB_BG};
+  // border: 1px solid ${COLORSET_ACTIVE_CONTROL_BORDER};
+`;
 
 const ButtonsContainer = styled(BaseFlexCenterDiv)`
   flex-wrap: wrap;
   padding: 10px;
   gap: 50px;
+`;
+
+const TitleLabel = styled(BigLabel)`
+  display: flex;  
+  align-items: flex-start;
+  text-align: left;
+  vertical-align: baseline;
 `;
 
 const DescriptLabel = styled(MediumLabel)`
