@@ -199,10 +199,10 @@ export const BaseInput = styled.input<{ fontsize?:string,  heightsize?: string, 
 
 
 export const BaseSelect = styled.select<{ fontsize?:string, heightsize?: string, bgColor?: string, borderColor?: string }>`
-  height:  ${(props) => props.heightsize || SIZESET_DEFAULT_SELECT_HEIGHT};
-  padding:3px;
+  height: ${SIZESET_DEFAULT_SELECT_HEIGHT};
+  width: 100%;
+  padding: 3px;
   
-  gap: 10px;
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_SELECT_SIZE};
   border: 1px solid ${(props) => props.borderColor || COLORSET_DEFAULT_INPUT_BORDER};
   color: white;

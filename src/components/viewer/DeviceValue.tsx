@@ -108,7 +108,7 @@ const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string
   
   width: 100%;
   min-width: 25px;
-  padding: 5px 0px;
+  padding: 3px 0px;
 
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_CONTROL_BG};

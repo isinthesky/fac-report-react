@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setApproves, setReportTable, setTabSetting, setTableDate, setViewType } from "../../features/reducers/settingSlice";
@@ -9,7 +9,7 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
-import { ActiveButton, BaseButton, MediumLabel, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton } from "../../static/componentSet";
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton, BaseFlexCenterDiv } from "../../static/componentSet";
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
@@ -19,6 +19,11 @@ import { getSettings } from "../../features/api";
 import { CONST_TABINFO_NAME } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
 
+interface CustomInputProps {
+  value: string;
+  onClick: () => void;
+}
+
 function Daily() {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
@@ -26,6 +31,12 @@ function Daily() {
   const [isOpen, setIsOpen] = useState(false);
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
+
+  const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref: any) => (
+    <CalendarButton onClick={onClick} ref={ref}>
+      {value}
+    </CalendarButton>
+  ));
 
   const handleIdCheck = useCallback(() => {
     dispatch(setViewType(settingSet.idViewMode === 0 ? 1 : 0));
@@ -80,7 +91,6 @@ function Daily() {
     dispatch(setTableDate(date));
   }, [date, dispatch]);
 
-  // Call useReactToPrint at the top level and store the returned function
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
     pageStyle: `@page { size: A4 landscape; }`,
@@ -104,20 +114,23 @@ function Daily() {
       <Header mainTab={Number(id1 ? id1 : "1")} />
       <Title>{STRING_DAILY_MAIN_TITLE}</Title>
       <ControlContainer>
-        <BaseFlexDiv>
-          <DateLabel>{STRING_DAILY_MAIN_SELECT_DATE}</DateLabel>
-        </BaseFlexDiv>
         <Controls>
-          <BaseFlexDiv>
-            <DatePicker
-              selected={new Date(date)}
-              onChange={(value: Date) => setDate(value.getTime())}
-            />
-          </BaseFlexDiv>
+          <CalendarContainer1>
+            <DateLabel>{STRING_DAILY_MAIN_SELECT_DATE}</DateLabel>
+            <BaseFlexDiv>
+              <DatePicker
+                selected={new Date(date)}
+                onChange={(value: Date) => setDate(value.getTime())}
+                showIcon={true}
+                dateFormat="yyyy / MM / dd"
+                customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
+              />
+            </BaseFlexDiv>
+          </CalendarContainer1>
           <ButtonControls>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
           </ButtonControls>
-      </Controls>
+        </Controls>
       </ControlContainer>
       <ReportLine>
         <ReportGuide row={settingSet.daily.row} column={settingSet.daily.column} />
@@ -156,7 +169,25 @@ const Title = styled(BaseFlexDiv)`
   background-color: ${COLORSET_BACKGROUND_COLOR};
 `;
 
-const DateLabel = styled(MediumLabel)`
+const DateLabel = styled(BaseFlexCenterDiv)`
+  font-size: 14px;
+`;
+
+const CalendarButton = styled(BaseButton)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 150px;
+  font-size: 13px;
+  color: black;
+  background-color: white;
+  border: 2px solid ${COLORSET_SIGNITURE_COLOR};
+
+  &:hover {
+    cursor: pointer;
+    background-color: #ddd;
+  }
 `;
 
 const DivHeader = styled.div`
@@ -164,6 +195,9 @@ const DivHeader = styled.div`
   flex-direction: row;
   align-self: stretch;
   justify-content: space-between;
+`;
+
+const CalendarContainer1 = styled(BaseFlexRow)`
 `;
 
 const ControlContainer = styled(BaseFlexColumn)`
@@ -189,7 +223,9 @@ const ReportLine = styled(BaseFlex1Column)`
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ExitBtn = styled(MiniButton)<{ bgColor?: string }>(props => ({
+const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
+(props => ({
+
   margin: '20px',
   width: '30px',
   height: '30px',

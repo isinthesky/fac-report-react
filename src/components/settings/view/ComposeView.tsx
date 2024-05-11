@@ -4,12 +4,13 @@ import styled from "styled-components";
 import UnitInfo from "./UnitInfo";
 import { setUpdateSettingsColRow } from "../../../features/api";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton } from "../../../static/componentSet";
+import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton, BaseSelect } from "../../../static/componentSet";
 import { FONTSET_DESCRIPTION_LABEL_SIZE } from "../../../static/fontSet"
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet"
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DISABLE_COLOR } from "../../../static/colorSet"
 import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_SET_GRID_ARRAY, STRING_DEFAULT_ROW, STRING_DEFAULT_COL} from "../../../static/langSet"
 import { setReportTable } from "../../../features/reducers/settingSlice";
+import { MIN_ROW_COUNT, MAX_ROW_COUNT, MIN_COLUMN_COUNT, MAX_COLUMN_COUNT } from "../../../env";
 
 const ComposeView: React.FC = () => {
   const dispatch = useDispatch()
@@ -21,13 +22,17 @@ const ComposeView: React.FC = () => {
   const [columns, setColumn] = useState(settingSlice.daily.column);
   const [edit, setEdit] = useState(true);
   
-  const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRow(Number(e.target.value));
-  };
+  // const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newValue = Number(e.target.value);
+  //   const clampedValue = Math.min(Math.max(newValue, MIN_ROW_COUNT), MAX_ROW_COUNT);
+  //   setRow(clampedValue);
+  // };
 
-  const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setColumn(Number(e.target.value));
-  };
+  // const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newValue = Number(e.target.value);
+  //   const clampedValue = Math.min(Math.max(newValue, MIN_COLUMN_COUNT), MAX_COLUMN_COUNT);
+  //   setColumn(clampedValue);
+  // };
 
   const handleEdit = () => {
     setEdit(!edit);
@@ -97,23 +102,19 @@ const ComposeView: React.FC = () => {
           <BaseFlexRow>
             <BaseFlexColumn gap="5px">
               <DescriptLabel>{STRING_DEFAULT_ROW}</DescriptLabel>
-              <ArrayInput type="number"
-                          onChange={handleRow}
-                          readOnly={edit}
-                          value={rows}
-                          mode={String(edit)}
-                          min="1"
-                          max="3" />
+              <ArraySelect value={rows} onChange={(e) => setRow(Number(e.target.value))} mode={String(edit)}>
+                {Array.from({ length: MAX_ROW_COUNT }, (_, i) => i + 1).map(i => (
+                  <option key={i} value={i}>{i}</option>
+                ))}
+              </ArraySelect>
             </BaseFlexColumn>
             <BaseFlexColumn gap="5px">
               <DescriptLabel>{STRING_DEFAULT_COL}</DescriptLabel>
-              <ArrayInput type="number"
-                          onChange={handleColumn}
-                          readOnly={edit}
-                          value={columns}
-                          mode={String(edit)}
-                          min="1"
-                          max="4" />
+              <ArraySelect value={columns} onChange={(e) => setColumn(Number(e.target.value))} mode={String(edit)}>
+                {Array.from({ length: MAX_COLUMN_COUNT }, (_, i) => i + 1).map(i => (
+                  <option key={i} value={i}>{i}</option>
+                ))}
+              </ArraySelect>
             </BaseFlexColumn>
             <ArraySettingContainer>
               <BaseButton widthsize="70px" heightsize="23px" onClick={handleEdit}>{STRING_SETTING_MAIN_BTN_EDIT}</BaseButton>
@@ -158,6 +159,12 @@ const DescriptLabel = styled(MediumLabel)`
   align-items: flex-end;
   font-size: ${FONTSET_DESCRIPTION_LABEL_SIZE};
 `;
+
+const ArraySelect = styled.select<{ mode: string}>`
+  width: 50px;
+  background-color: ${(props) => (props.mode === "true" ? COLORSET_DISABLE_COLOR : "white")};
+  pointer-events: ${(props) => (props.mode === "true" ? "none" : "auto")};
+`
 
 const ArrayInput = styled.input<{ mode: string, heightsize?: string, disable?: string }>`
   text-align: center;

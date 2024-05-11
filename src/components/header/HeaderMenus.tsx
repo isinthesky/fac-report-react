@@ -130,10 +130,14 @@ const MainButton = styled(FlatButtonBase)<{ enable?: string }>`
 `;
 
 const SubButton = styled.button<{ fontSize?: string, enable?: string }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   height: 30px;
-  // border: 1px solid #444; /* Consolidated border property */
   font-size: ${(props) => props.fontSize || FONTSET_MAIN_MENU_SIZE};
-  background-color: transparent;
   color: ${(props) => props.enable === "true" ? "white" : "#444"};
+  border: 2px solid #F44; /* Consolidated border property */
+  background-color: transparent;
   border: 0px solid black;
 `;

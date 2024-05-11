@@ -4,7 +4,7 @@ export const COLORSET_SIGNITURE_COLOR = "#C51950"
 export const COLORSET_BASE_COLOR = "#35373E"
 export const COLORSET_BACKGROUND_COLOR = "#35373E"
 export const COLORSET_HEADER_BG = "#25262C"
-export const COLORSET_DISABLE_COLOR = "lightgray"
+export const COLORSET_DISABLE_COLOR = "gray"
 export const COLORSET_BUTTON_COLOR = "darkgray"
 export const COLORSET_FONT_BASE = "#A3A6A9"
 export const COLORSET_FONT_HIGHLIGHT = "white"
@@ -80,10 +80,6 @@ export const GlobalStyle = createGlobalStyle`
   body {
     background-color: ${props => props.theme.baseBG};
     color: ${props => props.theme.basefont};
-  }
-
-  div {
-    background-color: ${props => props.theme.baseBG};
   }
 
   header {

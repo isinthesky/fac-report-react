@@ -10,37 +10,26 @@ import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } 
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
+import { throttle } from 'lodash';
 
-import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
+import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
-
-// const baseUrl = "http://192.168.18:5003/"; // Example base URL
-// const baseUrl = "http://facreport.iptime.org:5003/"; // Example base URL
-
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedFlatId, setSelectedFlatId] = useState<number>(mainTab);
 
-
-  const handleTitle = useCallback(() => {
-    navigate("/");
-  }, [navigate]);
-
-  const handleGoReport = useCallback((id:string) => {
-    navigate(`/daily/${id}/1`);
-  }, [navigate]);
-
-  const handleFlatButtonClick = (id: number) => {    
+  const handleMainMenuButtonClick = useCallback(throttle((id: number) => {    
     setSelectedFlatId(id);
-    handleGoReport(id.toString());
-  };
+    navigate(`/daily/${id.toString()}/1`);
+  }, 1000, { 'trailing': false }), [navigate]);
 
-  const subcallback = (id1: number, id2: number) => {
+  const subMenuButtonCallback = useCallback(throttle((id1: number, id2: number) => {
     dispatch(setViewSelect({mainTab: id1, subTab: id2}));
     navigate(`/daily/${id1.toString()}/${id2.toString()}`);
-  };
+  }, 1000, { 'trailing': false }), [navigate, dispatch]);
+
 
   const handleGoSetting = useCallback(() => {
     setSelectedFlatId(0);
@@ -84,16 +73,20 @@ export default function Header({ mainTab }: HeaderProps) {
     <TopHeader>
       <TitleContainer>
         <TitleLogoContainer>
-          <img src={DEFAULT_MAINLOGO_ROW_PATH} style={{width: "70%"}} onClick={handleTitle} alt="main_logo" />
+          <img src={DEFAULT_MAINLOGO_ROW_PATH} style={{width: "70%"}} alt="main_logo" />
         </TitleLogoContainer>
         <TitleTextContainer>
           <Title>{DEFAULT_LOCATION_NAME}</Title>
         </TitleTextContainer>
       </TitleContainer>
-      <PageControls>
-        <MainMenu onClickCallback={handleFlatButtonClick} />
-        <SubMenu mainId={ selectedFlatId} onClickCallback={subcallback} />
-      </PageControls>
+      <MenusContainer>
+        <MainMenuControls>
+          <MainMenu onClickCallback={handleMainMenuButtonClick} />
+        </MainMenuControls>
+        <SubMenuControlsFlex>
+          <SubMenu mainId={ selectedFlatId} onClickCallback={subMenuButtonCallback} />
+        </SubMenuControlsFlex>
+      </MenusContainer>
       <SettingButton enable={selectedFlatId}  onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
     </TopHeader>
   );
@@ -117,21 +110,20 @@ const TitleContainer = styled(BaseFlexColumn)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 250px;
+  width: 220px;
   height: 80px;
   gap: 1px;
   background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
 `;
 
-
 const TitleLogoContainer = styled(BaseFlexCenterDiv)`
-  width: 250px;
+  width: 220px;
   height: 50px;
   background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
 `;
 
 const TitleTextContainer = styled(BaseFlexCenterDiv)`
-  width: 250px;
+  width: 220px;
   height: 30px;
   background: transparent;
   // border: 1px solid #444;
@@ -148,12 +140,31 @@ const Title = styled.div<{ fontSize?: string }>`
   font-size: ${(props) => props.fontSize || "10px"};
 `;
 
-const PageControls = styled.div`
+const MenusContainer = styled(BaseFlex1Column)`
+  width: calc(100% - 270px);
+  background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
+  gap: 0px;
+`;
+
+const MainMenuControls = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: 80px;
-  width: calc(100% - 300px);
-  background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
+  
+  height: 50px;
+`;
+
+const SubMenuControlsFlex = styled.div`
+  display: grid;
+
+  grid-template-columns: repeat(10, 1fr);
+  height: 30px;
+`;
+
+const SubMenuControlsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  height: 30px;
+  width: calc(100% - 270px);
   gap: 0px;
 `;
 

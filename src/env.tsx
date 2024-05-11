@@ -39,3 +39,8 @@ export const INIT_UNITGROUP_SETTING = {"id": 0, "type":1, "name":"device", "st":
 
 export const CONST_TYPE_INFO_NAMES = ["전압", "전력량"]
 export const CONST_TYPE_INFO_KEYWORDS = ["V", "W"]
+
+export const MAX_COLUMN_COUNT = 4
+export const MAX_ROW_COUNT = 3
+export const MIN_COLUMN_COUNT = 1
+export const MIN_ROW_COUNT = 1

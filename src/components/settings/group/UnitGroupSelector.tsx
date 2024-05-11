@@ -81,11 +81,16 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
           )}
       </SelectDivision> 
       <SelectDevice onChange={handleDeviceChange} value={selectedDevice}>
-        <BaseOption key={selectedDevice} value={selectedDevice}>
-          {selectedDevice === 0 
-            ? "Select a device" 
-            : devicelist.devices[selectedDevice.toString()]?.name}
-        </BaseOption>
+        {selectedDevice === 0 
+          ? ( searchWord.length > 0
+              ? null
+              : <BaseOption key={selectedDevice} value={selectedDevice}>
+                  Select a device
+                </BaseOption>)
+          : <BaseOption key={selectedDevice} value={selectedDevice}>
+              {devicelist.devices[selectedDevice.toString()]?.name}
+            </BaseOption>}
+        
         {Object.values(devicelist.devices)
           .filter(
             (dev: IDevice) => 

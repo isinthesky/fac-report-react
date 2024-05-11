@@ -23,7 +23,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
       times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
-      <UnitCountainerLine key={rowIndex} gap="5px">
+      <UnitCountainerLine key={rowIndex}>
         <TimeContainer gap="1px">
           {times.map((time: string, index: number) => (
             <TimeDiv key={index}>{time}</TimeDiv>
@@ -66,7 +66,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
           }
         </ApproveTable>
       </TitleArea>
-      {renderDevice()}
+        {renderDevice()}
     </PrintArea>
   );
 });
@@ -78,8 +78,8 @@ const PrintArea = styled(BaseFlexColumn)`
   width: 257mm;
   height: 170mm;
 
-  margin: 10px;
-  padding: 10px;
+  margin: 20px 0px;
+  padding: 10px 20px;
   
   border: 2px solid #333;
   background-color: #FFF;
@@ -108,7 +108,7 @@ const ApproveTable = styled(BaseFlexRow)`
   justify-content: flex-end;
 
   height: 60px;
-  width: 250px;
+  width: 240px;
   gap: 1px;
   padding: 1px;
 
@@ -120,6 +120,7 @@ const ApproveDiv = styled(BaseFlexColumn)`
   align-items: stretch;
   justify-items: stretch;
   min-width: 70px;
+  // max-width: 90px;
   gap: 1px;
 `;
 
@@ -138,9 +139,12 @@ const SignDiv = styled(BaseFlexDiv)`
   background-color: #FFF;
 `;
 
-const UnitCountainerLine = styled(BaseFlexRow)`
-  align-items: start;
+const UnitCountainerLine = styled(BaseFlexCenterDiv)`
+  // align-items: start;
+  align-items: center;
   justify-items: stretch;
+  gap: 2px;
+  // border: 1px solid red;
 `;
 
 const UnitCountainerRow = styled(BaseFlexRow)`
@@ -162,7 +166,8 @@ const TimeContainer = styled(BaseFlexColumn)`
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)`
-  padding: 5px 0px;
+  padding: 3px 0px;
+  font-size: 12px;
   color: ${COLORSET_PRINT_FONT};
   background-color: #FFF;
 `;

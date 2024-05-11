@@ -5,7 +5,7 @@ import { SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, SmallLabel } from "../../../static/componentSet";
-import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_HEADER_BG } from "../../../static/colorSet";
+import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT, COLORSET_GRID_HEADER_BG } from "../../../static/colorSet";
 
 const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
@@ -14,8 +14,7 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
     tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
   );
   
-  const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T"];
-
+  const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"];
   useEffect(() => {
     setCurrUnit(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]);
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
@@ -66,6 +65,7 @@ const UnitContainer = styled(BaseFlex1Column)`
   justify-content: space-between;
   flex-direction: column;
   align-items: stretch;
+  gap: 0px;
 
   background-color: ${COLORSET_GRID_CONTROL_BG2};
 `;
@@ -76,7 +76,9 @@ const TitleDiv = styled(BaseFlex1Div)`
   
   padding: 0px 10px;
 
-  background-color: ${COLORSET_GRID_HEADER_BG};
+  color: ${COLORSET_GRID_CONTROL_FONT};
+
+  background-color: ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const ValueColumn = styled(SmallLabel)`
@@ -90,7 +92,7 @@ const Section = styled(BaseFlexDiv)`
 
 const DivicesContainer = styled(BaseFlex1Column)`
   padding: 10px;
-  gap: 5px;
+  gap: 7px;
 
   background-color: ${COLORSET_GRID_CONTROL_BG2};
 `;

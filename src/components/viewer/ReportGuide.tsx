@@ -85,7 +85,7 @@ const DeviceContainer = styled.div`
 const TimeDiv = styled(BaseFlexCenterDiv)`
   width: 100%;
 
-  padding: 5px 0px;
+  padding: 3px 0px;
   background-color: ${COLORSET_GRID_HEADER_BG};
 `;
 

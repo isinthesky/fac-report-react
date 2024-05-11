@@ -79,7 +79,7 @@ const UnitGrid = styled.div<{ mode?: string }>`
 
 const TitleColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
   width: 100%;
-  padding: 5px 0px;
+  padding: 3px 0px;
 
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
@@ -105,9 +105,10 @@ const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
 const SectionDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   width: 100%;
 
-  padding: 5px 0px;
+  padding: 3px 0px;
   gap: 1px;
 
+  font-size: 12px;
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
@@ -118,8 +119,8 @@ const DevTypeDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   width: 100%;
   // min-width: 25px;
 
-  padding: 5px 0px;
-
+  padding: 3px 0px;
+  font-size: 12px;
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
