@@ -14,7 +14,7 @@ const initialState: TabPageState = {
   viewPosition: {main: 1, sub: 1},
   settingPosition: {main: 1, sub: 1},
   currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo: Array(10).fill(Array(4).fill({id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) }))
+  tabPageInfo: Array(5).fill(Array(8).fill({id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) }))
 };
 
 export const tabPageSlice = createSlice({
@@ -58,15 +58,8 @@ export const tabPageSlice = createSlice({
       }
     },
 
-    // updateTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
-    //   if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
-    //     state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
-    //   }
-    // },
-
     saveTabPage: (state) => {
       if (state.currentTabPage) {
-        // console.log("saveTabPage", state.currentTabPage, state.settingPosition.main, state.settingPosition.sub);
         if (state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub] ) {
           state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub] = state.currentTabPage;
         }
@@ -75,7 +68,6 @@ export const tabPageSlice = createSlice({
     
     setTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
       if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
-        // console.log("setTabPage", action.payload.subTab, action.payload.object)
         state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
       }
     },

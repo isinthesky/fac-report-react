@@ -17,25 +17,24 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
   const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
 
-  const getLogByTimestamp = useCallback((devLog:DeviceLog, timestamp:number) => {
-    if (devLog[timestamp.toString()]) {
-      return devLog[timestamp.toString()];
-    }
+  const getLogByTimestamp = useCallback ((devLog:DeviceLog, timestamp: number) => {
 
-    const precedingTimestamp = Object.keys(devLog)
-      .map(Number)
-      .filter(ts => ts < timestamp)
-      .sort((a, b) => b - a)[0];
-  
-    return precedingTimestamp ? devLog[precedingTimestamp] : "-";
+    // console. log("local Time", new Date(timestamp). toString(), timestamp)
+    const precedingTimestamp = Object.entries (devLog).map( (value)=> {
+      if (value[1].issued_date < timestamp) {
+        return value;
+      }}).filter((value) => value)
+
+    console. log("precedingTimestamp", precedingTimestamp)
+    const size1 = Number (devLog.size);
+    const size2 = precedingTimestamp. length;
+    return size1 === size2 ? "-" : precedingTimestamp[precedingTimestamp.length - 1]?.[1].changed_value;
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try{
-
         let deviceData = []
-
         if (devId > 0) {
           const result: DeviceLog = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
 
@@ -53,6 +52,12 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
             return;
           }
 
+          const deviceMap = new Map();
+
+          for (const timeValue of Object.values(result)) {
+            deviceMap.set(Number(timeValue.issued_date), timeValue.changed_value);
+          }
+
           const date = new Date(settingSet.date);
           const devYear = date.getFullYear();
           const devMonth = date.getMonth();
@@ -65,7 +70,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
             return date;
           }).map((devTime: number) => {
             return getLogByTimestamp(result, devTime);
-          }).map((value: LogData | string) => {
+          }).map((value: string | any) => {
             if (typeof value === "string") {
               return value;
             }

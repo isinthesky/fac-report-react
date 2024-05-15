@@ -6,7 +6,7 @@ import { getSettings } from "../../features/api";
 import { setApproves, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
 import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
-import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
+import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME, INIT_TAB_COUNT } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
@@ -22,14 +22,14 @@ export default function Header({ mainTab }: HeaderProps) {
 
   const handleMainMenuButtonClick = useCallback(throttle((id: number) => {    
     setSelectedFlatId(id);
-    navigate(`/daily/${id.toString()}/1`);
+    navigate(`/daily/${id.toString()}/2`);
+    dispatch(setViewSelect({mainTab: id, subTab: 2}));
   }, 1000, { 'trailing': false }), [navigate]);
 
   const subMenuButtonCallback = useCallback(throttle((id1: number, id2: number) => {
     dispatch(setViewSelect({mainTab: id1, subTab: id2}));
     navigate(`/daily/${id1.toString()}/${id2.toString()}`);
   }, 1000, { 'trailing': false }), [navigate, dispatch]);
-
 
   const handleGoSetting = useCallback(() => {
     setSelectedFlatId(0);
@@ -45,13 +45,13 @@ export default function Header({ mainTab }: HeaderProps) {
   
         if (response) {
           dispatch(setReportTable(response.settings));
-          dispatch(setTabSetting(response.tabSetting));
           dispatch(setApproves(response.approves))
+          dispatch(setTabSetting({length: Number(INIT_TAB_COUNT)}));
   
           let count = 1;
           const keyName = CONST_TABINFO_NAME;
   
-          if (response.tabSetting.length) {
+          if (Number(INIT_TAB_COUNT)) {
             [1, 2, 3, 4, 5].forEach((mainId)=>{
               [1, 2, 3, 4, 5].forEach((subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;

@@ -77,11 +77,23 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
           ))}
       </DivisionSelector>
       <DeviceSelector onChange={handleDeviceChange} value={selectedDevice}>
-        <BaseOption key={selectedDevice} value={selectedDevice}>
+
+
+        {selectedDevice === 0 
+          ? ( searchWord.length > 0
+              ? null
+              : <BaseOption key={selectedDevice} value={selectedDevice}>
+                  Select a device
+                </BaseOption>)
+          : <BaseOption key={selectedDevice} value={selectedDevice}>
+              {devicelist.devices[selectedDevice.toString()]?.name}
+            </BaseOption>}
+
+        {/* <BaseOption key={selectedDevice} value={selectedDevice}>
           {selectedDevice === 0 
             ? "Select a device" 
             : devicelist.devices[selectedDevice.toString()]?.name}
-        </BaseOption>
+        </BaseOption> */}
         {Object.values(devicelist.devices)
           .filter(
             (dev: IDevice) => 

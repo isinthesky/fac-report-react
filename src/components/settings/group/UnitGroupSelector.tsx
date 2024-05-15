@@ -44,6 +44,11 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
     setSelectedDevice(currentDeviceId)
   }, [selectedDiv]);
 
+  // Add this useEffect to update selectedDevice when currentDeviceId changes
+  useEffect(() => {
+    setSelectedDevice(currentDeviceId);
+  }, [currentDeviceId]);
+
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
   };

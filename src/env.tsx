@@ -3,7 +3,6 @@
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 export const INIT_GENERAL_SETTING = process.env.REACT_APP_INIT_GENERAL_SETTING;
 export const INIT_APPROVES_SETTING = process.env.REACT_APP_INIT_APPROVES_SETTING;
-export const INIT_TAB_SETTING = process.env.REACT_APP_INIT_TAB_SETTING;
 
 export const INIT_REPORT_TYPE1 = process.env.REACT_APP_INIT_REPORT_TYPE1;
 export const INIT_REPORT_TYPE2 = process.env.REACT_APP_INIT_REPORT_TYPE2;

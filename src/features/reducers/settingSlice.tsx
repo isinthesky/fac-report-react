@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DailySetting, TabSetting, ApprovalsType } from "../../static/types";
-import { INIT_PRINT_TITLE } from "../../env";
+import { INIT_PRINT_TITLE, INIT_TAB_COUNT } from "../../env";
 
 export interface SettingState {
   [x: string]: any;
@@ -19,13 +19,22 @@ export interface SettingState {
 const twoMonthsAgo = new Date();
 twoMonthsAgo.setFullYear(twoMonthsAgo.getFullYear() - 1); // for testing
 
+// 현장
+const today = new Date();
+const oneDayMillisec = 24 * 60 * 60 * 1000;
+const yesterday = new Date(today.getTime() - oneDayMillisec);
+
+// 개발
+const lastyear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+
+
 const initialState: SettingState = {
   menus: [],
-  date: twoMonthsAgo.getTime(),
+  date: lastyear.getTime(),
   daily: { row: 2, column: 2 },
   unitPostion: { row: 1, column: 1 },
   tabPosition: { row: 1, column: 1 },
-  tabSetting: { length: Number(process.env.REACT_APP_INIT_TAB_COUNT) },
+  tabSetting: { length: Number(INIT_TAB_COUNT) },
   idViewMode: 0,
   printTitle: INIT_PRINT_TITLE as string,
   deviceSearchWord: "",

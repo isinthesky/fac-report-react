@@ -16,7 +16,7 @@ import Header from "../header/Header";
 import { getDeviceInfo } from "../../features/api/device";
 import { loadDeviceList } from "../../features/reducers/deviceSlice";
 import { getSettings } from "../../features/api";
-import { CONST_TABINFO_NAME } from "../../env";
+import { CONST_TABINFO_NAME, INIT_TAB_COUNT } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
 
 interface CustomInputProps {
@@ -62,13 +62,13 @@ function Daily() {
   
       if (response) {
         dispatch(setReportTable(response.settings));
-        dispatch(setTabSetting(response.tabSetting));
         dispatch(setApproves(response.approves))
+        dispatch(setTabSetting({length: Number(INIT_TAB_COUNT)}));
 
         let count = 1;
         const keyName = CONST_TABINFO_NAME;
 
-        if (response.tabSetting.length) {
+        if (Number(INIT_TAB_COUNT)) {
           [1, 2, 3, 4, 5].forEach((mainId)=>{
             [1, 2, 3, 4, 5].forEach((subId)=>{
               const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
@@ -122,7 +122,8 @@ function Daily() {
                 selected={new Date(date)}
                 onChange={(value: Date) => setDate(value.getTime())}
                 showIcon={true}
-                dateFormat="yyyy / MM / dd"
+                dateFormatCalendar="YYYY MM"
+                dateFormat=" yyyy / MM / dd"
                 customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
               />
             </BaseFlexDiv>

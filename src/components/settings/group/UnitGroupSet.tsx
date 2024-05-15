@@ -25,7 +25,6 @@ const UnitGroupSet: React.FC = () => {
     setDeviceList(unitGroupSlice.currentGroup);
   }, [unitGroupSlice.currentGroup, unitGroupSlice.selectedPos]);
 
-
   const handleSave = async  () => {
     try {
       await updateUnitGroupList(unitGroupSlice.groups)
@@ -55,9 +54,11 @@ const UnitGroupSet: React.FC = () => {
           const initDivisionId = (value !== 0)
                                 ? deviceinfo(value).divisionId
                                 : unit.div;
+          
+          console.log("selectedPos", unitGroupSlice.selectedPos);
 
           return( <ValueSection key={idx}>
-                    <IndexLabel fontsize="14px">{idx + 1}</IndexLabel>
+                    <IndexLabel>{idx + 1}</IndexLabel>
                     <UnitGroupAutoSelect
                       unitPosition={unitGroupSlice.selectedPos}
                       devicePosition={idx}
