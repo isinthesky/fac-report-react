@@ -18,14 +18,11 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
 
   const getLogByTimestamp = useCallback ((devLog:DeviceLog, timestamp: number) => {
-
-    // console. log("local Time", new Date(timestamp). toString(), timestamp)
     const precedingTimestamp = Object.entries (devLog).map( (value)=> {
       if (value[1].issued_date < timestamp) {
         return value;
       }}).filter((value) => value)
 
-    console. log("precedingTimestamp", precedingTimestamp)
     const size1 = Number (devLog.size);
     const size2 = precedingTimestamp. length;
     return size1 === size2 ? "-" : precedingTimestamp[precedingTimestamp.length - 1]?.[1].changed_value;

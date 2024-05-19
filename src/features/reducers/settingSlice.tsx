@@ -8,7 +8,6 @@ export interface SettingState {
   date: number;
   daily: DailySetting;
   unitPostion: DailySetting;
-  tabPosition: DailySetting;
   tabSetting: TabSetting;
   idViewMode: number;
   printTitle: string;
@@ -16,24 +15,20 @@ export interface SettingState {
   approvals: ApprovalsType[];
 }
 
-const twoMonthsAgo = new Date();
-twoMonthsAgo.setFullYear(twoMonthsAgo.getFullYear() - 1); // for testing
-
 // 현장
 const today = new Date();
 const oneDayMillisec = 24 * 60 * 60 * 1000;
 const yesterday = new Date(today.getTime() - oneDayMillisec);
 
 // 개발
-const lastyear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
 
 
 const initialState: SettingState = {
-  menus: [],
+  menus: ["11"],
   date: lastyear.getTime(),
-  daily: { row: 2, column: 2 },
+  daily: { row: 2, column: 3 },
   unitPostion: { row: 1, column: 1 },
-  tabPosition: { row: 1, column: 1 },
   tabSetting: { length: Number(INIT_TAB_COUNT) },
   idViewMode: 0,
   printTitle: INIT_PRINT_TITLE as string,
@@ -48,7 +43,16 @@ export const settingSlice = createSlice({
   initialState,
   reducers: {
     setMenus: (state, action: PayloadAction<string[]>) => {
-      state.menus = action.payload;
+      
+      // state.menus 배열을 비우고 
+      // action.payload 을 state.menus 에 
+      // 하나씩 넣어준다.
+
+      state.menus.length = 0;
+
+      action.payload.forEach((menu) => {
+        state.menus.push(menu);
+      });
     },
     setReportTable: (state, action: PayloadAction<DailySetting>) => {
       state.daily = action.payload;
@@ -80,5 +84,5 @@ export const settingSlice = createSlice({
   },
 });
 
-export const { setMenus, setReportTable,setUnitSelectPosition, setTabSelectPosition, setTabSetting, setTableDate, setViewType, setPrintTitle, setApproves, setdeviceSearchWord } = settingSlice.actions;
+export const { setMenus, setReportTable,setUnitSelectPosition, setTabSetting, setTableDate, setViewType, setPrintTitle, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;

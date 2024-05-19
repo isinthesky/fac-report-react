@@ -20,7 +20,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
     }))
   );
 
-  // Update enable state based on tabPositionSlice
   useEffect(() => {
     setMainMenu(mainMenu.map(menu => ({
       ...menu,
@@ -58,11 +57,13 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
 
 interface SubMenuProps {
   mainId: number;
+  subId: number;
   onClickCallback: (mainId: number, subId: number) => void;
 }
 
 export const SubMenu: React.FC<SubMenuProps> = ({
   mainId,
+  subId,
   onClickCallback,
 }) => {
   const [subMenu, setSubMenu] = useState(
@@ -72,11 +73,10 @@ export const SubMenu: React.FC<SubMenuProps> = ({
     }))
   );
 
-  // Update enable state based on tabPositionSlice
   useEffect(() => {
     setSubMenu(subMenu.map(sub => ({
       ...sub,
-      enable: sub.id === mainId ? "true" : "false"
+      enable: sub.id === subId ? "true" : "false"
     })));
   }, [mainId]);
 

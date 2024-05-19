@@ -25,8 +25,6 @@ const UnitTypeV: React.FC<ViewUnitProps> = ({ index }) => {
 
   let pos = 0;
 
-  console.log("curunit", curunit)
-
   return (
     <Container>
       <Row>

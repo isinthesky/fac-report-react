@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setApproves, setReportTable, setTabSetting, setTableDate, setViewType } from "../../features/reducers/settingSlice";
+import { setApproves, setMenus, setReportTable, setTabSetting, setTableDate, setViewType } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
 import PrintModal from "../PrintModal";
@@ -67,18 +67,22 @@ function Daily() {
 
         let count = 1;
         const keyName = CONST_TABINFO_NAME;
+        const buttons: string[] = [];
 
-        if (Number(INIT_TAB_COUNT)) {
+        if (Number(INIT_TAB_COUNT) >= count) {
           [1, 2, 3, 4, 5].forEach((mainId)=>{
             [1, 2, 3, 4, 5].forEach((subId)=>{
               const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
               if (process.env[key]) {
+                buttons.push(`${mainId}${subId}`);
                 dispatch(setTabPage({mainTab: mainId, subTab: subId, 
                                      object: response[keyName + `${count++}`]}));
               }
             })
           })
         }
+        
+        dispatch(setMenus(buttons));
       }
 
       const resDeviceSet = await getDeviceInfo();

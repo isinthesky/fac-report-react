@@ -1,9 +1,10 @@
 import { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getSettings } from "../../features/api";
-import { setApproves, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
+import { RootStore } from "../../store/congifureStore";
+import { setApproves, setMenus, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
 import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME, INIT_TAB_COUNT } from "../../env";
@@ -18,13 +19,24 @@ import { HeaderProps } from "../../static/interfaces";
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [selectedFlatId, setSelectedFlatId] = useState<number>(mainTab);
+  const settingSetMenus = useSelector((state: RootStore) => state.settingReducer.menus);
+  const viewPosition = useSelector((state: RootStore) => state.tabPageReducer.viewPosition);
+  const [selectedMenu, setSelectedMenu] = useState<{ mainId: number, subId: number }>({ mainId: mainTab, subId: viewPosition.sub as number });
 
-  const handleMainMenuButtonClick = useCallback(throttle((id: number) => {    
-    setSelectedFlatId(id);
-    navigate(`/daily/${id.toString()}/2`);
-    dispatch(setViewSelect({mainTab: id, subTab: 2}));
-  }, 1000, { 'trailing': false }), [navigate]);
+  const handleMainMenuButtonClick = useCallback(throttle((id: number) => {  
+    const mainId = id * 10;
+    
+    for (let i = 0; i < settingSetMenus.length; i++) {
+      const subId = Number(settingSetMenus[i]);
+      
+      if (subId > mainId) {
+        setSelectedMenu({ mainId: id, subId: Number(settingSetMenus[i][1]) });
+        dispatch(setViewSelect({mainTab: id, subTab: Number(settingSetMenus[i][1])}));
+        navigate(`/daily/${id.toString()}/${settingSetMenus[i][1]}`);
+        break;
+      }
+    }
+  }, 300, { 'trailing': false }), [navigate]);
 
   const subMenuButtonCallback = useCallback(throttle((id1: number, id2: number) => {
     dispatch(setViewSelect({mainTab: id1, subTab: id2}));
@@ -32,7 +44,7 @@ export default function Header({ mainTab }: HeaderProps) {
   }, 1000, { 'trailing': false }), [navigate, dispatch]);
 
   const handleGoSetting = useCallback(() => {
-    setSelectedFlatId(0);
+    setSelectedMenu({ mainId: 0, subId: 0 });
     dispatch(setViewSelect({mainTab: 0, subTab: 0}));
     dispatch(setSettingSelect({mainTab: 1, subTab: 1}));
     navigate("/settings");
@@ -50,18 +62,22 @@ export default function Header({ mainTab }: HeaderProps) {
   
           let count = 1;
           const keyName = CONST_TABINFO_NAME;
+          const buttons: string[] = [];
   
-          if (Number(INIT_TAB_COUNT)) {
+          if (Number(INIT_TAB_COUNT) >= count) {
             [1, 2, 3, 4, 5].forEach((mainId)=>{
               [1, 2, 3, 4, 5].forEach((subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
+                  buttons.push(`${mainId}${subId}`);
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 
                                        object: response[keyName + `${count++}`]}));
                 }
               })
             })
           }
+          
+          dispatch(setMenus(buttons));
         }
       } catch (error) {
         console.error(error);
@@ -84,10 +100,10 @@ export default function Header({ mainTab }: HeaderProps) {
           <MainMenu onClickCallback={handleMainMenuButtonClick} />
         </MainMenuControls>
         <SubMenuControlsFlex>
-          <SubMenu mainId={ selectedFlatId} onClickCallback={subMenuButtonCallback} />
+          <SubMenu mainId={selectedMenu.mainId} subId={selectedMenu.subId} onClickCallback={subMenuButtonCallback} />
         </SubMenuControlsFlex>
       </MenusContainer>
-      <SettingButton enable={selectedFlatId}  onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
+      <SettingButton enable={selectedMenu.mainId} onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
     </TopHeader>
   );
 }

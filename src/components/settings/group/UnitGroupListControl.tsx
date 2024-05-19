@@ -165,10 +165,10 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
       </ListContainer>
       {viewMode === "setting" ? (
       <ButtonsContainer>
-        <BaseButton onClick={handleAdd} widthsize={"60px"}>
+        <BaseButton onClick={handleAdd} widthsize={"50px"}>
           {STRING_SETTING_GROUP_ADD}
         </BaseButton>
-        <BaseButton onClick={() => handleDelete(unitGroupSlice.selectedPos)} widthsize={"60px"}>
+        <BaseButton onClick={() => handleDelete(unitGroupSlice.selectedPos)} widthsize={"50px"}>
           {STRING_SETTING_GROUP_DELETE}
         </BaseButton>
         <ActiveButton onClick={() => handleUpdate(unitGroupSlice.selectedPos)} widthsize={"60px"}>
@@ -205,6 +205,7 @@ const ListContainer = styled(BaseFlex1Column)`
 const SaveUnitContainer = styled(BaseFlex1Row)`
   justify-content: space-between;
   align-items: flex-start;
+  gap: 5px;
 
   background-color: transparent;
 `;
@@ -237,13 +238,16 @@ const GroupNameContainer = styled(BaseFlex1Div)`
 `;
 
 const IndexLabel = styled(MediumLabel)`  
-  text-align: center;
-  width: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 8px;
 `;
 
 const NameInput = styled.input<{ mode: string, heightsize?: string, fontsize?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
+  width: 100px;
   
   color: ${(props) => (props.mode === "true" ? COLORSET_GROUP_INPUT_ACTIVE_FONT : COLORSET_GROUP_INPUT_NOMAL_FONT)};
   background-color: ${(props) => (props.mode === "true" ? COLORSET_DARK_CONTROL_BG : COLORSET_GROUP_INPUT_NOMAL_BG)};

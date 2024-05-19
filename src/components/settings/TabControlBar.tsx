@@ -38,8 +38,8 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
     if (arr.length === 0 ) return;
   
     const settingTabpageButtons = arr.reduce((acc, code) => {
-      const mainTab = code[0]; // Extract the main tab digit.
-      const subTab = code[1]; // Extract the sub tab digit.
+      const mainTab = Number(code[0]); // Extract the main tab digit.
+      const subTab = Number(code[1]); // Extract the sub tab digit.
   
       if (!acc[mainTab]) {
         acc[mainTab] = [];
@@ -47,7 +47,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
   
       acc[mainTab].push(subTab);
       return acc;
-    }, {} as { [key: string]: string[] });
+    }, {} as { [key: number]: number[] });
   
     return Object.entries(settingTabpageButtons).map(([mainTab, subTabs]) => (
       <div key={mainTab} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -58,7 +58,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
           {subTabs.map(subTab => (
             <TabButton
               key={`${mainTab}${subTab}`}
-              onClick={() => handleTabClick(mainTab, subTab)}
+              onClick={() => handleTabClick(mainTab.toString(), subTab.toString())}
               mode={(Number(mainTab) === tabPosition.main && Number(subTab) === tabPosition.sub) ? "true" : "false"}
               fontsize={FONTSET_DEFAULT_BUTTON_SIZE}
             >
@@ -86,7 +86,6 @@ const TopBar = styled(BaseFlexRow)`
 
   gap: 20px;
   padding: 0px 30px;
-  // border: 1px solid #3f3;
 `;
 
 const MainTabLabel = styled(MediumLabel)`

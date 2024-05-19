@@ -49,9 +49,6 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
             if (confirmed) {
               try {
                 const keyNumber = CONST_TABINFO_NAME + `${count}`;
-
-                console.log("keyNumber", keyNumber);
-                
                 await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage as TabPageInfotype);
                 return;
               } catch (e) {

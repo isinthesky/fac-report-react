@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
@@ -20,6 +20,7 @@ import { CONST_TABINFO_NAME } from "../../env";
 import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
 import PrintSetting from "../settings/PrintSetting";
+import { RootStore } from "../../store/congifureStore";
 
 
 function Settings() {
@@ -28,19 +29,19 @@ function Settings() {
   const [columns, setColumn] = useState(0);
   const [mode, setMode] = useState("view");
   const params  = useParams();
+  const tabLength = useSelector((state: RootStore) => state.settingReducer.tabSetting);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
         const resSetting = await getSettings();
-        console.log("settings getSettings:", resSetting)
         
         if (resSetting) {
           dispatch(setReportTable(resSetting.settings));
           
           let count = 1;
           
-          if (resSetting.tabSetting.length) {
+          if (tabLength.length) {
             [1, 2, 3, 4, 5].forEach( async (mainId)=>{
               [1, 2, 3, 4, 5].forEach( async (subId)=>{
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
