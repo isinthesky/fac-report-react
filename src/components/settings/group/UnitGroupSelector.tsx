@@ -21,6 +21,7 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
   const [selectedDevice, setSelectedDevice] = useState<number>(currentDeviceId);
+  const [searchedNumber, setSearchedNumber] = useState<number>(0);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
   useEffect(() => {
@@ -43,6 +44,21 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
 
     setSelectedDevice(currentDeviceId)
   }, [selectedDiv]);
+
+
+  useEffect(() => {
+    const size = Object.values(devicelist.devices)
+      .filter((dev: IDevice) =>
+        dev.stationId === selectedSt && dev.divisionId === selectedDiv)
+      .filter((dev:IDevice) => {
+        if (searchWord.length > 0) {
+          return (dev.name.toLowerCase().includes(searchWord.toLowerCase())
+                  ? true : false);
+        }
+        return true;
+      })
+    setSearchedNumber(size.length);
+  }, [searchWord]);
 
   // Add this useEffect to update selectedDevice when currentDeviceId changes
   useEffect(() => {
@@ -88,7 +104,9 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
       <SelectDevice onChange={handleDeviceChange} value={selectedDevice}>
         {selectedDevice === 0 
           ? ( searchWord.length > 0
-              ? null
+              ? <BaseOption key={selectedDevice} value={selectedDevice}>
+                  {searchedNumber} devices found
+                </BaseOption>
               : <BaseOption key={selectedDevice} value={selectedDevice}>
                   Select a device
                 </BaseOption>)
@@ -123,6 +141,7 @@ const DeviceContainer = styled(BaseFlex1Row)`
 `;
 
 const SelectDivision = styled(BaseSelect)`
+  flex: 1;
   min-width: 70px;
   text-align: center;
   color: ${COLORSET_DARK_CONTROL_FONT};
@@ -130,7 +149,7 @@ const SelectDivision = styled(BaseSelect)`
 `
 
 const SelectDevice = styled(BaseSelect)`
-  flex: 1;
+  flex: 3;
   min-width: 200px;
   text-align: center;
   color: ${COLORSET_DARK_CONTROL_FONT};

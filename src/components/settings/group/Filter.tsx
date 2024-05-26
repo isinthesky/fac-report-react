@@ -62,37 +62,42 @@ const Filter: React.FC = () => {
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearchClick();
-    } else if (e.key === 'Escape') {
+    }
+  };
+
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
       handleClearInput();
     }
   };
 
   return (
-    <FilterContainer>
+    <FilterContainer onKeyDown={handleKeyDown} tabIndex={0}>
       <BigLabel>{STRING_SETTING_GROUP_FILTER}</BigLabel>
       <CenterRow>
-      <BaseFlexColumn gap="1px">
-        <SmallLabel>Station</SmallLabel>
-        <BaseSelect onChange={handleStationChange} value={selectedStation}>
-          {deviceSet.stations.map((st: IStation) => (
-            <BaseOption key={st.id} value={st.id}>
-              {st.name}
-            </BaseOption>
-          ))}
-        </BaseSelect>
-      </BaseFlexColumn>
-      <BaseFlexColumn gap="1px">
-        <SmallLabel>Division</SmallLabel>
-        <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
-          {deviceSet.divisions
-            .filter((item: IDivision) => item.stationId === selectedStation)
-            .map((div: IDivision) => (
-              <BaseOption key={div.id} value={div.id}>
-                {div.name}
+        <FilterColumn gap="1px">
+          <SmallLabel>Station</SmallLabel>
+          <BaseSelect onChange={handleStationChange} value={selectedStation}>
+            {deviceSet.stations.map((st: IStation) => (
+              <BaseOption key={st.id} value={st.id}>
+                {st.name}
               </BaseOption>
             ))}
-        </BaseSelect>
-      </BaseFlexColumn>
+          </BaseSelect>
+        </FilterColumn>
+        <FilterColumn gap="1px">
+          <SmallLabel>Division</SmallLabel>
+          <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
+            {deviceSet.divisions
+              .filter((item: IDivision) => item.stationId === selectedStation)
+              .map((div: IDivision) => (
+                <BaseOption key={div.id} value={div.id}>
+                  {div.name}
+                </BaseOption>
+              ))}
+          </BaseSelect>
+        </FilterColumn>
       </CenterRow>
       <BaseFlexColumn gap="1px">
         <SmallLabel>Search</SmallLabel>
@@ -127,7 +132,12 @@ const CenterRow = styled(BaseFlexRow)`
   justify-content: flex-start;
   align-items: stretch;
 
+  width: 100%;
   bottom-margin: 10px;
+`;
+
+const FilterColumn = styled(BaseFlexColumn)`
+  flex: 1;
 `;
 
 export default Filter;

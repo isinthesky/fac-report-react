@@ -92,6 +92,8 @@ function Daily() {
   }, []);
 
   useEffect(() => {
+
+    console.log("changed date", date);
     dispatch(setTableDate(date));
   }, [date, dispatch]);
 
@@ -234,7 +236,7 @@ const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
   margin: '20px',
   width: '30px',
   height: '30px',
-  fontSize: '20px',
+  fontsize: '20px',
   color: 'white',
   backgroundColor: props.bgColor || COLORSET_SIGNITURE_COLOR,
   borderRadius: '10px',

@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
-import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES } from "../../../env";
+import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
+import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_NAMES } from "../../../env";
 
 const UnitInfo: React.FC<Unit> = ({
   type,
@@ -28,7 +28,7 @@ const UnitInfo: React.FC<Unit> = ({
 
   return (
     <UnitContainer>
-      <NameContainer>
+      <NameContainer type={type}>
         <NameLabel>ID</NameLabel>
         <UnitIDLabel>{id}</UnitIDLabel>
         <NameLabel>Type</NameLabel>
@@ -77,11 +77,12 @@ const NameLabel = styled(MediumLabel)`
   background-color: transparent;
 `;
 
-const NameContainer = styled(BaseFlex1Div)`
+const NameContainer = styled(BaseFlex1Div)<{ type: number }>`
   align-items: center; 
   justify-self: start;
+  width: 100%;
 
-  background-color: ${COLORSET_GRID_HEADER_BG};
+  background-color: ${props => props.type === CONST_TYPE_INFO_INDEX[2] ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_GRID_HEADER_BG};
 `;
 
 const ItemDiv = styled(BaseFlex1Column)`

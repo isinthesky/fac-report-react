@@ -88,7 +88,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
       }
     };
     fetchData();
-  }, [devId, times]);
+  }, [devId, times, settingSet.date]);
 
   useEffect(() => {
     settingSet.idViewMode === 0
@@ -99,7 +99,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
   return (
     <>
       {deviceValue.map((value:any, index:number) => (
-        <ValueColumn mode={mode} key={index}>{value}</ValueColumn>
+        <ValueColumn mode={mode} fontsize={settingSet.printFontSize + "px"} key={index}>{value}</ValueColumn>
       ))}
     </>
   );
@@ -109,7 +109,7 @@ const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string
   font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
   
   width: 100%;
-  min-width: 25px;
+  min-width: ${(props) => props.mode === 'print' ? "22px" : "25px"};
   padding: 3px 0px;
 
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};

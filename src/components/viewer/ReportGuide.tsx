@@ -6,6 +6,7 @@ import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
+import { CONST_TYPE_INFO_INDEX } from "../../env";
 
 type ReportGuideProps = {
   row: number;
@@ -27,6 +28,10 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
+          if (currentTab.unitList[index].type === CONST_TYPE_INFO_INDEX[2]) {
+            return <></>;
+          }
+          
           const TypeComp = currentTab.unitList[index].type === 1 ? 'V' : 'W';
 
           return (

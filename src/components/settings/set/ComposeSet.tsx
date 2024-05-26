@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitTypeW from "./UnitTypeW";
 import UnitTypeV from "./UnitTypeV";
+import UnitTypeH from "./UnitTypeH";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateSettingsTabPage } from "../../../features/api/device";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
@@ -15,7 +16,7 @@ import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDi
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_CONTROL_BUTTON_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT } from "../../../env";
+import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT, CONST_TYPE_INFO_INDEX } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
@@ -148,8 +149,9 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         </SettingsContainer>
         <TimeDropdowns/>
         <BaseFlex1Row>
-          {deviceType === 1 && <UnitTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
-          {deviceType === 2 && <UnitTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {deviceType === CONST_TYPE_INFO_INDEX[0] && <UnitTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {deviceType === CONST_TYPE_INFO_INDEX[1] && <UnitTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {deviceType === CONST_TYPE_INFO_INDEX[2] && <UnitTypeH name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
         </BaseFlex1Row>
         <BaseFlexCenterDiv>
           <BaseButton widthsize="40px"> {"< <"}</BaseButton>

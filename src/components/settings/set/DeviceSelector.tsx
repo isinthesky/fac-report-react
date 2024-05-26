@@ -20,6 +20,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
   const [selectedDevice, setSelectedDevice] = useState<number>(currentDeviceId);
+  const [searchedNumber, setSearchedNumber] = useState<number>(0);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
   useEffect(() => {
@@ -42,6 +43,21 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 
     setSelectedDevice(currentDeviceId)
   }, [selectedDiv]);
+
+  useEffect(() => {
+    const size = Object.values(devicelist.devices)
+      .filter((dev: IDevice) =>
+        dev.stationId === selectedSt && dev.divisionId === selectedDiv)
+      .filter((dev:IDevice) => {
+        if (searchWord.length > 0) {
+          return (dev.name.toLowerCase().includes(searchWord.toLowerCase())
+                  ? true : false);
+        }
+        return true;
+      })
+      setSearchedNumber(size.length);
+    }, [searchWord]);
+
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
@@ -78,10 +94,11 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       </DivisionSelector>
       <DeviceSelector onChange={handleDeviceChange} value={selectedDevice}>
 
-
         {selectedDevice === 0 
-          ? ( searchWord.length > 0
-              ? null
+          ? (searchWord.length > 0
+              ? <BaseOption key={selectedDevice} value={selectedDevice}>
+                  {searchedNumber} devices found
+                </BaseOption>
               : <BaseOption key={selectedDevice} value={selectedDevice}>
                   Select a device
                 </BaseOption>)
@@ -89,14 +106,9 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
               {devicelist.devices[selectedDevice.toString()]?.name}
             </BaseOption>}
 
-        {/* <BaseOption key={selectedDevice} value={selectedDevice}>
-          {selectedDevice === 0 
-            ? "Select a device" 
-            : devicelist.devices[selectedDevice.toString()]?.name}
-        </BaseOption> */}
         {Object.values(devicelist.devices)
           .filter(
-            (dev: IDevice) => 
+            (dev: IDevice) =>
               dev.stationId === selectedSt && dev.divisionId === selectedDiv
           ).filter((dev:IDevice) => {
             if (searchWord.length > 0) {
@@ -123,6 +135,7 @@ const DeviceInfoContainer = styled(BaseFlex1Row)`
 `;
 
 const DivisionSelector = styled(BaseSelect)`
+  flex: 1;
   min-width: 70px;
   text-align: center;
   color: ${COLORSET_DARK_CONTROL_FONT};
@@ -130,6 +143,7 @@ const DivisionSelector = styled(BaseSelect)`
 `;
 
 const DeviceSelector = styled(BaseSelect)`
+  flex: 3;
   width: 100%;
   text-align: center;
   color: ${COLORSET_DARK_CONTROL_FONT};

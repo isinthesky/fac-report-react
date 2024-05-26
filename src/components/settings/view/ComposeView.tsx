@@ -22,18 +22,6 @@ const ComposeView: React.FC = () => {
   const [columns, setColumn] = useState(settingSlice.daily.column);
   const [edit, setEdit] = useState(true);
   
-  // const handleRow = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newValue = Number(e.target.value);
-  //   const clampedValue = Math.min(Math.max(newValue, MIN_ROW_COUNT), MAX_ROW_COUNT);
-  //   setRow(clampedValue);
-  // };
-
-  // const handleColumn = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const newValue = Number(e.target.value);
-  //   const clampedValue = Math.min(Math.max(newValue, MIN_COLUMN_COUNT), MAX_COLUMN_COUNT);
-  //   setColumn(clampedValue);
-  // };
-
   const handleEdit = () => {
     setEdit(!edit);
   };

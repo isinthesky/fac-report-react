@@ -129,13 +129,13 @@ const MainButton = styled(FlatButtonBase)<{ enable?: string }>`
   border-left: 1px solid ${COLORSET_HEADER_BORDER2};
 `;
 
-const SubButton = styled.button<{ fontSize?: string, enable?: string }>`
+const SubButton = styled.button<{ fontsize?: string, enable?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
 
   height: 30px;
-  font-size: ${(props) => props.fontSize || FONTSET_MAIN_MENU_SIZE};
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
   color: ${(props) => props.enable === "true" ? "white" : "#444"};
   border: 2px solid #F44; /* Consolidated border property */
   background-color: transparent;

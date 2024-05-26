@@ -7,6 +7,7 @@ import { RootStore } from '../store/congifureStore';
 import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../static/componentSet';
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../static/langSet';
 import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../static/colorSet';
+import { FONTSET_DEFAULT_DIV_SIZE } from '../static/fontSet';
 
 type PrintGuideProps = {
   row: number;
@@ -26,7 +27,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
       <UnitCountainerLine key={rowIndex}>
         <TimeContainer gap="1px">
           {times.map((time: string, index: number) => (
-            <TimeDiv key={index}>{time}</TimeDiv>
+            <TimeDiv key={index} fontsize={settingSet.printFontSize + "px"}>{time}</TimeDiv>
           ))} 
         </TimeContainer>
                 
@@ -165,9 +166,9 @@ const TimeContainer = styled(BaseFlexColumn)`
   border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
-const TimeDiv = styled(BaseFlexCenterDiv)`
-  padding: 3px 0px;
-  font-size: 12px;
+const TimeDiv = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
+  padding: 3px 2px;
+  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
   color: ${COLORSET_PRINT_FONT};
   background-color: #FFF;
 `;

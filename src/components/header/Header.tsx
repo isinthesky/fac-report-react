@@ -145,7 +145,7 @@ const TitleTextContainer = styled(BaseFlexCenterDiv)`
   // border: 1px solid #444;
 `;
 
-const Title = styled.div<{ fontSize?: string }>`
+const Title = styled.div<{ fontsize?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,7 +153,7 @@ const Title = styled.div<{ fontSize?: string }>`
   background: transparent;
   color: white;
   font-weight: bold;
-  font-size: ${(props) => props.fontSize || "10px"};
+  font-size: ${(props) => props.fontsize || "10px"};
 `;
 
 const MenusContainer = styled(BaseFlex1Column)`
@@ -184,10 +184,10 @@ const SubMenuControlsGrid = styled.div`
   gap: 0px;
 `;
 
-const SettingButton = styled.button<{ fontSize?: string, enable: number }>`
+const SettingButton = styled.button<{ fontsize?: string, enable: number }>`
   height: 50px;
   width: 50px;
-  font-size: ${(props) => props.fontSize || FONTSET_MAIN_MENU_SIZE};
+  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
   background: ${(props) => props.enable === 0 ? COLORSET_SIGNITURE_COLOR : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
   border-right: 0px solid #333;
   border-top: 0px solid #333;

@@ -11,6 +11,7 @@ export interface SettingState {
   tabSetting: TabSetting;
   idViewMode: number;
   printTitle: string;
+  printFontSize: number;
   deviceSearchWord: string;
   approvals: ApprovalsType[];
 }
@@ -32,6 +33,7 @@ const initialState: SettingState = {
   tabSetting: { length: Number(INIT_TAB_COUNT) },
   idViewMode: 0,
   printTitle: INIT_PRINT_TITLE as string,
+  printFontSize: 12,
   deviceSearchWord: "",
   approvals: [{checked:false, text:""},
               {checked:false, text:""},
@@ -78,11 +80,15 @@ export const settingSlice = createSlice({
     setPrintTitle: (state, action: PayloadAction<string>) => {
       state.printTitle = action.payload;
     },
+    setPrintFontSize: (state, action: PayloadAction<number>) => {
+      state.printFontSize = action.payload;
+    },
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
       state.approvals = action.payload;
     },
   },
 });
 
-export const { setMenus, setReportTable,setUnitSelectPosition, setTabSetting, setTableDate, setViewType, setPrintTitle, setApproves, setdeviceSearchWord } = settingSlice.actions;
+export const { setMenus, setReportTable, setUnitSelectPosition, setTabSetting, setTableDate, setViewType, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;
+
