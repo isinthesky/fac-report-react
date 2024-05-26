@@ -7,6 +7,7 @@ import { updateCurrentUnitDevice, updateFromCurrent } from "../../../features/re
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
 import {COLORSET_DARK_CONTROL_FONT, COLORSET_DARK_CONTROL_BG} from "../../../static/colorSet"
+import { STRING_SETTING_DEVICE_FOUND, STRING_SETTING_DEVICE_SELECT } from "../../../static/langSet";
 
 
 const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
@@ -105,10 +106,10 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
         {selectedDevice === 0 
           ? ( searchWord.length > 0
               ? <BaseOption key={selectedDevice} value={selectedDevice}>
-                  {searchedNumber} devices found
+                  {searchedNumber} {STRING_SETTING_DEVICE_FOUND}
                 </BaseOption>
               : <BaseOption key={selectedDevice} value={selectedDevice}>
-                  Select a device
+                  {STRING_SETTING_DEVICE_SELECT}  
                 </BaseOption>)
           : <BaseOption key={selectedDevice} value={selectedDevice}>
               {devicelist.devices[selectedDevice.toString()]?.name}

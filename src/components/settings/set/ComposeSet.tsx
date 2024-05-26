@@ -11,7 +11,7 @@ import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
-import { setUnitSelectPosition } from "../../../features/reducers/settingSlice";
+import { setUnitSelectPosition, setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
@@ -21,14 +21,11 @@ import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
   const dispatch = useDispatch();
-  
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
   const deviceRow = settingSet.unitPostion.row;
   const deviceColumn = settingSet.unitPostion.column;
-
   const position = deviceColumn + (deviceRow - 1) * column - 1;
-
   const [deviceType, setDeviceType] = useState(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
       return tabPageSlice.currentTabPage.unitList[position]?.type || 0;
@@ -111,6 +108,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
     dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
     dispatch(setTabUnitPosition({index: position}));
+    dispatch(setdeviceSearchWord(""));
   };
 
   const renderGridButtons = () => {

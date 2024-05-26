@@ -6,6 +6,7 @@ import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
 import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
 import { RootStore } from "../../../store/congifureStore";
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT } from "../../../static/colorSet";
+import { STRING_SETTING_DEVICE_FOUND, STRING_SETTING_DEVICE_SELECT } from "../../../static/langSet";
 
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
@@ -97,10 +98,10 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
         {selectedDevice === 0 
           ? (searchWord.length > 0
               ? <BaseOption key={selectedDevice} value={selectedDevice}>
-                  {searchedNumber} devices found
+                  {searchedNumber} {STRING_SETTING_DEVICE_FOUND}
                 </BaseOption>
               : <BaseOption key={selectedDevice} value={selectedDevice}>
-                  Select a device
+                  {STRING_SETTING_DEVICE_SELECT}
                 </BaseOption>)
           : <BaseOption key={selectedDevice} value={selectedDevice}>
               {devicelist.devices[selectedDevice.toString()]?.name}
@@ -109,8 +110,8 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
         {Object.values(devicelist.devices)
           .filter(
             (dev: IDevice) =>
-              dev.stationId === selectedSt && dev.divisionId === selectedDiv
-          ).filter((dev:IDevice) => {
+              dev.stationId === selectedSt && dev.divisionId === selectedDiv)
+          .filter((dev:IDevice) => {
             if (searchWord.length > 0) {
               return (dev.name.toLowerCase().includes(searchWord.toLowerCase())
                       ? true : false);

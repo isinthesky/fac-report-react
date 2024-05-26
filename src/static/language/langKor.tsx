@@ -42,6 +42,8 @@ export const KOR_SETTING_DEVICE_UNIT_SELECT = "유닛 선택";
 export const KOR_SETTING_DEVICE_NAME_SETTING = "이름 설정";
 export const KOR_SETTING_DEVICE_TYPE_SELECT = "타입 선택";
 export const KOR_SETTING_DEVICE_FILTER = "장치 검색";
+export const KOR_SETTING_DEVICE_SELECT = "장치 선택";
+export const KOR_SETTING_DEVICE_FOUND = "검색된 장치";
 
 export const KOR_SETTING_GROUP_LIST = "그룹 목록";
 export const KOR_SETTING_GROUP_SETTING = "그룹 설정";

@@ -15,7 +15,8 @@ const Filter: React.FC = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
-  const [searchWord, setSearchWord] = useState("");
+  const deviceSearchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
+  const [searchWord, setSearchWord] = useState(deviceSearchWord);
 
   const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
   const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
@@ -31,6 +32,12 @@ const Filter: React.FC = () => {
                         : unitGroupSlice.currentGroup.div);     
                     
   }, [unitGroupSlice.currentGroup]);
+
+
+  useEffect(() => {
+    setSearchWord(deviceSearchWord);
+  }, [deviceSearchWord]);
+
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const stId = Number(e.target.value);
@@ -64,7 +71,6 @@ const Filter: React.FC = () => {
       handleSearchClick();
     }
   };
-
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Escape') {

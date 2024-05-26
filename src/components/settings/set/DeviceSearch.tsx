@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
+import { RootStore } from "../../../store/congifureStore";
 import { BaseInput, ControlButton, BaseFlexDiv } from '../../../static/componentSet';
 import { ICON_DAY_SEARCH, ICON_DAY_REFRESH } from '../../../static/constSet';
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
@@ -8,7 +9,13 @@ import { COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NO
 
 const DeviceSearch: React.FC = () => {
   const dispatch = useDispatch()
-  const [searchWord, setSearchWord] = useState("");
+  const deviceSearchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
+  const [searchWord, setSearchWord] = useState(deviceSearchWord);
+
+  useEffect(() => {
+    setSearchWord(deviceSearchWord);
+  }, [deviceSearchWord]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("input searchWord", searchWord)

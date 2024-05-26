@@ -41,6 +41,8 @@ export const ENG_SETTING_DEVICE_UNIT_SELECT = "Unit Select";
 export const ENG_SETTING_DEVICE_NAME_SETTING = "Name Setting";
 export const ENG_SETTING_DEVICE_TYPE_SELECT = "Type Select";
 export const ENG_SETTING_DEVICE_FILTER = "Filter";
+export const ENG_SETTING_DEVICE_SELECT = "Select a device";
+export const ENG_SETTING_DEVICE_FOUND = "devices found";
 
 export const ENG_SETTING_GROUP_LIST = "Group List";
 export const ENG_SETTING_GROUP_SETTING = "Group Setting";

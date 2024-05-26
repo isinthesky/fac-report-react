@@ -12,6 +12,7 @@ import { Unit, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
 import { COLORSET_GROUP_INPUT_NOMAL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_GROUP_INPUT_ACTIVE_BORDER, COLORSET_GROUP_INPUT_ACTIVE_FONT, COLORSET_GROUP_INPUT_NOMAL_BORDER, COLORSET_GROUP_INPUT_NOMAL_FONT } from '../../../static/colorSet';
 import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
+import { setdeviceSearchWord } from '../../../features/reducers/settingSlice';
 
 
 const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
@@ -58,8 +59,9 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   }, [unitGroupSlice]);
 
   const handleGroupNameClick = (position: number) => {
-    dispatch(setSelectedGroup(position))
+    dispatch(setSelectedGroup(position));
     dispatch(setCurrentGroup(position));
+    handleClearInput();
   };
 
   const handleNameChange = (position: number, name: string) => {
@@ -88,6 +90,16 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
       currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
 
       dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
+    }
+  };
+
+  const handleClearInput = () => {
+    dispatch(setdeviceSearchWord(""))
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      handleClearInput();
     }
   };
 
