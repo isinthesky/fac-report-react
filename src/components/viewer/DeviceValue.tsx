@@ -5,12 +5,12 @@ import { RootStore } from "../../store/congifureStore";
 import { readDevicesData } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
-import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
-import { DeviceLog, LogData } from "../../static/types";
+import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_PRINT_FONT } from "../../static/colorSet";
+import { DeviceLog } from "../../static/types";
 import { DeviceValueProps } from "../../static/interfaces";
 
 
-const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
+const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   
@@ -33,7 +33,10 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
       try{
         let deviceData = []
         if (devId > 0) {
-          const result: DeviceLog = await readDevicesData(deviceSet.devices[devId.toString()].pathId, settingSet.date);
+          const result: DeviceLog = await readDevicesData(
+            deviceSet.devices[devId.toString()].pathId, 
+            settingSet.date
+          );
 
           if (!result) {
             deviceData = times.map(() => "x") as []
@@ -82,35 +85,38 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ mode, times, devId }) => {
         
         setDeviceValue(deviceData);
         setDeviceSave(deviceData);
-        
       } catch (error) {
         console.error("DeviceValue get device log: ", error);
       }
     };
     fetchData();
-  }, [devId, times, settingSet.date]);
+  }, [devId, times, settingSet.date, settingSet.viewMode]);
 
   useEffect(() => {
-    settingSet.idViewMode === 0
-    ? setDeviceValue(deviceSave)
-    : setDeviceValue(deviceSave.map(() => devId));
-  }, [settingSet.idViewMode, deviceSave, devId]);
+    settingSet.viewMode === "idCheck"
+      ? setDeviceValue(deviceSave.map(() => devId))
+      : setDeviceValue(deviceSave);
+  }, [settingSet.viewMode, deviceSave, devId]);
 
   return (
     <>
       {deviceValue.map((value:any, index:number) => (
-        <ValueColumn mode={mode} fontsize={settingSet.printFontSize + "px"} key={index}>{value}</ValueColumn>
+        <ValueColumn mode={settingSet.viewMode} fontsize={settingSet.printFontSize + "px"} key={index}>
+          {value}
+        </ValueColumn>
       ))}
     </>
   );
 };
 
 const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
-  
   width: 100%;
   min-width: ${(props) => props.mode === 'print' ? "22px" : "25px"};
+  
   padding: 3px 0px;
+  font-size: ${(props) => props.mode === 'print' 
+  ? props.fontsize 
+  : FONTSET_DEFAULT_DIV_SIZE};
 
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_CONTROL_BG};

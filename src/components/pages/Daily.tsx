@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setApproves, setMenus, setReportTable, setTabSetting, setTableDate, setViewType } from "../../features/reducers/settingSlice";
+import { setApproves, setMenus, setReportTable, setTabSetting, setTableDate, setViewMode } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
-import PrintModal from "../PrintModal";
+import PrintModal from "../print/PrintModal";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -39,8 +39,8 @@ function Daily() {
   ));
 
   const handleIdCheck = useCallback(() => {
-    dispatch(setViewType(settingSet.idViewMode === 0 ? 1 : 0));
-  }, [dispatch, settingSet.idViewMode]);
+    dispatch(setViewMode(settingSet.viewMode === "view" ? "idCheck" : "view"));
+  }, [dispatch, settingSet.viewMode]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -92,23 +92,27 @@ function Daily() {
   }, []);
 
   useEffect(() => {
-
-    console.log("changed date", date);
+    console.log("report date", new Date(date).toLocaleDateString("en-CA").replace(/-/g, ''));
     dispatch(setTableDate(date));
   }, [date, dispatch]);
 
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
-    pageStyle: `@page { size: A4 landscape; }`,
+    pageStyle: `@page { size: A4 landscape; }
+    body {
+      -webkit-print-color-adjust: exact;
+    }`,
     documentTitle: settingSet.printTitle + "_" + new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')
   });
 
   const handleOpenPrint = () => {
     setIsOpen(true);
+    dispatch(setViewMode("print"))
   };
 
   const handlePrintClose = () => {
     setIsOpen(false);
+    dispatch(setViewMode("view"))
   };
 
   const handlePrint = () => {
@@ -128,7 +132,7 @@ function Daily() {
                 selected={new Date(date)}
                 onChange={(value: Date) => setDate(value.getTime())}
                 showIcon={true}
-                dateFormatCalendar="YYYY MM"
+                dateFormatCalendar="yyyy MM"
                 dateFormat=" yyyy / MM / dd"
                 customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
               />
@@ -232,11 +236,10 @@ const ReportLine = styled(BaseFlex1Column)`
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
 (props => ({
-
   margin: '20px',
   width: '30px',
   height: '30px',
-  fontsize: '20px',
+  fontsize: '20',
   color: 'white',
   backgroundColor: props.bgColor || COLORSET_SIGNITURE_COLOR,
   borderRadius: '10px',

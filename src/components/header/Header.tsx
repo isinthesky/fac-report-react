@@ -13,7 +13,7 @@ import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGN
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { throttle } from 'lodash';
 
-import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
+import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 
 export default function Header({ mainTab }: HeaderProps) {
@@ -174,14 +174,6 @@ const SubMenuControlsFlex = styled.div`
 
   grid-template-columns: repeat(10, 1fr);
   height: 30px;
-`;
-
-const SubMenuControlsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  height: 30px;
-  width: calc(100% - 270px);
-  gap: 0px;
 `;
 
 const SettingButton = styled.button<{ fontsize?: string, enable: number }>`

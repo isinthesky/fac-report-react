@@ -7,7 +7,7 @@ import { RootStore } from "../../../store/congifureStore";
 import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column,BaseFlexRow, MediumLabel, BaseFlexColumn, } from "../../../static/componentSet";
 import { IDivision, IStation } from "../../../static/types";
 import { CONST_TYPE_INFO_NAMES } from "../../../env";
-import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_SETTING_TAB_BG } from "../../../static/colorSet";
+import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import DeviceSearch from "./DeviceSearch";
 import { STRING_SETTING_DEVICE_FILTER, STRING_SETTING_DEVICE_NAME_SETTING, STRING_SETTING_DEVICE_TYPE_SELECT } from "../../../static/langSet";
 

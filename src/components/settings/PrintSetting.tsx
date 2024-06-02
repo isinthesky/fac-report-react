@@ -2,19 +2,19 @@ import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useReactToPrint } from 'react-to-print';
-import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row, BigLabel } from '../../static/componentSet';
+import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row } from '../../static/componentSet';
 import { RootStore } from '../../store/congifureStore';
-import { setPrintTitle, setApproves, setPrintFontSize } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
+import { setPrintTitle, setApproves, setPrintFontSize, setViewMode } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
 import { BaseFlexColumn, MediumLabel, BaseModalBack, MiniButton } from '../../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE,STRING_SETTING_SET_PRINT_PREVIEW, STRING_SETTING_SET_PRINT_APPROVE, STRING_SETTING_SET_PRINT_FONT_SIZE, STRING_DAILY_MAIN_BTN_PRINT } from '../../static/langSet';
 import { setUpdateSettingsApprove, updateSettings } from '../../features/api';
 import { COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from '../../static/colorSet';
-import PrintModal from "../PrintModal";
+import PrintModal from "../print/PrintModal";
 
 const PrintSetting: React.FC = () => {
   const dispatch = useDispatch();
-  
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
+
   const [title, setTitle] = useState(settingSet.printTitle);  
   const [approvals, setApprovals] = useState(settingSet.approvals);
   const [fontSize, setFontSizeState] = useState(settingSet.printFontSize);
@@ -51,16 +51,21 @@ const PrintSetting: React.FC = () => {
   };
 
   const handlePreview = () => {
+    dispatch(setViewMode("print"))
     setIsOpen(true);
   };
 
   const handlePrintClose = () => {
+    dispatch(setViewMode("view"))
     setIsOpen(false);
   };
 
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
-    pageStyle: `@page { size: A4 landscape; }`,
+    pageStyle: `@page { size: A4 landscape; }
+    body {
+      -webkit-print-color-adjust: exact;
+    }`,
     documentTitle: settingSet.printTitle + "_" + new Date(settingSet.date).toLocaleDateString("en-CA").replace(/-/g, '')
   });
 
@@ -168,13 +173,6 @@ const ButtonsContainer = styled(BaseFlexCenterDiv)`
   gap: 50px;
 `;
 
-const TitleLabel = styled(BigLabel)`
-  display: flex;  
-  align-items: flex-start;
-  text-align: left;
-  vertical-align: baseline;
-`;
-
 const DescriptLabel = styled(MediumLabel)`
   display: flex;  
   align-items: flex-start;
@@ -192,11 +190,10 @@ const DivHeader = styled.div`
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
 (props => ({
-
   margin: '20px',
   width: '30px',
   height: '30px',
-  fontsize: '20px',
+  fontsize: '20',
   color: 'white',
   backgroundColor: props.bgColor || COLORSET_SIGNITURE_COLOR,
   borderRadius: '10px',

@@ -54,9 +54,7 @@ const UnitGroupSet: React.FC = () => {
           const initDivisionId = (value !== 0)
                                 ? deviceinfo(value).divisionId
                                 : unit.div;
-          
-          console.log("selectedPos", unitGroupSlice.selectedPos);
-
+                                
           return( <ValueSection key={idx}>
                     <IndexLabel>{idx + 1}</IndexLabel>
                     <UnitGroupAutoSelect
@@ -77,7 +75,7 @@ const UnitGroupSet: React.FC = () => {
   return (
     <UnitGroupContainer>
       <BaseFlex1Row>
-        <UnitGroupListControl viewMode={"setting"} />
+        <UnitGroupListControl settingMode={"setting"} />
         <Filter />
         <DevicesContainer>
           <BigLabel>{STRING_SETTING_GROUP_DEVICE_LIST}</BigLabel>

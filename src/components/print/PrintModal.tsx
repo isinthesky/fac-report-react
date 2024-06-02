@@ -1,13 +1,13 @@
 import { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceType from './viewer/UnitType';
-import { ApprovalsType } from '../static/types';
-import { RootStore } from '../store/congifureStore';
-import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../static/componentSet';
-import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../static/langSet';
-import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../static/colorSet';
-import { FONTSET_DEFAULT_DIV_SIZE } from '../static/fontSet';
+import ViewDeviceType from '../viewer/UnitType';
+import { ApprovalsType } from '../../static/types';
+import { RootStore } from '../../store/congifureStore';
+import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../../static/componentSet';
+import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../../static/langSet';
+import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSet';
+import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
 
 type PrintGuideProps = {
   row: number;
@@ -39,7 +39,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
           return (
             <UnitCountainerRow key={colIndex} gap="0px">
               <DeviceContainer>
-                <ViewDeviceType mode="print" key={index} tabPage={currentTab} index={index} type={TypeComp} />
+                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
             </UnitCountainerRow>
           );
@@ -83,6 +83,7 @@ const PrintArea = styled(BaseFlexColumn)`
   padding: 10px 20px;
   
   border: 2px solid #333;
+
   background-color: #FFF;
 `;
 
@@ -113,7 +114,8 @@ const ApproveTable = styled(BaseFlexRow)`
   gap: 1px;
   padding: 1px;
 
-  background-color: ${COLORSET_PRINT_BORDER};
+  // border: 1px solid ${COLORSET_PRINT_BORDER};
+  background-color: ${COLORSET_PRINT_BORDER} !important;
 `;
 
 const ApproveDiv = styled(BaseFlexColumn)`
@@ -121,8 +123,9 @@ const ApproveDiv = styled(BaseFlexColumn)`
   align-items: stretch;
   justify-items: stretch;
   min-width: 70px;
-  // max-width: 90px;
-  gap: 1px;
+
+  // border: 1px solid ${COLORSET_PRINT_BORDER};
+  // background-color: ${COLORSET_PRINT_BORDER};
 `;
 
 const NameDiv = styled(BaseFlexCenterDiv)`
@@ -144,14 +147,17 @@ const UnitCountainerLine = styled(BaseFlexCenterDiv)`
   // align-items: start;
   align-items: center;
   justify-items: stretch;
+  // padding: 1px;
   gap: 2px;
-  // border: 1px solid red;
+
+  background-color: #000;
+  border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const UnitCountainerRow = styled(BaseFlexRow)`
   width: 100%;
   background-color: ${COLORSET_PRINT_BORDER};
-  border: 1px solid ${COLORSET_PRINT_BORDER};
+  // border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const DeviceContainer = styled(BaseFlexRow)`
@@ -163,7 +169,7 @@ const TimeContainer = styled(BaseFlexColumn)`
   width: 50px;
 
   background-color: ${COLORSET_PRINT_BORDER};
-  border: 1px solid ${COLORSET_PRINT_BORDER};
+  // border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`

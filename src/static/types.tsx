@@ -20,7 +20,6 @@ export type SetDeviceType = {
 };
 
 export type ViewUnitProps = {
-  mode: string;
   key: number;
   tabPage: TabPageInfotype
   index: number;
@@ -90,7 +89,7 @@ export type ApprovalsType = {
 }
 
 export type ViewModeProp = {
-  viewMode: string;
+  settingMode: string;
 }
 
 export type setCurrnetUnitProp = {

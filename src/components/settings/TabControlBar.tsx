@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { setMenus } from "../../features/reducers/settingSlice";
 import { setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { RootStore } from "../../store/congifureStore";
-import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_HEADER_SUB_BTN_LINEAR1, COLORSET_HEADER_SUB_BTN_LINEAR2, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_SETTING_TAB_BUTTON_ACTIVE } from "../../static/colorSet";
+import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_SETTING_TAB_BUTTON_ACTIVE } from "../../static/colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DESCRIPTION_LABEL_SIZE } from "../../static/fontSet";
 import { BaseButton, BaseFlexRow, MediumLabel } from "../../static/componentSet";
 import { handleInitSettings } from "./set/handleButtons";

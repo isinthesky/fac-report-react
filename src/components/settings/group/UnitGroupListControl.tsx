@@ -7,7 +7,7 @@ import { RootStore } from '../../../store/congifureStore';
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BigLabel, ControlButton, MediumLabel } from '../../../static/componentSet';
 import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
   
-import { STRING_DEFAULT_APPLY, STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
+import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
 import { Unit, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
 import { COLORSET_GROUP_INPUT_NOMAL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_GROUP_INPUT_ACTIVE_BORDER, COLORSET_GROUP_INPUT_ACTIVE_FONT, COLORSET_GROUP_INPUT_NOMAL_BORDER, COLORSET_GROUP_INPUT_NOMAL_FONT } from '../../../static/colorSet';
@@ -15,7 +15,7 @@ import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
 import { setdeviceSearchWord } from '../../../features/reducers/settingSlice';
 
 
-const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
+const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   const dispatch = useDispatch();
   const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
@@ -85,7 +85,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
   };
 
   const handleApply = () => {
-    if (viewMode === "apply") {
+    if (settingMode === "apply") {
       const currentTabUnit = {...tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]}
       currentTabUnit.dvList = unitGroupSlice.currentGroup.dvList
 
@@ -119,7 +119,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
     <GroupContainer>
       <ListContainer>
         <BaseFlex1Column>
-          <BigLabel>{ viewMode === "setting" ? STRING_SETTING_GROUP_SETTING : STRING_SETTING_GROUP_LIST}</BigLabel>
+          <BigLabel>{ settingMode === "setting" ? STRING_SETTING_GROUP_SETTING : STRING_SETTING_GROUP_LIST}</BigLabel>
         </BaseFlex1Column>
         {unitGroupSlice.groups.length > 0
           ? unitGroupSlice.groups.map((group:Unit, index:number) => (
@@ -141,7 +141,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
                   }}
                   mode={(index) === unitGroupSlice.selectedPos ? "true" : "false"}
                 />
-                {viewMode === "setting" && (
+                {settingMode === "setting" && (
                    editMode[index] ? 
                     (
                       <EditButtonsContainer>
@@ -175,7 +175,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({viewMode}) => {
         : renderEmptyRows()
       }
       </ListContainer>
-      {viewMode === "setting" ? (
+      {settingMode === "setting" ? (
       <ButtonsContainer>
         <BaseButton onClick={handleAdd} widthsize={"50px"}>
           {STRING_SETTING_GROUP_ADD}

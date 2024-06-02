@@ -42,7 +42,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                 ))}
               </TimeContainer>
               <DeviceContainer>
-                <ViewDeviceType mode="view" key={index} tabPage={currentTab} index={index} type={TypeComp} />
+                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
               </DeviceContainer>
             </Container>
           );

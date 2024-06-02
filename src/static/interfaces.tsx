@@ -55,7 +55,6 @@ export interface PageControlBarProps {
 }
 
 export interface DeviceValueProps  {
-  mode: string;
   times: string[];
   devId: number;
 }

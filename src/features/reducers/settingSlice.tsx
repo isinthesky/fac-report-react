@@ -9,7 +9,7 @@ export interface SettingState {
   daily: DailySetting;
   unitPostion: DailySetting;
   tabSetting: TabSetting;
-  idViewMode: number;
+  viewMode: string;
   printTitle: string;
   printFontSize: number;
   deviceSearchWord: string;
@@ -22,18 +22,18 @@ const oneDayMillisec = 24 * 60 * 60 * 1000;
 const yesterday = new Date(today.getTime() - oneDayMillisec);
 
 // 개발
-const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
+// const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
 
 
 const initialState: SettingState = {
   menus: ["11"],
-  date: lastyear.getTime(),
+  date: yesterday.getTime(),
   daily: { row: 2, column: 3 },
   unitPostion: { row: 1, column: 1 },
   tabSetting: { length: Number(INIT_TAB_COUNT) },
-  idViewMode: 0,
+  viewMode: "view",
   printTitle: INIT_PRINT_TITLE as string,
-  printFontSize: 12,
+  printFontSize: 9,
   deviceSearchWord: "",
   approvals: [{checked:false, text:""},
               {checked:false, text:""},
@@ -45,13 +45,7 @@ export const settingSlice = createSlice({
   initialState,
   reducers: {
     setMenus: (state, action: PayloadAction<string[]>) => {
-      
-      // state.menus 배열을 비우고 
-      // action.payload 을 state.menus 에 
-      // 하나씩 넣어준다.
-
       state.menus.length = 0;
-
       action.payload.forEach((menu) => {
         state.menus.push(menu);
       });
@@ -71,8 +65,8 @@ export const settingSlice = createSlice({
     setTabSetting: (state, action: PayloadAction<TabSetting>) => {
       state.tabSetting = action.payload;
     },
-    setViewType: (state, action: PayloadAction<number>) => {
-      state.idViewMode = action.payload;
+    setViewMode: (state, action: PayloadAction<string>) => {
+      state.viewMode = action.payload;
     },
     setdeviceSearchWord: (state, action: PayloadAction<string>) => {
       state.deviceSearchWord = action.payload;
@@ -89,6 +83,6 @@ export const settingSlice = createSlice({
   },
 });
 
-export const { setMenus, setReportTable, setUnitSelectPosition, setTabSetting, setTableDate, setViewType, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
+export const { setMenus, setReportTable, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;
 

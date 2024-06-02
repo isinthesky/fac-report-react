@@ -15,7 +15,7 @@ import { setUnitSelectPosition, setdeviceSearchWord } from "../../../features/re
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
-import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_CONTROL_BUTTON_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
+import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT, CONST_TYPE_INFO_INDEX } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
@@ -154,7 +154,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
         <BaseFlexCenterDiv>
           <BaseButton widthsize="40px"> {"< <"}</BaseButton>
         </BaseFlexCenterDiv>
-        <UnitGroupListControl viewMode={"apply"}/>
+        <UnitGroupListControl settingMode={"apply"}/>
       </BaseFlex1Row>
       <ButtonGroup>
         <BaseButton onClick={handleRefresh}>{STRING_DEFAULT_REFRESH}</BaseButton>

@@ -5,7 +5,7 @@ import { SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, SmallLabel } from "../../../static/componentSet";
-import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT, COLORSET_GRID_HEADER_BG } from "../../../static/colorSet";
+import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT } from "../../../static/colorSet";
 
 const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);

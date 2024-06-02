@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH, CONST_LOGIN_PW, CONST_KEY_VALUE } from "../../env";
@@ -14,7 +14,6 @@ function Main() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {    
@@ -31,12 +30,6 @@ function Main() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [toggle]);
-
-  const containerStyle = backgroundLoaded ? {
-    backgroundImage: `url(${DEFAULT_BGIMG_PATH})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  } : {};
 
   const handleLogin = () => {
     if (!toggle) {
@@ -59,13 +52,13 @@ function Main() {
   };
 
   return (
-  <Flat style={containerStyle}>
+  <Flat>
     <BackgroundImage src={DEFAULT_BGIMG_PATH} />
     <img src={DEFAULT_MAINLOGO_COLUMN_PATH} alt="main_logo" width={400} />
     <LocationLabel>{DEFAULT_LOCATION_NAME}</LocationLabel>
     <MainRow>
       <MainColumn>
-        <MainRow_INPUT>
+        <MainRowINPUT>
           <InputLabel tabIndex={-1} >{STRING_MAIN_LOGIN_ID}</InputLabel>
           <Input
             tabIndex={1}
@@ -81,8 +74,8 @@ function Main() {
             }}
             required
           />
-        </MainRow_INPUT>
-        <MainRow_INPUT>
+        </MainRowINPUT>
+        <MainRowINPUT>
           <InputLabel tabIndex={-1}>{STRING_MAIN_LOGIN_PW}</InputLabel>
           <Input
             tabIndex={2}
@@ -98,7 +91,7 @@ function Main() {
             }}
             required
           />
-        </MainRow_INPUT>
+        </MainRowINPUT>
       </MainColumn>
       <MainRow>
         <LoginButton tabIndex={3} onClick={handleLogin}>
@@ -135,7 +128,7 @@ const MainRow = styled(BaseFlexRow)`
   background-color: transparent;
 `;
 
-const MainRow_INPUT = styled(BaseFlexRow)`
+const MainRowINPUT = styled(BaseFlexRow)`
   gap: 10px;
   background-color: transparent;
   align-items: center;

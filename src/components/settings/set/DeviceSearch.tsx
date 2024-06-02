@@ -5,7 +5,7 @@ import { RootStore } from "../../../store/congifureStore";
 import { BaseInput, ControlButton, BaseFlexDiv } from '../../../static/componentSet';
 import { ICON_DAY_SEARCH, ICON_DAY_REFRESH } from '../../../static/constSet';
 import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
-import { COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_INPUT_BG } from '../../../static/colorSet';
+import { COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_INPUT_BG } from '../../../static/colorSet';
 
 const DeviceSearch: React.FC = () => {
   const dispatch = useDispatch()
@@ -15,7 +15,6 @@ const DeviceSearch: React.FC = () => {
   useEffect(() => {
     setSearchWord(deviceSearchWord);
   }, [deviceSearchWord]);
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("input searchWord", searchWord)
