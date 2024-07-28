@@ -27,7 +27,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
       <UnitCountainerLine key={rowIndex}>
         <TimeContainer gap="1px">
           {times.map((time: string, index: number) => (
-            <TimeDiv key={index} fontsize={settingSet.printFontSize + "px"}>{time}</TimeDiv>
+            <TimeDiv key={index} fontSize={settingSet.printFontSize + "px"}>{time}</TimeDiv>
           ))} 
         </TimeContainer>
                 
@@ -75,7 +75,6 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
 
 const PrintArea = styled(BaseFlexColumn)`
   position: relative;
-  
   width: 257mm;
   height: 170mm;
 
@@ -83,7 +82,6 @@ const PrintArea = styled(BaseFlexColumn)`
   padding: 10px 20px;
   
   border: 2px solid #333;
-
   background-color: #FFF;
 `;
 
@@ -110,22 +108,18 @@ const ApproveTable = styled(BaseFlexRow)`
   justify-content: flex-end;
 
   height: 60px;
-  width: 240px;
+  width: 180px;
   gap: 1px;
   padding: 1px;
 
-  // border: 1px solid ${COLORSET_PRINT_BORDER};
-  background-color: ${COLORSET_PRINT_BORDER} !important;
+  background-color: ${COLORSET_PRINT_BORDER};
 `;
 
 const ApproveDiv = styled(BaseFlexColumn)`
   flex:1;
   align-items: stretch;
   justify-items: stretch;
-  min-width: 70px;
-
-  // border: 1px solid ${COLORSET_PRINT_BORDER};
-  // background-color: ${COLORSET_PRINT_BORDER};
+  min-width: 60px;
 `;
 
 const NameDiv = styled(BaseFlexCenterDiv)`
@@ -144,10 +138,8 @@ const SignDiv = styled(BaseFlexDiv)`
 `;
 
 const UnitCountainerLine = styled(BaseFlexCenterDiv)`
-  // align-items: start;
   align-items: center;
   justify-items: stretch;
-  // padding: 1px;
   gap: 2px;
 
   background-color: #000;
@@ -157,7 +149,6 @@ const UnitCountainerLine = styled(BaseFlexCenterDiv)`
 const UnitCountainerRow = styled(BaseFlexRow)`
   width: 100%;
   background-color: ${COLORSET_PRINT_BORDER};
-  // border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
 const DeviceContainer = styled(BaseFlexRow)`
@@ -169,12 +160,11 @@ const TimeContainer = styled(BaseFlexColumn)`
   width: 50px;
 
   background-color: ${COLORSET_PRINT_BORDER};
-  // border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
-const TimeDiv = styled(BaseFlexCenterDiv)<{ fontsize?: string }>`
+const TimeDiv = styled(BaseFlexCenterDiv)<{ fontSize?: string }>`
   padding: 3px 2px;
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
+  font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${COLORSET_PRINT_FONT};
   background-color: #FFF;
 `;

@@ -31,37 +31,35 @@ export const BaseFlexCenterDiv = styled.div<{ bgColor?: string }>`
   align-items: center;
   justify-content: center;
   background-color: ${(props) => props.bgColor || "transparent"};
-
 `;
 
-export const BaseFlex1Div = styled.div<{ fontsize?: string }>`
+export const BaseFlex1Div = styled.div`
   flex: 1;
   display: flex;
   
   gap: 10px;
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
   background-color: transparent;
 `;
 
 
-export const BaseFlex1Column = styled.div<{ fontsize?: string }>`
+export const BaseFlex1Column = styled.div<{ fontSize?: string }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   
   gap: 10px;
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
+  font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   background-color: transparent;
 `;
 
 
-export const BaseFlex1Row = styled.div<{ fontsize?: string }>`
+export const BaseFlex1Row = styled.div<{ fontSize?: string }>`
   flex: 1;
   display: flex;
   flex-direction: row;
 
   gap: 10px;
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_DIV_SIZE};
+  font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   background-color: transparent;
 `;
 
@@ -84,7 +82,7 @@ export const BaseModalBack = styled.div`
 export const BaseButton = styled.button<{ heightsize?:string, widthsize?:string, fontsize?:string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_BUTTON_HEIGHT};
   width: ${(props) => props.widthsize || SIZESET_DEFAULT_BUTTON_WIDTH};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_BUTTON_SIZE};
 
   background-color: ${COLORSET_NORMAL_CONTROL_BG};
   border: 1px solid ${COLORSET_NORMAL_CONTROL_BORDER};
@@ -99,7 +97,7 @@ export const BaseButton = styled.button<{ heightsize?:string, widthsize?:string,
 export const ActiveButton = styled.button<{heightsize?:string, widthsize?:string, bgColor?: string, fontsize?:string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_BUTTON_HEIGHT};
   width: ${(props) => props.widthsize || SIZESET_DEFAULT_BUTTON_WIDTH};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_BUTTON_SIZE};
 
   background-color: ${COLORSET_ACTIVE_CONTROL_BG};
   border: 1px solid ${COLORSET_ACTIVE_CONTROL_BG};
@@ -126,7 +124,7 @@ export const ControlButton = styled.button<{ heightsize?:string, widthsize?:stri
   background-color: ${COLORSET_CONTROL_BUTTON_BG};
   border: 0px solid ${COLORSET_CONTROL_BUTTON_BORDER};
 
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_BUTTON_SIZE};
 
   &:hover {
     background-color: ${COLORSET_CONTROL_BUTTON_HOVER};
@@ -144,7 +142,7 @@ export const MiniButton = styled.button<{ heightsize?:string, fontsize?:string }
 
   border: 0px solid #fff;
   
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_BUTTON_SIZE};
 `;
 
 
@@ -152,7 +150,7 @@ export const CenterLabel = styled.button<{ heightsize?:string, fontsize?:string 
   height: ${(props) => props.heightsize || SIZESET_CONTROL_CENTER_LABEL_HEIGHT};
   width: ${(props) => props.heightsize || SIZESET_CONTROL_CENTER_LABEL_WIDTH};
 
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_BUTTON_SIZE};
 
   background-color: transparent;
   border: none;
@@ -162,7 +160,7 @@ export const CenterLabel = styled.button<{ heightsize?:string, fontsize?:string 
 export const BigLabel = styled.label<{ fontsize?:string, heightSize?: string }>`
   padding: 1px;
   height: ${(props) => props.heightSize || "20px"};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BIG_LABEL_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_BIG_LABEL_SIZE};
   
   color: ${COLORSET_FONT_BASE};
   background-color: transparent;
@@ -172,7 +170,7 @@ export const BigLabel = styled.label<{ fontsize?:string, heightSize?: string }>`
 export const MediumLabel = styled.label<{ fontsize?:string, heightSize?: string }>`
   padding: 1px;
   height: ${(props) => props.heightSize || "20px"};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_MIDIUM_LABEL_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_MIDIUM_LABEL_SIZE};
   
   color: ${COLORSET_FONT_BASE};
   background-color: transparent;
@@ -182,7 +180,7 @@ export const MediumLabel = styled.label<{ fontsize?:string, heightSize?: string 
 export const SmallLabel = styled.label<{ fontsize?:string, heightSize?: string }>`
   padding: 1px;
   height: ${(props) => props.heightSize || "14px"};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_SMALL_LABEL_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_SMALL_LABEL_SIZE};
   
   color: ${COLORSET_FONT_BASE};
   background-color: transparent;
@@ -191,7 +189,7 @@ export const SmallLabel = styled.label<{ fontsize?:string, heightSize?: string }
 
 export const BaseInput = styled.input<{ fontsize?:string,  heightsize?: string, bgColor?: string, borderColor?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_INPUT_SIZE};
   color: white;
   background-color: ${(props) => props.bgColor || COLORSET_DEFAULT_INPUT_BG};
   border: 1px solid ${(props) => props.borderColor || COLORSET_DEFAULT_INPUT_BORDER};
@@ -203,7 +201,7 @@ export const BaseSelect = styled.select<{ fontsize?:string, heightsize?: string,
   width: 100%;
   padding: 3px;
   
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_SELECT_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_SELECT_SIZE};
   border: 1px solid ${(props) => props.borderColor || COLORSET_DEFAULT_INPUT_BORDER};
   color: white;
   background-color: ${(props) => props.bgColor || COLORSET_DEFAULT_INPUT_BG};
@@ -213,7 +211,7 @@ export const BaseSelect = styled.select<{ fontsize?:string, heightsize?: string,
 export const BaseOption = styled.option<{ fontsize?:string, heightsize?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_OPTION_HEIGHT};
   padding: 3px;
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_OPTION_SIZE};
+  font-size: ${(props) => props.fontsize? props.fontsize : FONTSET_DEFAULT_OPTION_SIZE};
 
   gap: 10px;
 `; 

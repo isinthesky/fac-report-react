@@ -97,12 +97,6 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
     dispatch(setdeviceSearchWord(""))
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape') {
-      handleClearInput();
-    }
-  };
-
   const renderEmptyRows = () => {
     const emptyRows = [];
     for (let i = 0; i < 10; i++) {
@@ -256,9 +250,9 @@ const IndexLabel = styled(MediumLabel)`
   width: 8px;
 `;
 
-const NameInput = styled.input<{ mode: string, heightsize?: string, fontsize?: string }>`
+const NameInput = styled.input<{ mode: string, heightsize?: string, fontSize?: string }>`
   height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_INPUT_SIZE};
+  font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_INPUT_SIZE};
   width: 100px;
   
   color: ${(props) => (props.mode === "true" ? COLORSET_GROUP_INPUT_ACTIVE_FONT : COLORSET_GROUP_INPUT_NOMAL_FONT)};

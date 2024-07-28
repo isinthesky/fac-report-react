@@ -32,18 +32,22 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
   return (
     <Container>
       <Row>
-        <TitleColumn mode={settingSlice.viewMode} fontsize={settingSlice.printFontSize + "px"}>{tabPage.unitList[index].name}</TitleColumn>
+        <TitleColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+          {tabPage.unitList[index].name}
+        </TitleColumn>
       </Row>
       <UnitGrid>
         {sections.map((section, sectionIdx) => (
           <Column key={`section-${sectionIdx}`} >
             <Row>
-              <SectionDiv mode={settingSlice.viewMode} fontsize={settingSlice.printFontSize + "px"}>{section.label}</SectionDiv>
+              <SectionDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                {section.label}
+              </SectionDiv>
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
                 <DeviceTypeValueDiv key={`value-${sectionIdx}-${valueIdx}`}>
-                  <DevTypeDiv mode={settingSlice.viewMode} fontsize={settingSlice.printFontSize + "px"}>
+                  <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                     {value}
                   </DevTypeDiv>
                   <DeviceValue times={tabPage.times} devId={tabPage.unitList[index].dvList[pos++]} />
@@ -82,11 +86,11 @@ const UnitGrid = styled.div<{ mode?: string }>`
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const TitleColumn = styled(BaseFlexCenterDiv) <{ fontsize?: string, mode?: string }>`
+const TitleColumn = styled(BaseFlexCenterDiv) <{ fontSize?: string, mode?: string }>`
   width: 100%;
   padding: 3px 0px;
 
-  font-size: ${(props) => props.mode === 'print' ? props.fontsize : FONTSET_DEFAULT_DIV_SIZE};
+  font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
@@ -107,25 +111,25 @@ const DeviceTypeValueDiv = styled(BaseFlexCenterDiv) <{ mode?: string }>`
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const SectionDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontsize?: string }>`
+const SectionDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string }>`
   width: 100%;
 
   padding: 3px 0px;
   gap: 1px;
 
-  font-size: ${(props) => props.mode === 'print' ? props.fontsize : FONTSET_DEFAULT_DIV_SIZE};
+  font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const DevTypeDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontsize?: string }>`
+const DevTypeDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string }>`
   flex-direction: column;
   width: 100%;
   // min-width: 25px;
 
   padding: 3px 0px;
-  font-size: ${(props) => props.mode === 'print' ? props.fontsize : FONTSET_DEFAULT_DIV_SIZE};
+  font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitInfo from "./UnitInfo";
@@ -6,7 +6,6 @@ import { setUpdateSettingsColRow } from "../../../features/api";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton } from "../../../static/componentSet";
 import { FONTSET_DESCRIPTION_LABEL_SIZE } from "../../../static/fontSet"
-import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet"
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DISABLE_COLOR } from "../../../static/colorSet"
 import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_SET_GRID_ARRAY, STRING_DEFAULT_ROW, STRING_DEFAULT_COL} from "../../../static/langSet"
 import { setReportTable } from "../../../features/reducers/settingSlice";
@@ -30,28 +29,6 @@ const ComposeView: React.FC = () => {
     await setUpdateSettingsColRow(rows, columns);
     dispatch(setReportTable({ row: rows, column: columns }));
   };
-
-  useEffect(() => {
-    (async () => {
-      try {
-        getUnitList();
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [deviceSlice]);
-
-
-  useEffect(() => {
-    (async () => {
-      try {
-        getUnitList();
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [tabSlice.settingPosition]);
-
 
   const getUnitList = useCallback(() => {
     const rowlist = [];
@@ -80,7 +57,7 @@ const ComposeView: React.FC = () => {
       }
     }
     return rowlist;
-  }, [tabSlice, rows, columns]); // Add dependencies here
+  }, [tabSlice, rows, columns, tabSlice.settingPosition, deviceSlice]); // Add dependencies here
 
   return (
     <SettingViewContainer>
@@ -152,15 +129,6 @@ const ArraySelect = styled.select<{ mode: string}>`
   background-color: ${(props) => (props.mode === "true" ? COLORSET_DISABLE_COLOR : "white")};
   pointer-events: ${(props) => (props.mode === "true" ? "none" : "auto")};
 `
-
-const ArrayInput = styled.input<{ mode: string, heightsize?: string, disable?: string }>`
-  text-align: center;
-  width: 50px;
-  height: ${(props) => props.heightsize || SIZESET_DEFAULT_INPUT_HEIGHT};
-
-  background-color: ${(props) => (props.mode === "true" ? COLORSET_DISABLE_COLOR : "white")};
-  border: none;
-`;
 
 const ArrayApplyButton = styled(ActiveButton)`
   display: flex;

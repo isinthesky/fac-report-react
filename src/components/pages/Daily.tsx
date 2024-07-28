@@ -31,7 +31,6 @@ function Daily() {
   const [isOpen, setIsOpen] = useState(false);
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
-
   const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref: any) => (
     <CalendarButton onClick={onClick} ref={ref}>
       {value}
@@ -59,6 +58,8 @@ function Daily() {
   useEffect(() => {
     (async () => {
       const response = await getSettings();
+
+      console.log(response)
   
       if (response) {
         dispatch(setReportTable(response.settings));
@@ -92,7 +93,7 @@ function Daily() {
   }, []);
 
   useEffect(() => {
-    console.log("report date", new Date(date).toLocaleDateString("en-CA").replace(/-/g, ''));
+    console.log("changed date", date);
     dispatch(setTableDate(date));
   }, [date, dispatch]);
 
@@ -168,7 +169,6 @@ const Flat = styled(BaseFlex1Column)`
   background-color: ${COLORSET_BACKGROUND_COLOR};
 `;
 
-
 const Title = styled(BaseFlexDiv)`
   justify-content: start;
 
@@ -239,7 +239,7 @@ const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
   margin: '20px',
   width: '30px',
   height: '30px',
-  fontsize: '20',
+  fontsize: '20px',
   color: 'white',
   backgroundColor: props.bgColor || COLORSET_SIGNITURE_COLOR,
   borderRadius: '10px',

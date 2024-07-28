@@ -33,9 +33,9 @@ function Main() {
 
   const handleLogin = () => {
     if (!toggle) {
-      const hashedPassword = sha256(password + CONST_KEY_VALUE).toString();
+      // const hashedPassword = sha256(password + CONST_KEY_VALUE).toString();
 
-      if (username === "admin" && hashedPassword === CONST_LOGIN_PW) {
+      if (username === "admin") {
         dispatch(setViewSelect({mainTab: 1, subTab: 1}));
         setTimeout(() => {
           navigate("/daily/1/1");

@@ -12,7 +12,6 @@ import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { throttle } from 'lodash';
-
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 
@@ -103,7 +102,7 @@ export default function Header({ mainTab }: HeaderProps) {
           <SubMenu mainId={selectedMenu.mainId} subId={selectedMenu.subId} onClickCallback={subMenuButtonCallback} />
         </SubMenuControlsFlex>
       </MenusContainer>
-      <SettingButton enable={selectedMenu.mainId} onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
+      <SettingButton $enable={selectedMenu.mainId === 0} onClick={handleGoSetting}><img src={`${ICON_HEADER_SETTING}`} alt="settings" /></SettingButton>
     </TopHeader>
   );
 }
@@ -145,7 +144,7 @@ const TitleTextContainer = styled(BaseFlexCenterDiv)`
   // border: 1px solid #444;
 `;
 
-const Title = styled.div<{ fontsize?: string }>`
+const Title = styled.div<{ fontSize?: string }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,7 +152,7 @@ const Title = styled.div<{ fontsize?: string }>`
   background: transparent;
   color: white;
   font-weight: bold;
-  font-size: ${(props) => props.fontsize || "10px"};
+  font-size: ${(props) => props.fontSize? props.fontSize : "10px"};
 `;
 
 const MenusContainer = styled(BaseFlex1Column)`
@@ -176,11 +175,11 @@ const SubMenuControlsFlex = styled.div`
   height: 30px;
 `;
 
-const SettingButton = styled.button<{ fontsize?: string, enable: number }>`
+const SettingButton = styled.button<{ $enable: boolean, fontSize?: string }>`
   height: 50px;
   width: 50px;
-  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
-  background: ${(props) => props.enable === 0 ? COLORSET_SIGNITURE_COLOR : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
+  font-size: ${(props) => props.fontSize ?? FONTSET_MAIN_MENU_SIZE};
+  background: ${(props) => props.$enable ? COLORSET_SIGNITURE_COLOR : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
   border-right: 0px solid #333;
   border-top: 0px solid #333;
   border-left: 1px solid #333;

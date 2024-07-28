@@ -18,7 +18,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: times.length}, () => "0")); 
 
   const getLogByTimestamp = useCallback ((devLog:DeviceLog, timestamp: number) => {
-    const precedingTimestamp = Object.entries (devLog).map( (value)=> {
+    const precedingTimestamp = Object.entries(devLog).map( (value)=> {
       if (value[1].issued_date < timestamp) {
         return value;
       }}).filter((value) => value)
@@ -101,7 +101,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   return (
     <>
       {deviceValue.map((value:any, index:number) => (
-        <ValueColumn mode={settingSet.viewMode} fontsize={settingSet.printFontSize + "px"} key={index}>
+        <ValueColumn mode={settingSet.viewMode} fontSize={settingSet.printFontSize + "px"} key={index}>
           {value}
         </ValueColumn>
       ))}
@@ -109,17 +109,17 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
   );
 };
 
-const ValueColumn = styled(BaseFlexCenterDiv)<{ fontsize?: string, mode?: string }>`
+const ValueColumn = styled(BaseFlexCenterDiv)<{ fontSize?: string, mode?: string }>`
   width: 100%;
-  min-width: ${(props) => props.mode === 'print' ? "22px" : "25px"};
+  min-width: ${(props) => props.mode === "print" ? "22px" : "25px"};
   
   padding: 3px 0px;
-  font-size: ${(props) => props.mode === 'print' 
-  ? props.fontsize 
+  font-size: ${(props) => props.mode === "print" 
+  ? props.fontSize 
   : FONTSET_DEFAULT_DIV_SIZE};
 
-  color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
-  background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_CONTROL_BG};
+  color: ${(props) => props.mode === "print" ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
+  background-color: ${(props) => props.mode === "print" ? "white" : COLORSET_GRID_CONTROL_BG};
 `;
 
 export default React.memo(DeviceValue);

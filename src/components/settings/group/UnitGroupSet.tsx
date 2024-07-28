@@ -29,9 +29,6 @@ const UnitGroupSet: React.FC = () => {
     try {
       await updateUnitGroupList(unitGroupSlice.groups)
       dispatch(updateFromCurrent(unitGroupSlice.selectedPos));
-      
-      console.log("unitGroupSlice.selectedPos", unitGroupSlice.selectedPos);
-      console.log(unitGroupSlice.groups, unitGroupSlice.currentGroup);
     } catch (error) {
       console.error(error);
     }

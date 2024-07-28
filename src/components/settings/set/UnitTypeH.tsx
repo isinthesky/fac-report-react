@@ -72,11 +72,9 @@ const UnitContainer = styled(BaseFlex1Column)`
 const TitleDiv = styled(BaseFlex1Div)`
   align-items: center;
   justify-content: start;
-  
   padding: 0px 10px;
 
   color: ${COLORSET_GRID_CONTROL_FONT};
-
   background-color: ${COLORSET_ACTIVE_CONTROL_BG};
 `;
 

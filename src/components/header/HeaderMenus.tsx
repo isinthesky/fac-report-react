@@ -16,14 +16,14 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
   const [mainMenu, setMainMenu] = useState(
     Array.from({ length: 5 }, (_, i) => ({
       id: i + 1,
-      enable: "false"
+      isActive: false
     }))
   );
 
   useEffect(() => {
     setMainMenu(mainMenu.map(menu => ({
       ...menu,
-      enable: menu.id === tabPositionSlice.main ? "true" : "false"
+      isActive: menu.id === tabPositionSlice.main
     })));
   }, [tabPositionSlice.main]);
 
@@ -35,12 +35,12 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
             <MainButton
               key={obj.id}
               id={obj.id.toString()}
-              enable={obj.enable}
+              $isActive={obj.isActive}
               onClick={() => {
                 onClickCallback(obj.id);
                 setMainMenu(mainMenu.map(menu => ({
                   ...menu,
-                  enable: menu.id === obj.id ? "true" : "false"
+                  isActive: menu.id === obj.id
                 })));
               }}
             >
@@ -48,7 +48,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onClickCallback }) => {
             </MainButton>
           )
         } else  {
-          return <MainButton key={obj.id} id={obj.id.toString()} enable="false" />
+          return <MainButton key={obj.id} id={obj.id.toString()} $isActive={false} />
         }
       })}
     </>
@@ -69,16 +69,16 @@ export const SubMenu: React.FC<SubMenuProps> = ({
   const [subMenu, setSubMenu] = useState(
     Array.from({ length: 5 }, (_, i) => ({
       id: i + 1,
-      enable: "false"
+      isActive: false
     }))
   );
 
   useEffect(() => {
     setSubMenu(subMenu.map(sub => ({
       ...sub,
-      enable: sub.id === subId ? "true" : "false"
+      isActive: sub.id === subId
     })));
-  }, [mainId]);
+  }, [mainId, subId]);
 
   if (mainId === 0) {
     return <></>;
@@ -91,12 +91,12 @@ export const SubMenu: React.FC<SubMenuProps> = ({
               <SubButton
                 key={obj.id}
                 id={obj.id.toString()}
-                enable={obj.enable}
+                $isActive={obj.isActive}
                 onClick={() => {
                   onClickCallback(mainId, obj.id);
                   setSubMenu(subMenu.map(sub => ({
                     ...sub,
-                    enable: sub.id === obj.id ? "true" : "false"
+                    isActive: sub.id === obj.id
                   })));
                 }}
               >
@@ -112,7 +112,7 @@ export const SubMenu: React.FC<SubMenuProps> = ({
   }  
 };
 
-const FlatButtonBase = styled.button<{ BGColor?: string, fontColor?: string, fontSize?: string }>`
+const FlatButtonBase = styled.button<{ BGColor?: string, fontColor?: string}>`
   height: 50px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -120,24 +120,23 @@ const FlatButtonBase = styled.button<{ BGColor?: string, fontColor?: string, fon
   border: 0px solid black;
 `;
 
-const MainButton = styled(FlatButtonBase)<{ enable?: string }>`
-  color: ${(props) => props.enable === "true" ? "white" : "#444"};
-  background: ${(props) => props.enable === "true"
-    ? `linear-gradient(to bottom, ${COLORSET_SIGNITURE_COLOR}, ${COLORSET_SIGNITURE_COLOR})`  // Enabled background color
+const MainButton = styled(FlatButtonBase)<{ $isActive: boolean }>`
+  color: ${(props) => props.$isActive ? "white" : "#444"};
+  background: ${(props) => props.$isActive
+    ? `linear-gradient(to bottom, ${COLORSET_SIGNITURE_COLOR}, ${COLORSET_SIGNITURE_COLOR})`  // Active background color
     : `linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2})`};
   border-bottom: 1px solid ${COLORSET_HEADER_BORDER2};
   border-left: 1px solid ${COLORSET_HEADER_BORDER2};
 `;
 
-const SubButton = styled.button<{ fontsize?: string, enable?: string }>`
+const SubButton = styled.button<{ fontSize?: string, $isActive?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
 
   height: 30px;
-  font-size: ${(props) => props.fontsize || FONTSET_MAIN_MENU_SIZE};
-  color: ${(props) => props.enable === "true" ? "white" : "#444"};
-  border: 2px solid #F44; /* Consolidated border property */
+  font-size: ${(props) => props.fontSize ?? FONTSET_MAIN_MENU_SIZE};
+  color: ${(props) => props.$isActive ? "white" : "#444"};
   background-color: transparent;
   border: 0px solid black;
 `;

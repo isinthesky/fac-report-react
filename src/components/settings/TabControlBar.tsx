@@ -53,14 +53,14 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
       <div key={mainTab} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <MainTabLabel>
           {process.env[`REACT_APP_INIT_REPORT_TYPE${mainTab}`]}
-        </MainTabLabel>
+        </MainTabLabel>ß
         <div>
           {subTabs.map(subTab => (
             <TabButton
               key={`${mainTab}${subTab}`}
               onClick={() => handleTabClick(mainTab.toString(), subTab.toString())}
               mode={(Number(mainTab) === tabPosition.main && Number(subTab) === tabPosition.sub) ? "true" : "false"}
-              fontsize={FONTSET_DEFAULT_BUTTON_SIZE}
+              fontSize={FONTSET_DEFAULT_BUTTON_SIZE}
             >
               {process.env[`REACT_APP_INIT_REPORT_TYPE${mainTab}_SUB${subTab}`]}
             </TabButton>
@@ -94,19 +94,18 @@ const MainTabLabel = styled(MediumLabel)`
   font-size: ${FONTSET_DESCRIPTION_LABEL_SIZE};
 `;
 
-const TabButton = styled.button<{ mode: string, fontsize?: string }>`
+const TabButton = styled.button<{ mode: string, fontSize?: string }>`
   height: 30px;
   width: 80px;
   margin-right: 5px;
 
   color: ${(props) => (props.mode === "true" ? "white" : COLORSET_NORMAL_CONTROL_FONT)};
-  font-size: ${(props) => props.fontsize || FONTSET_DEFAULT_BUTTON_SIZE};
+  font-size: ${(props) => props.fontSize ? props.fontSize : FONTSET_DEFAULT_BUTTON_SIZE};
   
   background: ${(props) => props.mode === "true" 
     ? COLORSET_SETTING_TAB_BUTTON_ACTIVE
     : COLORSET_DARK_CONTROL_BG};
   
-  // border: 0px solid #333;
   border: 1px solid #333;
   border-bottom: ${(props) => props.mode === "true" ? `1px solid ${COLORSET_ACTIVE_CONTROL_BG}` : `1px solid ${COLORSET_DARK_CONTROL_BG}`};
 `;

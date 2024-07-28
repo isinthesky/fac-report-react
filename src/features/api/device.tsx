@@ -8,37 +8,38 @@ const axiosInstance = axios.create({
 
 
 export const resetXmlDevice = async (): Promise<any> => {
-    try {
-      const download = await axiosInstance.get("/xml/downloadXml");
-      if (download.data.success) {
-        await axiosInstance.put("/report/device/resetDeviceInfo");
-      }
-    } catch (error) {
-      console.error("resetXmlDevice");
-      
+  try {
+    const download = await axiosInstance.get("/xml/downloadXml");
+    if (download.data.success) {
+      await axiosInstance.put("/report/device/resetDeviceInfo");
     }
-  };
+  } catch (error) {
+    console.error("resetXmlDevice");
+  }
+};
 
   
 export const getDeviceInfo = async (): Promise<any> => {
-    try {
-      const response = await axiosInstance.get("/report/device/getDeviceInfo");      
-      response.data.data.devices = response.data.data.devices.filter((dev: IDevice) => dev.pathId !== 0);
+  try {
+    const response = await axiosInstance.get("/report/device/getDeviceInfo");      
+    response.data.data.devices = response.data.data.devices.filter(
+      (dev: IDevice) => dev.pathId !== 0
+    );
 
-      const devices: { [key: number]: IDevice } = {};          
-      for (const dev of response.data.data.devices) {
-        const key = Number(dev.id);
-        devices[key] = dev;
-      }
-
-      response.data.data.devices = devices
-
-        return response.data.data;
-    } catch (error) {
-      console.error(error);
-      return false;
+    const devices: { [key: number]: IDevice } = {};          
+    for (const dev of response.data.data.devices) {
+      const key = Number(dev.id);
+      devices[key] = dev;
     }
-  };
+
+    response.data.data.devices = devices
+
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 
 export const updateSettingsTabPage = async (

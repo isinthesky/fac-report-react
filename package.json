@@ -1,6 +1,6 @@
 {
   "name": "fac-report-client",
-  "version": "0.2.4",
+  "version": "0.2.39",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
@@ -55,7 +55,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^20.4.6",
     "@types/react": "^18.2.18",
-    "@types/react-datepicker": "^4.15.0",
+    "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.2.7",
     "dotenv": "^16.0.3",
     "eslint": "^8.57.0",

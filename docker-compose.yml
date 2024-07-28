@@ -1,11 +1,12 @@
 services:
   front:
+    container_name: fac-report
     build:
       context:  "./"
-      dockerfile: dockerfile
-    container_name: fac-report-client
+    ports:
+      - "3000:3000"
     volumes:
       - .:/app/front
-      # - /app/front/node_modules
-    ports:
-      - "5003:5003"
+      - /app/front/node_modules
+    restart: always
+    

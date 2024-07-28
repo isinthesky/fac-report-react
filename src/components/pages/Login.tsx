@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
 
