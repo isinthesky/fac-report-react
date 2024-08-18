@@ -19,16 +19,17 @@ import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRI
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT, CONST_TYPE_INFO_INDEX } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
-const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
+const ComposeSet: React.FC = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
   const deviceRow = settingSet.unitPostion.row;
   const deviceColumn = settingSet.unitPostion.column;
-  const position = deviceColumn + (deviceRow - 1) * column - 1;
+  const position = deviceColumn + (deviceRow - 1) * deviceColumn - 1;
+  
   const [deviceType, setDeviceType] = useState(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
-      return tabPageSlice.currentTabPage.unitList[position]?.type || 0;
+      return tabPageSlice.currentTabPage.tab_table_infos[position]?.type || 0;
     }
     return 0;
   });
@@ -99,12 +100,12 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
   useEffect(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
-      setDeviceType(tabPageSlice.currentTabPage.unitList[position]?.type || 0);
+      setDeviceType(tabPageSlice.currentTabPage.tab_table_infos[position]?.type || 0);
     }
   }, [tabPageSlice, deviceColumn, deviceRow, position]);
 
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
-    const position = columnIndex + (rowIndex - 1) * column - 1;
+    const position = columnIndex + (rowIndex - 1) * deviceColumn - 1;
 
     dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
     dispatch(setTabUnitPosition({index: position}));
@@ -113,8 +114,8 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
 
   const renderGridButtons = () => {
     const gridButtons = [];
-    for (let r = 0; r < row; r++) {
-      for (let c = 0; c < column; c++) {
+    for (let r = 0; r < tabPageSlice.currentTabPage.tbl_row; r++) {
+      for (let c = 0; c < tabPageSlice.currentTabPage.tbl_row; c++) {
         gridButtons.push(
           <GridButton
             key={`${r}-${c}`}
@@ -123,7 +124,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
             data-column={c + 1}
             mode = {(deviceRow - 1 === r && deviceColumn - 1 === c) ? "true" : "false"}
           >
-            {`${ (c+1)+ (r * column) }`}
+            {`${ (c+1)+ (r * tabPageSlice.currentTabPage.tbl_column) }`}
           </GridButton>
         );
       }
@@ -139,7 +140,7 @@ const ComposeSet: React.FC<ComposeProps> = ({ row, column}) => {
             <UnitSelectLabel>
               <MediumLabel>{STRING_SETTING_DEVICE_UNIT_SELECT}</MediumLabel>
             </UnitSelectLabel>
-            <GridContainer column={column}>
+            <GridContainer column={tabPageSlice.currentTabPage.tbl_column}>
                 {renderGridButtons()}
             </GridContainer>
           </SelectUnitContainer>

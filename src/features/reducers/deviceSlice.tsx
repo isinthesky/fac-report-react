@@ -21,17 +21,21 @@ export const deviceSlice = createSlice({
       if (action.payload && action.payload.devices) {
         state.devices = action.payload.devices;
       }
-      if (action.payload && action.payload.divisions) {
-        state.divisions = action.payload.divisions;
+    },
+    loadStaitionList: (state, action: PayloadAction<any>) => {
+      if (action.payload && action.payload.devices) {
+        state.stations = action.payload.devices;
       }
-      if (action.payload && action.payload.stations) {
-        state.stations = action.payload.stations;
+    },
+    loadDivisionList: (state, action: PayloadAction<any>) => {
+      if (action.payload && action.payload.devices) {
+        state.divisions = action.payload.devices;
       }
     },
   },
 });
 
-export const { loadDeviceList } =
+export const { loadDeviceList, loadDivisionList, loadStaitionList } =
   deviceSlice.actions;
 
 export default deviceSlice.reducer;

@@ -24,6 +24,13 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
       { label: "/", values: ["PF"] },
       { label: "/", values: ["Hz"] },
       { label: "/", values: ["kW"] },
+    ],
+    Rectifier: [
+      { label: "AC(V)", values: ["R-S", "S-T", "T-R"] },
+      { label: "/", values: ["Hz"] },
+      { label: "/", values: ["DC(V)"] },
+      { label: "/", values: ["DC(A)"] },
+      { label: "/", values: ["알람(유/무)"] },
     ]
   }[type]), [type]);
 
@@ -33,7 +40,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
     <Container>
       <Row>
         <TitleColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-          {tabPage.unitList[index].name}
+          {tabPage.tab_table_infos[index].name}
         </TitleColumn>
       </Row>
       <UnitGrid>
@@ -50,7 +57,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
                   <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                     {value}
                   </DevTypeDiv>
-                  <DeviceValue times={tabPage.times} devId={tabPage.unitList[index].dvList[pos++]} />
+                  <DeviceValue times={tabPage.times} devId={tabPage.tab_table_infos[index].devices[pos++].path_id} />
                 </DeviceTypeValueDiv>
               ))}
             </Row>

@@ -8,7 +8,7 @@ import UnitGroupListControl from "./UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_DEVICE_LIST } from "../../../static/langSet";
 import { updateUnitGroupList } from "../../../features/api/device";
 import { RootStore } from "../../../store/congifureStore";
-import { Unit } from "../../../static/types";
+import { Item, Unit } from "../../../static/types";
 import UnitGroupAutoSelect from "./UnitGroupSelector";
 import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import { updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
@@ -44,13 +44,9 @@ const UnitGroupSet: React.FC = () => {
 
   const renderSection = (index1: number, unit: Unit) => {
     return <>
-      {unit.dvList.map((value: number, idx: number) => {
-          const initStationId = (value !== 0) 
-                                ? deviceinfo(value).stationId
-                                : unit.st;
-          const initDivisionId = (value !== 0)
-                                ? deviceinfo(value).divisionId
-                                : unit.div;
+      {unit.devices.map((device: Item, idx: number) => {
+          const initStationId = (device.path_id !== 0) ? device.station_id : unit.st;
+          const initDivisionId = (device.path_id !== 0) ? device.division_id : unit.div;
                                 
           return( <ValueSection key={idx}>
                     <IndexLabel>{idx + 1}</IndexLabel>
@@ -62,7 +58,7 @@ const UnitGroupSet: React.FC = () => {
                       devicelist={deviceSet}
                       stationValue={unit.st}
                       divisionValue={unit.div}
-                      currentDeviceId={value}
+                      currentDevice={device}
                     />
                   </ValueSection>)
       })}

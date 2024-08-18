@@ -14,6 +14,7 @@ import PrintModal from "../print/PrintModal";
 const PrintSetting: React.FC = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
 
   const [title, setTitle] = useState(settingSet.printTitle);  
   const [approvals, setApprovals] = useState(settingSet.approvals);
@@ -139,8 +140,8 @@ const PrintSetting: React.FC = () => {
                 <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
                 <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
               </DivHeader>
-              <PrintModal row={settingSet.daily.row}
-                          column={settingSet.daily.column} 
+              <PrintModal row={tabPageSet.currentTabPage.tbl_row}
+                          column={tabPageSet.currentTabPage.tbl_column} 
                           ref={componentRef} />
             </ModalView>
           </BaseModalBack>

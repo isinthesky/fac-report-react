@@ -8,17 +8,16 @@ import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, Act
 import { FONTSET_DESCRIPTION_LABEL_SIZE } from "../../../static/fontSet"
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DISABLE_COLOR } from "../../../static/colorSet"
 import { STRING_SETTING_MAIN_BTN_EDIT, STRING_SETTING_MAIN_BTN_APPLY, STRING_SETTING_SET_GRID_ARRAY, STRING_DEFAULT_ROW, STRING_DEFAULT_COL} from "../../../static/langSet"
-import { setReportTable } from "../../../features/reducers/settingSlice";
+import { setReportTable } from "../../../features/reducers/tabPageSlice";
 import { MAX_ROW_COUNT, MAX_COLUMN_COUNT } from "../../../env";
 
 const ComposeView: React.FC = () => {
   const dispatch = useDispatch()
   const deviceSlice = useSelector((state: RootStore) => state.deviceReducer);
-  const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const tabSlice = useSelector((state : RootStore) => state.tabPageReducer);
 
-  const [rows, setRow] = useState(settingSlice.daily.row);
-  const [columns, setColumn] = useState(settingSlice.daily.column);
+  const [rows, setRow] = useState(tabSlice.currentTabPage.tbl_row);
+  const [columns, setColumn] = useState(tabSlice.currentTabPage.tbl_column);
   const [edit, setEdit] = useState(true);
   
   const handleEdit = () => {
@@ -38,19 +37,21 @@ const ComposeView: React.FC = () => {
     
     for (let r = 0; r < rows * columns; r++) {
       if (tabPageInfo) {
-        if (tabPageInfo.unitList.length < 1) return;
+        if (tabPageInfo.tab_table_infos.length < 1) return;
 
-        if (tabPageInfo.unitList.length > 0) {
+        if (tabPageInfo.tab_table_infos.length > 0) {
           rowlist.push(
             <UnitInfo
-              key={keyCounter}
-              type={tabPageInfo.unitList[keyCounter].type}
-              name={tabPageInfo.unitList[keyCounter].name}
-              id={keyCounter+1}
-              st={tabPageInfo.unitList[keyCounter].st}
-              div={tabPageInfo.unitList[keyCounter].div}
-              dvList={tabPageInfo.unitList[keyCounter].dvList}
-            />
+            tab_name={tabPageInfo.name}
+            type={tabPageInfo.tab_table_infos[keyCounter].type}
+            name={tabPageInfo.tab_table_infos[keyCounter].name}
+            idx={tabPageInfo.tab_table_infos[keyCounter].idx}
+            st={tabPageInfo.tab_table_infos[keyCounter].st}
+            div={tabPageInfo.tab_table_infos[keyCounter].div}
+            devices={tabPageInfo.tab_table_infos[keyCounter].devices}
+            disable={tabPageInfo.tab_table_infos[keyCounter].disable}
+            max_device={tabPageInfo.tab_table_infos[keyCounter].max_device || 0}
+          />
           );
         } 
         keyCounter++;

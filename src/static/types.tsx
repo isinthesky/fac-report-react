@@ -2,15 +2,15 @@ import { DeviceState } from "../features/reducers/deviceSlice";
 
 export type IDevice = {
   id: number;
-  xmlId: string;
+  xml_id: string;
   name: string;
-  pathId: number;
+  path_id: number;
   type: number;
-  stationId: number;
-  divisionId: number;
+  station_id: number;
+  division_id: number;
 };
 
-export type IDivision = { id: number; name: string; stationId: number };
+export type IDivision = { id: number; name: string; station_id: number };
 export type IStation = { id: number; name: string };
 
 export type TabKeys = 'tabPageInfo11' | 'tabPageInfo12' | 'tabPageInfo13' | `tabPageInfo14` | 'tabPageInfo21' | 'tabPageInfo22' | 'tabPageInfo23' | `tabPageInfo24` | 'tabPageInfo31' | 'tabPageInfo32' | 'tabPageInfo33' | `tabPageInfo34` | 'tabPageInfo41' | 'tabPageInfo42' | 'tabPageInfo43' | `tabPageInfo44`;
@@ -44,7 +44,7 @@ export type updateCurrentTabPageUnit = {
 export type updateCurrenUnitDevice = {
   unitPosition: number;
   devicePosition: number; 
-  deviceId: number;
+  device: Item;
 };
 
 
@@ -53,13 +53,24 @@ export type updateCurrentGroupType = {
   value: number|string;
 };
 
+export type Item = {
+  idx: number | null;
+  station_id: number;
+  division_id: number;
+  path_id: number;
+};
+
+
 export type Unit = {
+  tab_name: string;
   type: number;
+  idx: number;
   name: string;
-  id: number;
   st: number;
   div: number;
-  dvList: number[]
+  devices: Item[];
+  disable: number;
+  max_device: number;
 };
 
 export type SetTabPageType = {
@@ -70,8 +81,26 @@ export type SetTabPageType = {
 
 export type TabPageInfotype = {
   id: number;
+  name: string;
+  tbl_row: number;
+  tbl_column: number;
   times: string[];
-  unitList: Unit[]
+  tab_table_infos: Unit[];
+}
+
+export type ResTabPageInfotype = {
+  id: number;
+  name: string;
+  tab_table_infos: Unit[];
+  tbl_column: number;
+  tbl_row: number;
+}
+
+
+export type ResTabPagetype = {
+  count: number;
+  data: ResTabPageInfotype[];
+  total_count: number;
 }
 
 export type DeleteDropDownType = {
@@ -113,7 +142,7 @@ export interface TabSetting {
 export interface SetTabPageProp {
   mainTab: number;
   subTab: number;
-  object: TabPageInfotype;
+  tabInfo: TabPageInfotype;
 }
 
 export type DeviceSelectProps = {
@@ -124,7 +153,7 @@ export type DeviceSelectProps = {
   stationValue: number;
   initDivisionId: number;
   divisionValue: number;
-  currentDeviceId: number;
+  currentDevice: Item;
 };
 
 export type LogData = {

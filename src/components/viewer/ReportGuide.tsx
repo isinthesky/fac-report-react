@@ -16,8 +16,10 @@ type ReportGuideProps = {
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
+  console.log("currentTab", currentTab)
+
   const renderDevice = (() => {
-    if (!currentTab.unitList[0]) {
+    if (!currentTab.tab_table_infos[0]) {
       return <>{STRING_ERR_SERVER_CONNECT}</>;
     }
 
@@ -28,11 +30,11 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
-          if (currentTab.unitList[index].type === CONST_TYPE_INFO_INDEX[2]) {
+          if (currentTab.tab_table_infos[index].type === CONST_TYPE_INFO_INDEX[2]) {
             return <></>;
           }
           
-          const TypeComp = currentTab.unitList[index].type === 1 ? 'V' : 'W';
+          const TypeComp = currentTab.tab_table_infos[index].type === 1 ? 'V' : 'W';
 
           return (
             <Container key={colIndex} mode="view" >

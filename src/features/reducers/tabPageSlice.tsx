@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitDevice, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, setCurrnetUnitProp } from "../../static/types";
+import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitDevice, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, setCurrnetUnitProp, DailySetting } from "../../static/types";
+import { stat } from "fs";
 
 export interface TabPageState {
   unitPosition: {index:number};
@@ -13,8 +14,8 @@ const initialState: TabPageState = {
   unitPosition: {index: 0},
   viewPosition: {main: 1, sub: 1},
   settingPosition: {main: 1, sub: 1},
-  currentTabPage: {id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) },
-  tabPageInfo: Array(5).fill(Array(8).fill({id: 0, times: Array(4).fill('00:00'), unitList: Array(9).fill(0) }))
+  currentTabPage: {id: 0, name: "", tbl_row:0, tbl_column:0, times: Array(4).fill('00:00'), tab_table_infos: Array(9).fill(0) },
+  tabPageInfo: Array(5).fill(Array(8).fill({id: 0, times: Array(4).fill('00:00'), tab_table_infos: Array(9).fill(0) }))
 };
 
 export const tabPageSlice = createSlice({
@@ -42,19 +43,19 @@ export const tabPageSlice = createSlice({
     },
 
     setCurrentUnit: (state, action: PayloadAction<updateCurrentTabPageUnit>) => {
-      state.currentTabPage.unitList[action.payload.position] = action.payload.unit;
+      state.currentTabPage.tab_table_infos[action.payload.position] = action.payload.unit;
     },
 
     setCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
-      state.currentTabPage.unitList[action.payload.unitPosition].dvList[action.payload.devicePosition] = action.payload.deviceId;
+      state.currentTabPage.tab_table_infos[action.payload.unitPosition].devices[action.payload.devicePosition] = action.payload.device;
     },
 
     updateCurrentUnit: (
       state,
       action: PayloadAction<updateCurrentTabPageType>
     ) => {
-      if (action.payload.arrKey in state.currentTabPage.unitList[action.payload.arrPos]) {
-        (state.currentTabPage.unitList[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
+      if (action.payload.arrKey in state.currentTabPage.tab_table_infos[action.payload.arrPos]) {
+        (state.currentTabPage.tab_table_infos[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
       }
     },
 
@@ -68,7 +69,7 @@ export const tabPageSlice = createSlice({
     
     setTabPage: (state, action: PayloadAction<SetTabPageProp>) => {
       if (state.tabPageInfo[action.payload.mainTab][action.payload.subTab] ) {
-        state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.object;
+        state.tabPageInfo[action.payload.mainTab][action.payload.subTab] = action.payload.tabInfo;
       }
     },
 
@@ -113,8 +114,18 @@ export const tabPageSlice = createSlice({
       state.currentTabPage.times[index] = String(action.payload.time);
       state.currentTabPage.times.sort();
     },
+
+    setReportTable: (
+      state, 
+      action: PayloadAction<DailySetting>
+    ) => {
+      const tabPage = state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub];
+      tabPage.tbl_row = action.payload.row;
+      tabPage.tbl_column = action.payload.column;
+    }
   },
 });
 
-export const { setViewSelect, setSettingSelect, setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, saveTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setTabUnitPosition } = tabPageSlice.actions;
+export const { setViewSelect, setSettingSelect, setCurrentTab, updateCurrentUnit, setCurrentUnit, setCurrentUnitDevice, 
+  saveTabPage, setTabPage, addDropdown, removeDropdown, setTimes, setTabUnitPosition, setReportTable } = tabPageSlice.actions;
 export default tabPageSlice.reducer;

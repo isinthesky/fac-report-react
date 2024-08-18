@@ -6,7 +6,6 @@ export interface SettingState {
   [x: string]: any;
   menus: string[];
   date: number;
-  daily: DailySetting;
   unitPostion: DailySetting;
   tabSetting: TabSetting;
   viewMode: string;
@@ -22,13 +21,12 @@ const oneDayMillisec = 24 * 60 * 60 * 1000;
 const yesterday = new Date(today.getTime() - oneDayMillisec);
 
 // 개발
-// const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
+const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
 
 
 const initialState: SettingState = {
   menus: ["11"],
-  date: yesterday.getTime(),
-  daily: { row: 2, column: 3 },
+  date: lastyear.getTime(), // yesterday.getTime(),
   unitPostion: { row: 1, column: 1 },
   tabSetting: { length: Number(INIT_TAB_COUNT) },
   viewMode: "view",
@@ -49,9 +47,6 @@ export const settingSlice = createSlice({
       action.payload.forEach((menu) => {
         state.menus.push(menu);
       });
-    },
-    setReportTable: (state, action: PayloadAction<DailySetting>) => {
-      state.daily = action.payload;
     },
     setUnitSelectPosition: (state, action: PayloadAction<DailySetting>) => {
       state.unitPostion = action.payload;
@@ -83,6 +78,6 @@ export const settingSlice = createSlice({
   },
 });
 
-export const { setMenus, setReportTable, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
+export const { setMenus, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;
 

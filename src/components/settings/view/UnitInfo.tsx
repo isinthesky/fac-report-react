@@ -11,8 +11,8 @@ import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_NAMES } from "../../../env";
 const UnitInfo: React.FC<Unit> = ({
   type,
   name,
-  id,
-  dvList
+  idx,
+  devices
 }) => {
   const deviceSet = useSelector(
     (state: RootStore) => state.deviceReducer
@@ -30,7 +30,7 @@ const UnitInfo: React.FC<Unit> = ({
     <UnitContainer>
       <NameContainer type={type}>
         <NameLabel>ID</NameLabel>
-        <UnitIDLabel>{id}</UnitIDLabel>
+        <UnitIDLabel>{idx}</UnitIDLabel>
         <NameLabel>Type</NameLabel>
         <UnitInfoLabel>{CONST_TYPE_INFO_NAMES[type-1]}</UnitInfoLabel>
         <NameLabel>Name</NameLabel>
@@ -38,10 +38,10 @@ const UnitInfo: React.FC<Unit> = ({
       </NameContainer>
 
       <Group>
-      {dvList&&dvList.map((dv, index) => (
+      {devices&&devices.map((dv, index) => (
           <ItemDiv key={index}>
             <DescriptLabel>{`dv${index + 1}`}</DescriptLabel>
-            <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv)} readOnly={true}/>
+            <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv.path_id)} readOnly={true}/>
           </ItemDiv>
       ))}
       </ Group>

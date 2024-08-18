@@ -4,17 +4,17 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
 import ComposeView from "../settings/view/ComposeView";
-import { getSettings } from "../../features/api";
-import { getDeviceInfo, getUnitGroupList } from "../../features/api/device";
-import { loadDeviceList } from "../../features/reducers/deviceSlice";
-import { setReportTable } from "../../features/reducers/settingSlice";
+// import { getSettings } from "../../features/api";
+import { getDeviceDict, getStationList, getDivisionList} from "../../features/api/device";
+import { loadDeviceList, loadStaitionList, loadDivisionList } from "../../features/reducers/deviceSlice";
+import { setReportTable } from "../../features/reducers/tabPageSlice";
 import { updateGroup } from "../../features/reducers/unitGroupSlice";
 import { setTabPage } from "../../features/reducers/tabPageSlice";
 import TabControlBar from "../settings/TabControlBar";
 import { BaseFlex1Column } from "../../static/componentSet";
 import { COLORSET_BACKGROUND_COLOR } from "../../static/colorSet";
 import { CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
-import { Unit } from "../../static/types";
+import { Unit, IDevice, IDivision, IStation } from "../../static/types";
 import UnitGroupSet from "../settings/group/UnitGroupSet";
 import { CONST_TABINFO_NAME } from "../../env";
 import Header from "../header/Header";
@@ -25,8 +25,6 @@ import { RootStore } from "../../store/congifureStore";
 
 function Settings() {
   const dispatch = useDispatch();
-  const [rows, setRow] = useState(0);
-  const [columns, setColumn] = useState(0);
   const [mode, setMode] = useState("view");
   const params  = useParams();
   const tabLength = useSelector((state: RootStore) => state.settingReducer.tabSetting);
@@ -34,44 +32,32 @@ function Settings() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resSetting = await getSettings();
+        const resStation = await getStationList();
         
-        if (resSetting) {
-          dispatch(setReportTable(resSetting.settings));
-          
-          let count = 1;
-          
-          if (tabLength.length) {
-            [1, 2, 3, 4, 5].forEach( async (mainId)=>{
-              [1, 2, 3, 4, 5].forEach( async (subId)=>{
-                const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-                if (process.env[key]) {
-                  dispatch(setTabPage({mainTab: mainId, subTab: subId, 
-                                       object: resSetting[CONST_TABINFO_NAME + `${count++}`]}));
-                }
-              })
-            })
+        const stations = []
+        const divisions = []
+
+        for (const st of resStation.data) {
+          stations.push({id: st.id, name: st.name} as IStation)
+
+          for (const div of st.divisions) {
+            divisions.push({id:div.id, station_id: div.station_id, name:div.name} as IDivision)
           }
-
-          setRow(resSetting.settings.row);
-          setColumn(resSetting.settings.column);
         }
+        
+        const resDevice = await getDeviceDict();
 
-        const resDev = await getDeviceInfo();
-        dispatch(loadDeviceList(resDev));
-
-        const resGroupList = await getUnitGroupList();
-
-        resGroupList.value.forEach((item: Unit, pos: number) => {
-          dispatch(updateGroup({index: pos, group: item}));
-        });
+        console.log("resDevice",resDevice)
+        
+        dispatch(loadStaitionList(stations));
+        dispatch(loadDivisionList(divisions));
+        dispatch(loadDeviceList(resDevice.data))       
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, [dispatch]);
-
+  }, [dispatch])    
 
   useEffect(() => {
     if (Object.keys(params).length === 0) {
@@ -92,7 +78,7 @@ function Settings() {
       ) : mode === CONST_SETTING_MODE_DEVICE ? (
         <>
           <TabControlBar showInit={false} />
-          <ComposeSet row={rows} column={columns}></ComposeSet>
+          <ComposeSet />
         </>
       ) : mode === CONST_SETTING_MODE_UNIT ? (
         <UnitGroupSet />

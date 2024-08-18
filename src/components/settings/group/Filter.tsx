@@ -28,7 +28,7 @@ const Filter: React.FC = () => {
                         : unitGroupSlice.currentGroup.st);     
   
     setSelectedDivision( (unitGroupSlice.currentGroup.div === 0) 
-                        ? deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0]?.id
+                        ? deviceSet.divisions.filter((item) => item.station_id === selectedStation)[0]?.id
                         : unitGroupSlice.currentGroup.div);     
                     
   }, [unitGroupSlice.currentGroup]);
@@ -96,7 +96,7 @@ const Filter: React.FC = () => {
           <SmallLabel>Division</SmallLabel>
           <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
             {deviceSet.divisions
-              .filter((item: IDivision) => item.stationId === selectedStation)
+              .filter((item: IDivision) => item.station_id === selectedStation)
               .map((div: IDivision) => (
                 <BaseOption key={div.id} value={div.id}>
                   {div.name}

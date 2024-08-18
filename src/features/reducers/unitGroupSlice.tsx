@@ -10,17 +10,17 @@ export interface UnitGroupState {
 
 const initialState: UnitGroupState = {
   groups: [
-    { name: "name1", type: 1, id: 1, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name2", type: 1, id: 2, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name3", type: 1, id: 3, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name4", type: 1, id: 4, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name5", type: 1, id: 5, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name6", type: 1, id: 6, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name7", type: 1, id: 7, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name8", type: 1, id: 8, st: 0, div: 0, dvList: Array(9).fill(0) },
-    { name: "name9", type: 1, id: 9, st: 0, div: 0, dvList: Array(9).fill(0) },
+    { tab_name: "", name: "name1", type: 1, idx: 1, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name2", type: 1, idx: 2, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name3", type: 1, idx: 3, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name4", type: 1, idx: 4, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name5", type: 1, idx: 5, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name6", type: 1, idx: 6, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name7", type: 1, idx: 7, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name8", type: 1, idx: 8, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    { tab_name: "", name: "name9", type: 1, idx: 9, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
   ],
-  currentGroup: { name: "", type: 1, id: 0, st: 0, div: 0, dvList: Array(9).fill(0) },
+  currentGroup: { tab_name: " ", name: "", type: 1, idx: 0, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
   selectedPos: 0,
 };
 
@@ -57,7 +57,7 @@ export const unitGroupSlice = createSlice({
       state.currentGroup = action.payload;
     },
     updateCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
-      state.currentGroup.dvList[action.payload.devicePosition] = action.payload.deviceId;
+      state.currentGroup.devices[action.payload.devicePosition] = action.payload.device;
     },
     updateCurrentGroupUnit: (
       state,

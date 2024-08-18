@@ -2,9 +2,9 @@ import { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getSettings } from "../../features/api";
+// import { getSettings } from "../../features/api";\
 import { RootStore } from "../../store/congifureStore";
-import { setApproves, setMenus, setReportTable, setTabSetting } from "../../features/reducers/settingSlice";
+import { setApproves, setMenus, setTabSetting } from "../../features/reducers/settingSlice";
 import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { CONST_TABINFO_NAME, DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME, INIT_TAB_COUNT } from "../../env";
@@ -14,6 +14,8 @@ import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { throttle } from 'lodash';
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
+import { get_page_setting, get_page_list, get_page_time_list } from "../../features/api/page"
+import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype } from "../../../src/static/types"
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
@@ -52,30 +54,44 @@ export default function Header({ mainTab }: HeaderProps) {
   useEffect(() => {
     (async () => {
       try {
-        const response = await getSettings();
-  
-        if (response) {
-          dispatch(setReportTable(response.settings));
-          dispatch(setApproves(response.approves))
-          dispatch(setTabSetting({length: Number(INIT_TAB_COUNT)}));
-  
-          let count = 1;
-          const keyName = CONST_TABINFO_NAME;
+        const resPages = await get_page_list();
+        
+        if (resPages) {
+          dispatch(setTabSetting({length: resPages.total_count}));
+
+          let count = 0;
           const buttons: string[] = [];
-  
+
           if (Number(INIT_TAB_COUNT) >= count) {
-            [1, 2, 3, 4, 5].forEach((mainId)=>{
-              [1, 2, 3, 4, 5].forEach((subId)=>{
+            for (const mainId of [1, 2, 3, 4, 5]) {
+              for (const subId of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
                   buttons.push(`${mainId}${subId}`);
+                  const tempTabInfo = resPages.data[count++];
+
+                  console.log("header: ", tempTabInfo)
+
+                  const resPageSetting = await get_page_setting(tempTabInfo.name);
+
+                  console.log("tempTabInfo", tempTabInfo);
+                  console.log("resPageSetting", resPageSetting);
+                 
+                  tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
+                  tempTabInfo.tab_table_infos = resPageSetting.tables
+                  
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 
-                                       object: response[keyName + `${count++}`]}));
+                                      tabInfo: tempTabInfo}));
+
+                  if (count === 1) {
+                    dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
+                  }
                 }
-              })
-            })
+              }
+            }
           }
-          
+
+          console.log("menu count: ", count)
           dispatch(setMenus(buttons));
         }
       } catch (error) {

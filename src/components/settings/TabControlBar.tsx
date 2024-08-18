@@ -53,7 +53,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
       <div key={mainTab} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <MainTabLabel>
           {process.env[`REACT_APP_INIT_REPORT_TYPE${mainTab}`]}
-        </MainTabLabel>ß
+        </MainTabLabel>
         <div>
           {subTabs.map(subTab => (
             <TabButton

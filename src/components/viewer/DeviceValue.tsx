@@ -34,7 +34,7 @@ const DeviceValue: React.FC<DeviceValueProps> = ({ times, devId }) => {
         let deviceData = []
         if (devId > 0) {
           const result: DeviceLog = await readDevicesData(
-            deviceSet.devices[devId.toString()].pathId, 
+            deviceSet.devices[devId.toString()].path_id, 
             settingSet.date
           );
 

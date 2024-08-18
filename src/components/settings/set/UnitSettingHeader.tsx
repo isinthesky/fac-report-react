@@ -15,13 +15,13 @@ const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
-  const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index].st);
+  const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].type);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].st);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>("");
 
   useEffect(() => {
-    const currentUnit = tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
+    const currentUnit = tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]
 
     if (currentUnit.type === 0) {
       setDeviceType(1);
@@ -49,12 +49,12 @@ const DeviceHeaderSet = () => {
     if (!selectedStation) 
       return;
 
-    setSelectedDivision(deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id);
+    setSelectedDivision(deviceSet.divisions.filter((item) => item.station_id === selectedStation)[0].id);
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
         arrKey: "div",
-        deviceId: deviceSet.divisions.filter((item) => item.stationId === selectedStation)[0].id,
+        deviceId: deviceSet.divisions.filter((item) => item.station_id === selectedStation)[0].id,
       })
     );
   }, [selectedStation]);
@@ -130,7 +130,7 @@ const DeviceHeaderSet = () => {
             ))}
           </BaseSelect>
           <BaseSelect onChange={handleDivisionChange} value={selectedDivision}>
-            {deviceSet.divisions.filter((item) => item.stationId === selectedStation).map(
+            {deviceSet.divisions.filter((item) => item.station_id === selectedStation).map(
               (div: IDivision) => (
                 <BaseOption key={div.id} value={div.id}>
                   {div.name}

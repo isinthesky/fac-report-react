@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setApproves, setMenus, setReportTable, setTabSetting, setTableDate, setViewMode } from "../../features/reducers/settingSlice";
+import { setApproves, setMenus, setTabSetting, setTableDate, setViewMode } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
 import PrintModal from "../print/PrintModal";
@@ -13,11 +13,13 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { getDeviceInfo } from "../../features/api/device";
-import { loadDeviceList } from "../../features/reducers/deviceSlice";
-import { getSettings } from "../../features/api";
+// import { getDeviceInfo } from "../../features/api/device";
+// import { loadDeviceList } from "../../features/reducers/deviceSlice";
+// import { getSettings } from "../../features/api";
+import { get_page_setting, get_page_list, get_page_time_list } from "../../features/api/page"
 import { CONST_TABINFO_NAME, INIT_TAB_COUNT } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
+import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype } from "../../../src/static/types"
 
 interface CustomInputProps {
   value: string;
@@ -27,10 +29,12 @@ interface CustomInputProps {
 function Daily() {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
+  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
   const [date, setDate] = useState(settingSet.date);
   const [isOpen, setIsOpen] = useState(false);
   const { id1, id2 } = useParams();
   const componentRef = useRef<HTMLDivElement>(null);
+
   const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref: any) => (
     <CalendarButton onClick={onClick} ref={ref}>
       {value}
@@ -54,47 +58,44 @@ function Daily() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleIdCheck]);
-
+  
   useEffect(() => {
     (async () => {
-      const response = await getSettings();
-
-      console.log(response)
-  
-      if (response) {
-        dispatch(setReportTable(response.settings));
-        dispatch(setApproves(response.approves))
-        dispatch(setTabSetting({length: Number(INIT_TAB_COUNT)}));
-
-        let count = 1;
-        const keyName = CONST_TABINFO_NAME;
-        const buttons: string[] = [];
-
-        if (Number(INIT_TAB_COUNT) >= count) {
-          [1, 2, 3, 4, 5].forEach((mainId)=>{
-            [1, 2, 3, 4, 5].forEach((subId)=>{
-              const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-              if (process.env[key]) {
-                buttons.push(`${mainId}${subId}`);
-                dispatch(setTabPage({mainTab: mainId, subTab: subId, 
-                                     object: response[keyName + `${count++}`]}));
-              }
-            })
-          })
-        }
+      try {
+        const resPages = await get_page_list();   
         
-        dispatch(setMenus(buttons));
+        if (resPages) {
+          dispatch(setTabSetting({length: resPages.total_count}));
+
+          console.log("view select: ", id1, id2, INIT_TAB_COUNT)
+
+          let count = 0;
+          const buttons: string[] = [];
+
+          if (Number(INIT_TAB_COUNT) >= count) {
+            for (const mainId of [1, 2, 3, 4, 5]) {
+              for (const subId of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+                const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+                if (process.env[key]) {
+                  buttons.push(`${mainId}${subId}`);
+                  const tempTabInfo = resPages.data[count++];
+                  console.log("daily: ", tempTabInfo)
+                  const resPageSetting = await get_page_setting(tempTabInfo.name);
+                  
+                  tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
+                  tempTabInfo.tab_table_infos = resPageSetting.tables
+                  
+                  dispatch(setTabPage({mainTab: mainId, subTab: subId, 
+                                      tabInfo: tempTabInfo}));
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
       }
-
-      const resDeviceSet = await getDeviceInfo();
-      dispatch(loadDeviceList(resDeviceSet));
-      dispatch(setViewSelect({mainTab: Number(id1), subTab: Number(id2)}));
     })();
-  }, []);
-
-  useEffect(() => {
-    console.log("changed date", date);
-    dispatch(setTableDate(date));
   }, [date, dispatch]);
 
   const handlePrintFunction = useReactToPrint({
@@ -145,7 +146,7 @@ function Daily() {
         </Controls>
       </ControlContainer>
       <ReportLine>
-        <ReportGuide row={settingSet.daily.row} column={settingSet.daily.column} />
+        <ReportGuide row={tabPageSet.currentTabPage.tbl_row} column={tabPageSet.currentTabPage.tbl_column} />
       </ReportLine>
       {isOpen ? 
         <BaseModalBack onClick={handlePrintClose}>
@@ -155,8 +156,8 @@ function Daily() {
               <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
             </DivHeader>
-            <PrintModal row={settingSet.daily.row}
-                        column={settingSet.daily.column} 
+            <PrintModal row={tabPageSet.currentTabPage.tbl_row}
+                        column={tabPageSet.currentTabPage.tbl_column} 
                         ref={componentRef} />
           </ModalView>
         </BaseModalBack>

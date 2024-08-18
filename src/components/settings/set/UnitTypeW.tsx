@@ -11,12 +11,12 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(
-    tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]
+    tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]
   );
   
   const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"];
   useEffect(() => {
-    setCurrUnit(tabPageSlice.currentTabPage.unitList[tabPageSlice.unitPosition.index]);
+    setCurrUnit(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]);
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
   
   const deviceinfo = (deviceId: number) => {
@@ -31,12 +31,12 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
       <DivicesContainer>
         {unitKeys.map((value, idx) => {
           const initStationId =
-            currUnit.dvList[idx] !== 0
-              ? deviceinfo(currUnit.dvList[idx]).stationId
+            currUnit.devices[idx].path_id !== 0
+              ? currUnit.devices[idx].station_id
               : currUnit.st;
           const initDivisionId =
-            currUnit.dvList[idx] !== 0
-              ? deviceinfo(currUnit.dvList[idx]).divisionId
+            currUnit.devices[idx].path_id !== 0
+              ? currUnit.devices[idx].division_id
               : currUnit.div;
 
           return (
@@ -50,7 +50,7 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
                 stationValue={currUnit.st}
                 initDivisionId={initDivisionId}
                 divisionValue={currUnit.div}
-                currentDeviceId={currUnit.dvList[idx]}
+                currentDevice={currUnit.devices[idx]}
               />
             </DiviceDiv>
           );

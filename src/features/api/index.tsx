@@ -5,16 +5,16 @@ const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
 });
 
-export const getSettings = async (): Promise<any> => {
-  try {
-    const response = await axiosInstance.get("/report/general/getSettings");
-    // console.log("getSettings", response);
-    return response.data.data;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-};
+// export const getSettings = async (): Promise<any> => {
+//   try {
+//     const response = await axiosInstance.get("/report/general/getSettings");
+//     // console.log("getSettings", response);
+//     return response.data.data;
+//   } catch (error) {
+//     console.error(error);
+//     return false;
+//   }
+// };
 
 export const setInitSettings = async (
   keyString: string,

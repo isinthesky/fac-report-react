@@ -19,22 +19,48 @@ export const resetXmlDevice = async (): Promise<any> => {
 };
 
   
-export const getDeviceInfo = async (): Promise<any> => {
+export const getDeviceDict = async (): Promise<any> => {
   try {
-    const response = await axiosInstance.get("/report/device/getDeviceInfo");      
-    response.data.data.devices = response.data.data.devices.filter(
-      (dev: IDevice) => dev.pathId !== 0
-    );
+    const response = await axiosInstance.get("/FacReport/Device/dict");
 
-    const devices: { [key: number]: IDevice } = {};          
-    for (const dev of response.data.data.devices) {
-      const key = Number(dev.id);
-      devices[key] = dev;
-    }
+    if (response.data.content.success)
+      return response.data.content.data;
+    else
+      return false;
+      
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
-    response.data.data.devices = devices
 
-    return response.data.data;
+export const getStationList = async (): Promise<any> => {
+  try {
+    const params = { with_division: true };
+    const response = await axiosInstance.get("/FacReport/DeviceInfo/Station/list", { params });
+
+    if (response.data.content.success)
+      return response.data.content.data;
+    else
+      return false;
+      
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+
+export const getDivisionList = async (): Promise<any> => {
+  try {    
+    const response = await axiosInstance.get("/FacReport/DeviceInfoDivision/list");
+
+    if (response.data.content.success)
+      return response.data.content.data;
+    else
+      return false;
+      
   } catch (error) {
     console.error(error);
     return false;

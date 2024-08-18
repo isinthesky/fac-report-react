@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IDivision, IStation, IDevice, DeviceSelectProps } from "../../../static/types";
+import { IDivision, IStation, IDevice, DeviceSelectProps, Item } from "../../../static/types";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
@@ -15,12 +15,12 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   devicelist,
   initStationId,
   initDivisionId,
-  currentDeviceId,
+  currentDevice,
 }) => {
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selectedDevice, setSelectedDevice] = useState<number>(currentDeviceId);
+  const [selectedDevice, setSelectedDevice] = useState<Item | null>(null);
   const [searchedNumber, setSearchedNumber] = useState<number>(0);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
@@ -30,25 +30,27 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
                         : initStationId);
   }, [initStationId]);
 
+  console.log("currentDevice.path_id", currentDevice.path_id, devicelist.devices)
+
   useEffect(() => {
-    setSelectedDivision( (currentDeviceId === 0) 
+    setSelectedDivision( (currentDevice.path_id === 0) 
                          ? initDivisionId
-                         : devicelist.devices[currentDeviceId].divisionId);
+                         : devicelist.devices[currentDevice.path_id].division_id);
   }, [initDivisionId]);
 
   useEffect(() => {
-    if (currentDeviceId === 0) {
-      setSelectedDevice(0); 
+    if (currentDevice.path_id === 0) {
+      setSelectedDevice(null); 
       return;
     }
 
-    setSelectedDevice(currentDeviceId)
+    setSelectedDevice(currentDevice)
   }, [selectedDiv]);
 
   useEffect(() => {
     const size = Object.values(devicelist.devices)
       .filter((dev: IDevice) =>
-        dev.stationId === selectedSt && dev.divisionId === selectedDiv)
+        dev.station_id === selectedSt && dev.division_id === selectedDiv)
       .filter((dev:IDevice) => {
         if (searchWord.length > 0) {
           return (dev.name.toLowerCase().includes(searchWord.toLowerCase())
@@ -69,10 +71,21 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDevice(Number(e.target.value));    
+    setSelectedDevice({
+      idx: 0,
+      station_id: selectedSt,
+      division_id: selectedDiv,
+      path_id: Number(e.target.value)
+    } as Item);    
+
     dispatch(setCurrentUnitDevice({ unitPosition, 
                                     devicePosition, 
-                                    deviceId: Number(e.target.value) }));
+                                    device: {
+                                      idx: 0,
+                                      station_id: selectedSt,
+                                      division_id: selectedDiv,
+                                      path_id: Number(e.target.value)
+                                    } as Item }));
   };
 
   return (
@@ -86,31 +99,31 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       </DivisionSelector>
       <DivisionSelector onChange={handleDivisionChange} value={selectedDiv}>
         {devicelist.divisions
-          .filter((div: IDivision) => div.stationId === selectedSt)
+          .filter((div: IDivision) => div.station_id === selectedSt)
           .map((div: IDivision) => (
             <BaseOption key={div.id} value={div.id}>
               {div.name}
             </BaseOption>
           ))}
       </DivisionSelector>
-      <DeviceSelector onChange={handleDeviceChange} value={selectedDevice}>
+      <DeviceSelector onChange={handleDeviceChange} value={selectedDevice?.path_id}>
 
-        {selectedDevice === 0 
+        {selectedDevice?.path_id === 0 
           ? (searchWord.length > 0
-              ? <BaseOption key={selectedDevice} value={selectedDevice}>
+              ? <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
                   {searchedNumber} {STRING_SETTING_DEVICE_FOUND}
                 </BaseOption>
-              : <BaseOption key={selectedDevice} value={selectedDevice}>
+              : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
                   {STRING_SETTING_DEVICE_SELECT}
                 </BaseOption>)
-          : <BaseOption key={selectedDevice} value={selectedDevice}>
-              {devicelist.devices[selectedDevice.toString()]?.name}
-            </BaseOption>}
+              : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
+                  {selectedDevice?.path_id !== undefined && devicelist.devices[selectedDevice.path_id]?.name}
+                </BaseOption>}
 
         {Object.values(devicelist.devices)
           .filter(
             (dev: IDevice) =>
-              dev.stationId === selectedSt && dev.divisionId === selectedDiv)
+              dev.station_id === selectedSt && dev.division_id === selectedDiv)
           .filter((dev:IDevice) => {
             if (searchWord.length > 0) {
               return (dev.name.toLowerCase().includes(searchWord.toLowerCase())
