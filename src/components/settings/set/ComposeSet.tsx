@@ -107,6 +107,8 @@ const ComposeSet: React.FC = () => {
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
     const position = columnIndex + (rowIndex - 1) * deviceColumn - 1;
 
+    console.log("position unit", position)
+
     dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
     dispatch(setTabUnitPosition({index: position}));
     dispatch(setdeviceSearchWord(""));

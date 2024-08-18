@@ -27,6 +27,8 @@ function Settings() {
   const dispatch = useDispatch();
   const [mode, setMode] = useState("view");
   const params  = useParams();
+
+  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabLength = useSelector((state: RootStore) => state.settingReducer.tabSetting);
   
   useEffect(() => {
@@ -57,7 +59,7 @@ function Settings() {
       }
     };
     fetchData();
-  }, [dispatch])    
+  }, [dispatch]);
 
   useEffect(() => {
     if (Object.keys(params).length === 0) {

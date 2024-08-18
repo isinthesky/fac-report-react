@@ -20,7 +20,7 @@ const UnitInfo: React.FC<Unit> = ({
 
   const getDevName = (id:number) => {
     if (true === Object.hasOwn(deviceSet.devices, id)) {
-      return deviceSet.devices[id.toString()].name;
+      return deviceSet.devices[id].name;
     } else {
       return ""
     }

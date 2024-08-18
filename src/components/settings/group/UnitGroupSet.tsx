@@ -39,7 +39,7 @@ const UnitGroupSet: React.FC = () => {
   }
 
   const deviceinfo = (deviceId: number) => {
-    return deviceSet.devices[deviceId.toString()];
+    return deviceSet.devices[deviceId];
   };
 
   const renderSection = (index1: number, unit: Unit) => {

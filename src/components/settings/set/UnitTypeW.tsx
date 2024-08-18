@@ -20,7 +20,7 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
   
   const deviceinfo = (deviceId: number) => {
-    return deviceSet.devices[deviceId.toString()];
+    return deviceSet.devices[deviceId];
   };
 
   return (

@@ -19,7 +19,7 @@ import Header from "../header/Header";
 import { get_page_setting, get_page_list, get_page_time_list } from "../../features/api/page"
 import { CONST_TABINFO_NAME, INIT_TAB_COUNT } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
-import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype } from "../../../src/static/types"
+import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype, Unit } from "../../../src/static/types"
 
 interface CustomInputProps {
   value: string;
@@ -79,11 +79,19 @@ function Daily() {
                 if (process.env[key]) {
                   buttons.push(`${mainId}${subId}`);
                   const tempTabInfo = resPages.data[count++];
-                  console.log("daily: ", tempTabInfo)
                   const resPageSetting = await get_page_setting(tempTabInfo.name);
                   
                   tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
+                  
+                  for (const tbl of resPageSetting.tables as Unit[]) {
+                    tbl.div = tbl.devices[0].division_id;
+                    tbl.st = tbl.devices[0].station_id;
+                    tbl.name = "table" + tbl.idx;
+                  }
+                  
                   tempTabInfo.tab_table_infos = resPageSetting.tables
+
+                  console.log("daily: ", tempTabInfo, resPageSetting)
                   
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 
                                       tabInfo: tempTabInfo}));

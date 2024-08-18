@@ -23,6 +23,8 @@ const DeviceHeaderSet = () => {
   useEffect(() => {
     const currentUnit = tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]
 
+    console.log("currentUnit", currentUnit)
+
     if (currentUnit.type === 0) {
       setDeviceType(1);
       dispatch(updateCurrentUnit({arrPos:tabPageSlice.unitPosition.index,

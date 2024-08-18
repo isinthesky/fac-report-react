@@ -15,7 +15,7 @@ import { throttle } from 'lodash';
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 import { get_page_setting, get_page_list, get_page_time_list } from "../../features/api/page"
-import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype } from "../../../src/static/types"
+import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype, Unit } from "../../../src/static/types"
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
@@ -78,6 +78,13 @@ export default function Header({ mainTab }: HeaderProps) {
                   console.log("resPageSetting", resPageSetting);
                  
                   tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
+                  
+                  for (const tbl of resPageSetting.tables as Unit[]) {
+                    tbl.div = tbl.devices[0].division_id;
+                    tbl.st = tbl.devices[0].station_id;
+                    tbl.name = "table" + tbl.idx;
+                  }
+                  
                   tempTabInfo.tab_table_infos = resPageSetting.tables
                   
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 

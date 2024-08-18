@@ -21,10 +21,8 @@ const UnitTypeV: React.FC<SetDeviceType> = ({ name }) => {
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
   
   const deviceinfo = (deviceId: number) => {
-    return deviceSet.devices[deviceId.toString()];
+    return deviceSet.devices[deviceId];
   };
-
-  console.log("deviceSet.devices", deviceSet.devices)
 
   return (
     <UnitContainer>
@@ -41,6 +39,8 @@ const UnitTypeV: React.FC<SetDeviceType> = ({ name }) => {
             currUnit.devices[idx].path_id !== 0
               ? currUnit.devices[idx].division_id
               : currUnit.div;
+
+          console.log("tabPageSlice.unitPosition", tabPageSlice.unitPosition, currUnit.devices[idx])
 
           return (
             <DiviceDiv key={idx}>

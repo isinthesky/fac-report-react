@@ -20,7 +20,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const dispatch = useDispatch();
   const [selectedSt, setSelectedStation] = useState<number>(initStationId);
   const [selectedDiv, setSelectedDivision] = useState<number>(initDivisionId);
-  const [selectedDevice, setSelectedDevice] = useState<Item | null>(null);
+  const [selectedDevice, setSelectedDevice] = useState<Item | null>(currentDevice);
   const [searchedNumber, setSearchedNumber] = useState<number>(0);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
@@ -30,7 +30,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
                         : initStationId);
   }, [initStationId]);
 
-  console.log("currentDevice.path_id", currentDevice.path_id, devicelist.devices)
+  console.log("currentDevice.path_id", currentDevice.path_id)
 
   useEffect(() => {
     setSelectedDivision( (currentDevice.path_id === 0) 
@@ -61,7 +61,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       setSearchedNumber(size.length);
     }, [searchWord]);
 
-
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
   };
@@ -70,7 +69,15 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
     setSelectedDivision(Number(e.target.value));
   };
 
+
+  const deviceinfo = (deviceId: number) => {
+    return devicelist.devices[deviceId];
+  };
+
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+
+    console.log(Number(e.target.value))
+
     setSelectedDevice({
       idx: 0,
       station_id: selectedSt,
@@ -132,7 +139,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
             return true;
           })
           .map((dev: IDevice) => (
-            <BaseOption key={dev.id} value={dev.id}>
+            <BaseOption key={dev.path_id} value={dev.path_id}>
               {dev.name}
             </BaseOption>
           ))}
