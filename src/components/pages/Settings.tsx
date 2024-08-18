@@ -5,10 +5,10 @@ import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
 import ComposeView from "../settings/view/ComposeView";
 // import { getSettings } from "../../features/api";
-import { getDeviceDict, getStationList, getDivisionList} from "../../features/api/device";
+import { getDeviceDict, getStationList, getUnitGroupList} from "../../features/api/device";
 import { loadDeviceList, loadStaitionList, loadDivisionList } from "../../features/reducers/deviceSlice";
 import { setReportTable } from "../../features/reducers/tabPageSlice";
-import { updateGroup } from "../../features/reducers/unitGroupSlice";
+import { loadUnitGroupList } from "../../features/reducers/unitGroupSlice";
 import { setTabPage } from "../../features/reducers/tabPageSlice";
 import TabControlBar from "../settings/TabControlBar";
 import { BaseFlex1Column } from "../../static/componentSet";
@@ -34,10 +34,11 @@ function Settings() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resStation = await getStationList();
-        
         const stations = []
         const divisions = []
+        const unitGroups = []
+
+        const resStation = await getStationList();
 
         for (const st of resStation.data) {
           stations.push({id: st.id, name: st.name} as IStation)
@@ -48,12 +49,21 @@ function Settings() {
         }
         
         const resDevice = await getDeviceDict();
+        const resUnitGroup = await getUnitGroupList();
 
-        console.log("resDevice",resDevice)
+        console.log("resUnitGroup", resUnitGroup.data)
+
+        for (const unit of resUnitGroup.data) {
+          // unit.devices = unit.tab_device_presets;
+          unit.div = unit.tab_device_presets[0].division_id;
+          unit.st = unit.tab_device_presets[0].station_id;
+          unitGroups.push(unit)
+        }
         
         dispatch(loadStaitionList(stations));
         dispatch(loadDivisionList(divisions));
-        dispatch(loadDeviceList(resDevice.data))       
+        dispatch(loadDeviceList(resDevice.data))    
+        dispatch(loadUnitGroupList(unitGroups))
       } catch (error) {
         console.error(error);
       }

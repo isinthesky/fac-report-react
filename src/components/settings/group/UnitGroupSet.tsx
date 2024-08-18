@@ -6,29 +6,53 @@ import Filter from "./Filter";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Row, BaseFlexCenterDiv, BigLabel } from "../../../static/componentSet";
 import UnitGroupListControl from "./UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_DEVICE_LIST } from "../../../static/langSet";
+
+import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';  
 import { updateUnitGroupList } from "../../../features/api/device";
 import { RootStore } from "../../../store/congifureStore";
-import { Item, Unit } from "../../../static/types";
+import { Item, Unit, Preset } from "../../../static/types";
 import UnitGroupAutoSelect from "./UnitGroupSelector";
 import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
-import { updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
+import { addDevice, setCurrentGroup, updateDevice, deleteDevice } from "../../../features/reducers/unitGroupSlice";
 
 const UnitGroupSet: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const unitGroupSlice = useSelector((state: RootStore) => state.unitGroupReducer);
+  const presetSlice = useSelector((state: RootStore) => state.unitGroupReducer);
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const [deviceList, setDeviceList] = useState<Unit>(unitGroupSlice.currentGroup);
+  const [deviceList, setDeviceList] = useState<Preset>(presetSlice.currentGroup);
 
   useEffect(() => {
-    console.log("unitGroupSlice.currentGroup", unitGroupSlice.currentGroup);
-    setDeviceList(unitGroupSlice.currentGroup);
-  }, [unitGroupSlice.currentGroup, unitGroupSlice.selectedPos]);
+    dispatch(setCurrentGroup(presetSlice.selectedPos));
+    setDeviceList(presetSlice.currentGroup);
+  }, []);
+
+  useEffect(() => {
+    console.log("presetSlice.currentGroup", presetSlice.currentGroup);
+    setDeviceList(presetSlice.currentGroup);
+  }, [presetSlice.currentGroup, presetSlice.selectedPos]);
+
+  const handleAdd = () => {
+    const newGroup = {idx: 0, station_id: 0, division_id: 0, path_id: 0} as Item;
+    dispatch(addDevice(newGroup));
+  };
+
+  const handleUpdate = (index: number) => {
+    dispatch(updateDevice(index));
+  };
+  
+  const handleDelete = (index: number) => {
+    dispatch(deleteDevice(index));
+  };
 
   const handleSave = async  () => {
     try {
-      await updateUnitGroupList(unitGroupSlice.groups)
-      dispatch(updateFromCurrent(unitGroupSlice.selectedPos));
+      dispatch(updateDevice(presetSlice.selectedPos));
+
+      for (const unit of presetSlice.groups) {
+        await updateUnitGroupList(unit.id, unit.name, unit.type, unit.tab_device_presets);
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -42,16 +66,18 @@ const UnitGroupSet: React.FC = () => {
     return deviceSet.devices[deviceId];
   };
 
-  const renderSection = (index1: number, unit: Unit) => {
+  console.log("unit.tab_device_presets", presetSlice.currentGroup);
+
+  const renderSection = (index1: number, unit: Preset) => {
     return <>
-      {unit.devices.map((device: Item, idx: number) => {
+      {unit.tab_device_presets.map((device: Item, idx: number) => {
           const initStationId = (device.path_id !== 0) ? device.station_id : unit.st;
           const initDivisionId = (device.path_id !== 0) ? device.division_id : unit.div;
                                 
           return( <ValueSection key={idx}>
                     <IndexLabel>{idx + 1}</IndexLabel>
                     <UnitGroupAutoSelect
-                      unitPosition={unitGroupSlice.selectedPos}
+                      unitPosition={presetSlice.selectedPos}
                       devicePosition={idx}
                       initStationId={initStationId}
                       initDivisionId={initDivisionId}
@@ -75,6 +101,17 @@ const UnitGroupSet: React.FC = () => {
           <BaseFlex1Column>
             { renderSection(0, deviceList) }
           </BaseFlex1Column>
+          <ButtonsContainer>
+            <BaseButton onClick={handleAdd} widthsize={"50px"}>
+              {STRING_SETTING_GROUP_ADD}
+            </BaseButton>
+            <BaseButton onClick={() => handleDelete(presetSlice.selectedPos)} widthsize={"50px"}>
+              {STRING_SETTING_GROUP_DELETE}
+            </BaseButton>
+            <ActiveButton onClick={() => handleUpdate(presetSlice.selectedPos)} widthsize={"60px"}>
+              {STRING_SETTING_GROUP_UPDATE}
+            </ActiveButton>
+          </ButtonsContainer>
         </DevicesContainer>
       </BaseFlex1Row>
       <ButtonsContainer>
@@ -108,7 +145,7 @@ const ButtonsContainer = styled(BaseFlexCenterDiv)`
 `;
 
 const ValueSection = styled(BaseFlex1Row)`
-  margin: 10px;
+  margin-top: 10px;
 `;
 
 export default UnitGroupSet;

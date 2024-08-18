@@ -56,3 +56,5 @@ export const KOR_SETTING_GROUP_DELETE = "삭제";
 export const KOR_SETTING_GROUP_UPDATE = "업데이트";
 
 export const KOR_ERR_SERVER_CONNECT = "서버 연결에 실패했습니다.";
+export const KOR_CONFIRM_SAVE_CHANGES = "변경 사항을 저장하시겠습니까?";
+export const KOR_CONFIRM_SAVE_ALL_CHANGES = "모든 테이블의 변경 사항을 저장하시겠습니까?";

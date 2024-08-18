@@ -55,3 +55,5 @@ export const ENG_SETTING_GROUP_DELETE = "Delete";
 export const ENG_SETTING_GROUP_UPDATE = "Update";
 
 export const ENG_ERR_SERVER_CONNECT = "Failed to connect to server";
+export const ENG_CONFIRM_SAVE_CHANGES = "Do you want to save changes?";
+export const ENG_CONFIRM_SAVE_ALL_CHANGES = "Do you want to save changes for all tables?";

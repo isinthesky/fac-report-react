@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { IDevice, TabPageInfotype, Unit } from "../../static/types";
+import { IDevice, TabPageInfotype, Unit, Preset, Item } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
@@ -68,14 +68,18 @@ export const getDivisionList = async (): Promise<any> => {
 };
 
 
-export const updateSettingsTabPage = async (
-    name: string,
-    object: TabPageInfotype
-  ): Promise<any> => {
+export const updateSettingsTabPage = async(
+  id: number,
+  type: number,
+  disable: number,
+  max_device: number
+): Promise<any> => {
     try {
-      await axiosInstance.put("/report/general/updateSetting", {
-        type: name,
-        value: object
+      await axiosInstance.put("/FacReport/PageInfo/TabTableInfo/update", {
+        id: id,
+        type: type,
+        disable: disable,
+        max_device: max_device
       });
       return true;
     } catch (error) {
@@ -87,9 +91,13 @@ export const updateSettingsTabPage = async (
 
 export const getUnitGroupList = async (): Promise<any> => {
     try {
-      const response = await axiosInstance.get("/report/general/getSetting/unitGroup");
-
-      return response.data.data;
+      const params = { with_tab_device_preset: true };
+      const response = await axiosInstance.get("/FacReport/PageInfo/TabTablePreset/list", { params });
+      
+      if (response.data.content.success)
+        return response.data.content.data;
+      else
+        return false;
     } catch (error) {
       console.error(error);
       return false;
@@ -98,12 +106,18 @@ export const getUnitGroupList = async (): Promise<any> => {
 
 
 export const updateUnitGroupList = async (
-    object: Unit[]
+    id: number,
+    name: string,
+    type: number,
+    devices: Item[]
   ): Promise<any> => {
     try {
-      return await axiosInstance.put("/report/general/updateSetting", {
-        type: "unitGroup",
-        value: object
+      return await axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", {
+        id: id,
+        name: name,
+        type: type,
+        max_device: devices.length,
+        devices: devices
       });
     } catch (error) {
       console.error(error);

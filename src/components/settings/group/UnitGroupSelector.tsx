@@ -46,6 +46,7 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
     setSelectedDevice(currentDevice)
   }, [selectedDiv]);
 
+  console.log("currentDevice", currentDevice);
 
   useEffect(() => {
     const size = Object.values(devicelist.devices)
@@ -61,7 +62,6 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
     setSearchedNumber(size.length);
   }, [searchWord]);
 
-  // Add this useEffect to update selectedDevice when currentDevice changes
   useEffect(() => {
     setSelectedDevice(currentDevice);
   }, [currentDevice]);
@@ -109,13 +109,13 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
       </SelectDivision> 
       <SelectDevice onChange={handleDeviceChange} value={selectedDevice?.path_id}>
       {selectedDevice?.path_id === 0 
-          ? (searchWord.length > 0
+          ? (searchWord.length > 0)
               ? <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
                   {searchedNumber} {STRING_SETTING_DEVICE_FOUND}
                 </BaseOption>
               : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
                   {STRING_SETTING_DEVICE_SELECT}  
-                </BaseOption>)
+                </BaseOption>
           : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
               {selectedDevice?.path_id !== undefined && devicelist.devices[selectedDevice.path_id]?.name}
             </BaseOption>}
@@ -131,7 +131,7 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
             }
             return true;})
           .map((dev: IDevice) => (
-            <BaseOption key={dev.id} value={dev.id}>
+            <BaseOption key={dev.path_id} value={dev.path_id}>
               {dev.name}
             </BaseOption>
           ))}

@@ -62,6 +62,7 @@ export type Item = {
 
 
 export type Unit = {
+  id: number;
   tab_name: string;
   type: number;
   idx: number;
@@ -70,6 +71,18 @@ export type Unit = {
   div: number;
   devices: Item[];
   disable: number;
+  max_device: number;
+};
+
+export type Preset = {
+  id: number;
+  tab_name: string;
+  type: number;
+  idx: number;
+  name: string;
+  st: number;
+  div: number;
+  tab_device_presets: Item[];
   max_device: number;
 };
 

@@ -80,6 +80,8 @@ function Daily() {
                   buttons.push(`${mainId}${subId}`);
                   const tempTabInfo = resPages.data[count++];
                   const resPageSetting = await get_page_setting(tempTabInfo.name);
+
+                  console.log("daily: ", tempTabInfo, resPageSetting)
                   
                   tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
                   
@@ -91,7 +93,6 @@ function Daily() {
                   
                   tempTabInfo.tab_table_infos = resPageSetting.tables
 
-                  console.log("daily: ", tempTabInfo, resPageSetting)
                   
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 
                                       tabInfo: tempTabInfo}));

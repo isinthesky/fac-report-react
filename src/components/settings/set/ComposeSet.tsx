@@ -14,7 +14,7 @@ import DeviceHeaderSet from "./UnitSettingHeader";
 import { setUnitSelectPosition, setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
-import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT } from "../../../static/langSet";
+import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT, CONST_TYPE_INFO_INDEX } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
@@ -34,62 +34,38 @@ const ComposeSet: React.FC = () => {
     return 0;
   });
 
-  const handleSave = async () => {
-    let count = 1;
-  
-    for (let mainId = 1; mainId <= MAX_TABPAGE_COUNT; mainId++) {
-      for (let subId = 1; subId <= MAX_TABPAGE_COUNT; subId++) {
-        const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
-
-        if (process.env[TabKey]) {
-          if (tabPageSlice.settingPosition.main === mainId && tabPageSlice.settingPosition.sub === subId) {
-            const confirmed = window.confirm(`Do you want to save changes for ${process.env[TabKey]}?`);
-            
-            if (confirmed) {
-              try {
-                const keyNumber = CONST_TABINFO_NAME + `${count}`;
-                await updateSettingsTabPage(keyNumber, tabPageSlice.currentTabPage as TabPageInfotype);
-                return;
-              } catch (e) {
-                console.error("updateSettingsTabPage error:", e);
-              }
-            } else {
-              return;
-            }
-          }
-          count += 1;
-        }
-      }
+  const handleSave = async () => {    
+    const confirmed = window.confirm(`${STRING_CONFIRM_SAVE_CHANGES} (${tabPageSlice.currentTabPage.name})`);
+    if (!confirmed) {
+      return;
     }
     
+    const tableInfo = tabPageSlice.currentTabPage.tab_table_infos[position];
+    
+    try {
+      await updateSettingsTabPage(tableInfo.id, tableInfo.type, tableInfo.disable, tableInfo.max_device);
+    } catch (e) {
+      console.error("updateSettingsTabPage error:", e);
+    }
+
     dispatch(saveTabPage());
   };
 
   const handleSaveAll = async () => {
-    const confirmed = window.confirm(`Do you want to save changes for all tabs?`);
+    const confirmed = window.confirm(STRING_CONFIRM_SAVE_ALL_CHANGES);
     if (!confirmed) {
       return;
     }
 
-    dispatch(saveTabPage())
-
-    let count = 1;
-
-    for (let mainId = 1; mainId <= 5; mainId++) {
-      for (let subId = 1; subId <= 5; subId++) {
-        const TabKey = `${MAIN_TAB_ENV_NAME}${mainId}_SUB${subId}`;
-        if (process.env[TabKey]) {
-          try {
-            const keyNumber = CONST_TABINFO_NAME + `${count}`; 
-            await updateSettingsTabPage(keyNumber, tabPageSlice.tabPageInfo[mainId][subId] as TabPageInfotype);
-          }
-          catch (e) {
-            console.error("updateSettingsTabPage error:", e);
-          }
-        }
-        count += 1;
+    for (const tableInfo of tabPageSlice.currentTabPage.tab_table_infos) {   
+      try {
+        await updateSettingsTabPage(tableInfo.id, tableInfo.type, tableInfo.disable, tableInfo.max_device);
+      } catch (e) {
+        console.error("updateSettingsTabPage error:", e);
       }
-    }
+    }    
+
+    dispatch(saveTabPage());
   };
 
   const handleRefresh = () => {
@@ -116,8 +92,14 @@ const ComposeSet: React.FC = () => {
 
   const renderGridButtons = () => {
     const gridButtons = [];
-    for (let r = 0; r < tabPageSlice.currentTabPage.tbl_row; r++) {
-      for (let c = 0; c < tabPageSlice.currentTabPage.tbl_row; c++) {
+    const tabInfo = tabPageSlice.currentTabPage;
+    for (let r = 0; r < tabInfo.tbl_row; r++) {
+      for (let c = 0; c < tabInfo.tbl_row; c++) {
+
+        if ((c+1)+ (r * tabInfo.tbl_column) > tabInfo.tab_table_infos.length) {
+          break;
+        }
+
         gridButtons.push(
           <GridButton
             key={`${r}-${c}`}
@@ -143,7 +125,7 @@ const ComposeSet: React.FC = () => {
               <MediumLabel>{STRING_SETTING_DEVICE_UNIT_SELECT}</MediumLabel>
             </UnitSelectLabel>
             <GridContainer column={tabPageSlice.currentTabPage.tbl_column}>
-                {renderGridButtons()}
+              { renderGridButtons() }
             </GridContainer>
           </SelectUnitContainer>
           <DeviceHeaderSet />
@@ -162,7 +144,7 @@ const ComposeSet: React.FC = () => {
       <ButtonGroup>
         <BaseButton onClick={handleRefresh}>{STRING_DEFAULT_REFRESH}</BaseButton>
         <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>      
-        <HideButton onClick={handleSaveAll}>{STRING_DEFAULT_SAVEALL}</HideButton>
+        <ActiveButton onClick={handleSaveAll}>{STRING_DEFAULT_SAVEALL}</ActiveButton>
       </ButtonGroup>
     </PageContainer>
   );

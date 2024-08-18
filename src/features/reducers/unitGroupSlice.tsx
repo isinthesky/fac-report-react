@@ -1,26 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Unit, updateCurrentGroupType, updateCurrenUnitDevice } from "../../static/types";
+import { Unit,Preset, updateCurrentGroupType, updateCurrenUnitDevice, Item } from "../../static/types";
 
 
 export interface UnitGroupState {
-  groups: Unit[],
-  currentGroup: Unit,
+  groups: Preset[],
+  currentGroup: Preset,
   selectedPos: number
 }
 
 const initialState: UnitGroupState = {
   groups: [
-    { tab_name: "", name: "name1", type: 1, idx: 1, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name2", type: 1, idx: 2, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name3", type: 1, idx: 3, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name4", type: 1, idx: 4, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name5", type: 1, idx: 5, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name6", type: 1, idx: 6, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name7", type: 1, idx: 7, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name8", type: 1, idx: 8, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
-    { tab_name: "", name: "name9", type: 1, idx: 9, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+    {id: 1, tab_name: "", name: "name1", type: 1, idx: 1, st: 0, div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
   ],
-  currentGroup: { tab_name: " ", name: "", type: 1, idx: 0, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0},
+  currentGroup: { id: 0, tab_name: " ", name: "", type: 1, idx: 0, st: 0, div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
   selectedPos: 0,
 };
 
@@ -28,10 +20,13 @@ export const unitGroupSlice = createSlice({
   name: "unitGroup",
   initialState,
   reducers: {
-    addGroup: (state, action: PayloadAction<Unit>) => {
+    loadUnitGroupList: (state, action: PayloadAction<Preset[]>) => {
+      state.groups = action.payload;
+    },
+    addUnitGroup: (state, action: PayloadAction<Preset>) => {
       state.groups.push(action.payload);
     },
-    updateGroup: (state, action: PayloadAction<{ index: number; group: Unit }>) => {
+    updateGroup: (state, action: PayloadAction<{ index: number; group: Preset }>) => {
       const { index, group } = action.payload;
       if (state.groups[index]) {
         state.groups[index] = group;
@@ -53,11 +48,11 @@ export const unitGroupSlice = createSlice({
     setCurrentGroup: (state, action: PayloadAction<number>) => {
       state.currentGroup = state.groups[action.payload];
     },
-    updateCurrentGroup: (state, action: PayloadAction<Unit>) => {
+    updateCurrentGroup: (state, action: PayloadAction<Preset>) => {
       state.currentGroup = action.payload;
     },
     updateCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
-      state.currentGroup.devices[action.payload.devicePosition] = action.payload.device;
+      state.currentGroup.tab_device_presets[action.payload.devicePosition] = action.payload.device;
     },
     updateCurrentGroupUnit: (
       state,
@@ -67,8 +62,18 @@ export const unitGroupSlice = createSlice({
         (state.currentGroup as any)[action.payload.arrKey] = action.payload.value;
       }
     },
+    addDevice: (state, action: PayloadAction<Item>) => {
+      state.currentGroup.tab_device_presets.push(action.payload);
+    },
+    deleteDevice: (state, action: PayloadAction<number>) => {
+      state.currentGroup.tab_device_presets.splice(action.payload, 1);
+    },
+    updateDevice: (state, action: PayloadAction<number>) => {      
+      state.groups[action.payload] = state.currentGroup;
+    },
   },
 });
 
-export const {addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit, updateCurrentUnitDevice } = unitGroupSlice.actions;
+export const { loadUnitGroupList, addUnitGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, updateCurrentGroup, setSelectedGroup, updateCurrentGroupUnit, updateCurrentUnitDevice, 
+  addDevice, deleteDevice, updateDevice } = unitGroupSlice.actions;
 export default unitGroupSlice.reducer;

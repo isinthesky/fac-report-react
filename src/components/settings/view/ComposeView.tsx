@@ -58,6 +58,7 @@ const ComposeView: React.FC = () => {
         if (tabPageInfo.tab_table_infos.length > 0) {
           rowlist.push(
             <UnitInfo
+              id={tabPageInfo.tab_table_infos[keyCounter].id}
               tab_name={tabPageInfo.name}
               type={tabPageInfo.tab_table_infos[keyCounter].type}
               name={tabPageInfo.tab_table_infos[keyCounter].name}

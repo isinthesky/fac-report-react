@@ -36,14 +36,13 @@ const UnitInfo: React.FC<Unit> = ({
         <NameLabel>Name</NameLabel>
         <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
-
       <Group>
-      {devices&&devices.map((dv, index) => (
+        {devices&&devices.map((dv, index) => (
           <ItemDiv key={index}>
             <DescriptLabel>{`dv${index + 1}`}</DescriptLabel>
             <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv.path_id)} readOnly={true}/>
           </ItemDiv>
-      ))}
+        ))}
       </ Group>
     </UnitContainer>
   );

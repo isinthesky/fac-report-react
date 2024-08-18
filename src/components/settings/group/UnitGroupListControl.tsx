@@ -1,14 +1,14 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { addGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
+import { addUnitGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BigLabel, ControlButton, MediumLabel } from '../../../static/componentSet';
 import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
   
 import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
-import { Unit, ViewModeProp } from '../../../static/types';
+import { Unit, Preset, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
 import { COLORSET_GROUP_INPUT_NOMAL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_GROUP_INPUT_ACTIVE_BORDER, COLORSET_GROUP_INPUT_ACTIVE_FONT, COLORSET_GROUP_INPUT_NOMAL_BORDER, COLORSET_GROUP_INPUT_NOMAL_FONT } from '../../../static/colorSet';
 import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
@@ -71,8 +71,8 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   const handleAdd = () => {
-    const newGroup = { tab_name: " ", name: "", type: 1, idx: 0, st: 0, div: 0, devices: Array(9).fill(0), max_device: 0, disable:0};
-    dispatch(addGroup(newGroup));
+    const newGroup = { id: 0, tab_name: " ", name: "", type: 1, idx: 0, st: 0, div: 0, tab_device_presets: Array(9).fill(0), max_device: 0, disable:0};
+    dispatch(addUnitGroup(newGroup));
   };
 
   const handleUpdate = (index: number) => {
@@ -87,7 +87,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   const handleApply = () => {
     if (settingMode === "apply") {
       const currentTabUnit = {...tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]}
-      currentTabUnit.devices = unitGroupSlice.currentGroup.devices
+      currentTabUnit.devices = unitGroupSlice.currentGroup.tab_device_presets
 
       dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
     }
@@ -116,7 +116,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
           <BigLabel>{ settingMode === "setting" ? STRING_SETTING_GROUP_SETTING : STRING_SETTING_GROUP_LIST}</BigLabel>
         </BaseFlex1Column>
         {unitGroupSlice.groups.length > 0
-          ? unitGroupSlice.groups.map((group:Unit, index:number) => (
+          ? unitGroupSlice.groups.map((group:Preset, index:number) => (
             <SaveUnitContainer key={index}  onClick={() => handleGroupNameClick(index)}>
               <IndexLabel heightSize="20px">{index + 1}</IndexLabel>
               <GroupNameContainer>

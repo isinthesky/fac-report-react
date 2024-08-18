@@ -30,8 +30,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
                         : initStationId);
   }, [initStationId]);
 
-  console.log("currentDevice.path_id", currentDevice.path_id)
-
   useEffect(() => {
     setSelectedDivision( (currentDevice.path_id === 0) 
                          ? initDivisionId
@@ -116,7 +114,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
           ))}
       </DivisionSelector>
       <DeviceSelector onChange={handleDeviceChange} value={selectedDevice?.path_id}>
-
         {(selectedDevice?.path_id === 0)
           ? (searchWord.length > 0)
             ? <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
