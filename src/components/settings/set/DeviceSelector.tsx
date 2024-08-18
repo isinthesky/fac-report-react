@@ -43,9 +43,12 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       setSelectedDevice(null); 
       return;
     }
-
     setSelectedDevice(currentDevice)
   }, [selectedDiv]);
+
+  useEffect(() => {
+    setSelectedDevice(currentDevice);
+  }, [currentDevice]);
 
   useEffect(() => {
     const size = Object.values(devicelist.devices)
@@ -68,7 +71,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
   };
-
 
   const deviceinfo = (deviceId: number) => {
     return devicelist.devices[deviceId];
@@ -115,17 +117,17 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       </DivisionSelector>
       <DeviceSelector onChange={handleDeviceChange} value={selectedDevice?.path_id}>
 
-        {selectedDevice?.path_id === 0 
-          ? (searchWord.length > 0
-              ? <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
-                  {searchedNumber} {STRING_SETTING_DEVICE_FOUND}
-                </BaseOption>
-              : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
-                  {STRING_SETTING_DEVICE_SELECT}
-                </BaseOption>)
-              : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
-                  {selectedDevice?.path_id !== undefined && devicelist.devices[selectedDevice.path_id]?.name}
-                </BaseOption>}
+        {(selectedDevice?.path_id === 0)
+          ? (searchWord.length > 0)
+            ? <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
+                {searchedNumber} {STRING_SETTING_DEVICE_FOUND}
+              </BaseOption>
+            : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
+                {STRING_SETTING_DEVICE_SELECT}
+              </BaseOption>
+          : <BaseOption key={selectedDevice?.path_id} value={selectedDevice?.path_id}>
+              {selectedDevice?.path_id !== undefined && devicelist.devices[selectedDevice.path_id]?.name}
+            </BaseOption>}
 
         {Object.values(devicelist.devices)
           .filter(

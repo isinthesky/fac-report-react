@@ -3,6 +3,9 @@ import { ApprovalsType} from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
+  headers: {
+    'accept': 'application/json'
+  }
 });
 
 // export const getSettings = async (): Promise<any> => {
@@ -67,14 +70,18 @@ export const updateSettings = async (
 };
 
 export const setUpdateSettingsColRow = async (
+  id: number,
+  name: string,
   row: number,
   column: number
 ): Promise<any> => {
   try {
-    const value = {"row": row, "column": column};
-    const response = await axiosInstance.put("/report/general/updateSetting", {
-      type: "settings",
-      value: value,
+    console.log("setUpdateS", id, name, column, row)
+    const response = await axiosInstance.put("/FacReport/PageInfo/TabInfo/update", {
+      id: id,
+      name: name,
+      tbl_row: row,
+      tbl_column: column
     });
     return response.data.success;
   } catch (error) {

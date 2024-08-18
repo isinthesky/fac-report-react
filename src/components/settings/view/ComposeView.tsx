@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitInfo from "./UnitInfo";
@@ -24,9 +24,16 @@ const ComposeView: React.FC = () => {
     setEdit(!edit);
   };
 
+  useEffect(() => {
+    setRow(tabSlice.currentTabPage.tbl_row);
+    setColumn(tabSlice.currentTabPage.tbl_column);
+  }, [tabSlice.currentTabPage.tbl_row, tabSlice.currentTabPage.tbl_column]);
+
+
   const handleApply = async () => {
-    await setUpdateSettingsColRow(rows, columns);
     dispatch(setReportTable({ row: rows, column: columns }));
+    await setUpdateSettingsColRow(tabSlice.currentTabPage.id, tabSlice.currentTabPage.name,
+      rows, columns );
   };
 
   const getUnitList = useCallback(() => {
@@ -34,31 +41,42 @@ const ComposeView: React.FC = () => {
     let keyCounter = 0;
 
     const tabPageInfo = tabSlice.currentTabPage;
+
+    console.log("00", tabPageInfo, rows, columns)
+
+    if (rows === 0 || columns === 0){
+      return []
+    }
     
     for (let r = 0; r < rows * columns; r++) {
       if (tabPageInfo) {
         if (tabPageInfo.tab_table_infos.length < 1) return;
+        console.log("111", tabPageInfo.tab_table_infos.length)
+        if (tabPageInfo.tab_table_infos.length <= r) break;
+        console.log("222", tabPageInfo.tab_table_infos.length, r, tabPageInfo.tab_table_infos.length <= r)
 
         if (tabPageInfo.tab_table_infos.length > 0) {
           rowlist.push(
             <UnitInfo
-            tab_name={tabPageInfo.name}
-            type={tabPageInfo.tab_table_infos[keyCounter].type}
-            name={tabPageInfo.tab_table_infos[keyCounter].name}
-            idx={tabPageInfo.tab_table_infos[keyCounter].idx}
-            st={tabPageInfo.tab_table_infos[keyCounter].st}
-            div={tabPageInfo.tab_table_infos[keyCounter].div}
-            devices={tabPageInfo.tab_table_infos[keyCounter].devices}
-            disable={tabPageInfo.tab_table_infos[keyCounter].disable}
-            max_device={tabPageInfo.tab_table_infos[keyCounter].max_device || 0}
-          />
+              tab_name={tabPageInfo.name}
+              type={tabPageInfo.tab_table_infos[keyCounter].type}
+              name={tabPageInfo.tab_table_infos[keyCounter].name}
+              idx={tabPageInfo.tab_table_infos[keyCounter].idx}
+              st={tabPageInfo.tab_table_infos[keyCounter].st}
+              div={tabPageInfo.tab_table_infos[keyCounter].div}
+              devices={tabPageInfo.tab_table_infos[keyCounter].devices}
+              disable={tabPageInfo.tab_table_infos[keyCounter].disable}
+              max_device={tabPageInfo.tab_table_infos[keyCounter].max_device || 0}
+            />
           );
         } 
         keyCounter++;
       }
     }
+
+    console.log(rowlist, tabPageInfo)
     return rowlist;
-  }, [tabSlice, rows, columns, tabSlice.settingPosition, deviceSlice]); // Add dependencies here
+  }, [rows, columns, tabSlice.currentTabPage, deviceSlice]);
 
   return (
     <SettingViewContainer>

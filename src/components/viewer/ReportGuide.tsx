@@ -30,6 +30,10 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       <RowContainer key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
+          
+          if (currentTab.tab_table_infos.length <= index) {
+            return <></>;
+          }
           if (currentTab.tab_table_infos[index].type === CONST_TYPE_INFO_INDEX[2]) {
             return <></>;
           }
