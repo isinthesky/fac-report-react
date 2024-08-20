@@ -63,8 +63,8 @@ const ComposeView: React.FC = () => {
               type={tabPageInfo.tab_table_infos[keyCounter].type}
               name={tabPageInfo.tab_table_infos[keyCounter].name}
               idx={tabPageInfo.tab_table_infos[keyCounter].idx}
-              st={tabPageInfo.tab_table_infos[keyCounter].st}
-              div={tabPageInfo.tab_table_infos[keyCounter].div}
+              search_st={tabPageInfo.tab_table_infos[keyCounter].search_st}
+              search_div={tabPageInfo.tab_table_infos[keyCounter].search_div}
               devices={tabPageInfo.tab_table_infos[keyCounter].devices}
               disable={tabPageInfo.tab_table_infos[keyCounter].disable}
               max_device={tabPageInfo.tab_table_infos[keyCounter].max_device || 0}

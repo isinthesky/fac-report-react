@@ -54,6 +54,7 @@ export type updateCurrentGroupType = {
 };
 
 export type Item = {
+  id: number;
   idx: number | null;
   station_id: number;
   division_id: number;
@@ -67,8 +68,8 @@ export type Unit = {
   type: number;
   idx: number;
   name: string;
-  st: number;
-  div: number;
+  search_st: number;
+  search_div: number;
   devices: Item[];
   disable: number;
   max_device: number;
@@ -80,8 +81,8 @@ export type Preset = {
   type: number;
   idx: number;
   name: string;
-  st: number;
-  div: number;
+  search_st: number;
+  search_div: number;
   tab_device_presets: Item[];
   max_device: number;
 };

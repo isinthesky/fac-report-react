@@ -19,7 +19,8 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   console.log("currentTab", currentTab)
 
   const renderDevice = (() => {
-    if (!currentTab.tab_table_infos[0]) {
+    
+    if (currentTab.tab_table_infos.length === 0) {
       return <>{STRING_ERR_SERVER_CONNECT}</>;
     }
 

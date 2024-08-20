@@ -71,8 +71,8 @@ const UnitGroupSet: React.FC = () => {
   const renderSection = (index1: number, unit: Preset) => {
     return <>
       {unit.tab_device_presets.map((device: Item, idx: number) => {
-          const initStationId = (device.path_id !== 0) ? device.station_id : unit.st;
-          const initDivisionId = (device.path_id !== 0) ? device.division_id : unit.div;
+          const initStationId = (device.path_id !== 0) ? device.station_id : unit.search_st;
+          const initDivisionId = (device.path_id !== 0) ? device.division_id : unit.search_div;
                                 
           return( <ValueSection key={idx}>
                     <IndexLabel>{idx + 1}</IndexLabel>
@@ -82,8 +82,8 @@ const UnitGroupSet: React.FC = () => {
                       initStationId={initStationId}
                       initDivisionId={initDivisionId}
                       devicelist={deviceSet}
-                      stationValue={unit.st}
-                      divisionValue={unit.div}
+                      stationValue={unit.search_st}
+                      divisionValue={unit.search_div}
                       currentDevice={device}
                     />
                   </ValueSection>)

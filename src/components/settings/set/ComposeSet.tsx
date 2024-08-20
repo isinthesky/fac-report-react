@@ -5,7 +5,7 @@ import UnitTypeW from "./UnitTypeW";
 import UnitTypeV from "./UnitTypeV";
 import UnitTypeH from "./UnitTypeH";
 import TimeDropdowns from "./TimeDropdowns";
-import { updateSettingsTabPage } from "../../../features/api/device";
+import { updateTable, updateDevice } from "../../../features/api/device";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
@@ -41,9 +41,13 @@ const ComposeSet: React.FC = () => {
     }
     
     const tableInfo = tabPageSlice.currentTabPage.tab_table_infos[position];
-    
+    const deviceInfo = tabPageSlice.currentTabPage.tab_table_infos[position].devices;
     try {
-      await updateSettingsTabPage(tableInfo.id, tableInfo.type, tableInfo.disable, tableInfo.max_device);
+      await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
+
+      for (const device of deviceInfo) {
+        await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
+      }
     } catch (e) {
       console.error("updateSettingsTabPage error:", e);
     }
@@ -59,7 +63,7 @@ const ComposeSet: React.FC = () => {
 
     for (const tableInfo of tabPageSlice.currentTabPage.tab_table_infos) {   
       try {
-        await updateSettingsTabPage(tableInfo.id, tableInfo.type, tableInfo.disable, tableInfo.max_device);
+        await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
       } catch (e) {
         console.error("updateSettingsTabPage error:", e);
       }
@@ -94,7 +98,7 @@ const ComposeSet: React.FC = () => {
     const gridButtons = [];
     const tabInfo = tabPageSlice.currentTabPage;
     for (let r = 0; r < tabInfo.tbl_row; r++) {
-      for (let c = 0; c < tabInfo.tbl_row; c++) {
+      for (let c = 0; c < tabInfo.tbl_column; c++) {
 
         if ((c+1)+ (r * tabInfo.tbl_column) > tabInfo.tab_table_infos.length) {
           break;

@@ -35,6 +35,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
   }[type]), [type]);
 
   let pos = 0;
+  console.log(tabPage.tab_table_infos[index])
 
   return (
     <Container>
@@ -45,23 +46,25 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
       </Row>
       <UnitGrid>
         {sections.map((section, sectionIdx) => (
-          <Column key={`section-${sectionIdx}`} >
-            <Row>
-              <SectionDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-                {section.label}
-              </SectionDiv>
-            </Row>
-            <Row>
-              {section.values.map((value, valueIdx) => (
-                <DeviceTypeValueDiv key={`value-${sectionIdx}-${valueIdx}`}>
-                  <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-                    {value}
-                  </DevTypeDiv>
-                  <DeviceValue times={tabPage.times} devId={tabPage.tab_table_infos[index].devices[pos++].path_id} />
-                </DeviceTypeValueDiv>
-              ))}
-            </Row>
-          </Column>
+          tabPage.tab_table_infos[index].devices.length > pos && (
+            <Column key={`section-${sectionIdx}`} >
+              <Row>
+                <SectionDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                  {section.label}
+                </SectionDiv>
+              </Row>
+              <Row>
+                {section.values.map((value, valueIdx) => (
+                  <DeviceTypeValueDiv key={`value-${sectionIdx}-${valueIdx}`}>
+                    <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                      {value}
+                    </DevTypeDiv>
+                    <DeviceValue times={tabPage.times} devId={tabPage.tab_table_infos[index].devices[pos++].path_id} />
+                  </DeviceTypeValueDiv>
+                ))}
+              </Row>
+            </Column>
+          )
         ))}
       </UnitGrid>
     </Container>

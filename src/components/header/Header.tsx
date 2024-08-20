@@ -78,13 +78,6 @@ export default function Header({ mainTab }: HeaderProps) {
                   console.log("resPageSetting", resPageSetting);
                  
                   tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
-                  
-                  for (const tbl of resPageSetting.tables as Unit[]) {
-                    tbl.div = tbl.devices[0].division_id;
-                    tbl.st = tbl.devices[0].station_id;
-                    tbl.name = "table" + tbl.idx;
-                  }
-                  
                   tempTabInfo.tab_table_infos = resPageSetting.tables
                   
                   dispatch(setTabPage({mainTab: mainId, subTab: subId, 

@@ -24,6 +24,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const [searchedNumber, setSearchedNumber] = useState<number>(0);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
+
   useEffect(() => {
     setSelectedStation( (initStationId === 0) 
                         ? devicelist.stations[0].id
@@ -37,10 +38,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   }, [initDivisionId]);
 
   useEffect(() => {
-    if (currentDevice.path_id === 0) {
-      setSelectedDevice(null); 
-      return;
-    }
     setSelectedDevice(currentDevice)
   }, [selectedDiv]);
 
@@ -75,29 +72,24 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-
-    console.log(Number(e.target.value))
-
-    setSelectedDevice({
-      idx: 0,
-      station_id: selectedSt,
-      division_id: selectedDiv,
-      path_id: Number(e.target.value)
-    } as Item);    
-
-    dispatch(setCurrentUnitDevice({ unitPosition, 
-                                    devicePosition, 
-                                    device: {
-                                      idx: 0,
-                                      station_id: selectedSt,
-                                      division_id: selectedDiv,
-                                      path_id: Number(e.target.value)
-                                    } as Item }));
+    if (selectedDevice) {
+      const newPathId = Number(e.target.value);
+      const updatedDevice = { ...selectedDevice, path_id: newPathId };
+      setSelectedDevice(updatedDevice);    
+  
+      dispatch(setCurrentUnitDevice({ 
+        unitPosition, 
+        devicePosition, 
+        device: updatedDevice 
+      }));
+    }
   };
 
   return (
     <DeviceInfoContainer>
-      <DivisionSelector onChange={handleStationChange} value={selectedSt}>
+      {selectedDevice && (
+        <>
+        <DivisionSelector onChange={handleStationChange} value={selectedSt}>
         {devicelist.stations.map((st: IStation) => (
           <BaseOption key={st.id} value={st.id}>
             {st.name}
@@ -142,7 +134,10 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
               {dev.name}
             </BaseOption>
           ))}
-      </DeviceSelector>
+          </DeviceSelector>
+        </>
+      )}
+      
     </DeviceInfoContainer>
   );
 };

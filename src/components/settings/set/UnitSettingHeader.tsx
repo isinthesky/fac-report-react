@@ -16,14 +16,12 @@ const DeviceHeaderSet = () => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].st);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].search_st);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>("");
 
   useEffect(() => {
     const currentUnit = tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]
-
-    console.log("currentUnit", currentUnit)
 
     if (currentUnit.type === 0) {
       setDeviceType(1);
@@ -33,12 +31,12 @@ const DeviceHeaderSet = () => {
       }));
     }
 
-    if (currentUnit.st === 0) {
+    if (currentUnit.search_st === 0) {
       setSelectedStation(deviceSet.stations[0].id);
       dispatch(
         updateCurrentUnit({
           arrPos: tabPageSlice.unitPosition.index,
-          arrKey: "st",
+          arrKey: "search_st",
           deviceId: deviceSet.stations[0].id,
         })
       );
@@ -55,7 +53,7 @@ const DeviceHeaderSet = () => {
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
-        arrKey: "div",
+        arrKey: "search_div",
         deviceId: deviceSet.divisions.filter((item) => item.station_id === selectedStation)[0].id,
       })
     );
@@ -76,7 +74,7 @@ const DeviceHeaderSet = () => {
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
-        arrKey: "st",
+        arrKey: "search_st",
         deviceId: Number(e.target.value),
       })
     );
@@ -87,7 +85,7 @@ const DeviceHeaderSet = () => {
     dispatch(
       updateCurrentUnit({
         arrPos: tabPageSlice.unitPosition.index,
-        arrKey: "div",
+        arrKey: "search_div",
         deviceId: Number(e.target.value),
       })
     );

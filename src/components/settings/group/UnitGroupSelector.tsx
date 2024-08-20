@@ -38,15 +38,8 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
   }, [initDivisionId]);
 
   useEffect(() => {
-    if (currentDevice.path_id === 0) {
-      setSelectedDevice(null); 
-      return;
-    }
-
     setSelectedDevice(currentDevice)
   }, [selectedDiv]);
-
-  console.log("currentDevice", currentDevice);
 
   useEffect(() => {
     const size = Object.values(devicelist.devices)
@@ -75,17 +68,18 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
   };
 
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("handleDeviceChange", e.target.value);
-    setSelectedDevice({idx: 0, station_id: selectedSt, division_id: selectedDiv, path_id: Number(e.target.value)});    
-    dispatch(updateCurrentUnitDevice({ unitPosition, 
-                                       devicePosition, 
-                                       device: {
-                                        idx: 0,
-                                        station_id: selectedSt,
-                                        division_id: selectedDiv,
-                                        path_id: Number(e.target.value)
-                                      } as Item }));
-
+    if (selectedDevice) {
+      const newPathId = Number(e.target.value);
+      const updatedDevice = { ...selectedDevice, path_id: newPathId };
+      setSelectedDevice(updatedDevice);    
+  
+      dispatch(updateCurrentUnitDevice({ 
+        unitPosition, 
+        devicePosition, 
+        device: updatedDevice 
+      }));
+    }
+    
     dispatch(updateFromCurrent(unitPosition));
   };
   

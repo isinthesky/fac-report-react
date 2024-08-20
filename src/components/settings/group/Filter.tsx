@@ -18,18 +18,18 @@ const Filter: React.FC = () => {
   const deviceSearchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
   const [searchWord, setSearchWord] = useState(deviceSearchWord);
 
-  const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.div);
+  const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.search_st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.search_div);
 
   useEffect(() => {
     console.log("group init station", unitGroupSlice.currentGroup)
-    setSelectedStation( (unitGroupSlice.currentGroup.st === 0) 
+    setSelectedStation( (unitGroupSlice.currentGroup.search_st === 0) 
                         ? deviceSet.stations[0]?.id
-                        : unitGroupSlice.currentGroup.st);     
+                        : unitGroupSlice.currentGroup.search_st);     
   
-    setSelectedDivision( (unitGroupSlice.currentGroup.div === 0) 
+    setSelectedDivision( (unitGroupSlice.currentGroup.search_div === 0) 
                         ? deviceSet.divisions.filter((item) => item.station_id === selectedStation)[0]?.id
-                        : unitGroupSlice.currentGroup.div);     
+                        : unitGroupSlice.currentGroup.search_div);     
                     
   }, [unitGroupSlice.currentGroup]);
 
@@ -43,14 +43,14 @@ const Filter: React.FC = () => {
     const stId = Number(e.target.value);
     setSelectedStation(stId);
 
-    dispatch(updateCurrentGroupUnit({arrKey: "st", value: stId}))
+    dispatch(updateCurrentGroupUnit({arrKey: "search_st", value: stId}))
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const divId = Number(e.target.value);
     setSelectedDivision(divId);
 
-    dispatch(updateCurrentGroupUnit({arrKey: "div", value: divId}))
+    dispatch(updateCurrentGroupUnit({arrKey: "search_div", value: divId}))
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

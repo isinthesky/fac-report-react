@@ -68,18 +68,46 @@ export const getDivisionList = async (): Promise<any> => {
 };
 
 
-export const updateSettingsTabPage = async(
+export const updateTable = async(
   id: number,
+  name: string,
   type: number,
   disable: number,
-  max_device: number
+  max_device: number,
+  search_st: number,
+  search_div: number
 ): Promise<any> => {
     try {
       await axiosInstance.put("/FacReport/PageInfo/TabTableInfo/update", {
         id: id,
+        name: name,
         type: type,
         disable: disable,
-        max_device: max_device
+        max_device: max_device,
+        search_st: search_st,
+        search_div: search_div
+      });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+
+export const updateDevice = async(
+  id: number,
+  station_id: number,
+  division_id: number,
+  path_id: number
+): Promise<any> => {
+    try {
+
+      await axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", {
+        id: id,
+        station_id: station_id,
+        division_id: division_id,
+        path_id: path_id
       });
       return true;
     } catch (error) {

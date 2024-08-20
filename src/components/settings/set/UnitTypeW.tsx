@@ -33,11 +33,11 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
           const initStationId =
             currUnit.devices[idx].path_id !== 0
               ? currUnit.devices[idx].station_id
-              : currUnit.st;
+              : currUnit.search_st;
           const initDivisionId =
             currUnit.devices[idx].path_id !== 0
               ? currUnit.devices[idx].division_id
-              : currUnit.div;
+              : currUnit.search_div;
 
           return (
             <DiviceDiv key={idx}>
@@ -47,9 +47,9 @@ const UnitTypeW: React.FC<SetDeviceType> = ({ name }) => {
                 devicePosition={idx}
                 devicelist={deviceSet}
                 initStationId={initStationId}
-                stationValue={currUnit.st}
+                stationValue={currUnit.search_st}
                 initDivisionId={initDivisionId}
-                divisionValue={currUnit.div}
+                divisionValue={currUnit.search_div}
                 currentDevice={currUnit.devices[idx]}
               />
             </DiviceDiv>

@@ -71,7 +71,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   const handleAdd = () => {
-    const newGroup = { id: 0, tab_name: " ", name: "", type: 1, idx: 0, st: 0, div: 0, tab_device_presets: Array(9).fill(0), max_device: 0, disable:0};
+    const newGroup = { id: 0, tab_name: " ", name: "", type: 1, idx: 0, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0, disable:0};
     dispatch(addUnitGroup(newGroup));
   };
 

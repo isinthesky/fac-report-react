@@ -17,7 +17,6 @@ const DeviceSearch: React.FC = () => {
   }, [deviceSearchWord]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("input searchWord", searchWord)
     setSearchWord(e.target.value);
   };
 
