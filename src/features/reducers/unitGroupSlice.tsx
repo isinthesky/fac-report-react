@@ -12,7 +12,7 @@ const initialState: UnitGroupState = {
   groups: [
     {id: 1, tab_name: "", name: "name1", type: 1, idx: 1, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
   ],
-  currentGroup: { id: 0, tab_name: " ", name: "", type: 1, idx: 0, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
+  currentGroup: { id: 0, tab_name: "", name: "", type: 1, idx: 0, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
   selectedPos: 0,
 };
 

@@ -61,8 +61,26 @@ export type Item = {
   path_id: number;
 };
 
+export type DeviceValue = {
+  times: string;
+  value: string[];
+};
 
 export type Unit = {
+  id: number;
+  tab_name: string;
+  type: number;
+  idx: number;
+  name: string;
+  search_st: number;
+  search_div: number;
+  devices: Item[];
+  device_values: {key: string, value: string[]} | null;
+  disable: number;
+  max_device: number;
+};
+
+export type TableSettingType = {
   id: number;
   tab_name: string;
   type: number;

@@ -16,13 +16,13 @@ type ReportGuideProps = {
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
-  console.log("currentTab", currentTab)
-
   const renderDevice = (() => {
     
     if (currentTab.tab_table_infos.length === 0) {
       return <>{STRING_ERR_SERVER_CONNECT}</>;
     }
+
+    console.log("currentTab", currentTab, currentTab.tab_table_infos[0].device_values)
 
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
     times.push(...currentTab.times.map((time: string) => time));

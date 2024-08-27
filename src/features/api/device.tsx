@@ -68,6 +68,30 @@ export const getDivisionList = async (): Promise<any> => {
 };
 
 
+export const updateTab = async(
+  id: number,
+  name: string,
+  tbl_row: number,
+  tbl_column: number,
+  history_date: string,
+): Promise<any> => {
+    try {
+      console.log("updateTab", id, name, tbl_row, tbl_column, history_date)
+      await axiosInstance.put("/FacReport/PageInfo/TabInfo/update", {
+        id: id,
+        name: name,
+        tbl_row: tbl_row,
+        tbl_column: tbl_column,
+        history_date: history_date
+      });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+
 export const updateTable = async(
   id: number,
   name: string,
@@ -78,6 +102,7 @@ export const updateTable = async(
   search_div: number
 ): Promise<any> => {
     try {
+      console.log("updateTable", id, name, type, disable, max_device, search_st, search_div)
       await axiosInstance.put("/FacReport/PageInfo/TabTableInfo/update", {
         id: id,
         name: name,
@@ -133,19 +158,22 @@ export const getUnitGroupList = async (): Promise<any> => {
   };
 
 
-export const updateUnitGroupList = async (
+export const updatePresetTab = async (
     id: number,
     name: string,
     type: number,
-    devices: Item[]
+    max_device: number,
+    search_st: number,
+    search_div: number
   ): Promise<any> => {
     try {
       return await axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", {
         id: id,
         name: name,
         type: type,
-        max_device: devices.length,
-        devices: devices
+        max_device: max_device,
+        search_st: search_st,
+        search_div: search_div
       });
     } catch (error) {
       console.error(error);
@@ -154,24 +182,29 @@ export const updateUnitGroupList = async (
   };
 
 
+export const updatePresetDevice = async (
+  id: number,
+  station_id: number,
+  division_id: number,
+  path_id: number
+): Promise<any> => {
+  try {
+    return await axiosInstance.put("/FacReport/PageInfo/TabDevicePreset/update", {
+      id: id,
+      station_id: station_id,
+      division_id: division_id,
+      path_id: path_id
+    });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+
 export const readDevicesData = async (
     deviceId: number,
     date: number
   ): Promise<any> => {
-    try {
-      const response = await axiosInstance.post("/bms/getPointHistory", {
-        path_id: deviceId.toString(),
-        timestamp: date.toString()
-      });
-
-      if (response.data.success) {
-        return response.data.data;
-      }
-      
-      return null;
-    } catch (error) {
-      console.error("readDevicesData", error);
-      return null;
-    }
   };
   

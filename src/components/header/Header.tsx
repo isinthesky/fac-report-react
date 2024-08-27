@@ -54,6 +54,7 @@ export default function Header({ mainTab }: HeaderProps) {
   useEffect(() => {
     (async () => {
       try {
+        console.log("header: ", process.env.REACT_APP_SERVER_URL)
         const resPages = await get_page_list();
         
         if (resPages) {
@@ -72,7 +73,7 @@ export default function Header({ mainTab }: HeaderProps) {
 
                   console.log("header: ", tempTabInfo)
 
-                  const resPageSetting = await get_page_setting(tempTabInfo.name);
+                  const resPageSetting = await get_page_setting(tempTabInfo.name, false);
 
                   console.log("tempTabInfo", tempTabInfo);
                   console.log("resPageSetting", resPageSetting);

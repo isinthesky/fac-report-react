@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Unit } from "../../../static/types";
+import { TableSettingType } from "../../../static/types";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
@@ -8,7 +8,7 @@ import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
 import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_NAMES } from "../../../env";
 
-const UnitInfo: React.FC<Unit> = ({
+const UnitInfo: React.FC<TableSettingType> = ({
   type,
   name,
   idx,
@@ -26,6 +26,8 @@ const UnitInfo: React.FC<Unit> = ({
     }
   }
 
+  console.log("UnitInfo.devices: ", devices)
+
   return (
     <UnitContainer>
       <NameContainer type={type}>
@@ -37,10 +39,15 @@ const UnitInfo: React.FC<Unit> = ({
         <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
       <Group>
-        {devices&&devices.map((dv, index) => (
-          <ItemDiv key={index}>
-            <DescriptLabel>{`dv${index + 1}`}</DescriptLabel>
-            <DeviceInput id={`dv${index + 1}`} type="text" value={getDevName(dv.path_id)} readOnly={true}/>
+        {Object.values(devices).map((dv, index) => (
+          <ItemDiv key={dv.id}>
+            <DescriptLabel>{`dv${dv.idx}`}</DescriptLabel>
+            <DeviceInput 
+              id={`dv${dv.idx}`} 
+              type="text" 
+              value={getDevName(dv.path_id)} 
+              readOnly={true}
+            />
           </ItemDiv>
         ))}
       </ Group>

@@ -8,7 +8,7 @@ import UnitGroupListControl from "./UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_DEVICE_LIST } from "../../../static/langSet";
 
 import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';  
-import { updateUnitGroupList } from "../../../features/api/device";
+import { updatePresetTab, updatePresetDevice } from "../../../features/api/device";
 import { RootStore } from "../../../store/congifureStore";
 import { Item, Unit, Preset } from "../../../static/types";
 import UnitGroupAutoSelect from "./UnitGroupSelector";
@@ -49,8 +49,15 @@ const UnitGroupSet: React.FC = () => {
     try {
       dispatch(updateDevice(presetSlice.selectedPos));
 
+      console.log("unit", presetSlice.groups)
+
       for (const unit of presetSlice.groups) {
-        await updateUnitGroupList(unit.id, unit.name, unit.type, unit.tab_device_presets);
+        await updatePresetTab(unit.id, unit.name, unit.type, unit.tab_device_presets.length, unit.search_st, unit.search_div);
+
+        for (const device of unit.tab_device_presets) { 
+          
+          await updatePresetDevice(device.id, device.station_id, device.division_id, device.path_id);
+        }
       }
 
     } catch (error) {

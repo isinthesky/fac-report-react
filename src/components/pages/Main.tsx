@@ -33,8 +33,6 @@ function Main() {
 
   const handleLogin = () => {
     if (!toggle) {
-      // const hashedPassword = sha256(password + CONST_KEY_VALUE).toString();
-
       if (username === "admin") {
         dispatch(setViewSelect({mainTab: 1, subTab: 1}));
         setTimeout(() => {

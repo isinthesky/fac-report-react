@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setApproves, setMenus, setTabSetting, setTableDate, setViewMode } from "../../features/reducers/settingSlice";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
 import PrintModal from "../print/PrintModal";
@@ -13,13 +12,12 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-// import { getDeviceInfo } from "../../features/api/device";
-// import { loadDeviceList } from "../../features/reducers/deviceSlice";
-// import { getSettings } from "../../features/api";
-import { get_page_setting, get_page_list, get_page_time_list } from "../../features/api/page"
+import { setTabSetting, setViewMode } from "../../features/reducers/settingSlice";
+import { updateTab } from "../../features/api/device";
+import { timestampToYYYYMMDD } from "../../static/utils";
+import { get_page_setting, get_page_list, updateTabDate } from "../../features/api/page"
 import { CONST_TABINFO_NAME, INIT_TAB_COUNT } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
-import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype, Unit } from "../../../src/static/types"
 
 interface CustomInputProps {
   value: string;
@@ -67,7 +65,7 @@ function Daily() {
         if (resPages) {
           dispatch(setTabSetting({length: resPages.total_count}));
 
-          console.log("view select: ", id1, id2, INIT_TAB_COUNT)
+          console.log("view select: ", id1, id2, INIT_TAB_COUNT, timestampToYYYYMMDD(date))
 
           let count = 0;
           const buttons: string[] = [];
@@ -78,16 +76,30 @@ function Daily() {
                 const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
                 if (process.env[key]) {
                   buttons.push(`${mainId}${subId}`);
-                  const tempTabInfo = resPages.data[count++];
-                  const resPageSetting = await get_page_setting(tempTabInfo.name);
+                  const tabInfo = resPages.data[count++];
+                  
+                  await updateTab(tabInfo.id, tabInfo.name, tabInfo.tbl_row, tabInfo.tbl_column, timestampToYYYYMMDD(date));
 
-                  console.log("daily: ", tempTabInfo, resPageSetting)
-                  
-                  tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array                  
-                  tempTabInfo.tab_table_infos = resPageSetting.tables;
-                  
-                  dispatch(setTabPage({mainTab: mainId, subTab: subId, 
-                                       tabInfo: tempTabInfo}));
+                  if (mainId === Number(id1 ? id1 : 1) && subId === Number(id2 ? id2 : 1)) {
+                    console.log("updateTabDate", tabInfo.name)
+                    await updateTabDate(tabInfo.name);
+                  }
+
+                  const resPageSetting = await get_page_setting(tabInfo.name, 
+                                                                (mainId === Number(id1 ? id1 : 1) && subId === Number(id2 ? id2 : 1))
+                                                                ? true 
+                                                                : false);
+
+                  tabInfo.history_date = resPageSetting.history_date;
+                  tabInfo.times = resPageSetting.times;
+                  tabInfo.tab_table_infos = resPageSetting.tables;
+                 
+                  dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: tabInfo}));
+
+                  if (mainId === Number(id1 ? id1 : 1) && subId === Number(id2 ? id2 : 1)) {
+                    console.log("setViewSelect", mainId, subId)
+                    dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
+                  }
                 }
               }
             }

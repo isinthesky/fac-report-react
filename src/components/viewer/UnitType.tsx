@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
 import { ViewUnitProps } from "../../static/types";
@@ -8,8 +8,9 @@ import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BA
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 
-const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPage, type }) => {
+const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ tabPage, index, type }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
+  const [deviceValues, setDeviceValues] = useState<{key: string, value: string[]} | null>(null);
   const sections = useMemo(() => ({
     V: [
       { label: "V", values: ["R-S", "S-T", "T-R"] },
@@ -34,8 +35,44 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
     ]
   }[type]), [type]);
 
-  let pos = 0;
-  console.log(tabPage.tab_table_infos[index])
+  useEffect(() => {
+    setDeviceValues(tabPage.tab_table_infos[index].device_values);
+  }, [tabPage.tab_table_infos[index].device_values])
+
+
+  const makeDeviceValues = (value_obj: {key: string, value: string[]}) => {
+    let deviceIndex = 0;
+
+    return (
+      <>
+        {sections.map((section, sectionIdx) => ((
+          <Column key={`section-${sectionIdx}`} >
+            <Row>
+              <SectionDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                {section.label}
+              </SectionDiv>
+            </Row>
+            <Row>
+              {section.values.map((value, valueIdx) => (
+                <DeviceTypeValueDiv key={`value-${sectionIdx}-${deviceIndex++}`}>
+                  <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                    {value}
+                  </DevTypeDiv>     
+                  <DeviceValue 
+                    arrPosValue={
+                      Object.values(value_obj).map((value, valueIdx) => {
+                        return value[deviceIndex]
+                      })
+                    } 
+                  />
+                </DeviceTypeValueDiv>
+              ))}
+            </Row>
+          </Column>
+        )))}
+      </>
+    )
+  }
 
   return (
     <Container>
@@ -45,27 +82,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ index, tabPag
         </TitleColumn>
       </Row>
       <UnitGrid>
-        {sections.map((section, sectionIdx) => (
-          tabPage.tab_table_infos[index].devices.length > pos && (
-            <Column key={`section-${sectionIdx}`} >
-              <Row>
-                <SectionDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-                  {section.label}
-                </SectionDiv>
-              </Row>
-              <Row>
-                {section.values.map((value, valueIdx) => (
-                  <DeviceTypeValueDiv key={`value-${sectionIdx}-${valueIdx}`}>
-                    <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-                      {value}
-                    </DevTypeDiv>
-                    <DeviceValue times={tabPage.times} devId={tabPage.tab_table_infos[index].devices[pos++].path_id} />
-                  </DeviceTypeValueDiv>
-                ))}
-              </Row>
-            </Column>
-          )
-        ))}
+        {deviceValues && makeDeviceValues(deviceValues)}
       </UnitGrid>
     </Container>
   );

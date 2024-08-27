@@ -47,6 +47,9 @@ function Settings() {
             divisions.push({id:div.id, station_id: div.station_id, name:div.name} as IDivision)
           }
         }
+
+        console.log("stations", stations)
+        console.log("divisions", divisions)
         
         const resDevice = await getDeviceDict();
         const resUnitGroup = await getUnitGroupList();
