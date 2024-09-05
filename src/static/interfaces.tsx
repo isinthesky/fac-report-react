@@ -18,11 +18,6 @@ export interface SelectedTab {
   sub: number;
 }
 
-export interface ApprovalsType {
-  checked: boolean;
-  text: string;
-}
-
 export interface HeaderProps {
   mainTab: number;
   // other props

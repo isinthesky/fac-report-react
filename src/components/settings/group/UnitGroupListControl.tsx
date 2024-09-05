@@ -3,12 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { addUnitGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
-
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BigLabel, ControlButton, MediumLabel } from '../../../static/componentSet';
 import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
-  
 import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';
-import { Unit, Preset, ViewModeProp } from '../../../static/types';
+import { Preset, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
 import { COLORSET_GROUP_INPUT_NOMAL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_GROUP_INPUT_ACTIVE_BORDER, COLORSET_GROUP_INPUT_ACTIVE_FONT, COLORSET_GROUP_INPUT_NOMAL_BORDER, COLORSET_GROUP_INPUT_NOMAL_FONT } from '../../../static/colorSet';
 import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';

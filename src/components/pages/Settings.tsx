@@ -1,42 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
 import ComposeView from "../settings/view/ComposeView";
-// import { getSettings } from "../../features/api";
 import { getDeviceDict, getStationList, getUnitGroupList} from "../../features/api/device";
 import { loadDeviceList, loadStaitionList, loadDivisionList } from "../../features/reducers/deviceSlice";
-import { setReportTable } from "../../features/reducers/tabPageSlice";
 import { loadUnitGroupList } from "../../features/reducers/unitGroupSlice";
-import { setTabPage } from "../../features/reducers/tabPageSlice";
 import TabControlBar from "../settings/TabControlBar";
 import { BaseFlex1Column } from "../../static/componentSet";
 import { COLORSET_BACKGROUND_COLOR } from "../../static/colorSet";
 import { CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
-import { Unit, IDevice, IDivision, IStation } from "../../static/types";
+import { IDivision, IStation } from "../../static/types";
 import UnitGroupSet from "../settings/group/UnitGroupSet";
 import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
 import PrintSetting from "../settings/PrintSetting";
-import { RootStore } from "../../store/congifureStore";
-
 
 function Settings() {
   const dispatch = useDispatch();
   const [mode, setMode] = useState("view");
   const params  = useParams();
-
-  const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const tabLength = useSelector((state: RootStore) => state.settingReducer.tabSetting);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
         const stations = []
         const divisions = []
-        const unitGroups = []
-
         const resStation = await getStationList();
 
         for (const st of resStation.data) {

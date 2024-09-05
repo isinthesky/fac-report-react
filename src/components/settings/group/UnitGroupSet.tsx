@@ -6,11 +6,10 @@ import Filter from "./Filter";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Row, BaseFlexCenterDiv, BigLabel } from "../../../static/componentSet";
 import UnitGroupListControl from "./UnitGroupListControl";
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_GROUP_DEVICE_LIST } from "../../../static/langSet";
-
-import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_LIST, STRING_SETTING_GROUP_SETTING, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';  
+import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_DELETE, STRING_SETTING_GROUP_UPDATE } from '../../../static/langSet';  
 import { updatePresetTab, updatePresetDevice } from "../../../features/api/device";
 import { RootStore } from "../../../store/congifureStore";
-import { Item, Unit, Preset } from "../../../static/types";
+import { Item, Preset } from "../../../static/types";
 import UnitGroupAutoSelect from "./UnitGroupSelector";
 import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import { addDevice, setCurrentGroup, updateDevice, deleteDevice } from "../../../features/reducers/unitGroupSlice";
@@ -49,8 +48,6 @@ const UnitGroupSet: React.FC = () => {
     try {
       dispatch(updateDevice(presetSlice.selectedPos));
 
-      console.log("unit", presetSlice.groups)
-
       for (const unit of presetSlice.groups) {
         await updatePresetTab(unit.id, unit.name, unit.type, unit.tab_device_presets.length, unit.search_st, unit.search_div);
 
@@ -68,8 +65,6 @@ const UnitGroupSet: React.FC = () => {
   const handleCancel = () => {
     navigate("/settings");
   }
-
-  console.log("unit.devices", presetSlice.currentGroup, deviceList);
 
   const renderSection = (index1: number, unit: Preset) => {
     return <>

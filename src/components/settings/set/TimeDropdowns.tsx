@@ -12,7 +12,6 @@ import { COLORSET_DARK_CONTROL_FONT } from '../../../static/colorSet';
 const TimeDropdowns: React.FC = () => {
   const dispatch = useDispatch();
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [timeList, setTimeList] = useState<TimeListItem[]>([]);
 
   const handleAddDropdown = () => {

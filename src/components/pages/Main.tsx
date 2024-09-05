@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH, CONST_LOGIN_PW, CONST_KEY_VALUE } from "../../env";
+import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH } from "../../env";
 import { STRING_MAIN_LOGIN_BTN, STRING_MAIN_LOGIN_ID, STRING_MAIN_LOGIN_PW, STRING_MAIN_LOGIN_ERROR } from "../../static/langSet";
 import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { useNavigate } from "react-router-dom";
 import { setViewSelect } from '../../features/reducers/tabPageSlice';
-import sha256 from 'crypto-js/sha256'; // Import the sha256 function
 
 
 function Main() {
@@ -65,7 +64,7 @@ function Main() {
             placeholder="Enter ID"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleLogin();
               }
@@ -82,7 +81,7 @@ function Main() {
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleLogin();
               }
