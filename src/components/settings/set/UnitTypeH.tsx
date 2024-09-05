@@ -19,10 +19,6 @@ const UnitTypeH: React.FC<SetDeviceType> = ({ name }) => {
     setCurrUnit(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]);
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
   
-  const deviceinfo = (deviceId: number) => {
-    return deviceSet.devices[deviceId];
-  };
-
   return (
     <UnitContainer>
       <Section>

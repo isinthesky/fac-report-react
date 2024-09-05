@@ -82,11 +82,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
       setSelectedDevice(updatedDevice);
     }
   };
-
-  const deviceinfo = (deviceId: number) => {
-    return devicelist.devices[deviceId];
-  };
-
+  
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (selectedDevice) {
       const newPathId = Number(e.target.value);

@@ -23,7 +23,6 @@ const yesterday = new Date(today.getTime() - oneDayMillisec);
 // 개발
 const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
 
-
 const initialState: SettingState = {
   menus: ["11"],
   date: lastyear.getTime(), // yesterday.getTime(),

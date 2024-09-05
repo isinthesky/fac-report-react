@@ -2,9 +2,8 @@ import { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { getSettings } from "../../features/api";\
 import { RootStore } from "../../store/congifureStore";
-import { setApproves, setMenus, setTabSetting } from "../../features/reducers/settingSlice";
+import { setMenus, setTabSetting } from "../../features/reducers/settingSlice";
 import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
 import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME, INIT_TAB_COUNT } from "../../env";
@@ -14,8 +13,7 @@ import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { throttle } from 'lodash';
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
-import { get_page_setting, get_page_list, get_page_time_list } from "../../features/api/page"
-import { TabPageInfotype, ResTabPageInfotype, ResTabPagetype, Unit } from "../../../src/static/types"
+import { get_page_setting, get_page_list } from "../../features/api/page"
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();

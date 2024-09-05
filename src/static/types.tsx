@@ -25,11 +25,6 @@ export type ViewUnitProps = {
   index: number;
 };
 
-export type ComposeProps = {
-  row: number;
-  column: number;
-};
-
 export type updateCurrentTabPageType = {
   arrPos: number;
   arrKey: string;

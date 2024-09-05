@@ -1,8 +1,7 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useMemo} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootStore } from "../../store/congifureStore";
-import { readDevicesData } from "../../features/api/device";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_PRINT_FONT } from "../../static/colorSet";
@@ -10,21 +9,21 @@ import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_PRINT_FONT } fro
 
 const DeviceValue: React.FC<{ arrPosValue: string[] }> = ({ arrPosValue }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
 
-  const [deviceValue, setDeviceValue] = useState<any[]>(Array.from({length: arrPosValue.length}, () => "0")); 
-  const [deviceSave, setDeviceSave] = useState<any[]>(Array.from({length: arrPosValue.length}, () => "0")); 
-
-  useEffect(() => {
-    settingSet.viewMode === "idCheck"
-      ? setDeviceValue(deviceSave.map(() => arrPosValue[0]))
-      : setDeviceValue(deviceSave);
-  }, [settingSet.viewMode, deviceSave, arrPosValue]);
+  const deviceValue = useMemo(() => {
+    return settingSet.viewMode === "idCheck"
+      ? Array(arrPosValue.length).fill(arrPosValue[0])
+      : arrPosValue;
+  }, [settingSet.viewMode, arrPosValue]);
 
   return (
     <>
-      {arrPosValue.map((value:any, index:number) => (
-        <ValueColumn mode={settingSet.viewMode} fontSize={settingSet.printFontSize + "px"} key={index}>
+      {deviceValue.map((value: string, index: number) => (
+        <ValueColumn 
+          mode={settingSet.viewMode} 
+          fontSize={settingSet.printFontSize + "px"} 
+          key={index}
+        >
           {value}
         </ValueColumn>
       ))}

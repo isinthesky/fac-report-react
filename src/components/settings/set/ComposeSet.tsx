@@ -8,8 +8,6 @@ import TimeDropdowns from "./TimeDropdowns";
 import { updateTable, updateDevice, updateTabTimeInfo } from "../../../features/api/device";
 import { get_page_time_list } from "../../../features/api/page";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
-import { ComposeProps, TabPageInfotype } from "../../../static/types";
-import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
 import { setUnitSelectPosition, setdeviceSearchWord, setTimeList } from "../../../features/reducers/settingSlice";
@@ -212,10 +210,6 @@ const GridButton = styled.button<{ mode: string }>`
   
   cursor: pointer;
   border: 1px solid ${(props) => (props.mode === "true" ? COLORSET_SIGNITURE_COLOR : COLORSET_NORMAL_CONTROL_BG)};
-`;
-
-const HideButton = styled(BaseButton)`
-  display: none;
 `;
 
 export default ComposeSet;

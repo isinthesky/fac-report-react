@@ -1,6 +1,5 @@
 
 import axios from "axios";
-import { IDevice, TabPageInfotype, Unit, Preset, Item } from "../../static/types";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
