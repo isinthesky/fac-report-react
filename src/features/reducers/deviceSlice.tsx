@@ -10,7 +10,7 @@ export interface DeviceState {
 const initialState: DeviceState = {
     devices: {},
     divisions: [],
-    stations: [],
+    stations: [], 
 };
 
 export const deviceSlice = createSlice({

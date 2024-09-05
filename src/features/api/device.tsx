@@ -127,7 +127,6 @@ export const updateDevice = async(
   path_id: number
 ): Promise<any> => {
     try {
-
       await axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", {
         id: id,
         station_id: station_id,
@@ -194,6 +193,24 @@ export const updatePresetDevice = async (
       station_id: station_id,
       division_id: division_id,
       path_id: path_id
+    });
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+
+export const updateTabTimeInfo = async (
+  tab_name: string,
+  tab_info_id: number,
+  times: string[]
+): Promise<any> => {
+  try {
+    return await axiosInstance.put("/FacReport/PageInfo/TabTimeInfo/update", {
+      tab_name: tab_name,
+      times: times,
+      tab_info_id: tab_info_id
     });
   } catch (error) {
     console.error(error);

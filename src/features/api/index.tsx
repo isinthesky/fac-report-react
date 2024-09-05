@@ -53,22 +53,6 @@ export const setDeleteSettings = async (): Promise<boolean> => {
   }
 };
 
-export const updateSettings = async (
-  name: string,
-  object: string
-): Promise<any> => {
-  try {
-    await axiosInstance.put("/report/general/updateSetting", {
-      type: name,
-      value: object
-    });
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-};
-
 export const setUpdateSettingsColRow = async (
   id: number,
   name: string,
@@ -90,13 +74,17 @@ export const setUpdateSettingsColRow = async (
   }
 };
 
+
 export const setUpdateSettingsApprove = async (
-  approves: ApprovalsType[]
+  id: number,
+  text: string,
+  checked: number
 ): Promise<any> => {
   try {
-    return await axiosInstance.put("/report/general/updateSetting", {
-      type: "approves",
-      value: approves
+    return await axiosInstance.put("/FacReport/PageInfo/TabApprove/update", {
+      id: id,
+      text: text,
+      checked: checked
     });
   } catch (error) {
     console.error(error);

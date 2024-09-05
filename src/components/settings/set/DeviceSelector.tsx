@@ -61,10 +61,26 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStation(Number(e.target.value));
+    if (selectedDevice) {
+      const updatedDevice: Item = {
+        ...selectedDevice,
+        station_id: Number(e.target.value),
+        id: selectedDevice.id || 0
+      };
+      setSelectedDevice(updatedDevice);
+    }
   };
 
   const handleDivisionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedDivision(Number(e.target.value));
+    if (selectedDevice) {
+      const updatedDevice: Item = {
+        ...selectedDevice,
+        division_id: Number(e.target.value),
+        id: selectedDevice.id || 0
+      };
+      setSelectedDevice(updatedDevice);
+    }
   };
 
   const deviceinfo = (deviceId: number) => {
@@ -74,7 +90,11 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (selectedDevice) {
       const newPathId = Number(e.target.value);
-      const updatedDevice = { ...selectedDevice, path_id: newPathId };
+      const updatedDevice = { ...selectedDevice, 
+                              path_id: newPathId,
+                              station_id: selectedSt,
+                              division_id: selectedDiv,
+                              id: selectedDevice.id || 0 };
       setSelectedDevice(updatedDevice);    
   
       dispatch(setCurrentUnitDevice({ 

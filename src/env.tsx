@@ -17,8 +17,8 @@ export const INIT_MAINTAB_COUNT = process.env.REACT_APP_INIT_MAINTAB_COUNT;
 export const INIT_TAB_COUNT = process.env.REACT_APP_INIT_TAB_COUNT;
 export const INIT_PRINT_TITLE = process.env.REACT_APP_INIT_PRINT_TITLE;
 
-export const CONST_TABINFO_NAME = process.env.REACT_APP_CONST_TABINFO_NAME;
-export const CONST_UNITGROUP_NAME = process.env.REACT_APP_CONST_UNITGROUP_NAME;
+export const CONST_TABINFO_NAME = process.env.REACT_APP_CONST_TABINFO_NAME as string;
+export const CONST_UNITGROUP_NAME = process.env.REACT_APP_CONST_UNITGROUP_NAME as string;
 
 export const CONST_LANG = process.env.REACT_APP_CONST_LANG
 export const CONST_KEY_VALUE = process.env.REACT_APP_KEY_VALUE
@@ -40,6 +40,6 @@ export const CONST_TYPE_INFO_KEYWORDS = ["V", "W", "HIDE"]
 export const CONST_TYPE_INFO_INDEX = [1, 2, 3]
 
 export const MAX_COLUMN_COUNT = 4
-export const MAX_ROW_COUNT = 3
+export const MAX_ROW_COUNT = 4
 export const MIN_COLUMN_COUNT = 1
 export const MIN_ROW_COUNT = 1

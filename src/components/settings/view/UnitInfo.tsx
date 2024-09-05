@@ -26,8 +26,6 @@ const UnitInfo: React.FC<TableSettingType> = ({
     }
   }
 
-  console.log("UnitInfo.devices: ", devices)
-
   return (
     <UnitContainer>
       <NameContainer type={type}>

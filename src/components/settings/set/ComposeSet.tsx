@@ -5,18 +5,19 @@ import UnitTypeW from "./UnitTypeW";
 import UnitTypeV from "./UnitTypeV";
 import UnitTypeH from "./UnitTypeH";
 import TimeDropdowns from "./TimeDropdowns";
-import { updateTable, updateDevice } from "../../../features/api/device";
+import { updateTable, updateDevice, updateTabTimeInfo } from "../../../features/api/device";
+import { get_page_time_list } from "../../../features/api/page";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
 import { ComposeProps, TabPageInfotype } from "../../../static/types";
 import { MAIN_TAB_ENV_NAME } from "../../../static/constSet";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
-import { setUnitSelectPosition, setdeviceSearchWord } from "../../../features/reducers/settingSlice";
+import { setUnitSelectPosition, setdeviceSearchWord, setTimeList } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES, CONST_TABINFO_NAME, MAX_TABPAGE_COUNT, CONST_TYPE_INFO_INDEX } from "../../../env";
+import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC = () => {
@@ -42,12 +43,16 @@ const ComposeSet: React.FC = () => {
     
     const tableInfo = tabPageSlice.currentTabPage.tab_table_infos[position];
     const deviceInfo = tabPageSlice.currentTabPage.tab_table_infos[position].devices;
+
+    console.log("tableInfo", tableInfo, deviceInfo)
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
 
       for (const device of deviceInfo) {
         await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
       }
+
+      await updateTabTimeInfo(tabPageSlice.currentTabPage.name,tabPageSlice.currentTabPage.id,tabPageSlice.currentTabPage.times);
     } catch (e) {
       console.error("updateSettingsTabPage error:", e);
     }
@@ -84,10 +89,17 @@ const ComposeSet: React.FC = () => {
     }
   }, [tabPageSlice, deviceColumn, deviceRow, position]);
 
+  useEffect(() => {
+    const getTimeList = async () => {
+      const resTimes = await get_page_time_list(tabPageSlice.currentTabPage.name);
+      dispatch(setTimeList(resTimes.data));
+      console.log("data",tabPageSlice.currentTabPage.name, resTimes.data)
+    }
+    getTimeList()
+  }, [])
+
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
     const position = columnIndex + (rowIndex - 1) * deviceColumn - 1;
-
-    console.log("position unit", position)
 
     dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
     dispatch(setTabUnitPosition({index: position}));

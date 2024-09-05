@@ -9,14 +9,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton, BaseFlexCenterDiv } from "../../static/componentSet";
-import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
+import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { setTabSetting, setViewMode } from "../../features/reducers/settingSlice";
+import { setTabSetting, setViewMode, setApproves } from "../../features/reducers/settingSlice";
 import { updateTab } from "../../features/api/device";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import { get_page_setting, get_page_list, updateTabDate } from "../../features/api/page"
-import { CONST_TABINFO_NAME, INIT_TAB_COUNT } from "../../env";
+import { get_page_setting, get_page_list, updateTabDate, get_page_approve_list, set_page_approve_list } from "../../features/api/page"
+import { INIT_TAB_COUNT, CONST_TABINFO_NAME } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
 
 interface CustomInputProps {
@@ -90,6 +90,7 @@ function Daily() {
                                                                 ? true 
                                                                 : false);
 
+                  
                   tabInfo.history_date = resPageSetting.history_date;
                   tabInfo.times = resPageSetting.times;
                   tabInfo.tab_table_infos = resPageSetting.tables;
@@ -105,6 +106,20 @@ function Daily() {
             }
           }
         }
+
+        const resApproveList = await get_page_approve_list(CONST_TABINFO_NAME);
+        
+        for (let i = 0; i < resApproveList.data.length; i++) {
+          const approve = resApproveList.data[i];
+          console.log("approve", approve, resApproveList.data.length, CONST_TABINFO_NAME)
+          if (resApproveList.data.length <= 3) {
+            await set_page_approve_list(CONST_TABINFO_NAME, approve.level + (i + 1), "approve", 0, approve.tab_info_id);
+          }
+        }
+        
+        const resApproveList2 = await get_page_approve_list(CONST_TABINFO_NAME);
+        console.log("resApproveList2", resApproveList2.data)
+        dispatch(setApproves(resApproveList2.data));
       } catch (error) {
         console.error(error);
       }
@@ -119,6 +134,9 @@ function Daily() {
     }`,
     documentTitle: settingSet.printTitle + "_" + new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')
   });
+
+  const handleOpenSave = () => {
+  };
 
   const handleOpenPrint = () => {
     setIsOpen(true);
@@ -155,6 +173,7 @@ function Daily() {
           </CalendarContainer1>
           <ButtonControls>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
+            <ActiveButton onClick={handleOpenSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
           </ButtonControls>
         </Controls>
       </ControlContainer>

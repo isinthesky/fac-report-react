@@ -145,8 +145,12 @@ export type SetDropDownType = {
 };
 
 export type ApprovalsType = {
-  checked: boolean;
+  id: number;
+  tab_name: string;
+  level: number;
   text: string;
+  checked: number;
+  tab_info_id: number;
 }
 
 export type ViewModeProp = {
@@ -169,6 +173,13 @@ export interface SelectedTab {
 
 export interface TabSetting {
   length: number;
+}
+
+export interface TimeListItem {
+  id: number;
+  tab_name: string;
+  time: string;
+  tab_info_id: number;
 }
 
 export interface SetTabPageProp {

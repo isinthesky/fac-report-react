@@ -70,7 +70,7 @@ const UnitGroupAutoSelect: React.FC<DeviceSelectProps> = ({
   const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (selectedDevice) {
       const newPathId = Number(e.target.value);
-      const updatedDevice = { ...selectedDevice, path_id: newPathId };
+      const updatedDevice = { ...selectedDevice, path_id: newPathId, station_id: selectedSt, division_id: selectedDiv };
       setSelectedDevice(updatedDevice);    
   
       dispatch(updateCurrentUnitDevice({ 

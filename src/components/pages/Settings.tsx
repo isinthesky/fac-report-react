@@ -16,7 +16,6 @@ import { COLORSET_BACKGROUND_COLOR } from "../../static/colorSet";
 import { CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
 import { Unit, IDevice, IDivision, IStation } from "../../static/types";
 import UnitGroupSet from "../settings/group/UnitGroupSet";
-import { CONST_TABINFO_NAME } from "../../env";
 import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
 import PrintSetting from "../settings/PrintSetting";
@@ -48,25 +47,15 @@ function Settings() {
           }
         }
 
-        console.log("stations", stations)
-        console.log("divisions", divisions)
-        
         const resDevice = await getDeviceDict();
         const resUnitGroup = await getUnitGroupList();
 
         console.log("resUnitGroup", resUnitGroup.data)
-
-        for (const unit of resUnitGroup.data) {
-          // unit.devices = unit.tab_device_presets;
-          unit.div = unit.tab_device_presets[0].division_id;
-          unit.st = unit.tab_device_presets[0].station_id;
-          unitGroups.push(unit)
-        }
         
         dispatch(loadStaitionList(stations));
         dispatch(loadDivisionList(divisions));
         dispatch(loadDeviceList(resDevice.data))    
-        dispatch(loadUnitGroupList(unitGroups))
+        dispatch(loadUnitGroupList(resUnitGroup.data))
       } catch (error) {
         console.error(error);
       }

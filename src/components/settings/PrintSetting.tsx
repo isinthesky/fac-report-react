@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useReactToPrint } from 'react-to-print';
@@ -7,7 +7,8 @@ import { RootStore } from '../../store/congifureStore';
 import { setPrintTitle, setApproves, setPrintFontSize, setViewMode } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
 import { BaseFlexColumn, MediumLabel, BaseModalBack, MiniButton } from '../../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE,STRING_SETTING_SET_PRINT_PREVIEW, STRING_SETTING_SET_PRINT_APPROVE, STRING_SETTING_SET_PRINT_FONT_SIZE, STRING_DAILY_MAIN_BTN_PRINT } from '../../static/langSet';
-import { setUpdateSettingsApprove, updateSettings } from '../../features/api';
+import { update_page_approve_list } from '../../features/api/page';
+import { ApprovalsType } from '../../static/types';
 import { COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from '../../static/colorSet';
 import PrintModal from "../print/PrintModal";
 
@@ -17,7 +18,7 @@ const PrintSetting: React.FC = () => {
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
 
   const [title, setTitle] = useState(settingSet.printTitle);  
-  const [approvals, setApprovals] = useState(settingSet.approvals);
+  const [approvals, setApprovalState] = useState(settingSet.approvals as ApprovalsType[]);
   const [fontSize, setFontSizeState] = useState(settingSet.printFontSize);
   const [isOpen, setIsOpen] = useState(false);
   const componentRef = useRef<HTMLDivElement>(null);
@@ -29,17 +30,18 @@ const PrintSetting: React.FC = () => {
       }
       return approval;
     });
-    setApprovals(newApprovals);
+    setApprovalState(newApprovals);
   };
 
   const handleCheckboxChange = (index: number) => {
     const newGroups = approvals.map((group, idx) => {
       if (idx === index) {
-        return { ...group, checked: !group.checked };
+        return { ...group, checked: group.checked === 1 ? 0 : 1 };
       }
       return group;
     });
-    setApprovals(newGroups);
+
+    setApprovalState(newGroups as ApprovalsType[]);
   };
 
   const handleTitleChange = (value: string) => {
@@ -75,12 +77,13 @@ const PrintSetting: React.FC = () => {
   };
 
   const handleSave = async () => {
-    dispatch(setApproves(approvals));
     dispatch(setPrintTitle(title));
 
     try {
-      await setUpdateSettingsApprove(approvals)
-      await updateSettings("printTitle", title)
+      for (const approval of approvals) {
+        await update_page_approve_list(approval.id, approval.text, approval.checked)
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -89,6 +92,13 @@ const PrintSetting: React.FC = () => {
   const handleCancel = () => {
     // Handle cancel logic
   };
+
+  useEffect(() => {
+    dispatch(setApproves(approvals as ApprovalsType[]));
+    
+    console.log("approvals", approvals, "approvals")
+
+  }, [approvals]);
 
   return (
     <SettingContainer>
@@ -109,7 +119,7 @@ const PrintSetting: React.FC = () => {
             <BaseFlex1Row>
               <BaseInput
                 type="checkbox"
-                checked={approval.checked}
+                checked={approval.checked === 1}
                 onChange={() => handleCheckboxChange(index)}
               />
               <BaseInput

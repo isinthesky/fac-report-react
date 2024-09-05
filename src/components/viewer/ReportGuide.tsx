@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ViewDeviceType from "./UnitType";
@@ -16,47 +16,52 @@ type ReportGuideProps = {
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
-  const renderDevice = (() => {
-    
-    if (currentTab.tab_table_infos.length === 0) {
-      return <>{STRING_ERR_SERVER_CONNECT}</>;
-    }
+  useEffect(() => {
+    console.log("currentTab", currentTab.tab_table_infos)
+  }, [currentTab])
 
-    console.log("currentTab", currentTab, currentTab.tab_table_infos[0].device_values)
+  const renderDevice = useMemo(() => {
+    return () => {
+      if (currentTab.tab_table_infos.length === 0) {
+        return <>{STRING_ERR_SERVER_CONNECT}</>;
+      }
 
-    const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
-    times.push(...currentTab.times.map((time: string) => time));
+      console.log("currentTab", currentTab, currentTab.tab_table_infos[0].device_values)
 
-    return Array.from({ length: row }).map((_, rowIndex) => (
-      <RowContainer key={rowIndex}>
-        {Array.from({ length: column }).map((_, colIndex) => {
-          const index = rowIndex * column + colIndex;
-          
-          if (currentTab.tab_table_infos.length <= index) {
-            return <></>;
-          }
-          if (currentTab.tab_table_infos[index].type === CONST_TYPE_INFO_INDEX[2]) {
-            return <></>;
-          }
-          
-          const TypeComp = currentTab.tab_table_infos[index].type === 1 ? 'V' : 'W';
+      const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
+      times.push(...currentTab.times.map((time: string) => time));
 
-          return (
-            <Container key={colIndex} mode="view" >
-              <TimeContainer mode="view">
-                {times.map((time: string, index: number) => (
-                  <TimeDiv key={index}>{time}</TimeDiv>
-                ))}
-              </TimeContainer>
-              <DeviceContainer>
-                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
-              </DeviceContainer>
-            </Container>
-          );
-        })}
-      </RowContainer>
-    ));
-  });
+      return Array.from({ length: row }).map((_, rowIndex) => (
+        <RowContainer key={rowIndex}>
+          {Array.from({ length: column }).map((_, colIndex) => {
+            const index = rowIndex * column + colIndex;
+            
+            if (currentTab.tab_table_infos.length <= index) {
+              return <></>;
+            }
+            if (currentTab.tab_table_infos[index].type === CONST_TYPE_INFO_INDEX[2]) {
+              return <></>;
+            }
+            
+            const TypeComp = currentTab.tab_table_infos[index].type === 1 ? 'V' : 'W';
+
+            return (
+              <Container key={colIndex} mode="view" >
+                <TimeContainer mode="view">
+                  {times.map((time: string, index: number) => (
+                    <TimeDiv key={index}>{time}</TimeDiv>
+                  ))}
+                </TimeContainer>
+                <DeviceContainer>
+                  <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
+                </DeviceContainer>
+              </Container>
+            );
+          })}
+        </RowContainer>
+      ));
+    };
+  }, [currentTab, row, column]); // Add dependencies here
 
   return <>{renderDevice()}</>;
 };

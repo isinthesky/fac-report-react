@@ -73,7 +73,7 @@ const UnitGroupSet: React.FC = () => {
     return deviceSet.devices[deviceId];
   };
 
-  console.log("unit.tab_device_presets", presetSlice.currentGroup);
+  console.log("unit.devices", presetSlice.currentGroup, deviceList);
 
   const renderSection = (index1: number, unit: Preset) => {
     return <>
