@@ -28,17 +28,17 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
     setSelectedStation( (initStationId === 0) 
                         ? devicelist.stations[0].id
                         : initStationId);
-  }, [initStationId]);
+  }, [initStationId, devicelist.stations]);
 
   useEffect(() => {
     setSelectedDivision( (currentDevice.path_id === 0) 
                          ? initDivisionId
                          : devicelist.devices[currentDevice.path_id].division_id);
-  }, [initDivisionId]);
+  }, [initDivisionId, devicelist.devices]);
 
   useEffect(() => {
     setSelectedDevice(currentDevice)
-  }, [selectedDiv]);
+  }, [selectedDiv, currentDevice]);
 
   useEffect(() => {
     setSelectedDevice(currentDevice);
