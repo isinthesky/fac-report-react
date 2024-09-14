@@ -10,9 +10,9 @@ export interface UnitGroupState {
 
 const initialState: UnitGroupState = {
   groups: [
-    {id: 1, name: "name1", type: 1, search_st: 0, search_div: 0, devices: Array(9).fill(0), max_device: 0},
+    {id: 1, name: "name1", type: 1, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
   ],
-  currentGroup: { id: 0, name: "", type: 1, search_st: 0, search_div: 0, devices: Array(9).fill(0), max_device: 0},
+  currentGroup: { id: 0, name: "", type: 1, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0},
   selectedPos: 0,
 };
 
@@ -52,7 +52,7 @@ export const unitGroupSlice = createSlice({
       state.currentGroup = action.payload;
     },
     updateCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
-      state.currentGroup.devices[action.payload.devicePosition] = action.payload.device;
+      state.currentGroup.tab_device_presets[action.payload.devicePosition] = action.payload.device;
     },
     updateCurrentGroupUnit: (
       state,
@@ -63,10 +63,10 @@ export const unitGroupSlice = createSlice({
       }
     },
     addDevice: (state, action: PayloadAction<Item>) => {
-      state.currentGroup.devices.push(action.payload);
+      state.currentGroup.tab_device_presets.push(action.payload);
     },
     deleteDevice: (state, action: PayloadAction<number>) => {
-      state.currentGroup.devices.splice(action.payload, 1);
+      state.currentGroup.tab_device_presets.splice(action.payload, 1);
     },
     updateDevice: (state, action: PayloadAction<number>) => {      
       state.groups[action.payload] = state.currentGroup;

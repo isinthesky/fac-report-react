@@ -37,7 +37,7 @@ const UnitInfo: React.FC<TableSettingType> = ({
         <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
       <Group>
-        {Object.values(devices).map((dv, index) => (
+        {devices && Object.values(devices).map((dv, index) => (
           <ItemDiv key={dv.id}>
             <DescriptLabel>{`dv${dv.idx}`}</DescriptLabel>
             <DeviceInput 

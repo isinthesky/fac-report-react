@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
@@ -16,15 +16,21 @@ import UnitGroupSet from "../settings/group/UnitGroupSet";
 import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
 import PrintSetting from "../settings/PrintSetting";
+import { RootStore } from "../../store/congifureStore";
+import { setApproves, setTabSetting } from "../../features/reducers/settingSlice"
+import { setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
+import { fetchPageSettings } from "../../features/api/common";
 
 function Settings() {
   const dispatch = useDispatch();
   const [mode, setMode] = useState("view");
   const params  = useParams();
+  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
+
         const stations = []
         const divisions = []
         const resStation = await getStationList();
@@ -39,19 +45,29 @@ function Settings() {
 
         const resDevice = await getDeviceDict();
         const resUnitGroup = await getUnitGroupList();
-
-        console.log("resUnitGroup", resUnitGroup.data)
         
         dispatch(loadStaitionList(stations));
         dispatch(loadDivisionList(divisions));
-        dispatch(loadDeviceList(resDevice.data))    
-        dispatch(loadUnitGroupList(resUnitGroup.data))
+        dispatch(loadDeviceList(resDevice.data));
+        dispatch(loadUnitGroupList(resUnitGroup.data));
+
+        const settingMainTab = (tabPageSlice.settingPosition.main === 0) ? 1 : tabPageSlice.settingPosition.main;
+        const settingSubTab = (tabPageSlice.settingPosition.sub === 0) ? 1 : tabPageSlice.settingPosition.sub;
+        const pageInfo = tabPageSlice.tabPageInfo[settingMainTab][settingSubTab];
+
+        if (!pageInfo.name) {
+          await fetchPageSettings(dispatch);
+        }
+
+        dispatch(setSettingSelect({mainTab: settingMainTab, subTab: settingSubTab}))
+        dispatch(setApproves(tabPageSlice.tabPageInfo[settingMainTab][settingSubTab].approves))
+
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(params).length === 0) {

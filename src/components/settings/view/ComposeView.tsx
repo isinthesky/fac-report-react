@@ -50,22 +50,22 @@ const ComposeView: React.FC = () => {
     
     for (let r = 0; r < rows * columns; r++) {
       if (tabPageInfo) {
-        if (tabPageInfo.tab_table_infos.length < 1) return;
-        if (tabPageInfo.tab_table_infos.length <= r) break;
+        if (tabPageInfo.tables.length < 1) return;
+        if (tabPageInfo.tables.length <= r) break;
 
-        if (tabPageInfo.tab_table_infos.length > 0) {
+        if (tabPageInfo.tables.length > 0) {
           rowlist.push(
             <TableSettingType
-              id={tabPageInfo.tab_table_infos[keyCounter].id}
+              id={tabPageInfo.tables[keyCounter].id}
               tab_name={tabPageInfo.name}
-              type={tabPageInfo.tab_table_infos[keyCounter].type}
-              name={tabPageInfo.tab_table_infos[keyCounter].name}
-              idx={tabPageInfo.tab_table_infos[keyCounter].idx}
-              search_st={tabPageInfo.tab_table_infos[keyCounter].search_st}
-              search_div={tabPageInfo.tab_table_infos[keyCounter].search_div}
-              devices={tabPageInfo.tab_table_infos[keyCounter].devices}
-              disable={tabPageInfo.tab_table_infos[keyCounter].disable}
-              max_device={tabPageInfo.tab_table_infos[keyCounter].max_device || 0}
+              type={tabPageInfo.tables[keyCounter].type}
+              name={tabPageInfo.tables[keyCounter].name}
+              idx={tabPageInfo.tables[keyCounter].idx}
+              search_st={tabPageInfo.tables[keyCounter].search_st}
+              search_div={tabPageInfo.tables[keyCounter].search_div}
+              devices={tabPageInfo.tables[keyCounter].devices}
+              disable={tabPageInfo.tables[keyCounter].disable}
+              max_device={tabPageInfo.tables[keyCounter].max_device || 0}
             />
           );
         } 

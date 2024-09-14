@@ -49,9 +49,9 @@ const UnitGroupSet: React.FC = () => {
       dispatch(updateDevice(presetSlice.selectedPos));
 
       for (const unit of presetSlice.groups) {
-        await updatePresetTab(unit.id, unit.name, unit.type, unit.devices.length, unit.search_st, unit.search_div);
+        await updatePresetTab(unit.id, unit.name, unit.type, unit.tab_device_presets.length, unit.search_st, unit.search_div);
 
-        for (const device of unit.devices) { 
+        for (const device of unit.tab_device_presets) { 
           
           await updatePresetDevice(device.id, device.station_id, device.division_id, device.path_id);
         }
@@ -68,7 +68,7 @@ const UnitGroupSet: React.FC = () => {
 
   const renderSection = (index1: number, unit: Preset) => {
     return <>
-      {unit.devices.map((device: Item, idx: number) => {
+      {unit.tab_device_presets.map((device: Item, idx: number) => {
           const initStationId = (device.path_id !== 0) ? device.station_id : unit.search_st;
           const initDivisionId = (device.path_id !== 0) ? device.division_id : unit.search_div;
                                 

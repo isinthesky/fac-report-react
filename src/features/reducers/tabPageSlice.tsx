@@ -13,9 +13,9 @@ export interface TabPageState {
 const initialState: TabPageState = {
   unitPosition: {index: 0},
   viewPosition: {main: 0, sub: 0},
-  settingPosition: {main: 1, sub: 1},
-  currentTabPage: {id: 0, name: "", tbl_row:0, tbl_column:0, times: Array(4).fill('00:00'), tab_table_infos: Array(9).fill(0) },
-  tabPageInfo: Array(5).fill(Array(8).fill({id: 0, times: Array(4).fill('00:00'), tab_table_infos: Array(9).fill(0) }))
+  settingPosition: {main: 0, sub: 0},
+  currentTabPage: {id: 0, name: "", tbl_row:0, tbl_column:0, approves: [], times: Array(4).fill('00:00'), tables: Array(9).fill(0) },
+  tabPageInfo: Array(5).fill(Array(8).fill({id: 0, approves: [], times: Array(4).fill('00:00'), tables: Array(9).fill(0) }))
 };
 
 export const tabPageSlice = createSlice({
@@ -43,19 +43,19 @@ export const tabPageSlice = createSlice({
     },
 
     setCurrentUnit: (state, action: PayloadAction<updateCurrentTabPageUnit>) => {
-      state.currentTabPage.tab_table_infos[action.payload.position] = action.payload.unit;
+      state.currentTabPage.tables[action.payload.position] = action.payload.unit;
     },
 
     setCurrentUnitDevice: (state, action: PayloadAction<updateCurrenUnitDevice>) => {
-      state.currentTabPage.tab_table_infos[action.payload.unitPosition].devices[action.payload.devicePosition] = action.payload.device;
+      state.currentTabPage.tables[action.payload.unitPosition].devices[action.payload.devicePosition] = action.payload.device;
     },
 
     updateCurrentUnit: (
       state,
       action: PayloadAction<updateCurrentTabPageType>
     ) => {
-      if (action.payload.arrKey in state.currentTabPage.tab_table_infos[action.payload.arrPos]) {
-        (state.currentTabPage.tab_table_infos[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
+      if (action.payload.arrKey in state.currentTabPage.tables[action.payload.arrPos]) {
+        (state.currentTabPage.tables[action.payload.arrPos] as any)[action.payload.arrKey] = action.payload.deviceId;
       }
     },
 

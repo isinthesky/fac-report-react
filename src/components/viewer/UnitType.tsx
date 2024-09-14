@@ -36,8 +36,8 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ tabPage, inde
   }[type]), [type]);
 
   useEffect(() => {
-    setDeviceValues(tabPage.tab_table_infos[index].device_values);
-  }, [tabPage.tab_table_infos[index].device_values])
+    setDeviceValues(tabPage.tables[index].device_values);
+  }, [tabPage.tables[index].device_values])
 
 
   const makeDeviceValues = (value_obj: {key: string, value: string[]}) => {
@@ -78,7 +78,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ tabPage, inde
     <Container>
       <Row>
         <TitleColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-          {tabPage.tab_table_infos[index].name}
+          {tabPage.tables[index].name}
         </TitleColumn>
       </Row>
       <UnitGrid>

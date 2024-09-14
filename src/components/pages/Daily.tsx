@@ -12,11 +12,9 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { setTabSetting, setViewMode, setApproves } from "../../features/reducers/settingSlice";
-import { updateTab } from "../../features/api/device";
+import { setViewMode, setApproves } from "../../features/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import { get_page_setting, get_page_list, updateTabDate, set_page_approve_list } from "../../features/api/page"
-import { INIT_TAB_COUNT, CONST_TABINFO_NAME } from "../../env";
+import { get_page_setting, updateTabDate, update_tab_device_value } from "../../features/api/page"
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
 
 interface CustomInputProps {
@@ -66,22 +64,28 @@ function Daily() {
         
         if (process.env[key]) {  
           const tabInfo = tabPageSet.currentTabPage;
-          const resPageSetting = await get_page_setting(tabInfo.name, true);
-          if (resPageSetting) {            
-            dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: tabInfo}));
+          await updateTabDate(tabInfo.name, timestampToYYYYMMDD(date));
+
+          await update_tab_device_value(tabInfo.name);
+
+          const resPageSetting = await get_page_setting(tabInfo.name, true, false);
+          if (resPageSetting) {     
+            resPageSetting.name = tabInfo.name;
+
+            dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
             dispatch(setApproves(resPageSetting.approves));
           }
 
-          if (tabInfo.name !== tabPageSet.tabPageInfo[mainId][subId].name) {
+          // if (tabInfo.name !== tabPageSet.tabPageInfo[mainId][subId].name) {
             dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
-          }
+          // }          
         }
 
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [date, tabPageSet.tabPageInfo, tabPageSet.viewPosition]);
+  }, [date]);
 
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,

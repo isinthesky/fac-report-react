@@ -11,12 +11,12 @@ const UnitTypeH: React.FC<SetDeviceType> = ({ name }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(
-    tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]
+    tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]
   );
   
   const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"];
   useEffect(() => {
-    setCurrUnit(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]);
+    setCurrUnit(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]);
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
   
   return (

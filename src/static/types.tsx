@@ -95,7 +95,7 @@ export type Preset = {
   max_device: number;
   search_st: number;
   search_div: number;
-  devices: Item[];
+  tab_device_presets: Item[];
 };
 
 export type SetTabPageType = {
@@ -110,22 +110,8 @@ export type TabPageInfotype = {
   tbl_row: number;
   tbl_column: number;
   times: string[];
-  tab_table_infos: Unit[];
-}
-
-export type ResTabPageInfotype = {
-  id: number;
-  name: string;
-  tab_table_infos: Unit[];
-  tbl_column: number;
-  tbl_row: number;
-}
-
-
-export type ResTabPagetype = {
-  count: number;
-  data: ResTabPageInfotype[];
-  total_count: number;
+  tables: Unit[];
+  approves: ApprovalsType[];
 }
 
 export type DeleteDropDownType = {
@@ -138,12 +124,9 @@ export type SetDropDownType = {
 };
 
 export type ApprovalsType = {
-  id: number;
-  tab_name: string;
   level: number;
   text: string;
   checked: number;
-  tab_info_id: number;
 }
 
 export type ViewModeProp = {

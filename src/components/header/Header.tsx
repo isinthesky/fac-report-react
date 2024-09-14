@@ -14,6 +14,8 @@ import { throttle } from 'lodash';
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 import { get_page_setting, get_page_list } from "../../features/api/page"
+import { fetchPageSettings } from "../../features/api/common"
+
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
@@ -53,39 +55,14 @@ export default function Header({ mainTab }: HeaderProps) {
     (async () => {
       try {
         console.log("header: ", process.env.REACT_APP_SERVER_URL)
-        const resPages = await get_page_list();
-        
-        if (resPages) {
-          dispatch(setTabSetting({length: resPages.total_count}));
+        const buttons = await fetchPageSettings(dispatch);
+        dispatch(setMenus(buttons));
 
-          let count = 0;
-          const buttons: string[] = [];
-
-          if (Number(INIT_TAB_COUNT) >= count) {
-            for (const mainId of [1, 2, 3, 4, 5]) {
-              for (const subId of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
-                const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-                if (process.env[key]) {
-                  buttons.push(`${mainId}${subId}`);
-                  const tempTabInfo = resPages.data[count++];
-                  const resPageSetting = await get_page_setting(tempTabInfo.name, true);
-                 
-                  tempTabInfo.times = resPageSetting.times;
-                  tempTabInfo.tab_table_infos = resPageSetting.tables
-                  
-                  dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: tempTabInfo}));
-
-                  if (count === 1) {
-                    dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
-                  }
-                }
-              }
-            }
-          }
-
-          console.log("menu count: ", count)
-          dispatch(setMenus(buttons));
+        if (buttons.length > 0) {
+          const [mainId, subId] = buttons[0].split('').map(Number);
+          dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
         }
+        
       } catch (error) {
         console.error(error);
       }

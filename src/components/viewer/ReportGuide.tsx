@@ -17,16 +17,16 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
   useEffect(() => {
-    console.log("currentTab", currentTab.tab_table_infos)
+    console.log("currentTab", currentTab.tables)
   }, [currentTab])
 
   const renderDevice = useMemo(() => {
     return () => {
-      if (currentTab.tab_table_infos.length === 0) {
+      if (currentTab.tables.length === 0) {
         return <>{STRING_ERR_SERVER_CONNECT}</>;
       }
 
-      console.log("currentTab", currentTab, currentTab.tab_table_infos[0].device_values)
+      console.log("currentTab", currentTab, currentTab.tables[0].device_values)
 
       const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
       times.push(...currentTab.times.map((time: string) => time));
@@ -36,14 +36,14 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
           {Array.from({ length: column }).map((_, colIndex) => {
             const index = rowIndex * column + colIndex;
             
-            if (currentTab.tab_table_infos.length <= index) {
+            if (currentTab.tables.length <= index) {
               return <></>;
             }
-            if (currentTab.tab_table_infos[index].type === CONST_TYPE_INFO_INDEX[2]) {
+            if (currentTab.tables[index].type === CONST_TYPE_INFO_INDEX[2]) {
               return <></>;
             }
             
-            const TypeComp = currentTab.tab_table_infos[index].type === 1 ? 'V' : 'W';
+            const TypeComp = currentTab.tables[index].type === 1 ? 'V' : 'W';
 
             return (
               <Container key={colIndex} mode="view" >

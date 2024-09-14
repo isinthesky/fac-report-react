@@ -31,9 +31,9 @@ const initialState: SettingState = {
   printTitle: INIT_PRINT_TITLE as string,
   printFontSize: 9,
   deviceSearchWord: "",
-  approvals: [{ id:0, tab_name:"", level:0, text:"", checked:0, tab_info_id:0},
-              { id:0, tab_name:"", level:0, text:"", checked:0, tab_info_id:0},
-              { id:0, tab_name:"", level:0, text:"", checked:0, tab_info_id:0}],
+  approvals: [{ level:0, text:"", checked:0 },
+              { level:0, text:"", checked:0 },
+              { level:0, text:"", checked:0 }],
   // timeList: [ { id: 1, tab_name: "", time: "00:00", tab_info_id: 0 },
   //   { id: 2, tab_name: "", time: "00:00", tab_info_id: 0 },
   //   { id: 3, tab_name: "", time: "00:00", tab_info_id: 0 },
@@ -74,17 +74,7 @@ export const settingSlice = createSlice({
     },
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
       state.approvals = action.payload;
-    },
-    // addDropdown: (state) => {
-    //   const newId = state.timeList.length ? state.timeList[state.timeList.length - 1].id + 1 : 1;
-    //   state.timeList.push({ id: newId, tab_name: `Tab ${newId}`, time: '00:00', tab_info_id: newId });
-    // },
-    // removeDropdown: (state, action: PayloadAction<{ index: number }>) => {
-    //   state.timeList.splice(action.payload.index, 1);
-    // },
-    // setTimes: (state, action: PayloadAction<{ index: number, time: string }>) => {
-    //   state.timeList[action.payload.index].time = action.payload.time;
-    // },
+    }
   },
 });
 

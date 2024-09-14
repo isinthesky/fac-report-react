@@ -15,13 +15,13 @@ const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
-  const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index].search_st);
+  const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].type);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].search_st);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>("");
 
   useEffect(() => {
-    const currentUnit = tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]
+    const currentUnit = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]
 
     if (currentUnit.type === 0) {
       setDeviceType(1);

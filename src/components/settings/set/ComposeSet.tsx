@@ -28,7 +28,7 @@ const ComposeSet: React.FC = () => {
   
   const [deviceType, setDeviceType] = useState(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
-      return tabPageSlice.currentTabPage.tab_table_infos[position]?.type || 0;
+      return tabPageSlice.currentTabPage.tables[position]?.type || 0;
     }
     return 0;
   });
@@ -39,8 +39,8 @@ const ComposeSet: React.FC = () => {
       return;
     }
     
-    const tableInfo = tabPageSlice.currentTabPage.tab_table_infos[position];
-    const deviceInfo = tabPageSlice.currentTabPage.tab_table_infos[position].devices;
+    const tableInfo = tabPageSlice.currentTabPage.tables[position];
+    const deviceInfo = tabPageSlice.currentTabPage.tables[position].devices;
 
     console.log("currentTabPage", tabPageSlice.currentTabPage)
     try {
@@ -64,7 +64,7 @@ const ComposeSet: React.FC = () => {
       return;
     }
 
-    for (const tableInfo of tabPageSlice.currentTabPage.tab_table_infos) {   
+    for (const tableInfo of tabPageSlice.currentTabPage.tables) {   
       try {
         await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
       } catch (e) {
@@ -83,7 +83,7 @@ const ComposeSet: React.FC = () => {
 
   useEffect(() => {
     if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
-      setDeviceType(tabPageSlice.currentTabPage.tab_table_infos[position]?.type || 0);
+      setDeviceType(tabPageSlice.currentTabPage.tables[position]?.type || 0);
     }
   }, [tabPageSlice, deviceColumn, deviceRow, position]);
 
@@ -101,7 +101,7 @@ const ComposeSet: React.FC = () => {
     for (let r = 0; r < tabInfo.tbl_row; r++) {
       for (let c = 0; c < tabInfo.tbl_column; c++) {
 
-        if ((c+1)+ (r * tabInfo.tbl_column) > tabInfo.tab_table_infos.length) {
+        if ((c+1)+ (r * tabInfo.tbl_column) > tabInfo.tables.length) {
           break;
         }
 

@@ -179,7 +179,6 @@ export const updatePresetTab = async (
         search_div: search_div
       };
       const res = await axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", data);
-      
       if (res.data.content.success)
         return true;
       else

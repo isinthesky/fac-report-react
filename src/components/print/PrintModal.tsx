@@ -34,7 +34,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
         {Array.from({ length: column }).map((_, colIndex) => {
           const index = rowIndex * column + colIndex;
 
-          const TypeComp = tabPageInfo.tab_table_infos[index].type === 1 ? 'V' : 'W';
+          const TypeComp = tabPageInfo.tables[index].type === 1 ? 'V' : 'W';
 
           return (
             <UnitCountainerRow key={colIndex} gap="0px">
