@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DailySetting, TabSetting, ApprovalsType, TimeListItem } from "../../static/types";
+import { DailySetting, TabSetting, ApprovalsType } from "../../static/types";
 import { INIT_PRINT_TITLE, INIT_TAB_COUNT } from "../../env";
 
 export interface SettingState {
@@ -12,7 +12,6 @@ export interface SettingState {
   printFontSize: number;
   deviceSearchWord: string;
   approvals: ApprovalsType[];
-  timeList: TimeListItem[];
 }
 
 // 현장
@@ -35,11 +34,11 @@ const initialState: SettingState = {
   approvals: [{ id:0, tab_name:"", level:0, text:"", checked:0, tab_info_id:0},
               { id:0, tab_name:"", level:0, text:"", checked:0, tab_info_id:0},
               { id:0, tab_name:"", level:0, text:"", checked:0, tab_info_id:0}],
-  timeList: [ { id: 1, tab_name: "", time: "00:00", tab_info_id: 0 },
-    { id: 2, tab_name: "", time: "00:00", tab_info_id: 0 },
-    { id: 3, tab_name: "", time: "00:00", tab_info_id: 0 },
-    { id: 4, tab_name: "", time: "00:00", tab_info_id: 0 }
-   ],
+  // timeList: [ { id: 1, tab_name: "", time: "00:00", tab_info_id: 0 },
+  //   { id: 2, tab_name: "", time: "00:00", tab_info_id: 0 },
+  //   { id: 3, tab_name: "", time: "00:00", tab_info_id: 0 },
+  //   { id: 4, tab_name: "", time: "00:00", tab_info_id: 0 }
+  //  ],
 };
 
 export const settingSlice = createSlice({
@@ -57,9 +56,6 @@ export const settingSlice = createSlice({
     },
     setTableDate: (state, action: PayloadAction<number>) => {
       state.date = action.payload;
-    },
-    setTimeList: (state, action: PayloadAction<TimeListItem[]>) => {
-      state.timeList = action.payload;
     },
     setTabSetting: (state, action: PayloadAction<TabSetting>) => {
       state.tabSetting = action.payload;
@@ -79,19 +75,19 @@ export const settingSlice = createSlice({
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
       state.approvals = action.payload;
     },
-    addDropdown: (state) => {
-      const newId = state.timeList.length ? state.timeList[state.timeList.length - 1].id + 1 : 1;
-      state.timeList.push({ id: newId, tab_name: `Tab ${newId}`, time: '00:00', tab_info_id: newId });
-    },
-    removeDropdown: (state, action: PayloadAction<{ index: number }>) => {
-      state.timeList.splice(action.payload.index, 1);
-    },
-    setTimes: (state, action: PayloadAction<{ index: number, time: string }>) => {
-      state.timeList[action.payload.index].time = action.payload.time;
-    },
+    // addDropdown: (state) => {
+    //   const newId = state.timeList.length ? state.timeList[state.timeList.length - 1].id + 1 : 1;
+    //   state.timeList.push({ id: newId, tab_name: `Tab ${newId}`, time: '00:00', tab_info_id: newId });
+    // },
+    // removeDropdown: (state, action: PayloadAction<{ index: number }>) => {
+    //   state.timeList.splice(action.payload.index, 1);
+    // },
+    // setTimes: (state, action: PayloadAction<{ index: number, time: string }>) => {
+    //   state.timeList[action.payload.index].time = action.payload.time;
+    // },
   },
 });
 
-export const { setMenus, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord, setTimeList, addDropdown, removeDropdown, setTimes } = settingSlice.actions;
+export const { setMenus, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;
 

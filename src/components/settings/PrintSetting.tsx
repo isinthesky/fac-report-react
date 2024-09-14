@@ -7,7 +7,7 @@ import { RootStore } from '../../store/congifureStore';
 import { setPrintTitle, setApproves, setPrintFontSize, setViewMode } from "../../features/reducers/settingSlice"; // Assuming similar actions exist
 import { BaseFlexColumn, MediumLabel, BaseModalBack, MiniButton } from '../../static/componentSet';
 import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE,STRING_SETTING_SET_PRINT_PREVIEW, STRING_SETTING_SET_PRINT_APPROVE, STRING_SETTING_SET_PRINT_FONT_SIZE, STRING_DAILY_MAIN_BTN_PRINT } from '../../static/langSet';
-import { update_page_approve_list } from '../../features/api/page';
+import { update_page_approve } from '../../features/api/page';
 import { ApprovalsType } from '../../static/types';
 import { COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from '../../static/colorSet';
 import PrintModal from "../print/PrintModal";
@@ -76,13 +76,11 @@ const PrintSetting: React.FC = () => {
     handlePrintFunction();
   };
 
-  const handleSave = async () => {
+  const handleSave = async (tab_name: string) => {
     dispatch(setPrintTitle(title));
 
     try {
-      for (const approval of approvals) {
-        await update_page_approve_list(approval.id, approval.text, approval.checked)
-      }
+      await update_page_approve(tab_name, approvals)
 
     } catch (error) {
       console.error(error);
@@ -160,7 +158,7 @@ const PrintSetting: React.FC = () => {
         <ButtonsContainer>
           <BaseButton onClick={handlePreview}>{STRING_SETTING_SET_PRINT_PREVIEW}</BaseButton>
           <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
-          <ActiveButton onClick={handleSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
+          <ActiveButton onClick={() => handleSave(tabPageSet.currentTabPage.name)}>{STRING_DEFAULT_SAVE}</ActiveButton>
         </ButtonsContainer>
       </ControlContainer>
     </SettingContainer>

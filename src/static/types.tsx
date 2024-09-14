@@ -90,14 +90,12 @@ export type TableSettingType = {
 
 export type Preset = {
   id: number;
-  tab_name: string;
-  type: number;
-  idx: number;
   name: string;
+  type: number;
+  max_device: number;
   search_st: number;
   search_div: number;
-  tab_device_presets: Item[];
-  max_device: number;
+  devices: Item[];
 };
 
 export type SetTabPageType = {
@@ -203,3 +201,20 @@ export type DeviceLog = {
   [key: string]: LogData 
 };
 
+export interface Approve {
+  level: number;
+  text: string;
+  checked: number;
+}
+
+export interface PageSettingResponse {
+  id: number;
+  tbl_row: number;
+  tbl_column: number;
+  history_date: string;
+  times: string[];
+  tables: Unit[];
+  approves: Approve[];
+  user_tables: any;
+  presets: Preset[];
+}

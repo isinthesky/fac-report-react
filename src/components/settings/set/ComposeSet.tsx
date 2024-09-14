@@ -10,7 +10,7 @@ import { get_page_time_list } from "../../../features/api/page";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
-import { setUnitSelectPosition, setdeviceSearchWord, setTimeList } from "../../../features/reducers/settingSlice";
+import { setUnitSelectPosition, setdeviceSearchWord } from "../../../features/reducers/settingSlice";
 import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
@@ -42,7 +42,7 @@ const ComposeSet: React.FC = () => {
     const tableInfo = tabPageSlice.currentTabPage.tab_table_infos[position];
     const deviceInfo = tabPageSlice.currentTabPage.tab_table_infos[position].devices;
 
-    console.log("tableInfo", tableInfo, deviceInfo)
+    console.log("currentTabPage", tabPageSlice.currentTabPage)
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
 
@@ -50,7 +50,7 @@ const ComposeSet: React.FC = () => {
         await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
       }
 
-      await updateTabTimeInfo(tabPageSlice.currentTabPage.name,tabPageSlice.currentTabPage.id,tabPageSlice.currentTabPage.times);
+      await updateTabTimeInfo(tabPageSlice.currentTabPage.name, tabPageSlice.currentTabPage.times);
     } catch (e) {
       console.error("updateSettingsTabPage error:", e);
     }
@@ -86,15 +86,6 @@ const ComposeSet: React.FC = () => {
       setDeviceType(tabPageSlice.currentTabPage.tab_table_infos[position]?.type || 0);
     }
   }, [tabPageSlice, deviceColumn, deviceRow, position]);
-
-  useEffect(() => {
-    const getTimeList = async () => {
-      const resTimes = await get_page_time_list(tabPageSlice.currentTabPage.name);
-      dispatch(setTimeList(resTimes.data));
-      console.log("data",tabPageSlice.currentTabPage.name, resTimes.data)
-    }
-    getTimeList()
-  }, [])
 
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
     const position = columnIndex + (rowIndex - 1) * deviceColumn - 1;

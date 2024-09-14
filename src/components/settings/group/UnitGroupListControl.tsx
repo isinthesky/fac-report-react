@@ -70,7 +70,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   const handleAdd = () => {
-    const newGroup = { id: 0, tab_name: " ", name: "", type: 1, idx: 0, search_st: 0, search_div: 0, tab_device_presets: Array(9).fill(0), max_device: 0, disable:0};
+    const newGroup = { id: 0, tab_name: " ", name: "", type: 1, idx: 0, search_st: 0, search_div: 0, devices: Array(9).fill(0), max_device: 0, disable:0};
     dispatch(addUnitGroup(newGroup));
   };
 
@@ -86,7 +86,7 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   const handleApply = () => {
     if (settingMode === "apply") {
       const currentTabUnit = {...tabPageSlice.currentTabPage.tab_table_infos[tabPageSlice.unitPosition.index]}
-      currentTabUnit.devices = unitGroupSlice.currentGroup.tab_device_presets
+      currentTabUnit.devices = unitGroupSlice.currentGroup.devices
 
       dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
     }

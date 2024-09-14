@@ -15,7 +15,7 @@ import Header from "../header/Header";
 import { setTabSetting, setViewMode, setApproves } from "../../features/reducers/settingSlice";
 import { updateTab } from "../../features/api/device";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import { get_page_setting, get_page_list, updateTabDate, get_page_approve_list, set_page_approve_list } from "../../features/api/page"
+import { get_page_setting, get_page_list, updateTabDate, set_page_approve_list } from "../../features/api/page"
 import { INIT_TAB_COUNT, CONST_TABINFO_NAME } from "../../env";
 import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
 
@@ -60,71 +60,28 @@ function Daily() {
   useEffect(() => {
     (async () => {
       try {
-        const resPages = await get_page_list();   
+        const mainId = tabPageSet.viewPosition.main;
+        const subId = tabPageSet.viewPosition.sub;
+        const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
         
-        if (resPages) {
-          dispatch(setTabSetting({length: resPages.total_count}));
+        if (process.env[key]) {  
+          const tabInfo = tabPageSet.currentTabPage;
+          const resPageSetting = await get_page_setting(tabInfo.name, true);
+          if (resPageSetting) {            
+            dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: tabInfo}));
+            dispatch(setApproves(resPageSetting.approves));
+          }
 
-          console.log("view select: ", id1, id2, INIT_TAB_COUNT, timestampToYYYYMMDD(date))
-
-          let count = 0;
-          const buttons: string[] = [];
-
-          if (Number(INIT_TAB_COUNT) >= count) {
-            for (const mainId of [1, 2, 3, 4, 5]) {
-              for (const subId of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
-                const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-                if (process.env[key]) {
-                  buttons.push(`${mainId}${subId}`);
-                  const tabInfo = resPages.data[count++];
-                  
-                  await updateTab(tabInfo.id, tabInfo.name, tabInfo.tbl_row, tabInfo.tbl_column, timestampToYYYYMMDD(date));
-
-                  if (mainId === Number(id1 ? id1 : 1) && subId === Number(id2 ? id2 : 1)) {
-                    console.log("updateTabDate", tabInfo.name)
-                    await updateTabDate(tabInfo.name);
-                  }
-
-                  const resPageSetting = await get_page_setting(tabInfo.name, 
-                                                                (mainId === Number(id1 ? id1 : 1) && subId === Number(id2 ? id2 : 1))
-                                                                ? true 
-                                                                : false);
-
-                  
-                  tabInfo.history_date = resPageSetting.history_date;
-                  tabInfo.times = resPageSetting.times;
-                  tabInfo.tab_table_infos = resPageSetting.tables;
-                 
-                  dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: tabInfo}));
-
-                  if (mainId === Number(id1 ? id1 : 1) && subId === Number(id2 ? id2 : 1)) {
-                    console.log("setViewSelect", mainId, subId)
-                    dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
-                  }
-                }
-              }
-            }
+          if (tabInfo.name !== tabPageSet.tabPageInfo[mainId][subId].name) {
+            dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
           }
         }
 
-        const resApproveList = await get_page_approve_list(CONST_TABINFO_NAME);
-        
-        for (let i = 0; i < resApproveList.data.length; i++) {
-          const approve = resApproveList.data[i];
-          console.log("approve", approve, resApproveList.data.length, CONST_TABINFO_NAME)
-          if (resApproveList.data.length <= 3) {
-            await set_page_approve_list(CONST_TABINFO_NAME, approve.level + (i + 1), "approve", 0, approve.tab_info_id);
-          }
-        }
-        
-        const resApproveList2 = await get_page_approve_list(CONST_TABINFO_NAME);
-        console.log("resApproveList2", resApproveList2.data)
-        dispatch(setApproves(resApproveList2.data));
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [date, dispatch]);
+  }, [date, tabPageSet.tabPageInfo, tabPageSet.viewPosition]);
 
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
@@ -152,6 +109,10 @@ function Daily() {
     handlePrintFunction();
   };
 
+  const handleUpdateTime = async () => {
+      await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+  }
+
   return (
     <Flat>
       <Header mainTab={Number(id1 ? id1 : "1")} />
@@ -170,6 +131,7 @@ function Daily() {
                 customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
               />
             </BaseFlexDiv>
+            <button onClick={handleUpdateTime}>load page</button>
           </CalendarContainer1>
           <ButtonControls>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>

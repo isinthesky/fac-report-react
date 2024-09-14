@@ -24,7 +24,6 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
   const [searchedNumber, setSearchedNumber] = useState<number>(0);
   const searchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
 
-
   useEffect(() => {
     setSelectedStation( (initStationId === 0) 
                         ? devicelist.stations[0].id

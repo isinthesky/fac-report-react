@@ -81,7 +81,7 @@ export const updateTab = async(
         name: name,
         tbl_row: tbl_row,
         tbl_column: tbl_column,
-        history_date: history_date
+        history_date: history_date,
       });
       return true;
     } catch (error) {
@@ -124,15 +124,20 @@ export const updateDevice = async(
   station_id: number,
   division_id: number,
   path_id: number
-): Promise<any> => {
+): Promise<boolean> => {
     try {
-      await axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", {
+      const data = {
         id: id,
         station_id: station_id,
         division_id: division_id,
         path_id: path_id
-      });
-      return true;
+      };
+      const res = await axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", data);
+      
+      if (res.data.content.success)
+        return true;
+      else
+        return false;
     } catch (error) {
       console.error(error);
       return false;
@@ -163,16 +168,22 @@ export const updatePresetTab = async (
     max_device: number,
     search_st: number,
     search_div: number
-  ): Promise<any> => {
+  ): Promise<boolean> => {
     try {
-      return await axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", {
+      const data = {
         id: id,
         name: name,
         type: type,
         max_device: max_device,
         search_st: search_st,
         search_div: search_div
-      });
+      };
+      const res = await axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", data);
+      
+      if (res.data.content.success)
+        return true;
+      else
+        return false;
     } catch (error) {
       console.error(error);
       return false;
@@ -185,14 +196,22 @@ export const updatePresetDevice = async (
   station_id: number,
   division_id: number,
   path_id: number
-): Promise<any> => {
+): Promise<boolean> => {
   try {
-    return await axiosInstance.put("/FacReport/PageInfo/TabDevicePreset/update", {
+    const data = {
       id: id,
       station_id: station_id,
       division_id: division_id,
       path_id: path_id
-    });
+    };
+
+    const res = await axiosInstance.put("/FacReport/PageInfo/TabDevicePreset/update", data);
+      
+    if (res.data.content.success)
+      return true;
+    else
+      return false;
+    
   } catch (error) {
     console.error(error);
     return false;
@@ -202,25 +221,19 @@ export const updatePresetDevice = async (
 
 export const updateTabTimeInfo = async (
   tab_name: string,
-  tab_info_id: number,
   times: string[]
-): Promise<any> => {
+): Promise<boolean> => {
   try {
-    return await axiosInstance.put("/FacReport/PageInfo/TabTimeInfo/update", {
-      tab_name: tab_name,
-      times: times,
-      tab_info_id: tab_info_id
-    });
+    const data = { name: tab_name, times: times };
+    const res =  await axiosInstance.put("/FacReport/PageInfo/TabInfo/update_times", data);
+    
+    if (res.data.content.success)
+      return true;
+    else
+      return false;
+    
   } catch (error) {
     console.error(error);
     return false;
   }
 };
-
-
-export const readDevicesData = async (
-    deviceId: number,
-    date: number
-  ): Promise<any> => {
-  };
-  

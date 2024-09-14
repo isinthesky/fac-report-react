@@ -12,7 +12,7 @@ export interface TabPageState {
 
 const initialState: TabPageState = {
   unitPosition: {index: 0},
-  viewPosition: {main: 1, sub: 1},
+  viewPosition: {main: 0, sub: 0},
   settingPosition: {main: 1, sub: 1},
   currentTabPage: {id: 0, name: "", tbl_row:0, tbl_column:0, times: Array(4).fill('00:00'), tab_table_infos: Array(9).fill(0) },
   tabPageInfo: Array(5).fill(Array(8).fill({id: 0, times: Array(4).fill('00:00'), tab_table_infos: Array(9).fill(0) }))
@@ -80,10 +80,8 @@ export const tabPageSlice = createSlice({
     addDropdown: (
       state
     ) => {
-      const tabPage = state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub];
-
+      const tabPage = state.currentTabPage;
       if (tabPage.times.length < 12) {
-        tabPage.times.push('00:00');
         state.currentTabPage.times.push('00:00');
       }
     },
@@ -92,7 +90,7 @@ export const tabPageSlice = createSlice({
       state,
       action: PayloadAction<DeleteDropDownType>
     ) => {
-      const tabPage = state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub];
+      const tabPage = state.currentTabPage;
       const index = action.payload.index;
 
       if (tabPage.times.length > 4) {
@@ -105,7 +103,7 @@ export const tabPageSlice = createSlice({
       state,
       action: PayloadAction<SetDropDownType>
     ) => {
-      const tabPage = state.tabPageInfo[state.settingPosition.main][state.settingPosition.sub];
+      const tabPage = state.currentTabPage;
       const index = action.payload.index;
 
       tabPage.times[index] = String(action.payload.time);

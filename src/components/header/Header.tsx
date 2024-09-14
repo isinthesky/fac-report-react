@@ -68,19 +68,12 @@ export default function Header({ mainTab }: HeaderProps) {
                 if (process.env[key]) {
                   buttons.push(`${mainId}${subId}`);
                   const tempTabInfo = resPages.data[count++];
-
-                  console.log("header: ", tempTabInfo)
-
-                  const resPageSetting = await get_page_setting(tempTabInfo.name, false);
-
-                  console.log("tempTabInfo", tempTabInfo);
-                  console.log("resPageSetting", resPageSetting);
+                  const resPageSetting = await get_page_setting(tempTabInfo.name, true);
                  
-                  tempTabInfo.times = resPageSetting.times; // Initialize times as an empty array
+                  tempTabInfo.times = resPageSetting.times;
                   tempTabInfo.tab_table_infos = resPageSetting.tables
                   
-                  dispatch(setTabPage({mainTab: mainId, subTab: subId, 
-                                      tabInfo: tempTabInfo}));
+                  dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: tempTabInfo}));
 
                   if (count === 1) {
                     dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
