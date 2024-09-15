@@ -3,19 +3,15 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
-import { setMenus, setTabSetting } from "../../features/reducers/settingSlice";
-import { setViewSelect, setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
+import { setViewSelect, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { MainMenu, SubMenu } from "./HeaderMenus";
-import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME, INIT_TAB_COUNT } from "../../env";
+import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { throttle } from 'lodash';
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
-import { get_page_setting, get_page_list } from "../../features/api/page"
-import { fetchPageSettings } from "../../features/api/common"
-
 
 export default function Header({ mainTab }: HeaderProps) {
   const navigate = useNavigate();
@@ -54,12 +50,8 @@ export default function Header({ mainTab }: HeaderProps) {
   useEffect(() => {
     (async () => {
       try {
-        console.log("header: ", process.env.REACT_APP_SERVER_URL)
-        const buttons = await fetchPageSettings(dispatch);
-        dispatch(setMenus(buttons));
-
-        if (buttons.length > 0) {
-          const [mainId, subId] = buttons[0].split('').map(Number);
+        if (settingSetMenus.length > 0) {
+          const [mainId, subId] = settingSetMenus[0].split('').map(Number);
           dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
         }
         
@@ -67,7 +59,7 @@ export default function Header({ mainTab }: HeaderProps) {
         console.error(error);
       }
     })();
-  }, [dispatch]);
+  }, [dispatch, settingSetMenus]);
 
   return (
     <TopHeader>

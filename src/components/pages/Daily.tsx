@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, forwardRef } from "react";
+import React, { useEffect, useState, useRef, useCallback, forwardRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useReactToPrint } from 'react-to-print';
@@ -12,35 +12,67 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { setViewMode, setApproves } from "../../features/reducers/settingSlice";
+import { setViewMode, setApproves, setMenus } from "../../features/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import { get_page_setting, updateTabDate, update_tab_device_value } from "../../features/api/page"
-import { setTabPage, setViewSelect } from "../../features/reducers/tabPageSlice";
+import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting } from "../../features/api/page"
+import { setTabPage, setViewSelect, setCurrentTab } from "../../features/reducers/tabPageSlice";
+import { fetchPageSettings } from "../../features/api/common";
+import { TabPageInfotype } from "../../static/types";
 
 interface CustomInputProps {
   value: string;
   onClick: () => void;
 }
 
-function Daily() {
+interface ViewPosition {
+  main: number;
+  sub: number;
+}
+
+const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref) => (
+  <CalendarButton onClick={onClick} ref={ref}>
+    {value}
+  </CalendarButton>
+));
+
+const DEFAULT_MAIN_TAB = "1";
+
+const Daily: React.FC = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
-  const [date, setDate] = useState(settingSet.date);
-  const [isOpen, setIsOpen] = useState(false);
-  const { id1, id2 } = useParams();
+  const [prevViewPosition, setPrevViewPosition] = useState<ViewPosition>({ main: -1, sub: -1 });
+  const [prevDate, setPrevDate] = useState<number>(0);
+  const [date, setDate] = useState<number>(settingSet.date);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { id1 } = useParams<{ id1?: string }>();
   const componentRef = useRef<HTMLDivElement>(null);
 
-  const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref: any) => (
-    <CalendarButton onClick={onClick} ref={ref}>
-      {value}
-    </CalendarButton>
-  ));
-
+  // Memoized functions
   const handleIdCheck = useCallback(() => {
     dispatch(setViewMode(settingSet.viewMode === "view" ? "idCheck" : "view"));
   }, [dispatch, settingSet.viewMode]);
 
+  const updatePageSettings = useCallback(async (mainId: number, subId: number) => {
+    const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+    
+    if (process.env[key]) {  
+      const tabInfo = tabPageSet.currentTabPage;
+      await updateTabDate(tabInfo.name, timestampToYYYYMMDD(date));
+      await update_tab_device_value(tabInfo.name);
+
+      const resPageSetting = await get_page_setting(tabInfo.name, true, false);
+      if (resPageSetting) {     
+        resPageSetting.name = tabInfo.name;
+        dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
+        dispatch(setApproves(resPageSetting.approves));
+      }
+
+      dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
+    }
+  }, [dispatch, date, tabPageSet.currentTabPage]);
+
+  // Effect for keyboard shortcut
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key.toLowerCase() === 'k') {
@@ -49,77 +81,87 @@ function Daily() {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleIdCheck]);
   
+  // Effect for fetching and updating data
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
-        const mainId = tabPageSet.viewPosition.main;
-        const subId = tabPageSet.viewPosition.sub;
-        const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-        
-        if (process.env[key]) {  
-          const tabInfo = tabPageSet.currentTabPage;
-          await updateTabDate(tabInfo.name, timestampToYYYYMMDD(date));
+        const { main: mainId, sub: subId } = tabPageSet.viewPosition;
 
-          await update_tab_device_value(tabInfo.name);
-
-          const resPageSetting = await get_page_setting(tabInfo.name, true, false);
-          if (resPageSetting) {     
-            resPageSetting.name = tabInfo.name;
-
-            dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
-            dispatch(setApproves(resPageSetting.approves));
-          }
-
-          // if (tabInfo.name !== tabPageSet.tabPageInfo[mainId][subId].name) {
-            dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
-          // }          
+        if (mainId < 1 || subId < 1) {
+          const buttons = await fetchPageSettings(dispatch);
+          dispatch(setMenus(buttons));
         }
 
+        if (mainId !== prevViewPosition.main || subId !== prevViewPosition.sub || date !== prevDate) {
+          setPrevViewPosition({ main: mainId, sub: subId });
+          setPrevDate(date);
+          updatePageSettings(mainId, subId);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching data:", error);
       }
-    })();
-  }, [date]);
+    };
 
+    fetchData();
+  }, [date, tabPageSet.viewPosition, prevViewPosition, prevDate, dispatch, updatePageSettings]);
+
+  // Print related functions
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
     pageStyle: `@page { size: A4 landscape; }
     body {
       -webkit-print-color-adjust: exact;
     }`,
-    documentTitle: settingSet.printTitle + "_" + new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')
+    documentTitle: `${settingSet.printTitle}_${new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')}`
   });
 
-  const handleOpenSave = () => {
-  };
-
-  const handleOpenPrint = () => {
+  const handleOpenPrint = useCallback(() => {
     setIsOpen(true);
     dispatch(setViewMode("print"))
-  };
+  }, [dispatch]);
 
-  const handlePrintClose = () => {
+  const handlePrintClose = useCallback(() => {
     setIsOpen(false);
     dispatch(setViewMode("view"))
+  }, [dispatch]);
+
+  // Other handlers
+  const handleOpenSave = () => {
+    // TODO: Implement save functionality
   };
 
-  const handlePrint = () => {
-    handlePrintFunction();
-  };
+  const handleHistoryPage = useCallback(async () => {
+    if (tabPageSet.currentTabPage.name) {
+      const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+      console.log("resHistoryPage", resHistoryPage);
 
-  const handleUpdateTime = async () => {
-      await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
-  }
+      if (resHistoryPage === false) {
+        console.log("저장된 페이지가 없습니다.");
+        return;
+      }
+
+      // resHistoryPage.name = tabPageSet.currentTabPage.name;
+
+      const tabPageInfo: TabPageInfotype = {
+        id: resHistoryPage.id,
+        name: resHistoryPage.name,
+        tbl_row: resHistoryPage.tbl_row,
+        tbl_column: resHistoryPage.tbl_column,
+        times: resHistoryPage.times,
+        tables: resHistoryPage.tables,
+        approves: resHistoryPage.approves,
+      }
+
+      dispatch(setCurrentTab(tabPageInfo));
+    }
+  }, [tabPageSet.currentTabPage.name, date]);
 
   return (
     <Flat>
-      <Header mainTab={Number(id1 ? id1 : "1")} />
+      <Header mainTab={Number(id1 || DEFAULT_MAIN_TAB)} />
       <Title>{STRING_DAILY_MAIN_TITLE}</Title>
       <ControlContainer>
         <Controls>
@@ -135,7 +177,7 @@ function Daily() {
                 customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
               />
             </BaseFlexDiv>
-            <button onClick={handleUpdateTime}>load page</button>
+            <button onClick={handleHistoryPage}>load history page</button>
           </CalendarContainer1>
           <ButtonControls>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
@@ -146,23 +188,26 @@ function Daily() {
       <ReportLine>
         <ReportGuide row={tabPageSet.currentTabPage.tbl_row} column={tabPageSet.currentTabPage.tbl_column} />
       </ReportLine>
-      {isOpen ? 
+      {isOpen && 
         <BaseModalBack onClick={handlePrintClose}>
           <ModalView onClick={(e) => e.stopPropagation()}>
             <DivHeader>
               <HideBtn></HideBtn>
-              <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
+              <PrintBtn onClick={handlePrintFunction}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
             </DivHeader>
-            <PrintModal row={tabPageSet.currentTabPage.tbl_row}
-                        column={tabPageSet.currentTabPage.tbl_column} 
-                        ref={componentRef} />
+            <PrintModal 
+              row={tabPageSet.currentTabPage.tbl_row}
+              column={tabPageSet.currentTabPage.tbl_column} 
+              ref={componentRef} 
+            />
           </ModalView>
         </BaseModalBack>
-      : null} 
+      } 
     </Flat>
   );
 }
+
 
 const Flat = styled(BaseFlex1Column)`
   background-color: ${COLORSET_BACKGROUND_COLOR};

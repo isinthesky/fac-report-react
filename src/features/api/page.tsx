@@ -137,3 +137,26 @@ export const update_tab_device_value = async (tabName: string): Promise<any> => 
     return false;
   }
 };
+
+
+export const get_history_page_setting = async (tabName: string, date: string): Promise<any> => {
+  try {
+    console.log("get_history_page_setting call", tabName, date)
+    const params = {
+        tab_name: tabName,
+        target_date: date,
+        with_table_info: true,
+        with_device_info: true,
+        with_device_value: true,
+      };
+      const response = await axiosInstance.get("/FacReport/HistoryPageInfo/get_page_setting", { params });
+
+      if (response.data.content.success)
+        return response.data.content.data;
+      else
+        return false;
+  } catch (error) {
+    console.error("get_history_page_setting", error);
+    return false;
+  }
+};
