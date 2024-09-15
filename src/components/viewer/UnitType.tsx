@@ -8,30 +8,28 @@ import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BA
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 
-const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ tabPage, index, type }) => {
+const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' | 'S' | 'R' }> = ({ tabPage, index, type }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const [deviceValues, setDeviceValues] = useState<{key: string, value: string[]} | null>(null);
   const sections = useMemo(() => ({
     V: [
       { label: "V", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
-      { label: "/", values: ["PF"] },
-      { label: "/", values: ["Hz"] },
-      { label: "/", values: ["kW"] },
+      { label: "/", values: ["PF","Hz", "KW"] },
     ],
     W: [
       { label: "W", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
-      { label: "/", values: ["PF"] },
-      { label: "/", values: ["Hz"] },
-      { label: "/", values: ["kW"] },
+      { label: "/", values: ["PF","Hz", "KW"] },
     ],
-    Rectifier: [
+    R: [
       { label: "AC(V)", values: ["R-S", "S-T", "T-R"] },
-      { label: "/", values: ["Hz"] },
-      { label: "/", values: ["DC(V)"] },
-      { label: "/", values: ["DC(A)"] },
-      { label: "/", values: ["알람(유/무)"] },
+      { label: "/", values: ["Hz", "DC(V)", "DC(A)", "Alram"] }
+    ],
+    S: [
+      { label: "V", values: ["R-S", "S-T", "T-R"] },
+      { label: "A", values: ["R", "S", "T"] },
+      { label: "/", values: ["Hz", "kW"]}
     ]
   }[type]), [type]);
 
@@ -54,7 +52,10 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' }> = ({ tabPage, inde
             </Row>
             <Row>
               {section.values.map((value, valueIdx) => (
-                <DeviceTypeValueDiv key={`value-${sectionIdx}-${deviceIndex++}`}>
+                <DeviceTypeValueDiv 
+                  key={`value-${sectionIdx}-${valueIdx}`}
+                  valueCount={section.values.length}
+                >
                   <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                     {value}
                   </DevTypeDiv>     
@@ -104,9 +105,7 @@ const Row = styled(BaseFlexCenterDiv) <{ mode?: string }>`
 `;
 
 const UnitGrid = styled.div<{ mode?: string }>`
-  display: grid;
-  grid-template-columns: 3fr 3fr 1fr 1fr 1fr;
-
+  display: flex;
   width: 100%;
   gap: 1px;
 
@@ -130,9 +129,9 @@ const Column = styled(BaseFlexCenterDiv) <{ mode?: string }>`
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const DeviceTypeValueDiv = styled(BaseFlexCenterDiv) <{ mode?: string }>`
+const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)<{ mode?: string, valueCount: number }>`
   flex-direction: column;
-  width: 100%;
+  width: ${props => `calc(100% / ${props.valueCount})`};
   min-width: 25px;
   gap: 1px;
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};

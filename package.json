@@ -1,6 +1,6 @@
 {
   "name": "fac-report-client",
-  "version": "0.2.106",
+  "version": "0.2.107",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",

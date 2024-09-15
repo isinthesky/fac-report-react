@@ -6,7 +6,7 @@ import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
-import { CONST_TYPE_INFO_INDEX } from "../../env";
+import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
 
 type ReportGuideProps = {
   row: number;
@@ -39,14 +39,19 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
             if (currentTab.tables.length <= index) {
               return <></>;
             }
-            if (currentTab.tables[index].type === CONST_TYPE_INFO_INDEX[2]) {
+
+            const currentType = currentTab.tables[index].type;
+      
+            // 숨김 타입(90)인 경우 렌더링하지 않음
+            if (currentType >= CONST_TYPE_INFO_INDEX[4]) {
               return <></>;
             }
             
-            const TypeComp = currentTab.tables[index].type === 1 ? 'V' : 'W';
+            // TypeComp 결정 로직 업데이트
+            const TypeComp = CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentType)] as "V" | "W" | "R" | "S";
 
             return (
-              <Container key={colIndex} mode="view" >
+              <Container key={colIndex} mode="view">
                 <TimeContainer mode="view">
                   {times.map((time: string, index: number) => (
                     <TimeDiv key={index}>{time}</TimeDiv>

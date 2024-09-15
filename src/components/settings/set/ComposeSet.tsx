@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import UnitTypeW from "./UnitTypeW";
-import UnitTypeV from "./UnitTypeV";
-import UnitTypeH from "./UnitTypeH";
+import UnitType from "./UnitType";
 import TimeDropdowns from "./TimeDropdowns";
 import { updateTable, updateDevice, updateTabTimeInfo } from "../../../features/api/device";
-import { get_page_time_list } from "../../../features/api/page";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
@@ -15,7 +12,7 @@ import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDi
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX } from "../../../env";
+import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../../env";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC = () => {
@@ -24,11 +21,10 @@ const ComposeSet: React.FC = () => {
   const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
   const deviceRow = settingSet.unitPostion.row;
   const deviceColumn = settingSet.unitPostion.column;
-  const position = deviceColumn + (deviceRow - 1) * deviceColumn - 1;
   
   const [deviceType, setDeviceType] = useState(() => {
-    if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
-      return tabPageSlice.currentTabPage.tables[position]?.type || 0;
+    if (deviceColumn !== 0 && deviceRow !== 0 && tabPageSlice.unitPosition.index >= 0) {
+      return tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]?.type || 0;
     }
     return 0;
   });
@@ -39,10 +35,10 @@ const ComposeSet: React.FC = () => {
       return;
     }
     
-    const tableInfo = tabPageSlice.currentTabPage.tables[position];
-    const deviceInfo = tabPageSlice.currentTabPage.tables[position].devices;
+    const tableInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index];
+    const deviceInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].devices;
 
-    console.log("currentTabPage", tabPageSlice.currentTabPage)
+    console.log("currentTabPage", tabPageSlice.currentTabPage, tableInfo)
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
 
@@ -82,43 +78,65 @@ const ComposeSet: React.FC = () => {
   }
 
   useEffect(() => {
-    if (deviceColumn !== 0 && deviceRow !== 0 && position >= 0) {
-      setDeviceType(tabPageSlice.currentTabPage.tables[position]?.type || 0);
+    if (deviceColumn !== 0 && deviceRow !== 0 && tabPageSlice.unitPosition.index >= 0) {
+      setDeviceType(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]?.type || 0);
     }
-  }, [tabPageSlice, deviceColumn, deviceRow, position]);
+  }, [tabPageSlice, deviceColumn, deviceRow, tabPageSlice.unitPosition.index]);
 
   const handleButtonClick = (rowIndex: number, columnIndex: number) => {
-    const position = columnIndex + (rowIndex - 1) * deviceColumn - 1;
+    const position = (rowIndex - 1) * tabPageSlice.currentTabPage.tbl_column + columnIndex - 1;
 
+    console.log("table select pos:", position)
+  
     dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
     dispatch(setTabUnitPosition({index: position}));
     dispatch(setdeviceSearchWord(""));
   };
-
+  
   const renderGridButtons = () => {
     const gridButtons = [];
     const tabInfo = tabPageSlice.currentTabPage;
+  
     for (let r = 0; r < tabInfo.tbl_row; r++) {
       for (let c = 0; c < tabInfo.tbl_column; c++) {
-
-        if ((c+1)+ (r * tabInfo.tbl_column) > tabInfo.tables.length) {
+        const buttonIndex = r * tabInfo.tbl_column + c + 1;
+        
+        if (buttonIndex > tabInfo.tables.length) {
           break;
         }
-
+  
         gridButtons.push(
           <GridButton
             key={`${r}-${c}`}
             onClick={() => handleButtonClick(r + 1, c + 1)}
             data-row={r + 1}
             data-column={c + 1}
-            mode = {(deviceRow - 1 === r && deviceColumn - 1 === c) ? "true" : "false"}
+            mode={(deviceRow === r + 1 && deviceColumn === c + 1) ? "true" : "false"}
           >
-            {`${ (c+1)+ (r * tabPageSlice.currentTabPage.tbl_column) }`}
+            {buttonIndex}
           </GridButton>
         );
       }
     }
     return gridButtons;
+  };
+
+
+  const renderUnitType = () => {
+    if (deviceType === 0 || !CONST_TYPE_INFO_INDEX.includes(deviceType)) {
+      return null;
+    }
+
+    const typeIndex = CONST_TYPE_INFO_INDEX.indexOf(deviceType);
+    const typeName = CONST_TYPE_INFO_NAMES[typeIndex];
+    const typeKeyword = CONST_TYPE_INFO_KEYWORDS[typeIndex] as 'V' | 'W' | 'S' | 'R' | 'HIDE';
+
+    return (
+      <UnitType
+        name={typeName}
+        type={typeKeyword}
+      />
+    );
   };
 
   return (
@@ -137,9 +155,7 @@ const ComposeSet: React.FC = () => {
         </SettingsContainer>
         <TimeDropdowns/>
         <BaseFlex1Row>
-          {deviceType === CONST_TYPE_INFO_INDEX[0] && <UnitTypeV name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
-          {deviceType === CONST_TYPE_INFO_INDEX[1] && <UnitTypeW name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
-          {deviceType === CONST_TYPE_INFO_INDEX[2] && <UnitTypeH name={CONST_TYPE_INFO_NAMES[deviceType - 1]} />}
+          {renderUnitType()}
         </BaseFlex1Row>
         <BaseFlexCenterDiv>
           <BaseButton widthsize="40px"> {"< <"}</BaseButton>

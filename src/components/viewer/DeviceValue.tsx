@@ -7,6 +7,20 @@ import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_PRINT_FONT } from "../../static/colorSet";
 
 
+const formatNumber = (value: string): string => {
+  const num = parseFloat(value);
+  if (isNaN(num)) return value; // 숫자가 아니면 원래 값 반환
+
+  const [intPart, decimalPart] = num.toString().split('.');
+  if (intPart.length >= 4) {
+    return intPart.slice(0, 4); // 정수 부분이 4자리 이상이면 처음 4자리만 반환
+  } else {
+    const totalLength = 4;
+    const decimalLength = totalLength - intPart.length;
+    return num.toFixed(decimalLength);
+  }
+};
+
 const DeviceValue: React.FC<{ arrPosValue: string[] }> = ({ arrPosValue }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
 
@@ -24,7 +38,7 @@ const DeviceValue: React.FC<{ arrPosValue: string[] }> = ({ arrPosValue }) => {
           fontSize={settingSet.printFontSize + "px"} 
           key={index}
         >
-          {value}
+          {formatNumber(value)} {/* 여기서 formatNumber 함수 사용 */}
         </ValueColumn>
       ))}
     </>
@@ -33,7 +47,7 @@ const DeviceValue: React.FC<{ arrPosValue: string[] }> = ({ arrPosValue }) => {
 
 const ValueColumn = styled(BaseFlexCenterDiv)<{ fontSize?: string, mode?: string }>`
   width: 100%;
-  min-width: ${(props) => props.mode === "print" ? "22px" : "25px"};
+  min-width: ${(props) => props.mode === "print" ? "22px" : "27px"};
   
   padding: 3px 0px;
   font-size: ${(props) => props.mode === "print" 

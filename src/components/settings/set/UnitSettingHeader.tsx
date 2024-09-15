@@ -63,9 +63,10 @@ const DeviceHeaderSet = () => {
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newType = Number(e.target.value);
     setDeviceType(newType);
-    dispatch(updateCurrentUnit({arrPos:tabPageSlice.unitPosition.index,
-        arrKey:"type",
-        deviceId: newType
+    dispatch(updateCurrentUnit({
+      arrPos:tabPageSlice.unitPosition.index,
+      arrKey:"type",
+      deviceId: newType
     }));
   };
 

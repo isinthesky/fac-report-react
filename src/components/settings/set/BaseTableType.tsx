@@ -5,27 +5,35 @@ import { SetDeviceType, Unit } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, SmallLabel } from "../../../static/componentSet";
-import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
+import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT } from "../../../static/colorSet";
 
-const UnitTypeH: React.FC<SetDeviceType> = ({ name }) => {
+interface BaseUnitTypeProps extends SetDeviceType {
+  unitKeys: string[];
+  containerStyle?: React.CSSProperties;
+  titleStyle?: React.CSSProperties;
+}
+
+const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerStyle, titleStyle }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(
     tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]
   );
   
-  const unitKeys = ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"];
   useEffect(() => {
     setCurrUnit(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]);
   }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
   
   return (
-    <UnitContainer>
+    <UnitContainer style={containerStyle}>
       <Section>
-        <TitleDiv>{name}</TitleDiv>
+        <TitleDiv style={titleStyle}>{name}</TitleDiv>
       </Section>
       <DivicesContainer>
         {unitKeys.map((value, idx) => {
+          if (currUnit.devices.length <= idx) {
+            return null;
+          }
           const initStationId =
             currUnit.devices[idx].path_id !== 0
               ? currUnit.devices[idx].station_id
@@ -62,16 +70,18 @@ const UnitContainer = styled(BaseFlex1Column)`
   align-items: stretch;
   gap: 0px;
 
-  background-color: ${COLORSET_ACTIVE_CONTROL_BG};
+  background-color: ${COLORSET_GRID_CONTROL_BG2};
 `;
 
 const TitleDiv = styled(BaseFlex1Div)`
   align-items: center;
   justify-content: start;
+  
   padding: 0px 10px;
 
   color: ${COLORSET_GRID_CONTROL_FONT};
-  background-color: ${COLORSET_ACTIVE_CONTROL_BG};
+
+  background-color: ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
 const ValueColumn = styled(SmallLabel)`
@@ -93,4 +103,5 @@ const DivicesContainer = styled(BaseFlex1Column)`
 const DiviceDiv = styled(BaseFlexColumn)`
   gap: 0px;
 `;
-export default UnitTypeH;
+
+export default BaseTableType;
