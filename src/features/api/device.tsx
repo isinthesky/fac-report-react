@@ -236,3 +236,26 @@ export const updateTabTimeInfo = async (
     return false;
   }
 };
+
+
+export const updateTabUserTableInfo = async (
+  id: number,
+  idx: number,
+  name: string,
+  type: number,
+  disable: number,
+  user_data: any = {}
+): Promise<boolean> => {
+  try {
+    console.log("updateTabUserTableInfo", id, idx, name, type, disable, user_data)
+    const data = { id: id, idx: idx, name: name, type: type, disable: disable, user_data: user_data };
+    const res = await axiosInstance.put("/FacReport/PageInfo/update_tab_user_table_info", data);
+    if (res.data.content.success)
+      return true;
+    else
+      return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}

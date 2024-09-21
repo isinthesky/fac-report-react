@@ -1,62 +1,90 @@
 import { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceType from '../viewer/UnitType';
 import { ApprovalsType } from '../../static/types';
+import TableData from "../viewer/TableData";
+import TableUser from "../viewer/TableUser";
 import { RootStore } from '../../store/congifureStore';
 import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../../static/componentSet';
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../../static/langSet';
 import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSet';
 import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
+import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
+import { isDataTableTypeByInt, isUserTableTypeByInt } from "../../static/utils";
+
 
 type PrintGuideProps = {
   row: number;
   column: number;
 };
 
-const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }, ref) => {
-  const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
+
+const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column }, ref) => {
+  const settingSlice = useSelector((state: RootStore) => state.settingReducer);
+  const currentTab = useSelector((state: RootStore) => state.tabPageReducer.currentTabPage);
 
   const renderDevice = () => {
     const tabPageInfo = currentTab;
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
-      times.push(...tabPageInfo.times.map((time: string) => time));
+    times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
       <UnitCountainerLine key={rowIndex}>
-        <TimeContainer gap="1px">
-          {times.map((time: string, index: number) => (
-            <TimeDiv key={index} fontSize={settingSet.printFontSize + "px"}>{time}</TimeDiv>
-          ))} 
-        </TimeContainer>
-                
         {Array.from({ length: column }).map((_, colIndex) => {
-          const index = rowIndex * column + colIndex;
+            const index = rowIndex * column + colIndex;
+            const currentTable = currentTab.tables[index];
 
-          const TypeComp = tabPageInfo.tables[index].type === 1 ? 'V' : 'W';
+            if (currentTable.disable) {
+              return <></>;
+            }
 
-          return (
-            <UnitCountainerRow key={colIndex} gap="0px">
-              <DeviceContainer>
-                <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
-              </DeviceContainer>
-            </UnitCountainerRow>
-          );
-        })}
+            if (isDataTableTypeByInt(currentTable.type)) {
+              return (
+                <UnitCountainerRow key={colIndex}>
+                  <TimeContainer gap="1px">
+                    {times.map((time: string, index: number) => (
+                      <TimeDiv key={index} fontSize={settingSlice.printFontSize + "px"}>{time.substring(0, 2)}</TimeDiv>
+                    ))}
+                  </TimeContainer>
+                  <DeviceContainer>
+                    <TableData 
+                      key={index} 
+                      currentTable={currentTable} 
+                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
+                    />
+                  </DeviceContainer>
+                </UnitCountainerRow>
+              )
+            } else {
+              return (
+                <UnitCountainerRow key={colIndex}>
+                  <DeviceContainer>
+                    <TableUser 
+                      key={currentTab.tables[index].idx} 
+                      currentTable={currentTab.tables[index]} 
+                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                    />
+                  </DeviceContainer>
+                </UnitCountainerRow>
+              );
+            }
+          })}
       </UnitCountainerLine>
     ));
   };
+
+  console.log("settingSlice.approvals", settingSlice.approvals);
 
   return (
     <PrintArea ref={ref}>
       <TitleArea>
         <HideDiv></HideDiv>
-        <TitleBox>{settingSet.printTitle}</TitleBox>
+        <TitleBox>{settingSlice.printTitle}</TitleBox>
         <ApproveTable>
-          {settingSet?.approvals.filter(
+          {settingSlice?.approvals.filter(
             (item:ApprovalsType) => item.checked).map(
               (item:ApprovalsType, idx:number) => {
+                console.log("item", item);
                 return (
                   <ApproveDiv key={idx} gap="1px">
                     <NameDiv> {item.text} </NameDiv>
@@ -67,7 +95,7 @@ const PrintModal = forwardRef <HTMLDivElement, PrintGuideProps>(({ row, column }
           }
         </ApproveTable>
       </TitleArea>
-        {renderDevice()}
+      {renderDevice()}
     </PrintArea>
   );
 });
@@ -149,6 +177,7 @@ const UnitCountainerLine = styled(BaseFlexCenterDiv)`
 const UnitCountainerRow = styled(BaseFlexRow)`
   width: 100%;
   background-color: ${COLORSET_PRINT_BORDER};
+  gap: 1px;
 `;
 
 const DeviceContainer = styled(BaseFlexRow)`
@@ -157,13 +186,14 @@ const DeviceContainer = styled(BaseFlexRow)`
 `;
 
 const TimeContainer = styled(BaseFlexColumn)`
-  width: 50px;
-
   background-color: ${COLORSET_PRINT_BORDER};
-`;
+  padding: 0px;
+  `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)<{ fontSize?: string }>`
-  padding: 3px 2px;
+  padding: 2px 1px;
+  width: 18px;
+
   font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${COLORSET_PRINT_FONT};
   background-color: #FFF;

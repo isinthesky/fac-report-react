@@ -17,8 +17,8 @@ import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
 import PrintSetting from "../settings/PrintSetting";
 import { RootStore } from "../../store/congifureStore";
-import { setApproves, setTabSetting } from "../../features/reducers/settingSlice"
-import { setTabPage, setSettingSelect } from "../../features/reducers/tabPageSlice";
+import { setApproves } from "../../features/reducers/settingSlice"
+import { setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { fetchPageSettings } from "../../features/api/common";
 
 function Settings() {

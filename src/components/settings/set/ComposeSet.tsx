@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import UnitType from "./UnitType";
 import TimeDropdowns from "./TimeDropdowns";
-import { updateTable, updateDevice, updateTabTimeInfo } from "../../../features/api/device";
+import { updateTable, updateDevice, updateTabTimeInfo, updateTabUserTableInfo } from "../../../features/api/device";
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
@@ -13,6 +13,7 @@ import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../../env";
+import { isDataTableTypeByInt } from "../../../static/utils";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
 const ComposeSet: React.FC = () => {
@@ -41,12 +42,24 @@ const ComposeSet: React.FC = () => {
     console.log("currentTabPage", tabPageSlice.currentTabPage, tableInfo)
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
-
-      for (const device of deviceInfo) {
-        await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
-      }
-
+      
       await updateTabTimeInfo(tabPageSlice.currentTabPage.name, tabPageSlice.currentTabPage.times);
+      
+      if (isDataTableTypeByInt(tableInfo.type)) {
+        for (const device of deviceInfo) {
+          await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
+        }
+      } else {
+        const userTable = tabPageSlice.currentTabPage.user_tables.find((item) => {
+          if (item.idx === tableInfo.idx) {
+            return item;
+          }
+        });
+
+        if (userTable) {
+          updateTabUserTableInfo(userTable.id, userTable.idx, userTable.name, userTable.type, userTable.disable, userTable?.user_data);
+        }
+      }
     } catch (e) {
       console.error("updateSettingsTabPage error:", e);
     }
@@ -121,7 +134,6 @@ const ComposeSet: React.FC = () => {
     return gridButtons;
   };
 
-
   const renderUnitType = () => {
     if (deviceType === 0 || !CONST_TYPE_INFO_INDEX.includes(deviceType)) {
       return null;
@@ -129,7 +141,7 @@ const ComposeSet: React.FC = () => {
 
     const typeIndex = CONST_TYPE_INFO_INDEX.indexOf(deviceType);
     const typeName = CONST_TYPE_INFO_NAMES[typeIndex];
-    const typeKeyword = CONST_TYPE_INFO_KEYWORDS[typeIndex] as 'V' | 'W' | 'S' | 'R' | 'HIDE';
+    const typeKeyword = CONST_TYPE_INFO_KEYWORDS[typeIndex] as 'V' | 'W' | 'S' | 'R' | 'TR' | 'U1' | 'U2' | 'HIDE';
 
     return (
       <UnitType
@@ -155,7 +167,7 @@ const ComposeSet: React.FC = () => {
         </SettingsContainer>
         <TimeDropdowns/>
         <BaseFlex1Row>
-          {renderUnitType()}
+          { renderUnitType() }
         </BaseFlex1Row>
         <BaseFlexCenterDiv>
           <BaseButton widthsize="40px"> {"< <"}</BaseButton>

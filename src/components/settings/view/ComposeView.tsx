@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import TableSettingType from "./UnitInfo";
+import TableData from "./TableData";
 import { setUpdateSettingsColRow } from "../../../features/api";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Row, BaseFlexColumn, BaseFlexRow, MediumLabel, BaseButton, ActiveButton } from "../../../static/componentSet";
@@ -55,7 +55,7 @@ const ComposeView: React.FC = () => {
 
         if (tabPageInfo.tables.length > 0) {
           rowlist.push(
-            <TableSettingType
+            <TableData
               id={tabPageInfo.tables[keyCounter].id}
               tab_name={tabPageInfo.name}
               type={tabPageInfo.tables[keyCounter].type}

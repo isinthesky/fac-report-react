@@ -37,7 +37,7 @@ export default function Header({ mainTab }: HeaderProps) {
 
   const subMenuButtonCallback = useCallback(throttle((id1: number, id2: number) => {
     dispatch(setViewSelect({mainTab: id1, subTab: id2}));
-    navigate(`/daily/${id1.toString()}/${id2.toString()}`);
+    // navigate(`/daily/${id1.toString()}/${id2.toString()}`);
   }, 1000, { 'trailing': false }), [navigate, dispatch]);
 
   const handleGoSetting = useCallback(() => {

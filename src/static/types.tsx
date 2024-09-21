@@ -1,3 +1,4 @@
+import { Dict } from "styled-components/dist/types";
 import { DeviceState } from "../features/reducers/deviceSlice";
 
 export type IDevice = {
@@ -21,14 +22,19 @@ export type SetDeviceType = {
 
 export type ViewUnitProps = {
   key: number;
-  tabPage: TabPageInfotype
-  index: number;
+  currentTable: Unit;
 };
 
 export type updateCurrentTabPageType = {
   arrPos: number;
   arrKey: string;
   deviceId: number|string;
+};
+
+export type updateCurrentTabPageUserDataType = {
+  arrPos: number;
+  key: string;
+  value: Dict;
 };
 
 export type updateCurrentTabPageUnit = {
@@ -42,6 +48,12 @@ export type updateCurrenUnitDevice = {
   device: Item;
 };
 
+
+export type updateCurrenUnitValues = {
+  unitPosition: number;
+  key: string;
+  value: { [key: string]: string[] };
+};
 
 export type updateCurrentGroupType = {
   arrKey: string;
@@ -70,7 +82,8 @@ export type Unit = {
   search_st: number;
   search_div: number;
   devices: Item[];
-  device_values: {key: string, value: string[]} | null;
+  device_values: { [key: string]: string[] } | null;
+  user_data: any;
   disable: number;
   max_device: number;
 };
@@ -112,6 +125,7 @@ export type TabPageInfotype = {
   times: string[];
   tables: Unit[];
   approves: ApprovalsType[];
+  user_tables: UserTableType[];
 }
 
 export type DeleteDropDownType = {
@@ -145,10 +159,6 @@ export interface DailySetting {
 export interface SelectedTab {
   main: number;
   sub: number;
-}
-
-export interface TabSetting {
-  length: number;
 }
 
 export interface TimeListItem {
@@ -201,3 +211,28 @@ export interface PageSettingResponse {
   user_tables: any;
   presets: Preset[];
 }
+
+export type UserTableType = {
+  id: number;
+  idx: number;
+  name: string;
+  type: number;
+  disable: number;
+  user_data: any;
+}
+
+
+export type TableType = 'V' | 'W' | 'R' | 'S' | 'TR' | 'U1' | 'U2' | 'HIDE';
+
+export const UNIT_TYPE_INFO: Record<TableType, number> = {
+  'V': 1,
+  'W': 2,
+  'R': 3,
+  'S': 4,
+  'TR': 5,
+  'U1': 1001,
+  'U2': 1002,
+  'HIDE': 9001
+};
+
+export const UNIT_TYPE_KEYWORDS = Object.keys(UNIT_TYPE_INFO) as TableType[];

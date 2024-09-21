@@ -11,9 +11,10 @@ interface BaseUnitTypeProps extends SetDeviceType {
   unitKeys: string[];
   containerStyle?: React.CSSProperties;
   titleStyle?: React.CSSProperties;
+  userTable?: boolean;
 }
 
-const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerStyle, titleStyle }) => {
+const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerStyle, titleStyle, userTable }) => {
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(
@@ -22,7 +23,7 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
   
   useEffect(() => {
     setCurrUnit(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]);
-  }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
+  }, [tabPageSlice.unitPosition]);
   
   return (
     <UnitContainer style={containerStyle}>
@@ -34,6 +35,7 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
           if (currUnit.devices.length <= idx) {
             return null;
           }
+
           const initStationId =
             currUnit.devices[idx].path_id !== 0
               ? currUnit.devices[idx].station_id
@@ -46,16 +48,20 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
           return (
             <DiviceDiv key={idx}>
               <ValueColumn>{value}</ValueColumn>
-              <DeviceAutoSelect
-                unitPosition={tabPageSlice.unitPosition.index}
-                devicePosition={idx}
-                devicelist={deviceSet}
-                initStationId={initStationId}
-                stationValue={currUnit.search_st}
-                initDivisionId={initDivisionId}
-                divisionValue={currUnit.search_div}
-                currentDevice={currUnit.devices[idx]}
-              />
+              {userTable ? (
+                <input type="text" value={"user input"} disabled={true} />
+              ) : (
+                <DeviceAutoSelect
+                  unitPosition={tabPageSlice.unitPosition.index}
+                  devicePosition={idx}
+                  devicelist={deviceSet}
+                  initStationId={initStationId}
+                  stationValue={currUnit.search_st}
+                  initDivisionId={initDivisionId}
+                  divisionValue={currUnit.search_div}
+                  currentDevice={currUnit.devices[idx]}
+                />
+              )}
             </DiviceDiv>
           );
         })}

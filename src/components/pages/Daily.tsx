@@ -14,10 +14,11 @@ import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../stati
 import Header from "../header/Header";
 import { setViewMode, setApproves, setMenus } from "../../features/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting } from "../../features/api/page"
+import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting } from "../../features/api/page"
 import { setTabPage, setViewSelect, setCurrentTab } from "../../features/reducers/tabPageSlice";
 import { fetchPageSettings } from "../../features/api/common";
-import { TabPageInfotype } from "../../static/types";
+import { TabPageInfotype, Unit, UserTableType } from "../../static/types";
+import { isUserTableTypeByInt } from "../../static/utils";
 
 interface CustomInputProps {
   value: string;
@@ -45,55 +46,62 @@ const Daily: React.FC = () => {
   const [prevDate, setPrevDate] = useState<number>(0);
   const [date, setDate] = useState<number>(settingSet.date);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { id1 } = useParams<{ id1?: string }>();
-  const componentRef = useRef<HTMLDivElement>(null);
+  const { id1 = DEFAULT_MAIN_TAB, id2 = "1" } = useParams<{ id1?: string; id2?: string }>();
 
-  // Memoized functions
-  const handleIdCheck = useCallback(() => {
-    dispatch(setViewMode(settingSet.viewMode === "view" ? "idCheck" : "view"));
-  }, [dispatch, settingSet.viewMode]);
+  const componentRef = useRef<HTMLDivElement>(null);
 
   const updatePageSettings = useCallback(async (mainId: number, subId: number) => {
     const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+
     
     if (process.env[key]) {  
-      const tabInfo = tabPageSet.currentTabPage;
-      await updateTabDate(tabInfo.name, timestampToYYYYMMDD(date));
-      await update_tab_device_value(tabInfo.name);
+      console.log("updatePageSettings call", tabPageSet.currentTabPage.name, date)
 
-      const resPageSetting = await get_page_setting(tabInfo.name, true, false);
+      if (!tabPageSet.currentTabPage.name) {
+        
+        console.log("tabPageSet.currentTabPage : init ", tabPageSet.currentTabPage.name)
+
+        await fetchPageSettings(dispatch);
+        return;
+      }
+
+      await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+      await update_tab_device_value(tabPageSet.currentTabPage.name);
+
+      const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
       if (resPageSetting) {     
-        resPageSetting.name = tabInfo.name;
+        resPageSetting.name = tabPageSet.currentTabPage.name;
+
+        const newTables = resPageSetting.tables.map((table: Unit) => {
+          if (isUserTableTypeByInt(table.type)) {
+            const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
+            if (userTable) {
+              table.id = userTable.id;
+              table.name = userTable.name;
+              table.disable = userTable.disable;
+              table.device_values = userTable.user_data;
+            }
+          }
+          return table;
+        })
+
+        console.log("daily: ", resPageSetting, newTables)
+
+        resPageSetting.tables = newTables;
+
         dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
         dispatch(setApproves(resPageSetting.approves));
       }
 
-      dispatch(setViewSelect({mainTab: Number(mainId), subTab: Number(subId)}));
+      dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
     }
-  }, [dispatch, date, tabPageSet.currentTabPage]);
-
-  // Effect for keyboard shortcut
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key.toLowerCase() === 'k') {
-        handleIdCheck();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleIdCheck]);
+  }, [dispatch, date, tabPageSet.currentTabPage.name]);
   
   // Effect for fetching and updating data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { main: mainId, sub: subId } = tabPageSet.viewPosition;
-
-        if (mainId < 1 || subId < 1) {
-          const buttons = await fetchPageSettings(dispatch);
-          dispatch(setMenus(buttons));
-        }
 
         if (mainId !== prevViewPosition.main || subId !== prevViewPosition.sub || date !== prevDate) {
           setPrevViewPosition({ main: mainId, sub: subId });
@@ -130,34 +138,51 @@ const Daily: React.FC = () => {
 
   // Other handlers
   const handleOpenSave = () => {
-    // TODO: Implement save functionality
+    tabPageSet.currentTabPage.tables.forEach((table: Unit) => {
+      if (isUserTableTypeByInt(table.type)) {
+        console.log("save_page_setting", table.name, table.device_values);
+        update_tab_user_table_info(table.id, table.name, table.type, table.disable, table.device_values);
+      }
+    });
+
+    console.log("save_page_setting", tabPageSet.currentTabPage.name);
+    save_page_setting(tabPageSet.currentTabPage.name);
   };
 
-  const handleHistoryPage = useCallback(async () => {
+  const handleHistoryPage = async () => {
+    console.log("resHistoryPage", tabPageSet.currentTabPage.name);
+
     if (tabPageSet.currentTabPage.name) {
       const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
-      console.log("resHistoryPage", resHistoryPage);
 
       if (resHistoryPage === false) {
         console.log("저장된 페이지가 없습니다.");
         return;
       }
 
-      // resHistoryPage.name = tabPageSet.currentTabPage.name;
+      resHistoryPage.name = tabPageSet.currentTabPage.name;
+      const newTables = resHistoryPage.tables.map((table: Unit) => {
+        if (isUserTableTypeByInt(table.type)) {
+          const userTable = resHistoryPage.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
+          if (userTable) {
+            table.id = userTable.id;
+            table.name = userTable.name;
+            table.disable = userTable.disable;
+            table.device_values = userTable.user_data;
+          }
+        }
+        return table;
+      })
 
-      const tabPageInfo: TabPageInfotype = {
-        id: resHistoryPage.id,
-        name: resHistoryPage.name,
-        tbl_row: resHistoryPage.tbl_row,
-        tbl_column: resHistoryPage.tbl_column,
-        times: resHistoryPage.times,
-        tables: resHistoryPage.tables,
-        approves: resHistoryPage.approves,
-      }
+      console.log("handleHistoryPage: ", resHistoryPage, newTables)
 
-      dispatch(setCurrentTab(tabPageInfo));
+      resHistoryPage.tables = newTables;
+
+      dispatch(setCurrentTab(resHistoryPage));
     }
-  }, [tabPageSet.currentTabPage.name, date]);
+  };
+
+  console.log("tabPageSet", tabPageSet);
 
   return (
     <Flat>
@@ -207,7 +232,6 @@ const Daily: React.FC = () => {
     </Flat>
   );
 }
-
 
 const Flat = styled(BaseFlex1Column)`
   background-color: ${COLORSET_BACKGROUND_COLOR};

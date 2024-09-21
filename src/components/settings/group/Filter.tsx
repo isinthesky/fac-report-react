@@ -22,7 +22,6 @@ const Filter: React.FC = () => {
   const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.search_div);
 
   useEffect(() => {
-    console.log("group init station", unitGroupSlice.currentGroup)
     setSelectedStation( (unitGroupSlice.currentGroup.search_st === 0) 
                         ? deviceSet.stations[0]?.id
                         : unitGroupSlice.currentGroup.search_st);     

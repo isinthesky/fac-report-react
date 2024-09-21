@@ -8,7 +8,7 @@ import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
 import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
 import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_NAMES } from "../../../env";
 
-const UnitInfo: React.FC<TableSettingType> = ({
+const TableData: React.FC<TableSettingType> = ({
   type,
   name,
   idx,
@@ -86,7 +86,7 @@ const NameContainer = styled(BaseFlex1Div)<{ type: number }>`
   justify-self: start;
   width: 100%;
 
-  background-color: ${props => props.type === CONST_TYPE_INFO_INDEX[2] ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_GRID_HEADER_BG};
+  background-color: ${props => props.type === CONST_TYPE_INFO_INDEX[CONST_TYPE_INFO_INDEX.length - 1] ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_GRID_HEADER_BG};
 `;
 
 const ItemDiv = styled(BaseFlex1Column)`
@@ -126,4 +126,4 @@ const DeviceInput = styled.input<{ heightsize?: string }>`
   border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-export default UnitInfo;
+export default TableData;

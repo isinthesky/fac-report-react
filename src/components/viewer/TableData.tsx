@@ -8,9 +8,10 @@ import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BA
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 
-const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' | 'S' | 'R' }> = ({ tabPage, index, type }) => {
+
+const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }> = ({ currentTable, type }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
-  const [deviceValues, setDeviceValues] = useState<{key: string, value: string[]} | null>(null);
+  const [deviceValues, setDeviceValues] = useState<{ [key: string]: string[] } | null>(null);
   const sections = useMemo(() => ({
     V: [
       { label: "V", values: ["R-S", "S-T", "T-R"] },
@@ -30,15 +31,22 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' | 'S' | 'R' }> = ({ t
       { label: "V", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
       { label: "/", values: ["Hz", "kW"]}
-    ]
+    ],
+    TR: [
+      { label: "TR1", values: ["R", "S", "T"] },
+      { label: "TR2", values: ["R", "S", "T"] },
+      { label: "TR3", values: ["R", "S", "T"] },
+      { label: "TR4", values: ["R", "S", "T"] },
+      { label: "LV-4-3", values: ["R", "S", "T"] },
+    ],
   }[type]), [type]);
 
   useEffect(() => {
-    setDeviceValues(tabPage.tables[index].device_values);
-  }, [tabPage.tables[index].device_values])
+    setDeviceValues(currentTable.device_values);
+  }, [currentTable.device_values])
 
 
-  const makeDeviceValues = (value_obj: {key: string, value: string[]}) => {
+  const makeDeviceValues = (value_obj: { [key: string]: string[] }) => {
     let deviceIndex = 0;
 
     return (
@@ -54,11 +62,11 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' | 'S' | 'R' }> = ({ t
               {section.values.map((value, valueIdx) => (
                 <DeviceTypeValueDiv 
                   key={`value-${sectionIdx}-${valueIdx}`}
-                  valueCount={section.values.length}
                 >
                   <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                     {value}
-                  </DevTypeDiv>     
+                  </DevTypeDiv> 
+
                   <DeviceValue 
                     arrPosValue={
                       Object.values(value_obj).map((value, valueIdx) => {
@@ -79,7 +87,7 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' | 'S' | 'R' }> = ({ t
     <Container>
       <Row>
         <TitleColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-          {tabPage.tables[index].name}
+          {currentTable.name}
         </TitleColumn>
       </Row>
       <UnitGrid>
@@ -92,7 +100,6 @@ const UnitType: React.FC<ViewUnitProps & { type: 'V' | 'W' | 'S' | 'R' }> = ({ t
 const Container = styled(BaseFlexCenterDiv) <{ mode?: string }>`
   flex-direction: column;
   width: 100%;
-  // padding: 0px 1px;
   gap: 1px;
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
@@ -114,7 +121,7 @@ const UnitGrid = styled.div<{ mode?: string }>`
 
 const TitleColumn = styled(BaseFlexCenterDiv) <{ fontSize?: string, mode?: string }>`
   width: 100%;
-  padding: 3px 0px;
+  padding: ${(props) => props.mode === 'print' ? "2px 0px" : "3px 0px"};
 
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
@@ -129,10 +136,9 @@ const Column = styled(BaseFlexCenterDiv) <{ mode?: string }>`
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
-const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)<{ mode?: string, valueCount: number }>`
+const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)<{ mode?: string }>`
   flex-direction: column;
-  width: ${props => `calc(100% / ${props.valueCount})`};
-  min-width: 25px;
+  width: 100%;
   gap: 1px;
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
@@ -140,8 +146,8 @@ const DeviceTypeValueDiv = styled(BaseFlexCenterDiv)<{ mode?: string, valueCount
 const SectionDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string }>`
   width: 100%;
 
-  padding: 3px 0px;
   gap: 1px;
+  padding: ${(props) => props.mode === 'print' ? "2px 0px" : "3px 0px"};
 
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
@@ -152,13 +158,12 @@ const SectionDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string
 const DevTypeDiv = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string }>`
   flex-direction: column;
   width: 100%;
-  // min-width: 25px;
 
-  padding: 3px 0px;
+  padding:${(props) => props.mode === 'print' ? "2px 0px" : "3px 0px"};
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_FONT : COLORSET_FONT_BASE};
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   // border: 1px solid ${COLORSET_GRID_CONTROL_BORDER};
 `;
 
-export default UnitType;
+export default TableData;

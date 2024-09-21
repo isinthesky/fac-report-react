@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DailySetting, TabSetting, ApprovalsType } from "../../static/types";
-import { INIT_PRINT_TITLE, INIT_TAB_COUNT } from "../../env";
+import { DailySetting, ApprovalsType } from "../../static/types";
+import { INIT_PRINT_TITLE } from "../../env";
 
 export interface SettingState {
   menus: string[];
   date: number;
   unitPostion: DailySetting;
-  tabSetting: TabSetting;
+  tabSetting: string[];
   viewMode: string;
   printTitle: string;
   printFontSize: number;
@@ -26,19 +26,14 @@ const initialState: SettingState = {
   menus: ["11"],
   date: lastyear.getTime(), // yesterday.getTime(),
   unitPostion: { row: 1, column: 1 },
-  tabSetting: { length: Number(INIT_TAB_COUNT) },
+  tabSetting: [],
   viewMode: "view",
   printTitle: INIT_PRINT_TITLE as string,
-  printFontSize: 9,
+  printFontSize: 8,
   deviceSearchWord: "",
   approvals: [{ level:0, text:"", checked:0 },
               { level:0, text:"", checked:0 },
               { level:0, text:"", checked:0 }],
-  // timeList: [ { id: 1, tab_name: "", time: "00:00", tab_info_id: 0 },
-  //   { id: 2, tab_name: "", time: "00:00", tab_info_id: 0 },
-  //   { id: 3, tab_name: "", time: "00:00", tab_info_id: 0 },
-  //   { id: 4, tab_name: "", time: "00:00", tab_info_id: 0 }
-  //  ],
 };
 
 export const settingSlice = createSlice({
@@ -57,7 +52,7 @@ export const settingSlice = createSlice({
     setTableDate: (state, action: PayloadAction<number>) => {
       state.date = action.payload;
     },
-    setTabSetting: (state, action: PayloadAction<TabSetting>) => {
+    setTabSetting: (state, action: PayloadAction<string[]>) => {
       state.tabSetting = action.payload;
     },
     setViewMode: (state, action: PayloadAction<string>) => {
@@ -74,7 +69,14 @@ export const settingSlice = createSlice({
     },
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
       state.approvals = action.payload;
-    }
+    },
+    // setInputRef: (state, action: PayloadAction<{ key: string; index: number; id: string }>) => {
+    //   const { key, index, id } = action.payload;
+    //   if (!state.inputRefs[key]) {
+    //     state.inputRefs[key] = [];
+    //   }
+    //   state.inputRefs[key][index] = id;
+    // },
   },
 });
 

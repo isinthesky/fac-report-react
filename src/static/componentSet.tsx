@@ -42,23 +42,23 @@ export const BaseFlex1Div = styled.div`
 `;
 
 
-export const BaseFlex1Column = styled.div<{ fontSize?: string }>`
+export const BaseFlex1Column = styled.div<{ fontSize?: string, gap?: string }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   
-  gap: 10px;
+  gap: ${(props) => props.gap || "10px"};
   font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   background-color: transparent;
 `;
 
 
-export const BaseFlex1Row = styled.div<{ fontSize?: string }>`
+export const BaseFlex1Row = styled.div<{ fontSize?: string, gap?: string }>`
   flex: 1;
   display: flex;
   flex-direction: row;
 
-  gap: 10px;
+  gap: ${(props) => props.gap || "10px"};
   font-size: ${(props) => props.fontSize? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
   background-color: transparent;
 `;

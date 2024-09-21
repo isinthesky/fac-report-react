@@ -29,7 +29,7 @@ export const get_page_list = async (): Promise<any> => {
 };
 
 
-export const get_page_setting = async (tabName: string, withValue: boolean, withPreset: boolean): Promise<any> => {
+export const get_page_setting = async (tabName: string, withValue: boolean): Promise<any> => {
   try {
     console.log("get_page_setting call", tabName, withValue)
     const params = {
@@ -37,10 +37,9 @@ export const get_page_setting = async (tabName: string, withValue: boolean, with
         with_table_info: true,
         with_device_info: true,
         with_device_value: withValue,
-        with_device_preset: withPreset
+        with_device_preset: false
       };
       const response = await axiosInstance.get("/FacReport/PageInfo/get_page_setting", { params });
-
       if (response.data.content.success)
         return response.data.content.data;
       else
@@ -86,27 +85,9 @@ export const updateTabDate = async (tabName: string, date: string): Promise<any>
 };
 
 
-export const set_page_approve_list = async (tabName: string, level: number, text: string, checked: number, tab_info_id: number): Promise<any> => {
-  try {
-    console.log("set_page_approve_list1", tabName, level, text, checked, tab_info_id)
-    const params = { tab_name: tabName, level: level, text: text, checked: checked, tab_info_id: tab_info_id };
-    const url = "/FacReport/PageInfo/TabApprove/create";
-    const response = await axiosInstance.post(url, { params });
-    if (response.data.content.success) {
-      console.log("set_page_approve_list2", response.data.content.data)
-      return response.data.content.data;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.error("get_page_approve_list", error);
-    return false;
-  }
-};
-
-
 export const update_page_approve = async (name: string, approves: ApprovalsType[]): Promise<boolean> => {
   try {
+    console.log("update_page_approve call", name, approves)
     const url = "/FacReport/PageInfo/TabInfo/update_approves";
     const data = { name: name, approves: approves };
     const response = await axiosInstance.put(url, data);
@@ -157,6 +138,38 @@ export const get_history_page_setting = async (tabName: string, date: string): P
         return false;
   } catch (error) {
     console.error("get_history_page_setting", error);
+    return false;
+  }
+};
+
+export const update_tab_user_table_info = async (id: number, name: string, type: number, disable: number, user_data: any): Promise<any> => {
+  try {
+    const url = "/FacReport/PageInfo/TabUserTableInfo/update";
+    const data = { id: id, name: name, type: type, disable: disable, user_data: user_data };
+    const response = await axiosInstance.put(url, data);
+    if (response.data.content.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("update_tab_user_table_info", error);
+    return false;
+  }
+};
+
+export const save_page_setting = async (tabName: string): Promise<any> => {
+  try {
+    const url = "/FacReport/HistoryPageInfo/save_page_setting";
+    const data = { tab_name: tabName };
+    const response = await axiosInstance.get(url, { params: data });
+    if (response.data.content.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("save_page_setting", error);
     return false;
   }
 };

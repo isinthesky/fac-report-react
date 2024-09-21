@@ -47,9 +47,9 @@ const DeviceValue: React.FC<{ arrPosValue: string[] }> = ({ arrPosValue }) => {
 
 const ValueColumn = styled(BaseFlexCenterDiv)<{ fontSize?: string, mode?: string }>`
   width: 100%;
-  min-width: ${(props) => props.mode === "print" ? "22px" : "27px"};
+  min-width: ${(props) => props.mode === "print" ? "16px" : "30px"};
   
-  padding: 3px 0px;
+  padding: ${(props) => props.mode === "print" ? "2px 0px" : "3px 0px"};
   font-size: ${(props) => props.mode === "print" 
   ? props.fontSize 
   : FONTSET_DEFAULT_DIV_SIZE};
@@ -59,4 +59,3 @@ const ValueColumn = styled(BaseFlexCenterDiv)<{ fontSize?: string, mode?: string
 `;
 
 export default React.memo(DeviceValue);
-  

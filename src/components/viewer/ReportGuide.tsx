@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import ViewDeviceType from "./UnitType";
+import TableData from "./TableData";
+import TableUser from "./TableUser";
 import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
 import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
+import { isDataTableTypeByInt } from "../../static/utils";
 
 type ReportGuideProps = {
   row: number;
@@ -16,17 +18,11 @@ type ReportGuideProps = {
 const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
   const currentTab = useSelector((state : RootStore) => state.tabPageReducer.currentTabPage);
 
-  useEffect(() => {
-    console.log("currentTab", currentTab.tables)
-  }, [currentTab])
-
   const renderDevice = useMemo(() => {
     return () => {
-      if (currentTab.tables.length === 0) {
+      if (!currentTab.tables || currentTab.tables.length === 0) {
         return <>{STRING_ERR_SERVER_CONNECT}</>;
       }
-
-      console.log("currentTab", currentTab, currentTab.tables[0].device_values)
 
       const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
       times.push(...currentTab.times.map((time: string) => time));
@@ -35,33 +31,42 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
         <RowContainer key={rowIndex}>
           {Array.from({ length: column }).map((_, colIndex) => {
             const index = rowIndex * column + colIndex;
-            
-            if (currentTab.tables.length <= index) {
+            const currentTable = currentTab.tables[index];
+
+            if (currentTable.disable) {
               return <></>;
             }
 
-            const currentType = currentTab.tables[index].type;
-      
-            // 숨김 타입(90)인 경우 렌더링하지 않음
-            if (currentType >= CONST_TYPE_INFO_INDEX[4]) {
-              return <></>;
+            if (isDataTableTypeByInt(currentTable.type)) {
+              return (
+                <Container key={colIndex} mode="view">
+                  <TimeContainer mode="view">
+                    {times.map((time: string, index: number) => (
+                      <TimeDiv key={index}>{time}</TimeDiv>
+                    ))}
+                  </TimeContainer>
+                  <DeviceContainer>
+                    <TableData 
+                      key={index} 
+                      currentTable={currentTable} 
+                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
+                    />
+                  </DeviceContainer>
+                </Container>
+              )
+            } else {
+              return (
+                <Container key={colIndex} mode="view">
+                  <DeviceContainer>
+                    <TableUser 
+                      key={currentTab.tables[index].idx} 
+                      currentTable={currentTab.tables[index]} 
+                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                    />
+                  </DeviceContainer>
+                </Container>
+              );
             }
-            
-            // TypeComp 결정 로직 업데이트
-            const TypeComp = CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentType)] as "V" | "W" | "R" | "S";
-
-            return (
-              <Container key={colIndex} mode="view">
-                <TimeContainer mode="view">
-                  {times.map((time: string, index: number) => (
-                    <TimeDiv key={index}>{time}</TimeDiv>
-                  ))}
-                </TimeContainer>
-                <DeviceContainer>
-                  <ViewDeviceType key={index} tabPage={currentTab} index={index} type={TypeComp} />
-                </DeviceContainer>
-              </Container>
-            );
           })}
         </RowContainer>
       ));
@@ -91,8 +96,6 @@ const Container = styled(BaseFlexCenterDiv)<{ mode?: string }>`
 const TimeContainer = styled(BaseFlexDiv)<{ mode?: string }>`
   flex-direction: column;
 
-  width: 50px;
-
   gap: 1px;
 
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
@@ -105,9 +108,7 @@ const DeviceContainer = styled.div`
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)`
-  width: 100%;
-
-  padding: 3px 0px;
+  padding: 3px 2px;
   background-color: ${COLORSET_GRID_HEADER_BG};
 `;
 

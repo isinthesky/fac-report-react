@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { updateCurrentUnit } from "../../../features/reducers/tabPageSlice";
+import { updateCurrentUnit, updateCurrentTableUserData } from "../../../features/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column,BaseFlexRow, MediumLabel, BaseFlexColumn, } from "../../../static/componentSet";
 import { IDivision, IStation } from "../../../static/types";
-import { CONST_TYPE_INFO_NAMES } from "../../../env";
+import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX } from "../../../env";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import DeviceSearch from "./DeviceSearch";
 import { STRING_SETTING_DEVICE_FILTER, STRING_SETTING_DEVICE_NAME_SETTING, STRING_SETTING_DEVICE_TYPE_SELECT } from "../../../static/langSet";
@@ -43,7 +43,8 @@ const DeviceHeaderSet = () => {
     }
 
     setDeviceName(currentUnit.name);
-  }, [tabPageSlice.currentTabPage, tabPageSlice.unitPosition]);
+    setDeviceType(currentUnit.type);
+  }, [tabPageSlice.unitPosition]);
 
   useEffect(() => {
     if (!selectedStation) 
@@ -68,6 +69,31 @@ const DeviceHeaderSet = () => {
       arrKey:"type",
       deviceId: newType
     }));
+
+    const currentUnit = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index];
+    
+    if (newType >= 1001 && newType <= 1999) {
+      tabPageSlice.currentTabPage.user_tables.find((item, index) => {
+        if (item.idx === currentUnit.idx) {
+          if (item.type === 1001) {
+
+            dispatch(updateCurrentTableUserData({
+              arrPos:index,
+              key:"user_data",
+              value: {"1":["E","E","E","E"],"2":["E","E","E","E"],"3":["E","E","E","E"],"4":["E","E","E","E"],"5":["E","E","E","E"],"6":["E","E"]}
+            }));
+          }
+    
+          if (item.type === 1002) {
+            dispatch(updateCurrentTableUserData({
+              arrPos:index,
+              key:"user_data",
+              value: {"1":["E","E"],"2":["E","E"],"3":["E","E"],"4":["E"],"5": ["E","E"],"6":["E","E"],"7":["E","E"],"8":["E","E"]}
+            }));
+          }
+        }
+      });
+    }
   };
 
   const handleStationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -114,7 +140,7 @@ const DeviceHeaderSet = () => {
         <MediumLabel>{STRING_SETTING_DEVICE_TYPE_SELECT}</MediumLabel>
         <BaseSelect onChange={handleTypeChange} value={deviceType}>
           { CONST_TYPE_INFO_NAMES.map((item, index) => (
-            <BaseOption key={index} value={index+1}>
+            <BaseOption key={index} value={CONST_TYPE_INFO_INDEX[index]}>
               {item}
             </BaseOption>
           ))}
