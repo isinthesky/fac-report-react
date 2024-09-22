@@ -23,9 +23,6 @@ const formatNumber = (value: string): string => {
 
 const DeviceValue: React.FC<{ arrPosValue: string[] }> = ({ arrPosValue }) => {
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-
-  console.log("arrPosValue", arrPosValue);
-
   const deviceValue = useMemo(() => {
     return settingSet.viewMode === "idCheck"
       ? Array(arrPosValue.length).fill(arrPosValue[0])
