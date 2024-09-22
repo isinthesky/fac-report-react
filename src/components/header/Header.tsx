@@ -55,6 +55,7 @@ export default function Header({ mainTab }: HeaderProps) {
           const [mainId, subId] = settingSetMenus[0].split('').map(Number);
           console.log("Header Init: ", mainId, subId);
           dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
+          navigate(`/daily/${mainId.toString()}/${subId.toString()}`);
         }
       } catch (error) {
         console.error(error);

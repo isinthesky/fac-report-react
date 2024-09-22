@@ -62,6 +62,7 @@ const Daily: React.FC = () => {
         if (buttons.length > 0) {
           console.log("Daily Init: ", buttons, tabPageSet.tabPageInfo, tabPageSet.currentTabPage);
           dispatch(setMenus(buttons));
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error initializing tab pages:", error);
@@ -101,39 +102,44 @@ const Daily: React.FC = () => {
 
       resPageSetting.tables = newTables;
 
+      setIsLoading(false);
+
       dispatch(setTabPage({mainTab: prevViewPosition.main, subTab: prevViewPosition.sub, tabInfo: resPageSetting}));
       dispatch(setViewSelect({ mainTab: prevViewPosition.main, subTab: prevViewPosition.main }));
-
-
-      const resHistoryPage = await get_history_page_setting(
-        tabPageSet.currentTabPage.name, 
-        timestampToYYYYMMDD(date)
-      );
-
-      if (resHistoryPage === false) {
-        return false;
-      }
     }
     return true;
   }
   
   // Effect for fetching and updating data
   useEffect(() => {
-    console.log("isLoading1111 시작");
     const fetchData = async () => {
       try {
         const { main: mainId, sub: subId } = tabPageSet.viewPosition;
         const mainBtnIndex = mainId ? mainId : 1;
         const subBtnIndex = subId ? subId : 1;
+        console.log("isLoading 0000000 시작");
 
         if (mainBtnIndex !== prevViewPosition.main || subBtnIndex !== prevViewPosition.sub || date !== prevDate) {
           setPrevViewPosition({ main: mainBtnIndex, sub: subBtnIndex });
           setPrevDate(date);  
-          const res:boolean = await resetTabUserTableInfo();
-          setIsHistoryAvailable(res);
-          setIsLoading(false);
+          await resetTabUserTableInfo();
         }
-        console.log("isLoading1111 종료");
+
+        if (tabPageSet.currentTabPage) {
+          const resHistoryInfo = await get_history_page_setting(
+            tabPageSet.currentTabPage?.name, 
+            timestampToYYYYMMDD(date)
+          );
+
+          if (resHistoryInfo === false) {
+            setIsHistoryAvailable(false);
+          } else {
+            setIsHistoryAvailable(true);
+          }
+
+          
+        }
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
