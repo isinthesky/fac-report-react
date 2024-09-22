@@ -17,6 +17,7 @@ export const ENG_MAIN_LOGIN_ERROR = "Invalid credentials";
 export const ENG_DAILY_MAIN_TITLE = "Daily Report";
 export const ENG_DAILY_MAIN_BTN_IDCHECK = "ID Check";
 export const ENG_DAILY_MAIN_BTN_PRINT = "Print";
+export const ENG_DAILY_MAIN_BTN_LOAD_HISTORY = "Load History";
 export const ENG_DAILY_MAIN_VIEW_SORTATION = "Sortation";
 export const ENG_DAILY_MAIN_VIEW_TIME = "Time";
 
@@ -27,7 +28,6 @@ export const ENG_SETTING_MAIN_BTN_INFO = "Device Info";
 export const ENG_SETTING_MAIN_BTN_DEVSET = "Device Setting";
 export const ENG_SETTING_MAIN_BTN_GROUPSET = "Group Setting";
 export const ENG_SETTING_MAIN_BTN_PRINTSET = "Print Setting";
-
 export const ENG_DAILY_MAIN_SELECT_DATE = "Select Date";
 
 export const ENG_SETTING_SET_TIME_ADD = "Add Time";

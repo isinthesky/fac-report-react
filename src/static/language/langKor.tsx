@@ -18,6 +18,7 @@ export const KOR_MAIN_LOGIN_ERROR = "ID 또는 비밀번호가 잘못되었습�
 export const KOR_DAILY_MAIN_TITLE = "일일 보고";
 export const KOR_DAILY_MAIN_BTN_IDCHECK = "ID 확인";
 export const KOR_DAILY_MAIN_BTN_PRINT = "인쇄";
+export const KOR_DAILY_MAIN_BTN_LOAD_HISTORY = "기록 불러오기";
 export const KOR_DAILY_MAIN_VIEW_SORTATION = "구분";
 export const KOR_DAILY_MAIN_VIEW_TIME = "시간";
 
@@ -28,7 +29,6 @@ export const KOR_SETTING_MAIN_BTN_INFO = "정보 확인";
 export const KOR_SETTING_MAIN_BTN_DEVSET = "장치 설정";
 export const KOR_SETTING_MAIN_BTN_GROUPSET = "그룹 설정";
 export const KOR_SETTING_MAIN_BTN_PRINTSET = "인쇄 설정";
-
 export const KOR_DAILY_MAIN_SELECT_DATE = "날짜 선택";
 
 export const KOR_SETTING_SET_TIME_ADD = "시간 추가";

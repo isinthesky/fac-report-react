@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { RootStore } from "../../store/congifureStore";
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton, BaseFlexCenterDiv } from "../../static/componentSet";
-import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE } from "../../static/langSet";
+import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE, STRING_DAILY_MAIN_BTN_LOAD_HISTORY } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
 import { setViewMode, setApproves, setMenus } from "../../features/reducers/settingSlice";
@@ -49,6 +49,7 @@ const Daily: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { id1 = DEFAULT_MAIN_TAB, id2 = "1" } = useParams<{ id1?: string; id2?: string }>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isHistoryAvailable, setIsHistoryAvailable] = useState<boolean>(true);
 
 
   const componentRef = useRef<HTMLDivElement>(null);
@@ -110,6 +111,10 @@ const Daily: React.FC = () => {
           setPrevViewPosition({ main: mainId, sub: subId });
           setPrevDate(date);
           updatePageSettings(mainId, subId);
+
+          const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+    
+          setIsHistoryAvailable(resHistoryPage !== false);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -179,8 +184,6 @@ const Daily: React.FC = () => {
         return table;
       })
 
-      console.log("handleHistoryPage: ", resHistoryPage, newTables)
-
       resHistoryPage.tables = newTables;
 
         dispatch(setCurrentTab(resHistoryPage));
@@ -212,7 +215,12 @@ const Daily: React.FC = () => {
                 customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
               />
             </BaseFlexDiv>
-            <button onClick={handleHistoryPage}>load history page</button>
+            
+            {isHistoryAvailable ? (
+              <ActiveButton onClick={handleHistoryPage}>{STRING_DAILY_MAIN_BTN_LOAD_HISTORY}</ActiveButton>
+            ) : (
+              <BaseButton disabled>{STRING_DAILY_MAIN_BTN_LOAD_HISTORY}</BaseButton>
+            )}
           </CalendarContainer1>
           <ButtonControls>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
@@ -325,6 +333,11 @@ const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
   borderRadius: '10px',
 }));
 
+const LoadHistoryBtn = styled(ActiveButton) `
+  margin: 20px;
+  border-radius: 10px;
+`;
+
 const PrintBtn = styled(ActiveButton) `
   margin: 20px;
   border-radius: 10px;
@@ -346,20 +359,6 @@ const ModalView = styled.div.attrs(() => ({
   width: 90vw;
   height: 90vh;
   background-color: #ffffff;
-`;
-
-// Add this new styled component at the end of the file
-const LoadingOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
 `;
 
 export default Daily;
