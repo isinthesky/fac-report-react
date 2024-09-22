@@ -5,7 +5,7 @@ import TableData from "./TableData";
 import TableUser from "./TableUser";
 import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
-import { BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
+import { BaseFlex1Row, BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
 import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
 import { isDataTableTypeByInt } from "../../static/utils";
@@ -49,27 +49,25 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                       <TimeDiv key={`report-guide-time-${index}`}>{time}</TimeDiv>
                     ))}
                   </TimeContainer>
-                  <DeviceContainer>
+                  <BaseFlex1Row>
                     <TableData 
                       key={`report-guide-table-data-${index}`}
                       currentTable={currentTable} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
                       times={times}
                     />
-                  </DeviceContainer>
+                  </BaseFlex1Row>
                 </Container>
               )
             } else {
               return (
                 <Container key={`report-guide-container-${colIndex}`} mode="view">
-                  <DeviceContainer>
-                    <TableUser 
-                      key={`report-guide-table-user-${index}`}
-                      currentTable={currentTab.tables[index]} 
-                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
-                      times={null}
-                    />
-                  </DeviceContainer>
+                  <TableUser 
+                    key={`report-guide-table-user-${index}`}
+                    currentTable={currentTab.tables[index]} 
+                    type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                    times={null}
+                  />
                 </Container>
               );
             }
@@ -84,8 +82,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
 
 const RowContainer = styled(BaseFlexDiv)`
   align-items: stretch;
-
-  width: calc(100%);
+  width: 100%;
   gap: 10px;
 `;
 
@@ -105,12 +102,6 @@ const TimeContainer = styled(BaseFlexDiv)<{ mode?: string }>`
   gap: 1px;
 
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
-`;
-
-const DeviceContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
 `;
 
 const TimeDiv = styled(BaseFlexCenterDiv)`

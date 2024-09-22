@@ -150,7 +150,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
     return (
       <Column key={`section-u2`} style={{gap: "1px"}}>
         <Row key={`u2table-1`} style={{alignItems: "center"}} gap="1px">
-          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={3}>
+          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={3} className="flexible-width">
             {renderWithLineBreaks(sections[type][0].label)}
           </SectionHeaderColumn>
           <Column style={{justifyContent: "space-between"}}>
@@ -174,7 +174,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
             ))}
           </Column>
             <Column style={{justifyContent: "space-between"}}>
-              <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+              <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} className="flexible-width">
                 {renderWithLineBreaks(sections[type][1].label)}
               </SectionHeaderRow>
               <UserInputColumn
@@ -188,7 +188,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
                 />
             </Column>
         </Row>
-        <Row gap="1px">
+        <Row gap="1px" style={{justifyContent: "stretch"}}>
           <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={4}>
             {renderWithLineBreaks(sections[type][2].label)}
           </SectionHeaderColumn>
@@ -236,10 +236,8 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
   
   return (
     <Container>
-      <UnitGrid>
-        {type === "U1" && inputValues && U1Table(inputValues)}
-        {type === "U2" && inputValues && U2Table(inputValues)}
-      </UnitGrid>
+      {type === "U1" && inputValues && U1Table(inputValues)}
+      {type === "U2" && inputValues && U2Table(inputValues)}
     </Container>
   );
 };
@@ -261,16 +259,9 @@ const Row = styled(BaseFlexCenterDiv) <{ mode?: string, gap?: string }>`
 
 const Column = styled(BaseFlexCenterDiv) <{ mode?: string, gap?: string }>`
   flex-direction: column;
+  width: max-content;
   gap: ${(props) => props.gap || "1px"};
   padding: 0px;
-  background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
-`;
-
-const UnitGrid = styled.div<{ mode?: string }>`
-  display: flex;
-  width: 100%;
-  gap: 1px;
-
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 
@@ -283,12 +274,8 @@ const SectionHeaderRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: 
   
   text-align: center;
   width: auto;
-  min-width: ${(props) => props.mode === 'print' ? 40 : 50}px;
+  min-width: ${(props) => props.mode === 'print' ? 40 : 60}px;
   align-self: stretch;
-
-  &.flexible-width {
-    max-width: max-content;
-  }
 `;
 
 const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string, padding?: string, multi?: number }>`
@@ -299,12 +286,9 @@ const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   
   text-align: center;
-  min-width: ${(props) => props.mode === 'print' ? 40 : 50}px;
+  min-width: ${(props) => props.mode === 'print' ? 40 : 60}px;
   align-self: stretch;
 
-  &.flexible-width {
-    max-width: max-content;
-  }
 `;
 
 const SectionRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string, padding?: string }>`
@@ -315,11 +299,7 @@ const SectionRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   
   text-align: center;
-  min-width: ${(props) => props.mode === 'print' ? 30 : 40}px;
-
-  &.flexible-width {
-    max-width: max-content;
-  }
+  min-width: ${(props) => props.mode === 'print' ? 30 : 60}px;
 `;
 
 
@@ -331,8 +311,7 @@ const SectionColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: str
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
 
   text-align: center;
-  min-width: ${(props) => props.mode === 'print' ? 30 : 50}px;
-  
+  min-width: ${(props) => props.mode === 'print' ? 30 : 60}px;
 `;
 
 const UserInputColumn = styled.input<{ mode?: string, fontSize?: string }>`
@@ -342,7 +321,6 @@ const UserInputColumn = styled.input<{ mode?: string, fontSize?: string }>`
 
   padding: ${(props) => props.mode === 'print' ? "0px" : "1px 0px"};
   width: calc(100% - 4px);
-
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
 
   pointer-events: ${(props) => props.mode === 'print' ? 'none' : 'auto'};
