@@ -148,8 +148,8 @@ const PrintSetting: React.FC = () => {
                 <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
                 <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
               </DivHeader>
-              <PrintModal row={tabPageSet.currentTabPage.tbl_row}
-                          column={tabPageSet.currentTabPage.tbl_column} 
+              <PrintModal row={tabPageSet.currentTabPage?.tbl_row || 0}
+                          column={tabPageSet.currentTabPage?.tbl_column || 0} 
                           ref={componentRef} />
             </ModalView>
           </BaseModalBack>
@@ -158,7 +158,7 @@ const PrintSetting: React.FC = () => {
         <ButtonsContainer>
           <BaseButton onClick={handlePreview}>{STRING_SETTING_SET_PRINT_PREVIEW}</BaseButton>
           <BaseButton onClick={handleCancel}>{STRING_DEFAULT_CANCEL}</BaseButton>
-          <ActiveButton onClick={() => handleSave(tabPageSet.currentTabPage.name)}>{STRING_DEFAULT_SAVE}</ActiveButton>
+          <ActiveButton onClick={() => handleSave(tabPageSet.currentTabPage?.name || "")}>{STRING_DEFAULT_SAVE}</ActiveButton>
         </ButtonsContainer>
       </ControlContainer>
     </SettingContainer>

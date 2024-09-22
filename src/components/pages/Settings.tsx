@@ -30,7 +30,6 @@ function Settings() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const stations = []
         const divisions = []
         const resStation = await getStationList();
@@ -56,7 +55,7 @@ function Settings() {
         const pageInfo = tabPageSlice.tabPageInfo[settingMainTab][settingSubTab];
 
         if (!pageInfo.name) {
-          await fetchPageSettings(dispatch);
+          await fetchPageSettings(dispatch, null);
         }
 
         dispatch(setSettingSelect({mainTab: settingMainTab, subTab: settingSubTab}))
@@ -79,7 +78,6 @@ function Settings() {
     <Flat>
       <Header mainTab={0} />
       <PageControlBar modeCallback={setMode} mode={mode} />
-      
       {mode === CONST_SETTING_MODE_VIEW ? (
         <>
           <TabControlBar showInit={true} />

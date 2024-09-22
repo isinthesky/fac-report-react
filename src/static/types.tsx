@@ -21,7 +21,7 @@ export type SetDeviceType = {
 };
 
 export type ViewUnitProps = {
-  key: number;
+  key: string;
   currentTable: Unit;
 };
 

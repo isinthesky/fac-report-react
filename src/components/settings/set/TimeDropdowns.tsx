@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDropdown, removeDropdown, setTimes } from "../../../features/reducers/tabPageSlice";
 import styled from "styled-components";
 import { RootStore } from '../../../store/congifureStore';
-import { TimeListItem } from '../../../static/types';
 import { STRING_SETTING_SET_TIME_ADD } from '../../../static/langSet';
 import { BaseButton, BaseFlex1Row, BaseFlexColumn, BaseOption, BaseSelect, MiniButton } from '../../../static/componentSet';
 import { ICON_DAY_DELETE } from '../../../static/constSet';
 import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from '../../../static/colorSet';
 import { COLORSET_DARK_CONTROL_FONT } from '../../../static/colorSet';
+
 const TimeDropdowns: React.FC = () => {
   const dispatch = useDispatch();
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
@@ -25,13 +25,10 @@ const TimeDropdowns: React.FC = () => {
     dispatch(setTimes({ index, time: e.target.value }));
   };
 
-  useEffect(() => {
-  }, [tabPageSlice.currentTabPage.times]);
-
   return (
     <TimeSettingContainer>
       <BottomDiv>
-        {tabPageSlice.currentTabPage.times.map((time: string, index: number) => (
+        {tabPageSlice.currentTabPage && tabPageSlice.currentTabPage.times.map((time: string, index: number) => (
           <SelectDiv key={index}>
             <TimeSelect value={time} onChange={(e) => handleTimeChange(index, e)}>
               {Array.from({ length: 24 }).map((_, hour) => {
@@ -39,13 +36,13 @@ const TimeDropdowns: React.FC = () => {
                 return <BaseOption key={timeValue} value={timeValue}>{timeValue}</BaseOption>;
               })}
             </TimeSelect>
-            {tabPageSlice.currentTabPage.times.length > 4 
+            {tabPageSlice.currentTabPage && tabPageSlice.currentTabPage.times.length > 4 
             ? <DeleteTimeButton onClick={() => handleRemoveDropdown(index)}>  <img src={ICON_DAY_DELETE} width={15} height={15} alt="Delete" /></DeleteTimeButton> 
             : null}
           </SelectDiv>
         ))}
       </BottomDiv>
-      {tabPageSlice.currentTabPage.times.length < 12 
+      {tabPageSlice.currentTabPage && tabPageSlice.currentTabPage.times.length < 12 
       ? <SettingButton onClick={handleAddDropdown}>{STRING_SETTING_SET_TIME_ADD}</SettingButton>
       : null}
     </TimeSettingContainer>

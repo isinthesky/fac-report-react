@@ -12,9 +12,9 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE, STRING_DAILY_MAIN_BTN_LOAD_HISTORY } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { setViewMode, setApproves, setMenus } from "../../features/reducers/settingSlice";
+import { setMenus, setViewMode } from "../../features/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import LoadingSpinner from "../viewer/LodingSpinner";
+import LoadingSpinner from "../viewer/LoadingSpinner";
 import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "../../features/api/page"
 import { setTabPage, setViewSelect, setCurrentTab } from "../../features/reducers/tabPageSlice";
 import { fetchPageSettings } from "../../features/api/common";
@@ -43,86 +43,107 @@ const Daily: React.FC = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
-  const [prevViewPosition, setPrevViewPosition] = useState<ViewPosition>({ main: -1, sub: -1 });
+  const [prevViewPosition, setPrevViewPosition] = useState<ViewPosition>({ main: 0, sub: 0 });
   const [prevDate, setPrevDate] = useState<number>(0);
   const [date, setDate] = useState<number>(settingSet.date);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { id1 = DEFAULT_MAIN_TAB, id2 = "1" } = useParams<{ id1?: string; id2?: string }>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHistoryAvailable, setIsHistoryAvailable] = useState<boolean>(true);
-
-
   const componentRef = useRef<HTMLDivElement>(null);
 
-  const updatePageSettings = async (mainId: number, subId: number) => {
-    const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-    
-    if (process.env[key]) {  
-      setIsLoading(true);
+  useEffect(() => {
+    console.log("isLoading 3333 시작");
+    setIsLoading(true);
+
+    const initializeTabPages = async () => {
       try {
-        if (!tabPageSet.currentTabPage.name) {
-          await fetchPageSettings(dispatch);
+        const buttons = await fetchPageSettings(dispatch, timestampToYYYYMMDD(date));
+        if (buttons.length > 0) {
+          console.log("Daily Init: ", buttons, tabPageSet.tabPageInfo, tabPageSet.currentTabPage);
+          dispatch(setMenus(buttons));
         }
-
-        await reset_tab_user_table_info(tabPageSet.currentTabPage.name);
-        await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
-        await update_tab_device_value(tabPageSet.currentTabPage.name);
-
-        const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
-        if (resPageSetting) {     
-          resPageSetting.name = tabPageSet.currentTabPage.name;
-
-          const newTables = resPageSetting.tables.map((table: Unit) => {
-            if (isUserTableTypeByInt(table.type)) {
-              const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
-              if (userTable) {
-                table.id = userTable.id;
-                table.name = userTable.name;
-                table.disable = userTable.disable;
-                table.device_values = userTable.user_data;
-              }
-            }
-            return table;
-          })
-
-          console.log("daily: ", resPageSetting, newTables)
-
-          resPageSetting.tables = newTables;
-
-          dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
-        }
-
-        dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
       } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
+        console.error("Error initializing tab pages:", error);
       }
     }
-  };
+
+    initializeTabPages();
+  }, [dispatch]);
+    
+  const resetTabUserTableInfo = async () => {
+    if (!tabPageSet.currentTabPage) {
+      return false;
+    }
+
+    console.log("reset_tab_user_table_info 11", tabPageSet.tabPageInfo, tabPageSet.currentTabPage.name);
+
+    await reset_tab_user_table_info(tabPageSet.currentTabPage.name);
+    await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+    await update_tab_device_value(tabPageSet.currentTabPage.name);
+
+    const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
+    if (resPageSetting) {     
+      resPageSetting.name = tabPageSet.currentTabPage.name;
+
+      const newTables = resPageSetting.tables.map((table: Unit) => {
+        if (isUserTableTypeByInt(table.type)) {
+          const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
+          if (userTable) {
+            table.id = userTable.id;
+            table.name = userTable.name;
+            table.disable = userTable.disable;
+            table.device_values = userTable.user_data;
+          }
+        }
+        return table;
+      })
+
+      resPageSetting.tables = newTables;
+
+      dispatch(setTabPage({mainTab: prevViewPosition.main, subTab: prevViewPosition.sub, tabInfo: resPageSetting}));
+      dispatch(setViewSelect({ mainTab: prevViewPosition.main, subTab: prevViewPosition.main }));
+
+
+      const resHistoryPage = await get_history_page_setting(
+        tabPageSet.currentTabPage.name, 
+        timestampToYYYYMMDD(date)
+      );
+
+      if (resHistoryPage === false) {
+        return false;
+      }
+    }
+    return true;
+  }
   
   // Effect for fetching and updating data
   useEffect(() => {
+    console.log("isLoading1111 시작");
     const fetchData = async () => {
       try {
         const { main: mainId, sub: subId } = tabPageSet.viewPosition;
+        const mainBtnIndex = mainId ? mainId : 1;
+        const subBtnIndex = subId ? subId : 1;
 
-        if (mainId !== prevViewPosition.main || subId !== prevViewPosition.sub || date !== prevDate) {
-          setPrevViewPosition({ main: mainId, sub: subId });
-          setPrevDate(date);
-          updatePageSettings(mainId, subId);
-
-          const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
-    
-          setIsHistoryAvailable(resHistoryPage !== false);
+        if (mainBtnIndex !== prevViewPosition.main || subBtnIndex !== prevViewPosition.sub || date !== prevDate) {
+          setPrevViewPosition({ main: mainBtnIndex, sub: subBtnIndex });
+          setPrevDate(date);  
+          const res:boolean = await resetTabUserTableInfo();
+          setIsHistoryAvailable(res);
+          setIsLoading(false);
         }
+        console.log("isLoading1111 종료");
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
-  }, [date, tabPageSet.viewPosition, prevViewPosition, prevDate, dispatch, updatePageSettings]);
+  }, [date, tabPageSet.viewPosition, prevViewPosition, prevDate]);
+
+  useEffect(() => {
+    console.log("isLoading 상태:", isLoading);
+  }, [isLoading]);
 
   // Print related functions
   const handlePrintFunction = useReactToPrint({
@@ -146,24 +167,31 @@ const Daily: React.FC = () => {
 
   // Other handlers
   const handleOpenSave = () => {
-    console.log("handleOpenSave", tabPageSet.currentTabPage);
+    if (!tabPageSet.currentTabPage) {
+      return;
+    }
+
     tabPageSet.currentTabPage.tables.forEach((table: Unit) => {
       if (isUserTableTypeByInt(table.type)) {
-        console.log("save_page_setting", table);
         update_tab_user_table_info(table.id, table.name, table.type, table.disable, table.device_values);
       }
     });
 
-    console.log("save_page_setting", tabPageSet.currentTabPage.name);
     save_page_setting(tabPageSet.currentTabPage.name);
   };
 
   const handleHistoryPage = async () => {
-    if (tabPageSet.currentTabPage.name) {
+    if (!tabPageSet.currentTabPage) {
+      return;
+    }
 
+    try {
       setIsLoading(true);
-      try {
-        const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+      console.log("isLoading2222 시작");
+      const resHistoryPage = await get_history_page_setting(
+        tabPageSet.currentTabPage.name, 
+        timestampToYYYYMMDD(date)
+      );
 
       if (resHistoryPage === false) {
         console.log("저장된 페이지가 없습니다.");
@@ -173,7 +201,9 @@ const Daily: React.FC = () => {
       resHistoryPage.name = tabPageSet.currentTabPage.name;
       const newTables = resHistoryPage.tables.map((table: Unit) => {
         if (isUserTableTypeByInt(table.type)) {
-          const userTable = resHistoryPage.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
+          const userTable = resHistoryPage.user_tables.find((
+            userTable: UserTableType) => userTable.idx === table.idx
+          );
           if (userTable) {
             table.id = userTable.id;
             table.name = userTable.name;
@@ -185,17 +215,14 @@ const Daily: React.FC = () => {
       })
 
       resHistoryPage.tables = newTables;
-
-        dispatch(setCurrentTab(resHistoryPage));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
+      dispatch(setCurrentTab(resHistoryPage));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      console.log("isLoading2222 종료");
+      setIsLoading(false);
     }
-  };
-
-  console.log("tabPageSet", tabPageSet);
+  }
 
   return (
     <Flat>
@@ -205,17 +232,20 @@ const Daily: React.FC = () => {
         <Controls>
           <CalendarContainer1>
             <DateLabel>{STRING_DAILY_MAIN_SELECT_DATE}</DateLabel>
-            <BaseFlexDiv>
+            <BaseFlexRow style={{ width: '180px' }}>
               <DatePicker
                 selected={new Date(date)}
-                onChange={(value: Date) => setDate(value.getTime())}
+                onChange={(value: Date) => {
+                  console.log("isLoading 00000 시작");
+                  setIsLoading(true);
+                  setDate(value.getTime());
+                }}
                 showIcon={true}
                 dateFormatCalendar="yyyy MM"
                 dateFormat=" yyyy / MM / dd"
                 customInput={<ExampleCustomInput value={date.toString()} onClick={() => {}} />}
               />
-            </BaseFlexDiv>
-            
+            </BaseFlexRow>
             {isHistoryAvailable ? (
               <ActiveButton onClick={handleHistoryPage}>{STRING_DAILY_MAIN_BTN_LOAD_HISTORY}</ActiveButton>
             ) : (
@@ -229,7 +259,7 @@ const Daily: React.FC = () => {
         </Controls>
       </ControlContainer>
       <ReportLine>
-        <ReportGuide row={tabPageSet.currentTabPage.tbl_row} column={tabPageSet.currentTabPage.tbl_column} />
+        <ReportGuide row={tabPageSet.currentTabPage?.tbl_row || 0} column={tabPageSet.currentTabPage?.tbl_column || 0} />
       </ReportLine>
       {isOpen && 
         <BaseModalBack onClick={handlePrintClose}>
@@ -240,8 +270,8 @@ const Daily: React.FC = () => {
               <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
             </DivHeader>
             <PrintModal 
-              row={tabPageSet.currentTabPage.tbl_row}
-              column={tabPageSet.currentTabPage.tbl_column} 
+              row={tabPageSet.currentTabPage?.tbl_row || 0}
+              column={tabPageSet.currentTabPage?.tbl_column || 0} 
               ref={componentRef} 
             />
           </ModalView>
@@ -297,6 +327,10 @@ const DivHeader = styled.div`
 `;
 
 const CalendarContainer1 = styled(BaseFlexRow)`
+  width: 400px;
+  gap: 20px;
+  justify-content: start;
+  align-items: center;
 `;
 
 const ControlContainer = styled(BaseFlexColumn)`

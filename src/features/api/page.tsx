@@ -70,7 +70,6 @@ export const get_page_time_list = async (tabName: string): Promise<any> => {
 
 export const updateTabDate = async (tabName: string, date: string): Promise<any> => {
   try {
-    console.log("updateTabDate call", tabName, date)
     const url = "/FacReport/PageInfo/TabInfo/update_history_date";
     const data = { name: tabName, history_date: date };
     const response = await axiosInstance.put(url, data);
@@ -177,7 +176,7 @@ export const save_page_setting = async (tabName: string): Promise<any> => {
 
 export const reset_tab_user_table_info = async (tabName: string): Promise<any> => {
   try {
-    const url = `/FacReport/PageInfo/TabUserTableInfo/reset?tab_name=${encodeURIComponent(tabName)}`;
+    const url = `/FacReport/PageInfo/TabUserTableInfo/reset?tab_name=${tabName}`;
     const response = await axiosInstance.put(url);
     if (response.data.content.success) {
       return true;

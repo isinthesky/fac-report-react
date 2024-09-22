@@ -16,8 +16,8 @@ const ComposeView: React.FC = () => {
   const deviceSlice = useSelector((state: RootStore) => state.deviceReducer);
   const tabSlice = useSelector((state : RootStore) => state.tabPageReducer);
 
-  const [rows, setRow] = useState(tabSlice.currentTabPage.tbl_row);
-  const [columns, setColumn] = useState(tabSlice.currentTabPage.tbl_column);
+  const [rows, setRow] = useState(tabSlice.currentTabPage?.tbl_row || 0);
+  const [columns, setColumn] = useState(tabSlice.currentTabPage?.tbl_column || 0);
   const [edit, setEdit] = useState(true);
   
   const handleEdit = () => {
@@ -25,15 +25,19 @@ const ComposeView: React.FC = () => {
   };
 
   useEffect(() => {
-    setRow(tabSlice.currentTabPage.tbl_row);
-    setColumn(tabSlice.currentTabPage.tbl_column);
-  }, [tabSlice.currentTabPage.tbl_row, tabSlice.currentTabPage.tbl_column]);
+    if (tabSlice.currentTabPage) {
+      setRow(tabSlice.currentTabPage.tbl_row);
+      setColumn(tabSlice.currentTabPage.tbl_column);
+    }
+  }, [tabSlice.currentTabPage?.tbl_row, tabSlice.currentTabPage?.tbl_column]);
 
 
   const handleApply = async () => {
     dispatch(setReportTable({ row: rows, column: columns }));
-    await setUpdateSettingsColRow(tabSlice.currentTabPage.id, tabSlice.currentTabPage.name,
-      rows, columns );
+    if (tabSlice.currentTabPage) {
+      await setUpdateSettingsColRow(tabSlice.currentTabPage.id, tabSlice.currentTabPage.name,
+        rows, columns );
+    }
   };
 
   const getUnitList = useCallback(() => {

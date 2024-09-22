@@ -16,21 +16,90 @@ import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS 
 import { isDataTableTypeByInt } from "../../../static/utils";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
-const ComposeSet: React.FC = () => {
+
+export const UnitSelector: React.FC = () => {
+  const dispatch = useDispatch();
+  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
+  const { unitPostion } = useSelector((state: RootStore) => state.settingReducer);
+
+  const handleButtonClick = (rowIndex: number, columnIndex: number) => {
+    if (!tabPageSlice.currentTabPage) {
+      return;
+    }
+
+    const position = (rowIndex - 1) * tabPageSlice.currentTabPage.tbl_column + columnIndex - 1;
+  
+    dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
+    dispatch(setTabUnitPosition({index: position}));
+    dispatch(setdeviceSearchWord(""));
+  };
+
+  const renderGridButtons = () => {
+    const gridButtons = [];
+    
+    if (!tabPageSlice.currentTabPage) {
+      return [];
+    }
+
+    const tabInfo = tabPageSlice.currentTabPage;
+  
+    for (let r = 0; r < tabInfo.tbl_row; r++) {
+      for (let c = 0; c < tabInfo.tbl_column; c++) {
+        const buttonIndex = r * tabInfo.tbl_column + c + 1;
+        
+        if (buttonIndex > tabInfo.tables.length) {
+          break;
+        }
+  
+        gridButtons.push(
+          <GridButton
+            key={`${r}-${c}`}
+            onClick={() => handleButtonClick(r + 1, c + 1)}
+            data-row={r + 1}
+            data-column={c + 1}
+            mode={(unitPostion.row === r + 1 && unitPostion.column === c + 1) ? "true" : "false"}
+          >
+            {buttonIndex}
+          </GridButton>
+        );
+      }
+    }
+    return gridButtons;
+  };
+
+  return (
+    <SelectUnitContainer>
+      <UnitSelectLabel>
+        <MediumLabel>{STRING_SETTING_DEVICE_UNIT_SELECT}</MediumLabel>
+      </UnitSelectLabel>
+      <GridContainer column={tabPageSlice.currentTabPage?.tbl_column || 0}>
+        {renderGridButtons()}
+      </GridContainer>
+    </SelectUnitContainer>
+  );
+};
+
+export const useComposeSet = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
-  const tabPageSlice = useSelector((state : RootStore) => state.tabPageReducer);
-  const deviceRow = settingSet.unitPostion.row;
-  const deviceColumn = settingSet.unitPostion.column;
-  
-  const [deviceType, setDeviceType] = useState(() => {
-    if (deviceColumn !== 0 && deviceRow !== 0 && tabPageSlice.unitPosition.index >= 0) {
-      return tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]?.type || 0;
-    }
-    return 0;
-  });
+  const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
+  const { row: deviceRow, column: deviceColumn } = settingSet.unitPostion;
 
-  const handleSave = async () => {    
+  const [deviceType, setDeviceType] = useState(0);
+
+  useEffect(() => {
+    if (!tabPageSlice.currentTabPage) return;
+
+    if (deviceColumn !== 0 && deviceRow !== 0 && tabPageSlice.unitPosition.index >= 0) {
+      setDeviceType(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]?.type || 0);
+    }
+  }, [tabPageSlice, deviceColumn, deviceRow, tabPageSlice.unitPosition.index]);
+
+  const handleSave = async () => {
+    if (!tabPageSlice.currentTabPage) {
+      return;
+    }
+
     const confirmed = window.confirm(`${STRING_CONFIRM_SAVE_CHANGES} (${tabPageSlice.currentTabPage.name})`);
     if (!confirmed) {
       return;
@@ -39,7 +108,6 @@ const ComposeSet: React.FC = () => {
     const tableInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index];
     const deviceInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].devices;
 
-    console.log("currentTabPage", tabPageSlice.currentTabPage, tableInfo)
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
       
@@ -68,6 +136,10 @@ const ComposeSet: React.FC = () => {
   };
 
   const handleSaveAll = async () => {
+    if (!tabPageSlice.currentTabPage) {
+      return;
+    }
+
     const confirmed = window.confirm(STRING_CONFIRM_SAVE_ALL_CHANGES);
     if (!confirmed) {
       return;
@@ -86,53 +158,20 @@ const ComposeSet: React.FC = () => {
 
   const handleRefresh = () => {
     if (deviceColumn !== 0 && deviceRow !== 0) {
-      dispatch(setSettingSelect({mainTab: deviceRow, subTab: deviceColumn}));
+      dispatch(setSettingSelect({ mainTab: deviceRow, subTab: deviceColumn }));
     }
+  };
+
+  return { handleSave, handleSaveAll, handleRefresh, deviceType };
+};
+
+const ComposeSet: React.FC = () => {
+  const { currentTabPage } = useSelector((state: RootStore) => state.tabPageReducer);
+  const { handleSave, handleSaveAll, handleRefresh, deviceType } = useComposeSet();
+
+  if (!currentTabPage) {
+    return null;
   }
-
-  useEffect(() => {
-    if (deviceColumn !== 0 && deviceRow !== 0 && tabPageSlice.unitPosition.index >= 0) {
-      setDeviceType(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]?.type || 0);
-    }
-  }, [tabPageSlice, deviceColumn, deviceRow, tabPageSlice.unitPosition.index]);
-
-  const handleButtonClick = (rowIndex: number, columnIndex: number) => {
-    const position = (rowIndex - 1) * tabPageSlice.currentTabPage.tbl_column + columnIndex - 1;
-
-    console.log("table select pos:", position)
-  
-    dispatch(setUnitSelectPosition({row: rowIndex, column: columnIndex}));
-    dispatch(setTabUnitPosition({index: position}));
-    dispatch(setdeviceSearchWord(""));
-  };
-  
-  const renderGridButtons = () => {
-    const gridButtons = [];
-    const tabInfo = tabPageSlice.currentTabPage;
-  
-    for (let r = 0; r < tabInfo.tbl_row; r++) {
-      for (let c = 0; c < tabInfo.tbl_column; c++) {
-        const buttonIndex = r * tabInfo.tbl_column + c + 1;
-        
-        if (buttonIndex > tabInfo.tables.length) {
-          break;
-        }
-  
-        gridButtons.push(
-          <GridButton
-            key={`${r}-${c}`}
-            onClick={() => handleButtonClick(r + 1, c + 1)}
-            data-row={r + 1}
-            data-column={c + 1}
-            mode={(deviceRow === r + 1 && deviceColumn === c + 1) ? "true" : "false"}
-          >
-            {buttonIndex}
-          </GridButton>
-        );
-      }
-    }
-    return gridButtons;
-  };
 
   const renderUnitType = () => {
     if (deviceType === 0 || !CONST_TYPE_INFO_INDEX.includes(deviceType)) {
@@ -155,24 +194,17 @@ const ComposeSet: React.FC = () => {
     <PageContainer>
       <BaseFlex1Row>
         <SettingsContainer>
-          <SelectUnitContainer>  
-            <UnitSelectLabel>
-              <MediumLabel>{STRING_SETTING_DEVICE_UNIT_SELECT}</MediumLabel>
-            </UnitSelectLabel>
-            <GridContainer column={tabPageSlice.currentTabPage.tbl_column}>
-              { renderGridButtons() }
-            </GridContainer>
-          </SelectUnitContainer>
+          <UnitSelector />
           <DeviceHeaderSet />
         </SettingsContainer>
-        <TimeDropdowns/>
+        <TimeDropdowns />
         <BaseFlex1Row>
-          { renderUnitType() }
+          {renderUnitType()}
         </BaseFlex1Row>
         <BaseFlexCenterDiv>
           <BaseButton widthsize="40px"> {"< <"}</BaseButton>
         </BaseFlexCenterDiv>
-        <UnitGroupListControl settingMode={"apply"}/>
+        <UnitGroupListControl settingMode="apply" />
       </BaseFlex1Row>
       <ButtonGroup>
         <BaseButton onClick={handleRefresh}>{STRING_DEFAULT_REFRESH}</BaseButton>

@@ -15,15 +15,19 @@ const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
-  const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].type);
-  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].search_st);
+  const [deviceType, setDeviceType] = useState(tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index].type);
+  const [selectedStation, setSelectedStation] = useState<number>(tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index].search_st || 0);
   const [selectedDivision, setSelectedDivision] = useState<number>(0);
   const [deviceName, setDeviceName] = useState<string>("");
 
   useEffect(() => {
+    if (!tabPageSlice.currentTabPage) {
+      return;
+    }
+
     const currentUnit = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]
 
-    if (currentUnit.type === 0) {
+    if (currentUnit?.type === 0) {
       setDeviceType(1);
       dispatch(updateCurrentUnit({arrPos:tabPageSlice.unitPosition.index,
           arrKey:"type",
@@ -31,7 +35,7 @@ const DeviceHeaderSet = () => {
       }));
     }
 
-    if (currentUnit.search_st === 0) {
+    if (currentUnit?.search_st === 0) {
       setSelectedStation(deviceSet.stations[0].id);
       dispatch(
         updateCurrentUnit({
@@ -70,10 +74,14 @@ const DeviceHeaderSet = () => {
       deviceId: newType
     }));
 
+    if (!tabPageSlice.currentTabPage) {
+      return;
+    }
+
     const currentUnit = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index];
     
     if (newType >= 1001 && newType <= 1999) {
-      tabPageSlice.currentTabPage.user_tables.find((item, index) => {
+      tabPageSlice.currentTabPage?.user_tables.find((item, index) => {
         if (item.idx === currentUnit.idx) {
           if (item.type === 1001) {
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import TableData from "./TableData";
@@ -20,6 +20,10 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
 
   const renderDevice = useMemo(() => {
     return () => {
+      if (!currentTab) {
+        return <></>;
+      }
+
       if (!currentTab.tables || currentTab.tables.length === 0) {
         return <>{STRING_ERR_SERVER_CONNECT}</>;
       }
@@ -28,7 +32,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
       times.push(...currentTab.times.map((time: string) => time));
 
       return Array.from({ length: row }).map((_, rowIndex) => (
-        <RowContainer key={rowIndex}>
+        <RowContainer key={`report-guide-row-${rowIndex}`}>
           {Array.from({ length: column }).map((_, colIndex) => {
             const index = rowIndex * column + colIndex;
             const currentTable = currentTab.tables[index];
@@ -39,15 +43,15 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
 
             if (isDataTableTypeByInt(currentTable.type)) {
               return (
-                <Container key={colIndex} mode="view">
+                <Container key={`report-guide-container-${colIndex}`} mode="view">
                   <TimeContainer mode="view">
                     {times.map((time: string, index: number) => (
-                      <TimeDiv key={index}>{time}</TimeDiv>
+                      <TimeDiv key={`report-guide-time-${index}`}>{time}</TimeDiv>
                     ))}
                   </TimeContainer>
                   <DeviceContainer>
                     <TableData 
-                      key={index} 
+                      key={`report-guide-table-data-${index}`}
                       currentTable={currentTable} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
                     />
@@ -56,10 +60,10 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
               )
             } else {
               return (
-                <Container key={colIndex} mode="view">
+                <Container key={`report-guide-container-${colIndex}`} mode="view">
                   <DeviceContainer>
                     <TableUser 
-                      key={currentTab.tables[index].idx} 
+                      key={`report-guide-table-user-${index}`}
                       currentTable={currentTab.tables[index]} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
                     />

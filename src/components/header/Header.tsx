@@ -36,6 +36,7 @@ export default function Header({ mainTab }: HeaderProps) {
   }, 300, { 'trailing': false }), [navigate]);
 
   const subMenuButtonCallback = useCallback(throttle((id1: number, id2: number) => {
+    console.log("subMenuButtonCallback", id1, id2);
     dispatch(setViewSelect({mainTab: id1, subTab: id2}));
     // navigate(`/daily/${id1.toString()}/${id2.toString()}`);
   }, 1000, { 'trailing': false }), [navigate, dispatch]);
@@ -52,15 +53,15 @@ export default function Header({ mainTab }: HeaderProps) {
       try {
         if (settingSetMenus.length > 0) {
           const [mainId, subId] = settingSetMenus[0].split('').map(Number);
+          console.log("Header Init: ", mainId, subId);
           dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
         }
-        
       } catch (error) {
         console.error(error);
       }
     })();
   }, [dispatch, settingSetMenus]);
-
+  
   return (
     <TopHeader>
       <TitleContainer>
@@ -90,7 +91,6 @@ const TopHeader = styled.header`
   top: 0px;
   width: 100%;
   height: 80px;
-
   margin-bottom: 10px;
   padding: 1px;
   gap: 1px; 

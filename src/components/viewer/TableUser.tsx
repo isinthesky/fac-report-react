@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import { ViewUnitProps } from "../../static/types";
-import { BaseFlexCenterDiv, BaseInput, BaseFlexRow, BaseFlexColumn } from "../../static/componentSet";
+import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,8 +29,6 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const initialValues = currentTable.device_values || {}
   const [inputValues, setInputValues] = useState<{ [key: string]: string[] }>(initialValues);
-
-  console.log("TableUser", currentTable.type, currentTable.device_values?.["2"])
 
   useEffect(() => {
     setInputValues(currentTable.device_values || {});
@@ -60,7 +58,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
 
   const U1Table = (valuesObj: { [key: string]: string[] }) => {
     return (
-      <Column key={`section-0`}>
+      <Column key={`section-${currentTable.idx}`}>
         <Row> 
           <Column>
             <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={1}>
@@ -72,7 +70,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
               </SectionHeaderRow>
               <Column>
                 {sections[type][1].values.map((value, valueIdx) => (
-                  <SectionRow key={`header1-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" fontSize={settingSlice.printFontSize + "px"} >
+                  <SectionRow key={`u1table1-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" fontSize={settingSlice.printFontSize + "px"} >
                     {value}
                   </SectionRow>
                 ))}
@@ -85,7 +83,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
                 </SectionHeaderRow>
                 <Column>
                   {sections[type][2].values.map((value, valueIdx) => (
-                    <SectionRow key={`header2-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" fontSize={settingSlice.printFontSize + "px"} >
+                    <SectionRow key={`u1table2-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" fontSize={settingSlice.printFontSize + "px"} >
                       {value}
                     </SectionRow>
                   ))}
@@ -96,17 +94,17 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
           <Column style={{alignSelf: "stretch"}}>
             <Row>
               {sections[type][0].values.map((value, valueIdx) => (
-                <SectionColumn key={`value-${valueIdx}`} mode={settingSlice.viewMode}  fontSize={settingSlice.printFontSize + "px"} style={{width: "100%"}}>
+                <SectionColumn key={`u1table3-${valueIdx}`} mode={settingSlice.viewMode}  fontSize={settingSlice.printFontSize + "px"} style={{width: "100%"}}>
                   {value}
                 </SectionColumn>
               ))}
             </Row>
 
             {Object.entries(valuesObj).slice(0, -1).map(([k, values]) => (
-              <Row key={`row-${k}`} >
+              <Row key={`u1table4-${k}`} >
                  {Array.isArray(values) && values.map((value, colIdx) => (
                   <UserInputColumn
-                    key={`input-${k}-${colIdx}`}
+                    key={`u1table5-${k}-${colIdx}`}
                     type="text"
                     fontSize={settingSlice.printFontSize + "px"} 
                     value={value}
@@ -119,18 +117,17 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
 
           </Column>
         </Row>
-        <Row key={`value-${3}`}>
+        <Row key={`u1table-value-3`}>
           {
             sections[type][3].values.map((value, valueIdx) => (
-              <Row gap="1px">
-                <SectionColumn key={`value3-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" style={{width: "100%"}} fontSize={settingSlice.printFontSize + "px"} >
+              <Row key={`u1table6-${valueIdx}`} gap="1px">
+                <SectionColumn key={`u1table7-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" style={{width: "100%"}} fontSize={settingSlice.printFontSize + "px"} >
                   {value}
                 </SectionColumn>
                 {valuesObj[U1Table_Key6][valueIdx] && (
                   <UserInputColumn
-                    key={`input-${U1Table_Key6}-${valueIdx}`}
+                    key={`u1table8-${U1Table_Key6}-${valueIdx}`}
                     type="text"
-                  
                     fontSize={settingSlice.printFontSize + "px"} 
                     mode={settingSlice.viewMode}
                     value={valuesObj[U1Table_Key6][valueIdx]}
@@ -151,21 +148,21 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
 
   const U2Table = (valuesObj: { [key: string]: string[] }) => {
     return (
-      <Column key={`section-0`} style={{gap: "1px"}}>
-        <Row style={{alignItems: "center"}} gap="1px">
+      <Column key={`section-u2`} style={{gap: "1px"}}>
+        <Row key={`u2table-1`} style={{alignItems: "center"}} gap="1px">
           <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={3}>
             {renderWithLineBreaks(sections[type][0].label)}
           </SectionHeaderColumn>
           <Column style={{justifyContent: "space-between"}}>
             {sections[type][0].values.map((value, valueIdx) => (
-              <Row>
-                <SectionColumn key={`value-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
+              <Row key={`u2table2-${valueIdx}`}>
+                <SectionColumn key={`u2table3-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
                   {value}
                 </SectionColumn>
                 {valuesObj[String(valueIdx + 1)] && 
                   valuesObj[String(valueIdx + 1)].map((val, valIdx) => (
                     <UserInputColumn
-                      key={`input-${valueIdx + 1}-${valIdx}`}
+                      key={`u2table-input-${valueIdx + 1}-${valIdx}`}
                       type="text"
                       fontSize={settingSlice.printFontSize + "px"} 
                       mode={settingSlice.viewMode}
@@ -197,12 +194,12 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
           </SectionHeaderColumn>
           <Column style={{justifyContent: "space-between"}}>
             {sections[type][2].values.map((value, valueIdx) => (
-              <Row>
-                <SectionColumn key={`value-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+              <Row key={`u2table4-${valueIdx}`}>
+                <SectionColumn key={`u2table5-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                   {value}
                 </SectionColumn>
                 <UserInputColumn
-                  key={`input-${String(U2Table_Key5 + valueIdx)}-${0}`}
+                  key={`u2table6-input-${String(U2Table_Key5 + valueIdx)}-${0}`}
                   type="text"
                   fontSize={settingSlice.printFontSize + "px"} 
                   mode={settingSlice.viewMode}
@@ -217,14 +214,13 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
           </SectionHeaderColumn>
           <Column style={{justifyContent: "space-between"}}>
             {sections[type][3].values.map((value, valueIdx) => (
-              <Row>
-                <SectionColumn key={`value-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
+              <Row key={`u2table7-${valueIdx}`}>
+                <SectionColumn key={`u2table8-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
                   {value}
                 </SectionColumn>
                 <UserInputColumn
-                  key={`input-${String(U2Table_Key5 + valueIdx)}-${1}`}
+                  key={`u2table9-input-${valueIdx + 1}-${1}`}
                   type="text"
-                
                   fontSize={settingSlice.printFontSize + "px"} 
                   mode={settingSlice.viewMode}
                   value={valuesObj[String(U2Table_Key5 + valueIdx)]?.at(1)}

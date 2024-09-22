@@ -18,10 +18,14 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   const [currUnit, setCurrUnit] = useState<Unit>(
-    tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]
+    tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index] || {} as Unit  
   );
   
   useEffect(() => {
+    if (!tabPageSlice.currentTabPage) {
+      return;
+    }
+
     setCurrUnit(tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index]);
   }, [tabPageSlice.unitPosition]);
   

@@ -11,6 +11,7 @@ import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSe
 import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
 import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
 import { isDataTableTypeByInt, isUserTableTypeByInt } from "../../static/utils";
+import { Unit } from "../../static/types";
 
 
 type PrintGuideProps = {
@@ -24,6 +25,10 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
   const currentTab = useSelector((state: RootStore) => state.tabPageReducer.currentTabPage);
 
   const renderDevice = () => {
+    if (!currentTab) {
+      return;
+    }
+
     const tabPageInfo = currentTab;
     const times = [STRING_DAILY_MAIN_VIEW_SORTATION, "/", STRING_DAILY_MAIN_VIEW_TIME];
     times.push(...tabPageInfo.times.map((time: string) => time));
@@ -48,7 +53,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                   </TimeContainer>
                   <DeviceContainer>
                     <TableData 
-                      key={index} 
+                      key={`print-table-data-${index}`}
                       currentTable={currentTable} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
                     />
@@ -60,8 +65,8 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                 <UnitCountainerRow key={colIndex}>
                   <DeviceContainer>
                     <TableUser 
-                      key={currentTab.tables[index].idx} 
-                      currentTable={currentTab.tables[index]} 
+                      key={`print-table-user-${index}`}
+                      currentTable={currentTab?.tables[index] || {} as Unit} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
                     />
                   </DeviceContainer>
