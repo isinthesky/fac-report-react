@@ -54,6 +54,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                       key={`report-guide-table-data-${index}`}
                       currentTable={currentTable} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
+                      times={times}
                     />
                   </DeviceContainer>
                 </Container>
@@ -66,6 +67,7 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                       key={`report-guide-table-user-${index}`}
                       currentTable={currentTab.tables[index]} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                      times={null}
                     />
                   </DeviceContainer>
                 </Container>

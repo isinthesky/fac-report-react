@@ -23,6 +23,7 @@ export type SetDeviceType = {
 export type ViewUnitProps = {
   key: string;
   currentTable: Unit;
+  times: string[] | null;
 };
 
 export type updateCurrentTabPageType = {

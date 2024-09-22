@@ -53,7 +53,6 @@ const Daily: React.FC = () => {
   const componentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("isLoading 3333 시작");
     setIsLoading(true);
 
     const initializeTabPages = async () => {
@@ -76,8 +75,6 @@ const Daily: React.FC = () => {
     if (!tabPageSet.currentTabPage) {
       return false;
     }
-
-    console.log("reset_tab_user_table_info 11", tabPageSet.tabPageInfo, tabPageSet.currentTabPage.name);
 
     await reset_tab_user_table_info(tabPageSet.currentTabPage.name);
     await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
@@ -117,7 +114,6 @@ const Daily: React.FC = () => {
         const { main: mainId, sub: subId } = tabPageSet.viewPosition;
         const mainBtnIndex = mainId ? mainId : 1;
         const subBtnIndex = subId ? subId : 1;
-        console.log("isLoading 0000000 시작");
 
         if (mainBtnIndex !== prevViewPosition.main || subBtnIndex !== prevViewPosition.sub || date !== prevDate) {
           setPrevViewPosition({ main: mainBtnIndex, sub: subBtnIndex });
@@ -137,7 +133,7 @@ const Daily: React.FC = () => {
             setIsHistoryAvailable(true);
           }
 
-          
+          console.log("reset_tab_user_table_info 11", tabPageSet.tabPageInfo, tabPageSet.currentTabPage);
         }
         
       } catch (error) {
@@ -193,7 +189,6 @@ const Daily: React.FC = () => {
 
     try {
       setIsLoading(true);
-      console.log("isLoading2222 시작");
       const resHistoryPage = await get_history_page_setting(
         tabPageSet.currentTabPage.name, 
         timestampToYYYYMMDD(date)
@@ -225,7 +220,6 @@ const Daily: React.FC = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      console.log("isLoading2222 종료");
       setIsLoading(false);
     }
   }
@@ -242,7 +236,6 @@ const Daily: React.FC = () => {
               <DatePicker
                 selected={new Date(date)}
                 onChange={(value: Date) => {
-                  console.log("isLoading 00000 시작");
                   setIsLoading(true);
                   setDate(value.getTime());
                 }}

@@ -56,6 +56,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                       key={`print-table-data-${index}`}
                       currentTable={currentTable} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
+                      times={times}
                     />
                   </DeviceContainer>
                 </UnitCountainerRow>
@@ -68,6 +69,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                       key={`print-table-user-${index}`}
                       currentTable={currentTab?.tables[index] || {} as Unit} 
                       type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                      times={null}
                     />
                   </DeviceContainer>
                 </UnitCountainerRow>

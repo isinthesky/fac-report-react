@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 
 
-const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }> = ({ currentTable, type }) => {
+const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }> = ({ currentTable, type, times }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const [deviceValues, setDeviceValues] = useState<{ [key: string]: string[] } | null>(null);
   const sections = useMemo(() => ({
@@ -48,7 +48,6 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }
 
   const makeDeviceValues = (value_obj: { [key: string]: string[] }) => {
     let deviceIndex = 0;
-
     return (
       <>
         {sections.map((section, sectionIdx) => ((
@@ -59,23 +58,32 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }
               </SectionDiv>
             </Row>
             <Row>
-              {section.values.map((value, valueIdx) => (
-                <DeviceTypeValueDiv 
-                  key={`value-${sectionIdx}-${valueIdx}`}
-                >
-                  <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-                    {value}
-                  </DevTypeDiv> 
+              {section.values.map((sectionValue, valueIdx) => {
+                const currentDeviceIndex = deviceIndex++;
+                return (
+                  <DeviceTypeValueDiv 
+                    key={`value-${sectionIdx}-${valueIdx}`}
+                  >
+                    <DevTypeDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                      {sectionValue}
+                    </DevTypeDiv> 
 
-                  <DeviceValue 
-                    arrPosValue={
-                      Object.values(value_obj).map((value, valueIdx) => {
-                        return value[deviceIndex]
-                      })
-                    } 
-                  />
-                </DeviceTypeValueDiv>
-              ))}
+                    <DeviceValue 
+                      arrPosValue={
+                        times ? times.flatMap((_, i) => 
+                          Object.entries(value_obj)
+                            .map(([key, value], index) => {
+                              if (index === i) {
+                                return value[currentDeviceIndex] || ""
+                              }
+                            })
+                            .filter((v): v is string => v !== undefined)
+                        ) : []
+                      }   
+                    />
+                  </DeviceTypeValueDiv>
+                );
+              })}
             </Row>
           </Column>
         )))}

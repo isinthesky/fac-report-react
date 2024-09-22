@@ -24,7 +24,7 @@ const sections = {
   ]
 };
 
-const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTable, type }) => {
+const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTable, type, times }) => {
   const dispatch = useDispatch();
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const initialValues = currentTable.device_values || {}
