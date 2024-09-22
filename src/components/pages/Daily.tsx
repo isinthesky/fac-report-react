@@ -14,7 +14,8 @@ import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../stati
 import Header from "../header/Header";
 import { setViewMode, setApproves, setMenus } from "../../features/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
-import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting } from "../../features/api/page"
+import LoadingSpinner from "../viewer/LodingSpinner";
+import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "../../features/api/page"
 import { setTabPage, setViewSelect, setCurrentTab } from "../../features/reducers/tabPageSlice";
 import { fetchPageSettings } from "../../features/api/common";
 import { TabPageInfotype, Unit, UserTableType } from "../../static/types";
@@ -47,55 +48,57 @@ const Daily: React.FC = () => {
   const [date, setDate] = useState<number>(settingSet.date);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { id1 = DEFAULT_MAIN_TAB, id2 = "1" } = useParams<{ id1?: string; id2?: string }>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
   const componentRef = useRef<HTMLDivElement>(null);
 
-  const updatePageSettings = useCallback(async (mainId: number, subId: number) => {
+  const updatePageSettings = async (mainId: number, subId: number) => {
     const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
-
     
     if (process.env[key]) {  
-      console.log("updatePageSettings call", tabPageSet.currentTabPage.name, date)
+      setIsLoading(true);
+      try {
+        if (!tabPageSet.currentTabPage.name) {
+          await fetchPageSettings(dispatch);
+        }
 
-      if (!tabPageSet.currentTabPage.name) {
-        
-        console.log("tabPageSet.currentTabPage : init ", tabPageSet.currentTabPage.name)
+        await reset_tab_user_table_info(tabPageSet.currentTabPage.name);
+        await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+        await update_tab_device_value(tabPageSet.currentTabPage.name);
 
-        await fetchPageSettings(dispatch);
-        return;
-      }
+        const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
+        if (resPageSetting) {     
+          resPageSetting.name = tabPageSet.currentTabPage.name;
 
-      await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
-      await update_tab_device_value(tabPageSet.currentTabPage.name);
-
-      const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
-      if (resPageSetting) {     
-        resPageSetting.name = tabPageSet.currentTabPage.name;
-
-        const newTables = resPageSetting.tables.map((table: Unit) => {
-          if (isUserTableTypeByInt(table.type)) {
-            const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
-            if (userTable) {
-              table.id = userTable.id;
-              table.name = userTable.name;
-              table.disable = userTable.disable;
-              table.device_values = userTable.user_data;
+          const newTables = resPageSetting.tables.map((table: Unit) => {
+            if (isUserTableTypeByInt(table.type)) {
+              const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
+              if (userTable) {
+                table.id = userTable.id;
+                table.name = userTable.name;
+                table.disable = userTable.disable;
+                table.device_values = userTable.user_data;
+              }
             }
-          }
-          return table;
-        })
+            return table;
+          })
 
-        console.log("daily: ", resPageSetting, newTables)
+          console.log("daily: ", resPageSetting, newTables)
 
-        resPageSetting.tables = newTables;
+          resPageSetting.tables = newTables;
 
-        dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
-        dispatch(setApproves(resPageSetting.approves));
+          dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
+        }
+
+        dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
-
-      dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
     }
-  }, [dispatch, date, tabPageSet.currentTabPage.name]);
+  };
   
   // Effect for fetching and updating data
   useEffect(() => {
@@ -138,9 +141,10 @@ const Daily: React.FC = () => {
 
   // Other handlers
   const handleOpenSave = () => {
+    console.log("handleOpenSave", tabPageSet.currentTabPage);
     tabPageSet.currentTabPage.tables.forEach((table: Unit) => {
       if (isUserTableTypeByInt(table.type)) {
-        console.log("save_page_setting", table.name, table.device_values);
+        console.log("save_page_setting", table);
         update_tab_user_table_info(table.id, table.name, table.type, table.disable, table.device_values);
       }
     });
@@ -150,10 +154,11 @@ const Daily: React.FC = () => {
   };
 
   const handleHistoryPage = async () => {
-    console.log("resHistoryPage", tabPageSet.currentTabPage.name);
-
     if (tabPageSet.currentTabPage.name) {
-      const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
+
+      setIsLoading(true);
+      try {
+        const resHistoryPage = await get_history_page_setting(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
 
       if (resHistoryPage === false) {
         console.log("저장된 페이지가 없습니다.");
@@ -178,7 +183,12 @@ const Daily: React.FC = () => {
 
       resHistoryPage.tables = newTables;
 
-      dispatch(setCurrentTab(resHistoryPage));
+        dispatch(setCurrentTab(resHistoryPage));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -229,6 +239,8 @@ const Daily: React.FC = () => {
           </ModalView>
         </BaseModalBack>
       } 
+
+      {isLoading && <LoadingSpinner />}
     </Flat>
   );
 }
@@ -334,6 +346,20 @@ const ModalView = styled.div.attrs(() => ({
   width: 90vw;
   height: 90vh;
   background-color: #ffffff;
+`;
+
+// Add this new styled component at the end of the file
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;
 
 export default Daily;

@@ -11,7 +11,6 @@ export async function fetchPageSettings(dispatch: Dispatch) {
   const resPages = await get_page_list();
     
   if (resPages) {
-    console.log("resPages", resPages);
     const tabNames = resPages.data.map((tab: any) => tab.name);
     dispatch(setTabSetting(tabNames));
 
@@ -25,7 +24,7 @@ export async function fetchPageSettings(dispatch: Dispatch) {
           if (process.env[key]) {
             buttons.push(`${mainId}${subId}`);
             const tempTabInfo = resPages.data[count++];
-            const resPageSetting = await get_page_setting(tempTabInfo.name, true);
+            const resPageSetting = await get_page_setting(tempTabInfo.name, false);
 
             if (resPageSetting) {     
               resPageSetting.name = tempTabInfo.name;
@@ -48,7 +47,6 @@ export async function fetchPageSettings(dispatch: Dispatch) {
               console.log("common PageSetting", mainId, subId, resPageSetting, newTables);
               dispatch(setTabPage({mainTab: mainId, subTab: subId, tabInfo: resPageSetting}));
               dispatch(setApproves(resPageSetting.approves));
-
             }
           }
         }
