@@ -38,6 +38,7 @@ export const INIT_UNITGROUP_SETTING = {"id": 0, "type":1, "name":"device", "st":
 export const CONST_TYPE_INFO_NAMES = ["전압", "전력량", "정류기", "태양광", "TR온도", "MOF배율", "최대전력", "숨김"]
 export const CONST_TYPE_INFO_KEYWORDS = ["V", "W", "R", "S", "TR", "U1", "U2", "HIDE"]
 export const CONST_TYPE_INFO_INDEX = [1, 2, 3, 4, 5, 1001, 1002, 9001]
+export const CONST_TYPE_INFO_MAX_DEVICE = [9, 9, 7, 8, 15, 11, 11, 9]
 
 export const MAX_COLUMN_COUNT = 4
 export const MAX_ROW_COUNT = 4
