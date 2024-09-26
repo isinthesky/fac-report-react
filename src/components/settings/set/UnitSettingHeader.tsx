@@ -73,9 +73,8 @@ const DeviceHeaderSet = () => {
       arrKey:"type",
       deviceId: newType
     }));
-
-    const index = CONST_TYPE_INFO_INDEX.indexOf(newType);
-    const maxDevice = CONST_TYPE_INFO_MAX_DEVICE[index];
+    
+    const maxDevice = CONST_TYPE_INFO_MAX_DEVICE[CONST_TYPE_INFO_INDEX.indexOf(newType)];
 
     dispatch(updateCurrentUnit({
       arrPos:tabPageSlice.unitPosition.index,
