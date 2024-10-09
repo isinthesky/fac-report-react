@@ -108,9 +108,6 @@ export const useComposeSet = () => {
     const tableInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index];
     const deviceInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].devices;
 
-    console.log("tableInfo", tableInfo)
-    console.log("deviceInfo", deviceInfo)
-
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
       
@@ -118,7 +115,9 @@ export const useComposeSet = () => {
       
       if (isDataTableTypeByInt(tableInfo.type)) {
         for (const device of deviceInfo) {
-          await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
+          if (device.path_id > 0) {
+            await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
+          }
         }
       } else {
         const userTable = tabPageSlice.currentTabPage.user_tables.find((item) => {

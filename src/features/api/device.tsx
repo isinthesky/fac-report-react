@@ -6,92 +6,96 @@ const axiosInstance = axios.create({
 });
 
 
-export const resetXmlDevice = async (): Promise<any> => {
-  try {
-    const download = await axiosInstance.get("/xml/downloadXml");
-    if (download.data.success) {
-      await axiosInstance.put("/report/device/resetDeviceInfo");
-    }
-  } catch (error) {
-    console.error("resetXmlDevice");
-  }
+export const resetXmlDevice = (): Promise<any> => {
+  return axiosInstance.get("/xml/downloadXml")
+    .then(download => {
+      if (download.data.success) {
+        return axiosInstance.put("/report/device/resetDeviceInfo");
+      }
+    })
+    .catch(error => {
+      console.error("resetXmlDevice", error);
+    });
 };
 
-  
-export const getDeviceDict = async (): Promise<any> => {
-  try {
-    const response = await axiosInstance.get("/FacReport/Device/dict");
-
-    if (response.data.content.success)
-      return response.data.content.data;
-    else
+export const getDeviceDict = (): Promise<any> => {
+  return axiosInstance.get("/FacReport/Device/dict")
+    .then(response => {
+      if (response.data.content.success) {
+        return response.data.content.data;
+      } else {
+        return false;
+      }
+    })
+    .catch(error => {
+      console.error(error);
       return false;
-      
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+    });
 };
 
 
-export const getStationList = async (): Promise<any> => {
-  try {
-    const params = { with_division: true };
-    const response = await axiosInstance.get("/FacReport/DeviceInfo/Station/list", { params });
-
-    if (response.data.content.success)
-      return response.data.content.data;
-    else
+export const getStationList = (): Promise<any> => {
+  const params = { with_division: true };
+  return axiosInstance.get("/FacReport/DeviceInfo/Station/list", { params })
+    .then(response => {
+      if (response.data.content.success) {
+        return response.data.content.data;
+      } else {
+        return false;
+      }
+    })
+    .catch(error => {
+      console.error(error);
       return false;
-      
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+    });
 };
 
 
-export const getDivisionList = async (): Promise<any> => {
-  try {    
-    const response = await axiosInstance.get("/FacReport/DeviceInfoDivision/list");
-
-    if (response.data.content.success)
-      return response.data.content.data;
-    else
+export const getDivisionList = (): Promise<any> => {
+  return axiosInstance.get("/FacReport/DeviceInfoDivision/list")
+    .then(response => {
+      if (response.data.content.success)
+        return response.data.content.data;
+      else
+        return false;
+    })
+    .catch(error => {
+      console.error(error);
       return false;
-      
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+    });
 };
 
 
-export const updateTab = async(
+export const updateTab =(
   id: number,
   name: string,
   tbl_row: number,
   tbl_column: number,
   history_date: string,
 ): Promise<any> => {
-    try {
-      console.log("updateTab", id, name, tbl_row, tbl_column, history_date)
-      await axiosInstance.put("/FacReport/PageInfo/TabInfo/update", {
-        id: id,
-        name: name,
-        tbl_row: tbl_row,
-        tbl_column: tbl_column,
-        history_date: history_date,
-      });
-      return true;
-    } catch (error) {
+  console.log("updateTab", id, name, tbl_row, tbl_column, history_date)
+  return axiosInstance.put("/FacReport/PageInfo/TabInfo/update", {
+    id: id,
+    name: name,
+    tbl_row: tbl_row,
+    tbl_column: tbl_column,
+    history_date: history_date,
+  })
+    .then(response => {
+      if (response.data.content.success) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch(error => {
       console.error(error);
       return false;
-    }
-  };
+    });
+};
 
 
-export const updateTable = async(
+export const updateTable =(
   id: number,
   name: string,
   type: number,
@@ -100,68 +104,77 @@ export const updateTable = async(
   search_st: number,
   search_div: number
 ): Promise<any> => {
-    try {
-      console.log("updateTable", id, name, type, disable, max_device, search_st, search_div)
-      await axiosInstance.put("/FacReport/PageInfo/TabTableInfo/update", {
-        id: id,
-        name: name,
-        type: type,
-        disable: disable,
-        max_device: max_device,
-        search_st: search_st,
-        search_div: search_div
-      });
-      return true;
-    } catch (error) {
+  console.log("updateTable", id, name, type, disable, max_device, search_st, search_div)
+  return axiosInstance.put("/FacReport/PageInfo/TabTableInfo/update", {
+    id: id,
+    name: name,
+    type: type,
+    disable: disable,
+    max_device: max_device,
+    search_st: search_st,
+    search_div: search_div
+  })
+    .then(response => {
+      if (response.data.content.success) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .catch(error => {
       console.error(error);
       return false;
-    }
-  };
+    });
+};
 
 
-export const updateDevice = async(
+export const updateDevice =(
   id: number,
   station_id: number,
   division_id: number,
   path_id: number
 ): Promise<boolean> => {
-    try {
-      const data = {
-        id: id,
-        station_id: station_id,
-        division_id: division_id,
-        path_id: path_id
-      };
-      const res = await axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", data);
-      
-      if (res.data.content.success)
+    
+  const data = {
+    id: id,
+    station_id: station_id,
+    division_id: division_id,
+    path_id: path_id
+  };
+
+  return axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", data)
+    .then(response => {
+      if (response.data.content.success) {
         return true;
-      else
+      } else {
         return false;
-    } catch (error) {
+      }
+    })
+    .catch(error => {
       console.error(error);
       return false;
-    }
-  };
+    });
+};
 
 
-export const getUnitGroupList = async (): Promise<any> => {
-    try {
-      const params = { with_tab_device_preset: true };
-      const response = await axiosInstance.get("/FacReport/PageInfo/TabTablePreset/list", { params });
-      
-      if (response.data.content.success)
+export const getUnitGroupList = (): Promise<any> => {
+  const params = { with_tab_device_preset: true };
+  return axiosInstance.get("/FacReport/PageInfo/TabTablePreset/list", { params })
+    .then(response => {
+      if (response.data.content.success) {
         return response.data.content.data;
-      else
+      } else {
         return false;
-    } catch (error) {
+      }
+    })
+    .catch(error => {
       console.error(error);
       return false;
-    }
-  };
+    });
+};
 
 
-export const updatePresetTab = async (
+export const updatePresetTab = (
     id: number,
     name: string,
     type: number,
@@ -169,76 +182,77 @@ export const updatePresetTab = async (
     search_st: number,
     search_div: number
   ): Promise<boolean> => {
-    try {
-      const data = {
-        id: id,
-        name: name,
-        type: type,
-        max_device: max_device,
-        search_st: search_st,
-        search_div: search_div
-      };
-      const res = await axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", data);
-      if (res.data.content.success)
+    const data = {
+      id: id,
+      name: name,
+      type: type,
+      max_device: max_device,
+      search_st: search_st,
+      search_div: search_div
+    };
+    return axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", data)
+      .then(response => {
+      if (response.data.content.success) {
         return true;
-      else
+      } else {
         return false;
-    } catch (error) {
+      }
+    })
+    .catch(error => {
       console.error(error);
       return false;
-    }
-  };
+    });
+};
 
 
-export const updatePresetDevice = async (
+export const updatePresetDevice = (
   id: number,
   station_id: number,
   division_id: number,
   path_id: number
 ): Promise<boolean> => {
-  try {
-    const data = {
-      id: id,
-      station_id: station_id,
-      division_id: division_id,
-      path_id: path_id
-    };
+  const data = {
+    id: id,
+    station_id: station_id,
+    division_id: division_id,
+    path_id: path_id
+  };
 
-    const res = await axiosInstance.put("/FacReport/PageInfo/TabDevicePreset/update", data);
-      
-    if (res.data.content.success)
+  return axiosInstance.put("/FacReport/PageInfo/TabDevicePreset/update", data)
+    .then(response => {
+    if (response.data.content.success) {
       return true;
-    else
+    } else {
       return false;
-    
-  } catch (error) {
+    }
+  })
+  .catch(error => {
     console.error(error);
     return false;
-  }
+  });
 };
 
 
-export const updateTabTimeInfo = async (
+export const updateTabTimeInfo = (
   tab_name: string,
   times: string[]
 ): Promise<boolean> => {
-  try {
-    const data = { name: tab_name, times: times };
-    const res =  await axiosInstance.put("/FacReport/PageInfo/TabInfo/update_times", data);
-    
-    if (res.data.content.success)
-      return true;
-    else
+  const data = { name: tab_name, times: times };
+  return axiosInstance.put("/FacReport/PageInfo/TabInfo/update_times", data)
+    .then(res => {
+      if (res.data.content.success)
+        return true;
+      else
+        return false;
+    })
+    .catch(error => {
+      console.error(error);
       return false;
-    
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+    });
 };
 
 
-export const updateTabUserTableInfo = async (
+export const updateTabUserTableInfo = (
   id: number,
   idx: number,
   name: string,
@@ -246,16 +260,17 @@ export const updateTabUserTableInfo = async (
   disable: number,
   user_data: any = {}
 ): Promise<boolean> => {
-  try {
-    console.log("updateTabUserTableInfo", id, idx, name, type, disable, user_data)
-    const data = { id: id, idx: idx, name: name, type: type, disable: disable, user_data: user_data };
-    const res = await axiosInstance.put("/FacReport/PageInfo/update_tab_user_table_info", data);
-    if (res.data.content.success)
-      return true;
-    else
+  console.log("updateTabUserTableInfo", id, idx, name, type, disable, user_data);
+  const data = { id, idx, name, type, disable, user_data };
+  return axiosInstance.put("/FacReport/PageInfo/update_tab_user_table_info", data)
+    .then(res => {
+      if (res.data.content.success)
+        return true;
+      else
+        return false;
+    })
+    .catch(error => {
+      console.error(error);
       return false;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-}
+    });
+};

@@ -165,12 +165,13 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
           </Column>
           <Column>
           {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key, keyIdx) => (
+
             <UserInputColumn
                 key={`u2table-input-${key}-${0}`}
                 type="text"
                 fontSize={settingSlice.printFontSize + "px"} 
                 mode={settingSlice.viewMode}
-                value={valuesObj[key][0]}
+                value={valuesObj[key]?.[0] ?? ""}
                 onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(String(key), 0, el.target.value)}
               />
             ))}
@@ -182,7 +183,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
                 type="text"
                 fontSize={settingSlice.printFontSize + "px"} 
                 mode={settingSlice.viewMode}
-                value={valuesObj[key][1]}
+                value={valuesObj[key]?.[1] ?? ""}
                 onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(String(key), 1, el.target.value)}
               />
             ))}
@@ -197,7 +198,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
                 style={{height: settingSlice.viewMode === "print" ? `calc(2 * 11px)` : `calc(2 * 17px)`}}
                 fontSize={settingSlice.printFontSize + "px"} 
                 mode={settingSlice.viewMode}
-                value={valuesObj[String(U2Table_Key4)]}
+                value={valuesObj[String(U2Table_Key4)]?.at(0) ?? ""}
                 onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(U2Table_Key4, 0, el.target.value)}
               />
           </Column>

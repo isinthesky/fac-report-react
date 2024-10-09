@@ -27,9 +27,25 @@ const UnitGroupSet: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("presetSlice.currentGroup", presetSlice.currentGroup);
     setDeviceList(presetSlice.currentGroup);
   }, [presetSlice.currentGroup, presetSlice.selectedPos]);
+
+  useEffect(() => {
+    const processUnits = async () => {
+      try {
+        for (const unit of presetSlice.groups) {
+          await updatePresetTab(unit.id, unit.name, unit.type, unit.tab_device_presets.length, unit.search_st, unit.search_div);
+
+          for (const device of unit.tab_device_presets) { 
+            await updatePresetDevice(device.id, device.station_id, device.division_id, device.path_id);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    processUnits();
+  }, [presetSlice.groups])
 
   const handleAdd = () => {
     const newGroup = {idx: 0, station_id: 0, division_id: 0, path_id: 0} as Item;
@@ -46,25 +62,11 @@ const UnitGroupSet: React.FC = () => {
   };
 
   const handleSave = async  () => {
-    try {
-      dispatch(updateDevice(presetSlice.selectedPos));
-
-      for (const unit of presetSlice.groups) {
-        await updatePresetTab(unit.id, unit.name, unit.type, unit.tab_device_presets.length, unit.search_st, unit.search_div);
-
-        for (const device of unit.tab_device_presets) { 
-          
-          await updatePresetDevice(device.id, device.station_id, device.division_id, device.path_id);
-        }
-      }
-
-    } catch (error) {
-      console.error(error);
-    }
+    dispatch(updateDevice(presetSlice.selectedPos));
   };
 
   const handleCancel = () => {
-    navigate("/settings");
+    navigate("/settings", { state: { fromNavigate: true } });
   }
 
   const renderSection = (index1: number, unit: Preset) => {

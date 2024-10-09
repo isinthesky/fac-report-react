@@ -42,11 +42,8 @@ const ComposeView: React.FC = () => {
 
   const getUnitList = useCallback(() => {
     const rowlist = [];
-    let keyCounter = 0;
-
     const tabPageInfo = tabSlice.currentTabPage;
-
-    console.log("00", tabPageInfo, rows, columns)
+    let keyCounter = 0;
 
     if (rows === 0 || columns === 0){
       return []
@@ -76,8 +73,6 @@ const ComposeView: React.FC = () => {
         keyCounter++;
       }
     }
-
-    console.log(rowlist, tabPageInfo)
     return rowlist;
   }, [rows, columns, tabSlice.currentTabPage, deviceSlice]);
 

@@ -84,16 +84,24 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   const handleApply = () => {
-    console.log(settingMode)
     if (settingMode === "apply") {
-      const currentTabUnit = {...tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index] || {} as Unit}
-      console.log("unitGroupSlice.currentGroup", unitGroupSlice.currentGroup, unitGroupSlice.currentGroup.tab_device_presets[0], currentTabUnit.devices[2])
-      currentTabUnit.devices = unitGroupSlice.currentGroup.tab_device_presets
+      const currentTabUnit = tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index];
 
+      if (currentTabUnit) {
+        const updatedDevices = currentTabUnit.devices?.map((device, i) => ({
+          ...device,
+          division_id: unitGroupSlice.currentGroup.tab_device_presets[i].division_id,
+          path_id: unitGroupSlice.currentGroup.tab_device_presets[i].path_id,
+          station_id: unitGroupSlice.currentGroup.tab_device_presets[i].station_id,
+        }));
 
-      console.log(currentTabUnit)
+        const updatedUnit = {
+          ...currentTabUnit,
+          devices: updatedDevices,
+        };
 
-      dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
+        dispatch(setCurrentUnit({position: tabPageSlice.unitPosition.index, unit: updatedUnit}));
+      }
     }
   };
 

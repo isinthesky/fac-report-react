@@ -31,7 +31,7 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
       </Section>
       <DivicesContainer>
         {unitKeys.map((value, idx) => {
-          if ((tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index]?.devices?.length ?? 0) <= idx) {
+          if ((tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index]?.devices?.length ?? 0) < idx) {
             return null;
           }
 
