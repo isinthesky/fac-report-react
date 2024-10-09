@@ -108,6 +108,9 @@ export const useComposeSet = () => {
     const tableInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index];
     const deviceInfo = tabPageSlice.currentTabPage.tables[tabPageSlice.unitPosition.index].devices;
 
+    console.log("tableInfo", tableInfo)
+    console.log("deviceInfo", deviceInfo)
+
     try {
       await updateTable(tableInfo.id, tableInfo.name, tableInfo.type, tableInfo.disable, tableInfo.max_device, tableInfo.search_st, tableInfo.search_div);
       

@@ -132,8 +132,6 @@ const Daily: React.FC = () => {
           } else {
             setIsHistoryAvailable(true);
           }
-
-          console.log("reset_tab_user_table_info 11", tabPageSet.tabPageInfo, tabPageSet.currentTabPage);
         }
         
       } catch (error) {
