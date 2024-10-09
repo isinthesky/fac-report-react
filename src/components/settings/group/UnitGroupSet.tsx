@@ -41,6 +41,7 @@ const UnitGroupSet: React.FC = () => {
   };
   
   const handleDelete = (index: number) => {
+    console.log(index)
     dispatch(deleteDevice(index));
   };
 
@@ -103,10 +104,10 @@ const UnitGroupSet: React.FC = () => {
             <BaseButton onClick={handleAdd} widthsize={"50px"}>
               {STRING_SETTING_GROUP_ADD}
             </BaseButton>
-            <BaseButton onClick={() => handleDelete(presetSlice.selectedPos)} widthsize={"50px"}>
+            <BaseButton onClick={() => handleDelete((deviceList.tab_device_presets.length)-1)} widthsize={"50px"}>
               {STRING_SETTING_GROUP_DELETE}
             </BaseButton>
-            <ActiveButton onClick={() => handleUpdate(presetSlice.selectedPos)} widthsize={"60px"}>
+            <ActiveButton onClick={() => handleUpdate((deviceList.tab_device_presets.length)-1)} widthsize={"60px"}>
               {STRING_SETTING_GROUP_UPDATE}
             </ActiveButton>
           </ButtonsContainer>

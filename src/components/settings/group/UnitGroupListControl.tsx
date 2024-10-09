@@ -84,9 +84,14 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   const handleApply = () => {
+    console.log(settingMode)
     if (settingMode === "apply") {
       const currentTabUnit = {...tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index] || {} as Unit}
+      console.log("unitGroupSlice.currentGroup", unitGroupSlice.currentGroup, unitGroupSlice.currentGroup.tab_device_presets[0], currentTabUnit.devices[2])
       currentTabUnit.devices = unitGroupSlice.currentGroup.tab_device_presets
+
+
+      console.log(currentTabUnit)
 
       dispatch(setCurrentUnit({position:tabPageSlice.unitPosition.index, unit: currentTabUnit}));
     }

@@ -219,6 +219,7 @@ const Daily: React.FC = () => {
       dispatch(setCurrentTab(resHistoryPage));
     } catch (error) {
       console.error("Error fetching data:", error);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
