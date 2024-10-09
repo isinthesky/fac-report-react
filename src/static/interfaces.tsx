@@ -19,7 +19,7 @@ export interface SelectedTab {
 }
 
 export interface HeaderProps {
-  mainTab: number;
+  paramMain: number;
   // other props
 }
 

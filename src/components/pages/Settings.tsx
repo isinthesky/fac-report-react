@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
 import ComposeView from "../settings/view/ComposeView";
@@ -25,6 +25,7 @@ function Settings() {
   const dispatch = useDispatch();
   const [mode, setMode] = useState("view");
   const params  = useParams();
+  const location = useLocation();
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
   
   useEffect(() => {
@@ -72,11 +73,17 @@ function Settings() {
     if (Object.keys(params).length === 0) {
       setMode("view");
     }
-  }, [params]);
+    // Check if the page was accessed via URL or navigate function
+    if (location.state && location.state.fromNavigate) {
+      console.log("Page accessed via navigate function");
+    } else {
+      console.log("Page accessed via URL");
+    }
+  }, [params, location]);
 
   return (
     <Flat>
-      <Header mainTab={0} />
+      <Header paramMain={0} />
       <PageControlBar modeCallback={setMode} mode={mode} />
       {mode === CONST_SETTING_MODE_VIEW ? (
         <>

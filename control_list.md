@@ -5,10 +5,10 @@
 ## Header
 
 ### Main Buttons
- - env : REACT_APP_INIT_REPORT_TYPE
+ - env : REACT_APP_INIT_REPORT_MENU
 
 ### Sub Tab Buttons
- - env : REACT_APP_INIT_REPORT_TYPE1_SUB
+ - env : REACT_APP_INIT_REPORT_MENU1_SUB
 
 ## Report Viewer
 
@@ -31,8 +31,8 @@
  
 ### Tab Control Bar
 
- - env : REACT_APP_INIT_REPORT_TYPE
- - env : REACT_APP_INIT_REPORT_TYPE1_SUB
+ - env : REACT_APP_INIT_REPORT_MENU
+ - env : REACT_APP_INIT_REPORT_MENU1_SUB
 
 ### Compose Set
 

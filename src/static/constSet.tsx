@@ -1,6 +1,6 @@
 
 
-export const MAIN_TAB_ENV_NAME = "REACT_APP_INIT_REPORT_TYPE";
+export const MAIN_TAB_ENV_NAME = "REACT_APP_INIT_REPORT_MENU";
 
 export const CONST_UNIT_TYPE_1 = "전압";
 export const CONST_UNIT_TYPE_2 = "전력";

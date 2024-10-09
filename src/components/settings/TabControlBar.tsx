@@ -20,7 +20,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
 
     ["1", "2", "3", "4", "5"].forEach((mainId) => {
       ["1", "2", "3", "4", "5"].forEach((subId) => {
-        const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+        const key = `REACT_APP_INIT_REPORT_MENU${mainId}_SUB${subId}`;
         if (process.env[key]) {
           buttons.push(`${mainId}${subId}`);
         }
@@ -52,7 +52,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
     return Object.entries(settingTabpageButtons).map(([mainTab, subTabs]) => (
       <div key={mainTab} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <MainTabLabel>
-          {process.env[`REACT_APP_INIT_REPORT_TYPE${mainTab}`]}
+          {process.env[`REACT_APP_INIT_REPORT_MENU${mainTab}`]}
         </MainTabLabel>
         <div>
           {subTabs.map(subTab => (
@@ -62,7 +62,7 @@ const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
               mode={(Number(mainTab) === tabPosition.main && Number(subTab) === tabPosition.sub) ? "true" : "false"}
               fontSize={FONTSET_DEFAULT_BUTTON_SIZE}
             >
-              {process.env[`REACT_APP_INIT_REPORT_TYPE${mainTab}_SUB${subTab}`]}
+              {process.env[`REACT_APP_INIT_REPORT_MENU${mainTab}_SUB${subTab}`]}
             </TabButton>
           ))}
         </div>

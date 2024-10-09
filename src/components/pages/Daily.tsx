@@ -72,7 +72,7 @@ const Daily: React.FC = () => {
   }, [dispatch]);
     
   const resetTabUserTableInfo = async () => {
-    if (!tabPageSet.currentTabPage) {
+    if (!tabPageSet.currentTabPage || !tabPageSet.currentTabPage.name) {
       return false;
     }
 
@@ -225,7 +225,7 @@ const Daily: React.FC = () => {
 
   return (
     <Flat>
-      <Header mainTab={Number(id1 || DEFAULT_MAIN_TAB)} />
+      <Header paramMain={Number(id1 || DEFAULT_MAIN_TAB)} />
       <Title>{STRING_DAILY_MAIN_TITLE}</Title>
       <ControlContainer>
         <Controls>

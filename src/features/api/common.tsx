@@ -19,7 +19,7 @@ export async function fetchPageSettings(dispatch: Dispatch, date: string | null)
     if (Number(INIT_TAB_COUNT) > count) {
       for (const mainId of [1, 2, 3, 4, 5]) {
         for (const subId of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
-          const key = `REACT_APP_INIT_REPORT_TYPE${mainId}_SUB${subId}`;
+          const key = `REACT_APP_INIT_REPORT_MENU${mainId}_SUB${subId}`;
           if (process.env[key]) {
             
             buttons.push(`${mainId}${subId}`);
