@@ -60,17 +60,17 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
     return (
       <Column key={`section-${currentTable.idx}`}>
         <Row> 
-          <Column>
-            <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+          <Column style={{flex: 2}}>
+            <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
               {renderWithLineBreaks(sections[type][0].label)}
             </SectionHeaderRow>
             <Row>
-              <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={3}>
+              <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}  style={{flex: 1}} >
                 {renderWithLineBreaks(sections[type][1].label)}
               </SectionHeaderRow>
-              <Column>
+              <Column style={{flex: 1}}>
                 {sections[type][1].values.map((value, valueIdx) => (
-                  <SectionRow key={`u1table1-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" fontSize={settingSlice.printFontSize + "px"} >
+                  <SectionRow key={`u1table1-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
                     {value}
                   </SectionRow>
                 ))}
@@ -78,12 +78,12 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
             </Row> 
             <Column>  
               <Row>
-                <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={2}>
+                <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}  style={{flex: 1}}>
                   {renderWithLineBreaks(sections[type][2].label)}
                 </SectionHeaderRow>
-                <Column>
+                <Column style={{flex: 1}}>
                   {sections[type][2].values.map((value, valueIdx) => (
-                    <SectionRow key={`u1table2-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" fontSize={settingSlice.printFontSize + "px"} >
+                    <SectionRow key={`u1table2-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
                       {value}
                     </SectionRow>
                   ))}
@@ -91,7 +91,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
               </Row> 
             </Column> 
           </Column> 
-          <Column style={{alignSelf: "stretch"}}>
+          <Column style={{alignSelf: "stretch", flex: 4}}>
             <Row>
               {sections[type][0].values.map((value, valueIdx) => (
                 <SectionColumn key={`u1table3-${valueIdx}`} mode={settingSlice.viewMode}  fontSize={settingSlice.printFontSize + "px"} style={{width: "100%"}}>
@@ -121,7 +121,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
           {
             sections[type][3].values.map((value, valueIdx) => (
               <Row key={`u1table6-${valueIdx}`} gap="1px">
-                <SectionColumn key={`u1table7-${valueIdx}`} mode={settingSlice.viewMode} className="flexible-width" style={{width: "100%"}} fontSize={settingSlice.printFontSize + "px"} >
+                <SectionColumn key={`u1table7-${valueIdx}`} mode={settingSlice.viewMode} style={{width: "100%"}} fontSize={settingSlice.printFontSize + "px"} >
                   {value}
                 </SectionColumn>
                 {valuesObj[U1Table_Key6][valueIdx] && (
@@ -142,7 +142,6 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
     )
   }
 
-
   const U2Table_Key1 = "1"
   const U2Table_Key2 = "2"
   const U2Table_Key3 = "3"
@@ -153,19 +152,18 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
     return (
       <Column key={`section-u2`} style={{gap: "1px"}}>
         <Row key={`u2table-1`} style={{alignItems: "center"}} gap="1px">
-          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={3} className="flexible-width">
+          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} style={{flex: 4}}>
             {renderWithLineBreaks(sections[type][0].label)}
           </SectionHeaderColumn>
-          <Column>
+          <Column style={{flex: 4}}>
             {sections[type][0].values.map((value, valueIdx) => (
               <SectionColumn key={`u2table3-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                 {value}
               </SectionColumn>
             ))}
           </Column>
-          <Column>
+          <Column style={{flex: 7}}>
           {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key, keyIdx) => (
-
             <UserInputColumn
                 key={`u2table-input-${key}-${0}`}
                 type="text"
@@ -176,7 +174,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
               />
             ))}
           </Column>
-          <Column>
+          <Column style={{flex: 7}}>
           {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key, keyIdx) => (
             <UserInputColumn
                 key={`u2table-input-${key}-${1}`}
@@ -188,8 +186,8 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
               />
             ))}
           </Column>
-          <Column style={{justifyContent: "space-between", alignSelf: "stretch"}}>
-            <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} className="flexible-width">
+          <Column style={{justifyContent: "space-between", alignSelf: "stretch", flex: 6}}>
+            <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
               {renderWithLineBreaks(sections[type][1].label)}
             </SectionHeaderRow>
             <UserInputSun
@@ -204,19 +202,20 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
           </Column>
         </Row>
         <Row gap="1px" style={{justifyContent: "stretch"}}>
-          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={4}>
+          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} style={{flex: 4}}>
             {renderWithLineBreaks(sections[type][2].label)}
           </SectionHeaderColumn>
-          <Column style={{justifyContent: "space-between"}}>
+          <Column style={{justifyContent: "space-between", flex: 10}}>
             {sections[type][2].values.map((value, valueIdx) => (
               <Row key={`u2table4-${valueIdx}`}>
-                <SectionColumn key={`u2table5-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                <SectionColumn key={`u2table5-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} style={{flex: 4}}> 
                   {value}
                 </SectionColumn>
                 <UserInputColumn
                   key={`u2table6-input-${String(U2Table_Key5 + valueIdx)}-${0}`}
                   type="text"
                   fontSize={settingSlice.printFontSize + "px"} 
+                  style={{flex: 6}}
                   mode={settingSlice.viewMode}
                   value={valuesObj[String(U2Table_Key5 + valueIdx)]?.at(0)}
                   onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(String(U2Table_Key5 + valueIdx), 0, el.target.value)}
@@ -224,19 +223,20 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
               </Row>
             ))}
           </Column>
-          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} multi={4}>
+          <SectionHeaderColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} style={{flex: 4}}>
             {renderWithLineBreaks(sections[type][3].label)}
           </SectionHeaderColumn>
-          <Column style={{justifyContent: "space-between"}}>
+          <Column style={{justifyContent: "space-between", flex: 10}}>
             {sections[type][3].values.map((value, valueIdx) => (
               <Row key={`u2table7-${valueIdx}`}>
-                <SectionColumn key={`u2table8-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} >
+                <SectionColumn key={`u2table8-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"} style={{flex: 4}}>
                   {value}
                 </SectionColumn>
                 <UserInputColumn
                   key={`u2table9-input-${valueIdx + 1}-${1}`}
                   type="text"
                   fontSize={settingSlice.printFontSize + "px"} 
+                  style={{flex: 6}}
                   mode={settingSlice.viewMode}
                   value={valuesObj[String(U2Table_Key5 + valueIdx)]?.at(1)}
                   onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(String(U2Table_Key5 + valueIdx), 1, el.target.value)}
@@ -271,7 +271,6 @@ const Row = styled(BaseFlexCenterDiv) <{ mode?: string, gap?: string }>`
   height: 100%;
   gap: ${(props) => props.gap || "1px"};
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
-  flex: 1; // Add this line
 `;
 
 const Column = styled(BaseFlexCenterDiv) <{ mode?: string, gap?: string }>`
@@ -280,10 +279,9 @@ const Column = styled(BaseFlexCenterDiv) <{ mode?: string, gap?: string }>`
   gap: ${(props) => props.gap || "1px"};
   padding: 0px;
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
-  flex: 1; // Add this line
   `;
 
-const SectionHeaderRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string, multi?: number }>`
+const SectionHeaderRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string }>`
   padding: ${(props) => props.mode === 'print' ? "2px 0px" : "3px 0px"};
 
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
@@ -292,13 +290,12 @@ const SectionHeaderRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: 
   
   text-align: center;
   
-  flex: 1; // Add this line
   width: auto; // Change from 20% to auto
   min-width: ${(props) => props.mode === 'print' ? 40 : 60}px;
   align-self: stretch;
 `;
 
-const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string, padding?: string, multi?: number }>`
+const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string, padding?: string }>`
   padding: ${(props) => props.mode === 'print' ? "2px 0px" : "3px 0px"};
 
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
@@ -309,7 +306,6 @@ const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize
   min-width: ${(props) => props.mode === 'print' ? 40 : 60}px;
   align-self: stretch;
   
-  flex: 1; // Add this line
   width: auto; // Change from 20% to auto
 `;
 
@@ -324,7 +320,6 @@ const SectionRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string
   width: 100%;
   text-align: center;
   min-width: ${(props) => props.mode === 'print' ? 30 : 60}px;
-  flex: 1; // Add this line
 `;
 
 
@@ -338,7 +333,6 @@ const SectionColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: str
   width: 100%;
   text-align: center;
   min-width: ${(props) => props.mode === 'print' ? 30 : 60}px;
-  flex: 1; // Add this line
 `;
 
 const UserInputSun = styled.input<{ mode?: string, fontSize?: string }>`
@@ -362,7 +356,6 @@ const UserInputColumn = styled.input<{ mode?: string, fontSize?: string }>`
   font-size: ${(props) => props.mode === 'print' ? props.fontSize : FONTSET_DEFAULT_DIV_SIZE};
 
   pointer-events: ${(props) => props.mode === 'print' ? 'none' : 'auto'};
-  flex: 1; // Add this line
 `
 
 export default TableUser;
