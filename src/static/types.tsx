@@ -67,6 +67,7 @@ export type Item = {
   station_id: number;
   division_id: number;
   path_id: number;
+  digit: number;
 };
 
 export type DeviceValue = {

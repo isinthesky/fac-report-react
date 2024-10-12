@@ -89,7 +89,8 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
                               path_id: newPathId,
                               station_id: selectedSt,
                               division_id: selectedDiv,
-                              id: selectedDevice.id || 0 };
+                              id: selectedDevice.id || 0,
+                              digit: selectedDevice.digit || 1 };
       setSelectedDevice(updatedDevice);    
   
       dispatch(setCurrentUnitDevice({ 
@@ -97,6 +98,13 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
         devicePosition, 
         device: updatedDevice 
       }));
+    }
+  };
+
+  const handleDeviceDigitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (selectedDevice) {
+      const updatedDevice: Item = { ...selectedDevice, digit: Number(e.target.value) };
+      setSelectedDevice(updatedDevice);
     }
   };
 
@@ -152,6 +160,13 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
           </DeviceSelector>
         </>
       )}
+
+      <DeviceDigitSelector onChange={handleDeviceDigitChange} value={selectedDevice?.digit}>
+        <BaseOption value={0}>0</BaseOption>
+        <BaseOption value={1}>1</BaseOption>
+        <BaseOption value={2}>2</BaseOption>
+        <BaseOption value={2}>3</BaseOption>
+      </DeviceDigitSelector>
       
     </DeviceInfoContainer>
   );
@@ -165,7 +180,7 @@ const DeviceInfoContainer = styled(BaseFlex1Row)`
 `;
 
 const DivisionSelector = styled(BaseSelect)`
-  flex: 1;
+  flex: 2;
   min-width: 70px;
   text-align: center;
   color: ${COLORSET_DARK_CONTROL_FONT};
@@ -173,8 +188,16 @@ const DivisionSelector = styled(BaseSelect)`
 `;
 
 const DeviceSelector = styled(BaseSelect)`
-  flex: 3;
+  flex: 5;
   width: 100%;
+  text-align: center;
+  color: ${COLORSET_DARK_CONTROL_FONT};
+  background-color: ${COLORSET_DARK_CONTROL_BG};
+`;
+
+const DeviceDigitSelector = styled(BaseSelect)`
+  flex: 1;
+  min-width: 70px;
   text-align: center;
   color: ${COLORSET_DARK_CONTROL_FONT};
   background-color: ${COLORSET_DARK_CONTROL_BG};

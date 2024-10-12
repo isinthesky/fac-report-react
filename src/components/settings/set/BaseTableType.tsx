@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { SetDeviceType, Item } from "../../../static/types";
 import DeviceAutoSelect from "./DeviceSelector";
 import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, SmallLabel } from "../../../static/componentSet";
+import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, SmallLabel } from "../../../static/componentSet";
 import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT } from "../../../static/colorSet";
 
 interface BaseUnitTypeProps extends SetDeviceType {
@@ -46,8 +46,12 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
 
           return (
             <DiviceDiv key={idx}>
-              <ValueColumn>{value}</ValueColumn>
-              {userTable ? (
+              <BaseFlexRow style={{justifyContent: "space-between"}}>
+                <ValueColumn>{value}</ValueColumn>
+                <SmallLabel>{"소수점 길이"}</SmallLabel>
+              </BaseFlexRow>
+                
+                {userTable ? (
                 <input type="text" value={"user input"} disabled={true} />
               ) : (
                 <DeviceAutoSelect

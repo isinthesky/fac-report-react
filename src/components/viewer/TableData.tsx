@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { ViewUnitProps } from "../../static/types";
+import { Item, ViewUnitProps } from "../../static/types";
 import { BaseFlexCenterDiv } from "../../static/componentSet";
 import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
@@ -12,6 +12,7 @@ import { RootStore } from "../../store/congifureStore";
 const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }> = ({ currentTable, type, times }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const [deviceValues, setDeviceValues] = useState<{ [key: string]: string[] } | null>(null);
+  const [tableDevices, setTableDevices] = useState<Item[] | null>(null);
   const sections = useMemo(() => ({
     V: [
       { label: "V", values: ["R-S", "S-T", "T-R"] },
@@ -43,8 +44,8 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }
 
   useEffect(() => {
     setDeviceValues(currentTable.device_values);
-  }, [currentTable.device_values])
-
+    setTableDevices(currentTable.devices);
+  }, [currentTable.device_values, currentTable.devices])
 
   const makeDeviceValues = (value_obj: { [key: string]: string[] }) => {
     let deviceIndex = 0;
@@ -77,6 +78,7 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }
                             .filter((v): v is string => v !== undefined)
                         ) : []
                       }   
+                      digit={tableDevices?.[currentDeviceIndex]?.digit || 1}
                     />
                   </DeviceTypeValueDiv>
                 );
