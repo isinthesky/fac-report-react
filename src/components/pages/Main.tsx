@@ -106,17 +106,19 @@ const Flat = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: url(${DEFAULT_BGIMG_PATH});
   gap: 10px;
-  height: 100vh; /* Set the height to 100% of the viewport height */
+  height: 100vh;
   position: relative;
+  overflow: hidden; // 추가: 자식 요소가 부모를 벗어나지 않도록 함
 `;
 
 const BackgroundImage = styled.img`
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill; // cover에서 fill로 변경
   z-index: -1;
 `;
 

@@ -65,9 +65,18 @@ const PrintSetting: React.FC = () => {
 
   const handlePrintFunction = useReactToPrint({
     content: () => componentRef.current,
-    pageStyle: `@page { size: A4 landscape; }
+    pageStyle: `
+    @page { 
+      size: A4 landscape;
+      margin: 5mm; /* 페이지 여백을 0으로 설정 */
+    }
     body {
       -webkit-print-color-adjust: exact;
+    }
+    /* 프린터 드라이버의 최소 여백을 고려한 설정 */
+    @media print {
+      margin: 5mm;
+      padding: 5mm;
     }`,
     documentTitle: settingSet.printTitle + "_" + new Date(settingSet.date).toLocaleDateString("en-CA").replace(/-/g, '')
   });

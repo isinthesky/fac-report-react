@@ -113,10 +113,10 @@ const PrintArea = styled(BaseFlexColumn)`
   width: 257mm;
   height: 170mm;
 
-  margin: 20px 0px;
-  padding: 10px 20px;
+  margin: 5px 0px;
+  padding: 0px 5px;
   
-  border: 2px solid #333;
+  border: 1px solid #333;
   background-color: #FFF;
 `;
 

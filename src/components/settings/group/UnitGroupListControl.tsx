@@ -223,7 +223,8 @@ const ListContainer = styled(BaseFlex1Column)`
 const SaveUnitContainer = styled(BaseFlex1Row)`
   justify-content: space-between;
   align-items: flex-start;
-  gap: 5px;
+  gap: 10px;
+  padding: 0px 10px;
 
   background-color: transparent;
 `;
@@ -259,7 +260,9 @@ const IndexLabel = styled(MediumLabel)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 8px;
+  align-self: center;
+
+  width: 10px;
 `;
 
 const NameInput = styled.input<{ mode: string, heightsize?: string, fontSize?: string }>`
