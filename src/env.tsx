@@ -24,7 +24,7 @@ export const CONST_LANG = process.env.REACT_APP_CONST_LANG
 export const CONST_KEY_VALUE = process.env.REACT_APP_KEY_VALUE
 export const CONST_LOGIN_PW = process.env.REACT_APP_CONST_LOGIN_PW
 
-export const DEFAULT_LOCATION_NAME = "희성 LT 빌딩"
+export const DEFAULT_LOCATION_NAME = process.env.REACT_APP_LOCATION_NAME
 export const DEFAULT_CI_PATH = "/images/main_ci.png"
 export const DEFAULT_MAINLOGO_COLUMN_PATH = "/images/bg/main_logo_col.png"
 export const DEFAULT_MAINLOGO_ROW_PATH = "/images/bg/main_logo_row.png"

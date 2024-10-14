@@ -99,11 +99,13 @@ const Daily: React.FC = () => {
 
       resPageSetting.tables = newTables;
 
-      setIsLoading(false);
 
       dispatch(setTabPage({mainTab: prevViewPosition.main, subTab: prevViewPosition.sub, tabInfo: resPageSetting}));
       dispatch(setViewSelect({ mainTab: prevViewPosition.main, subTab: prevViewPosition.main }));
     }
+
+    setIsLoading(false);
+
     return true;
   }
   
@@ -114,6 +116,8 @@ const Daily: React.FC = () => {
         const { main: mainId, sub: subId } = tabPageSet.viewPosition;
         const mainBtnIndex = mainId ? mainId : 1;
         const subBtnIndex = subId ? subId : 1;
+
+        setIsLoading(true);
 
         if (mainBtnIndex !== prevViewPosition.main || subBtnIndex !== prevViewPosition.sub || date !== prevDate) {
           setPrevViewPosition({ main: mainBtnIndex, sub: subBtnIndex });
@@ -132,18 +136,15 @@ const Daily: React.FC = () => {
           } else {
             setIsHistoryAvailable(true);
           }
+
+          setIsLoading(false);
         }
-        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, [date, tabPageSet.viewPosition, prevViewPosition, prevDate]);
-
-  useEffect(() => {
-    console.log("isLoading 상태:", isLoading);
-  }, [isLoading]);
 
   // Print related functions
   const handlePrintFunction = useReactToPrint({
