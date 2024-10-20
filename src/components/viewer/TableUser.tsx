@@ -6,23 +6,23 @@ import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
 import { useSelector, useDispatch } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
-import { renderWithLineBreaks } from "../../static/utils";
+import { isUserTableTypeByInt, renderWithLineBreaks } from "../../static/utils";
 import { setCurrentTableValues } from "../../features/reducers/tabPageSlice";
-import { isValidTableUserType } from "../../env";
+import { TABLE_TYPE_STR_TO_INT } from "../../env";
 const sections = {
-  U1: [
+  [TABLE_TYPE_STR_TO_INT["U1"]]: [
     { label: "MOF 배율", values: ["전일지침", "금일지침", "변화량", "소계"]},
     { label: "유효전력\n(kwh)", values: ["주간4", "저녁5", "심야6"]},
     { label: "무효전력\n(kVarh)", values: ["주간7", "저녁8"]},
     { label: "-", values: ["유효전력 (kWh)", "무효전력 (kVarh)"]},
   ],
-  U2: [
+  [TABLE_TYPE_STR_TO_INT["U2"]]: [
     { label: "최대\n전력", values: ["현재", "주간", "저녁"]},
     { label: "태양광", values: []},
     { label: "UPS\n점검", values: ["7시", "11시", "17시", "23시",]},
     { label: "이벤트\n발생\n유/무", values: ["7시", "11시", "17시", "23시",]},
   ],
-  TR: [
+  [TABLE_TYPE_STR_TO_INT["TR"]]: [
     { label: "TR1", values: ["R", "S", "T"] },
     { label: "TR2", values: ["R", "S", "T"] },
     { label: "TR3", values: ["R", "S", "T"] },
@@ -31,11 +31,14 @@ const sections = {
   ],
 };
 
-const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ currentTable, type, times }) => {
+
+const TableUser: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
   const dispatch = useDispatch();
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const initialValues = currentTable.device_values || {}
   const [inputValues, setInputValues] = useState<{ [key: string]: string[] }>(initialValues);
+
+  const type = currentTable.type as keyof typeof sections;
 
   useEffect(() => {
     setInputValues(currentTable.device_values || {});
@@ -259,10 +262,10 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ cur
     let keyIndex = 0;
   
     return (
-      <Column key={`section-tr`} style={{ gap: "1px" }}>
-        <SectionHeaderRow>TR</SectionHeaderRow>
+      <Column key={`section-tr`} style={{ gap: "1px" }} >
+        <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>TR</SectionHeaderRow>
         <Row key={`section-tr`} style={{ gap: "1px" }}>
-          {sections.TR.map((section, sectionIdx) => (
+          {sections[type].map((section, sectionIdx) => (
             <Column key={`tr-section-${sectionIdx}`} style={{ gap: "1px" }}>
               <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
                 {section.label}
@@ -299,12 +302,12 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ cur
     );
   };
   
-  if (isValidTableUserType(type)) {
+  if (isUserTableTypeByInt(currentTable.type)) {
     return (
       <Container>
-        {type === "U1" && inputValues && U1Table(inputValues)}
-        {type === "U2" && inputValues && U2Table(inputValues)}
-        {type === "TR" && inputValues && TRTable(inputValues)}
+        {currentTable.type === TABLE_TYPE_STR_TO_INT["U1"] && inputValues && U1Table(inputValues)}
+        {currentTable.type === TABLE_TYPE_STR_TO_INT["U2"] && inputValues && U2Table(inputValues)}
+        {currentTable.type === TABLE_TYPE_STR_TO_INT["TR"] && inputValues && TRTable(inputValues)}
       </Container>
     );
   }
@@ -325,6 +328,7 @@ const Row = styled(BaseFlexCenterDiv) <{ mode?: string, gap?: string }>`
   width: 100%;
   height: 100%;
   gap: ${(props) => props.gap || "1px"};
+  padding: 0px;
   background-color: ${(props) => props.mode === 'print' ? COLORSET_PRINT_BORDER : COLORSET_GRID_CONTROL_BORDER};
 `;
 

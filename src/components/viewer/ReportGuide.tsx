@@ -57,7 +57,6 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                       <TableData 
                         key={`report-guide-table-data-${index}`}
                         currentTable={currentTable} 
-                        type={tableType}
                         times={times}
                       />
                     </BaseFlex1Row>
@@ -75,7 +74,6 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                   <TableUser 
                     key={`report-guide-table-user-${index}`}
                     currentTable={currentTable} 
-                    type={tableType as "U1" | "U2" | "TR"} 
                     times={null}
                   />
                 </Container>

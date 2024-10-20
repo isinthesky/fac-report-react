@@ -10,7 +10,7 @@ import { CONST_TYPE_INFO } from "../../../env";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import DeviceSearch from "./DeviceSearch";
 import { STRING_SETTING_DEVICE_FILTER, STRING_SETTING_DEVICE_NAME_SETTING, STRING_SETTING_DEVICE_TYPE_SELECT } from "../../../static/langSet";
-
+import { TABLE_TYPE_STR_TO_INT } from "../../../env";
 const DeviceHeaderSet = () => {
   const dispatch = useDispatch();
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
@@ -92,7 +92,7 @@ const DeviceHeaderSet = () => {
     if (newType >= 1001 && newType <= 1999) {
       tabPageSlice.currentTabPage?.user_tables.find((item, index) => {
         if (item.idx === currentUnit.idx) {
-          if (item.type === 1001) {
+          if (item.type === TABLE_TYPE_STR_TO_INT["U1"]) {
 
             dispatch(updateCurrentTableUserData({
               arrPos:index,
@@ -101,11 +101,19 @@ const DeviceHeaderSet = () => {
             }));
           }
     
-          if (item.type === 1002) {
+          if (item.type === TABLE_TYPE_STR_TO_INT["U2"]) {
             dispatch(updateCurrentTableUserData({
               arrPos:index,
               key:"user_data",
               value: {"1":["E","E"],"2":["E","E"],"3":["E","E"],"4":["E"],"5": ["E","E"],"6":["E","E"],"7":["E","E"],"8":["E","E"]}
+            }));
+          }
+
+          if (item.type === TABLE_TYPE_STR_TO_INT["TR"]) {
+            dispatch(updateCurrentTableUserData({
+              arrPos:index,
+              key:"user_data",
+              value: {"1": ["E", "E", "E", "E"], "2": ["E", "E", "E", "E"], "3": ["E", "E", "E", "E"], "4": ["E", "E", "E", "E"], "5": ["E", "E", "E", "E"],"6": ["E", "E", "E", "E"],"7": ["E", "E", "E", "E"],"8": ["E", "E", "E", "E"],"9": ["E", "E", "E", "E"],"10": ["E", "E", "E", "E"],"11": ["E", "E", "E", "E"],"12": ["E", "E", "E", "E"],"13": ["E", "E", "E", "E"],"14": ["E", "E", "E", "E"],"15": ["E", "E", "E", "E"]}
             }));
           }
         }
