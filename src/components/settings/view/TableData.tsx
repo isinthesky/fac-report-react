@@ -6,7 +6,7 @@ import { RootStore } from "../../../store/congifureStore";
 import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
 import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
 import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_NAMES } from "../../../env";
+import { CONST_TYPE_INFO, TypeInfo } from "../../../env";
 
 const TableData: React.FC<TableSettingType> = ({
   type,
@@ -26,20 +26,24 @@ const TableData: React.FC<TableSettingType> = ({
     }
   }
 
+  const typeInfo: TypeInfo | undefined = CONST_TYPE_INFO.find(info => info.index === type);
+  const typeName = typeInfo?.name || "";
+  const unitKeys = typeInfo?.unitKeys || [];
+
   return (
     <UnitContainer>
       <NameContainer type={type}>
         <NameLabel>ID</NameLabel>
         <UnitIDLabel>{idx}</UnitIDLabel>
         <NameLabel>Type</NameLabel>
-        <UnitInfoLabel>{CONST_TYPE_INFO_NAMES[type-1]}</UnitInfoLabel>
+        <UnitInfoLabel>{typeName}</UnitInfoLabel>
         <NameLabel>Name</NameLabel>
         <UnitInfoLabel>{name}</UnitInfoLabel>
       </NameContainer>
       <Group>
         {devices && Object.values(devices).map((dv, index) => (
           <ItemDiv key={dv.id}>
-            <DescriptLabel>{`dv${dv.idx}`}</DescriptLabel>
+            <DescriptLabel>{unitKeys[index] || `dv${dv.idx}`}</DescriptLabel>
             <DeviceInput 
               id={`dv${dv.idx}`} 
               type="text" 
@@ -86,7 +90,10 @@ const NameContainer = styled(BaseFlex1Div)<{ type: number }>`
   justify-self: start;
   width: 100%;
 
-  background-color: ${props => props.type === CONST_TYPE_INFO_INDEX[CONST_TYPE_INFO_INDEX.length - 1] ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_GRID_HEADER_BG};
+  background-color: ${(props) => {
+    const typeInfo = CONST_TYPE_INFO.find(info => info.index === props.type);
+    return typeInfo?.keyword === "HIDE" ? COLORSET_ACTIVE_CONTROL_BG : COLORSET_GRID_HEADER_BG;
+  }};
 `;
 
 const ItemDiv = styled(BaseFlex1Column)`

@@ -1,5 +1,6 @@
 import { Dict } from "styled-components/dist/types";
 import { DeviceState } from "../features/reducers/deviceSlice";
+import { TableType } from '../env';
 
 export type IDevice = {
   id: number;
@@ -67,7 +68,7 @@ export type Item = {
   station_id: number;
   division_id: number;
   path_id: number;
-  digit: number;
+  decimal_part_digits: number;
 };
 
 export type DeviceValue = {
@@ -222,19 +223,3 @@ export type UserTableType = {
   disable: number;
   user_data: any;
 }
-
-
-export type TableType = 'V' | 'W' | 'R' | 'S' | 'TR' | 'U1' | 'U2' | 'HIDE';
-
-export const UNIT_TYPE_INFO: Record<TableType, number> = {
-  'V': 1,
-  'W': 2,
-  'R': 3,
-  'S': 4,
-  'TR': 5,
-  'U1': 1001,
-  'U2': 1002,
-  'HIDE': 9001
-};
-
-export const UNIT_TYPE_KEYWORDS = Object.keys(UNIT_TYPE_INFO) as TableType[];

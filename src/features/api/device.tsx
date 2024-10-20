@@ -104,7 +104,6 @@ export const updateTable =(
   search_st: number,
   search_div: number
 ): Promise<any> => {
-  console.log("updateTable", id, name, type, disable, max_device, search_st, search_div)
   return axiosInstance.put("/FacReport/PageInfo/TabTableInfo/update", {
     id: id,
     name: name,
@@ -132,16 +131,17 @@ export const updateDevice =(
   id: number,
   station_id: number,
   division_id: number,
-  path_id: number
+  path_id: number,
+  digits: number
 ): Promise<boolean> => {
     
   const data = {
     id: id,
     station_id: station_id,
     division_id: division_id,
-    path_id: path_id
+    path_id: path_id,
+    decimal_part_digits: digits
   };
-
   return axiosInstance.put("/FacReport/PageInfo/TabDeviceInfo/update", data)
     .then(response => {
       if (response.data.content.success) {

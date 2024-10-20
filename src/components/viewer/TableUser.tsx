@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import { renderWithLineBreaks } from "../../static/utils";
 import { setCurrentTableValues } from "../../features/reducers/tabPageSlice";
-
+import { isValidTableUserType } from "../../env";
 const sections = {
   U1: [
     { label: "MOF 배율", values: ["전일지침", "금일지침", "변화량", "소계"]},
@@ -21,10 +21,17 @@ const sections = {
     { label: "태양광", values: []},
     { label: "UPS\n점검", values: ["7시", "11시", "17시", "23시",]},
     { label: "이벤트\n발생\n유/무", values: ["7시", "11시", "17시", "23시",]},
-  ]
+  ],
+  TR: [
+    { label: "TR1", values: ["R", "S", "T"] },
+    { label: "TR2", values: ["R", "S", "T"] },
+    { label: "TR3", values: ["R", "S", "T"] },
+    { label: "TR4", values: ["R", "S", "T"] },
+    { label: "LV-4-3", values: ["R", "S", "T"] },
+  ],
 };
 
-const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTable, type, times }) => {
+const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ currentTable, type, times }) => {
   const dispatch = useDispatch();
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const initialValues = currentTable.device_values || {}
@@ -140,7 +147,7 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
         </Row>
       </Column>
     )
-  }
+  };
 
   const U2Table_Key1 = "1"
   const U2Table_Key2 = "2"
@@ -247,14 +254,60 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" }> = ({ currentTab
         </Row>
       </Column>
     )
-  }
+  };
+
+  let TRTable_Keys = 1;
+
+  const TRTable = (valuesObj: { [key: string]: string[] }) => {
+    console.log("TRTable", Object.entries(valuesObj));
+    return (
+      <Column key={`section-tr`} style={{ gap: "1px" }}>
+        <SectionHeaderRow>TR</SectionHeaderRow>
+        <Row key={`section-tr`} style={{ gap: "1px" }}>
+          {sections.TR.map((section, sectionIdx) => (
+            <Column key={`tr-section-${sectionIdx}`} style={{ gap: "1px" }}>
+              <SectionHeaderRow mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                {section.label}
+              </SectionHeaderRow>
+              <Row>
+                {section.values.map((value, valueIdx) => (
+                  <SectionColumn key={`tr-section-${sectionIdx}-value-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                    {value}
+                  </SectionColumn>
+                ))}
+              </Row>
+              <Column>
+                {Object.entries(valuesObj).map(([key, value], valueIdx) => {
+                  return (
+                    <UserInputColumn
+                      key={`tr-input-${sectionIdx}-${valueIdx}`}
+                      type="text"
+                      fontSize={settingSlice.printFontSize + "px"}
+                      value={value || ""}
+                      mode={settingSlice.viewMode}
+                      onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(String(TRTable_Keys), valueIdx, el.target.value)}
+                    />
+                  );
+                })}
+              </Column>
+            </Column>
+          ))}
+        </Row>
+      </Column>
+    );
+  };
   
-  return (
-    <Container>
-      {type === "U1" && inputValues && U1Table(inputValues)}
-      {type === "U2" && inputValues && U2Table(inputValues)}
-    </Container>
-  );
+  if (isValidTableUserType(type)) {
+    return (
+      <Container>
+        {type === "U1" && inputValues && U1Table(inputValues)}
+        {type === "U2" && inputValues && U2Table(inputValues)}
+        {type === "TR" && inputValues && TRTable(inputValues)}
+      </Container>
+    );
+  }
+
+  return null;
 };
 
 const Container = styled(BaseFlexCenterDiv) <{ mode?: string }>`
@@ -291,7 +344,7 @@ const SectionHeaderRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: 
   text-align: center;
   
   width: auto; // Change from 20% to auto
-  min-width: ${(props) => props.mode === 'print' ? 40 : 60}px;
+  // min-width: ${(props) => props.mode === 'print' ? 30 : 40}px;
   align-self: stretch;
 `;
 
@@ -303,7 +356,7 @@ const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   
   text-align: center;
-  min-width: ${(props) => props.mode === 'print' ? 40 : 60}px;
+  // min-width: ${(props) => props.mode === 'print' ? 30 : 40}px;
   align-self: stretch;
   
   width: auto; // Change from 20% to auto
@@ -319,7 +372,7 @@ const SectionRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string
   
   width: 100%;
   text-align: center;
-  min-width: ${(props) => props.mode === 'print' ? 30 : 60}px;
+  // min-width: ${(props) => props.mode === 'print' ?  30 : 40}px;
 `;
 
 
@@ -332,7 +385,7 @@ const SectionColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: str
 
   width: 100%;
   text-align: center;
-  min-width: ${(props) => props.mode === 'print' ? 30 : 60}px;
+  // min-width: ${(props) => props.mode === 'print' ?  30 : 40}px;
 `;
 
 const UserInputSun = styled.input<{ mode?: string, fontSize?: string }>`

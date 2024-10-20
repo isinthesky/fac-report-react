@@ -7,7 +7,7 @@ import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlex1Row, BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
-import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
+import { CONST_TYPE_INFO, TypeInfo, TableType, isValidTableType, isValidTableUserType, isValidTableDataType } from "../../env";
 import { isDataTableTypeByInt } from "../../static/utils";
 
 type ReportGuideProps = {
@@ -42,34 +42,45 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
             }
 
             if (isDataTableTypeByInt(currentTable.type)) {
-              return (
-                <Container key={`report-guide-container-${colIndex}`} mode="view">
-                  <TimeContainer mode="view">
-                    {times.map((time: string, index: number) => (
-                      <TimeDiv key={`report-guide-time-${index}`}>{time}</TimeDiv>
-                    ))}
-                  </TimeContainer>
-                  <BaseFlex1Row>
-                    <TableData 
-                      key={`report-guide-table-data-${index}`}
-                      currentTable={currentTable} 
-                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
-                      times={times}
-                    />
-                  </BaseFlex1Row>
-                </Container>
-              )
+              const typeInfo = CONST_TYPE_INFO.find(info => info.index === currentTable.type);
+              const tableType = typeInfo?.keyword;
+              
+              if (tableType && isValidTableDataType(tableType)) {
+                return (
+                  <Container key={`report-guide-container-${colIndex}`} mode="view">
+                    <TimeContainer mode="view">
+                      {times.map((time: string, index: number) => (
+                        <TimeDiv key={`report-guide-time-${index}`}>{time}</TimeDiv>
+                      ))}
+                    </TimeContainer>
+                    <BaseFlex1Row>
+                      <TableData 
+                        key={`report-guide-table-data-${index}`}
+                        currentTable={currentTable} 
+                        type={tableType}
+                        times={times}
+                      />
+                    </BaseFlex1Row>
+                  </Container>
+                )
+              }
             } else {
-              return (
+
+              const typeInfo = CONST_TYPE_INFO.find(info => info.index === currentTable.type);
+              const tableType = typeInfo?.keyword;
+
+              if (tableType && isValidTableUserType(tableType)) {
+                return (
                 <Container key={`report-guide-container-${colIndex}`} mode="view">
                   <TableUser 
                     key={`report-guide-table-user-${index}`}
-                    currentTable={currentTab.tables[index]} 
-                    type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                    currentTable={currentTable} 
+                    type={tableType as "U1" | "U2" | "TR"} 
                     times={null}
                   />
                 </Container>
-              );
+                );
+              }
             }
           })}
         </RowContainer>

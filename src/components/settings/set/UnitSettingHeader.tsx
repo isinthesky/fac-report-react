@@ -6,7 +6,7 @@ import { updateCurrentUnit, updateCurrentTableUserData } from "../../../features
 import { RootStore } from "../../../store/congifureStore";
 import { BaseInput, BaseSelect, BaseOption, BaseFlex1Column,BaseFlexRow, MediumLabel, BaseFlexColumn, } from "../../../static/componentSet";
 import { IDivision, IStation } from "../../../static/types";
-import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_MAX_DEVICE } from "../../../env";
+import { CONST_TYPE_INFO, TypeInfo } from "../../../env";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import DeviceSearch from "./DeviceSearch";
 import { STRING_SETTING_DEVICE_FILTER, STRING_SETTING_DEVICE_NAME_SETTING, STRING_SETTING_DEVICE_TYPE_SELECT } from "../../../static/langSet";
@@ -74,7 +74,8 @@ const DeviceHeaderSet = () => {
       deviceId: newType
     }));
     
-    const maxDevice = CONST_TYPE_INFO_MAX_DEVICE[CONST_TYPE_INFO_INDEX.indexOf(newType)];
+    const typeInfo = CONST_TYPE_INFO.find(info => info.index === newType);
+    const maxDevice = typeInfo?.maxDevice || 0;
 
     dispatch(updateCurrentUnit({
       arrPos:tabPageSlice.unitPosition.index,
@@ -155,9 +156,9 @@ const DeviceHeaderSet = () => {
       <OptionContainer>
         <MediumLabel>{STRING_SETTING_DEVICE_TYPE_SELECT}</MediumLabel>
         <BaseSelect onChange={handleTypeChange} value={deviceType}>
-          { CONST_TYPE_INFO_NAMES.map((item, index) => (
-            <BaseOption key={index} value={CONST_TYPE_INFO_INDEX[index]}>
-              {item}
+          {CONST_TYPE_INFO.map((item) => (
+            <BaseOption key={item.index} value={item.index}>
+              {item.name}
             </BaseOption>
           ))}
         </BaseSelect>

@@ -12,6 +12,7 @@ export interface SettingState {
   printFontSize: number;
   deviceSearchWord: string;
   approvals: ApprovalsType[];
+  isLoading: boolean;
 }
 
 // 현장
@@ -34,6 +35,7 @@ const initialState: SettingState = {
   approvals: [{ level:0, text:"", checked:0 },
               { level:0, text:"", checked:0 },
               { level:0, text:"", checked:0 }],
+  isLoading: false,
 };
 
 export const settingSlice = createSlice({
@@ -70,16 +72,12 @@ export const settingSlice = createSlice({
     setApproves: (state, action: PayloadAction<ApprovalsType[]>) => {
       state.approvals = action.payload;
     },
-    // setInputRef: (state, action: PayloadAction<{ key: string; index: number; id: string }>) => {
-    //   const { key, index, id } = action.payload;
-    //   if (!state.inputRefs[key]) {
-    //     state.inputRefs[key] = [];
-    //   }
-    //   state.inputRefs[key][index] = id;
-    // },
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    }
   },
 });
 
-export const { setMenus, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setdeviceSearchWord } = settingSlice.actions;
+export const { setMenus, setUnitSelectPosition, setTabSetting, setTableDate, setViewMode, setPrintTitle, setPrintFontSize, setApproves, setIsLoading, setdeviceSearchWord } = settingSlice.actions;
 export default settingSlice.reducer;
 

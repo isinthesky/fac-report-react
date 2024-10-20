@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -19,43 +19,16 @@ const UnitGroupSet: React.FC = () => {
   const dispatch = useDispatch();
   const presetSlice = useSelector((state: RootStore) => state.unitGroupReducer);
   const deviceSet = useSelector((state: RootStore) => state.deviceReducer);
-  const [deviceList, setDeviceList] = useState<Preset>(presetSlice.currentGroup);
 
   useEffect(() => {
     dispatch(setCurrentGroup(presetSlice.selectedPos));
-    setDeviceList(presetSlice.currentGroup);
-  }, []);
-
-  useEffect(() => {
-    setDeviceList(presetSlice.currentGroup);
-  }, [presetSlice.currentGroup, presetSlice.selectedPos]);
-
-  useEffect(() => {
-    const processUnits = async () => {
-      try {
-        for (const unit of presetSlice.groups) {
-          await updatePresetTab(unit.id, unit.name, unit.type, unit.tab_device_presets.length, unit.search_st, unit.search_div);
-
-          for (const device of unit.tab_device_presets) { 
-            await updatePresetDevice(device.id, device.station_id, device.division_id, device.path_id);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    processUnits();
-  }, [presetSlice.groups])
+  }, [dispatch, presetSlice.selectedPos]);
 
   const handleAdd = () => {
     const newGroup = {idx: 0, station_id: 0, division_id: 0, path_id: 0} as Item;
     dispatch(addDevice(newGroup));
   };
 
-  const handleUpdate = (index: number) => {
-    dispatch(updateDevice(index));
-  };
-  
   const handleDelete = (index: number) => {
     console.log(index)
     dispatch(deleteDevice(index));
@@ -75,19 +48,20 @@ const UnitGroupSet: React.FC = () => {
           const initStationId = (device.path_id !== 0) ? device.station_id : unit.search_st;
           const initDivisionId = (device.path_id !== 0) ? device.division_id : unit.search_div;
                                 
-          return( <ValueSection key={idx}>
-                    <IndexLabel>{idx + 1}</IndexLabel>
-                    <UnitGroupAutoSelect
-                      unitPosition={presetSlice.selectedPos}
-                      devicePosition={idx}
-                      initStationId={initStationId}
-                      initDivisionId={initDivisionId}
-                      devicelist={deviceSet}
-                      stationValue={unit.search_st}
-                      divisionValue={unit.search_div}
-                      currentDevice={device}
-                    />
-                  </ValueSection>)
+          return( 
+          <ValueSection key={idx}>
+            <IndexLabel>{idx + 1}</IndexLabel>
+            <UnitGroupAutoSelect
+              unitPosition={presetSlice.selectedPos}
+              devicePosition={idx}
+              initStationId={initStationId}
+              initDivisionId={initDivisionId}
+              devicelist={deviceSet}
+              stationValue={unit.search_st}
+              divisionValue={unit.search_div}
+              currentDevice={device}
+            />
+          </ValueSection>)
       })}
     </>
   }
@@ -100,18 +74,15 @@ const UnitGroupSet: React.FC = () => {
         <DevicesContainer>
           <BigLabel>{STRING_SETTING_GROUP_DEVICE_LIST}</BigLabel>
           <BaseFlex1Column>
-            { renderSection(0, deviceList) }
+            { renderSection(0, presetSlice.currentGroup) }
           </BaseFlex1Column>
           <ButtonsContainer>
             <BaseButton onClick={handleAdd} widthsize={"50px"}>
               {STRING_SETTING_GROUP_ADD}
             </BaseButton>
-            <BaseButton onClick={() => handleDelete((deviceList.tab_device_presets.length)-1)} widthsize={"50px"}>
+            <BaseButton onClick={() => handleDelete(presetSlice.currentGroup.tab_device_presets.length - 1)} widthsize={"50px"}>
               {STRING_SETTING_GROUP_DELETE}
             </BaseButton>
-            <ActiveButton onClick={() => handleUpdate((deviceList.tab_device_presets.length)-1)} widthsize={"60px"}>
-              {STRING_SETTING_GROUP_UPDATE}
-            </ActiveButton>
           </ButtonsContainer>
         </DevicesContainer>
       </BaseFlex1Row>

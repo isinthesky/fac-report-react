@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 
 
-const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }> = ({ currentTable, type, times }) => {
+const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" }> = ({ currentTable, type, times }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const [deviceValues, setDeviceValues] = useState<{ [key: string]: string[] } | null>(null);
   const [tableDevices, setTableDevices] = useState<Item[] | null>(null);
@@ -32,14 +32,7 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }
       { label: "V", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
       { label: "/", values: ["Hz", "kW"]}
-    ],
-    TR: [
-      { label: "TR1", values: ["R", "S", "T"] },
-      { label: "TR2", values: ["R", "S", "T"] },
-      { label: "TR3", values: ["R", "S", "T"] },
-      { label: "TR4", values: ["R", "S", "T"] },
-      { label: "LV-4-3", values: ["R", "S", "T"] },
-    ],
+    ]
   }[type]), [type]);
 
   useEffect(() => {
@@ -78,7 +71,7 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" | "TR" }
                             .filter((v): v is string => v !== undefined)
                         ) : []
                       }   
-                      digit={tableDevices?.[currentDeviceIndex]?.digit || 1}
+                      digit={tableDevices?.[currentDeviceIndex]?.decimal_part_digits || 0}
                     />
                   </DeviceTypeValueDiv>
                 );

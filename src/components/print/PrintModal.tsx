@@ -9,7 +9,7 @@ import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../../static/langSet';
 import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSet';
 import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
-import { CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../env";
+import { CONST_TYPE_INFO } from "../../env";
 import { isDataTableTypeByInt, isUserTableTypeByInt } from "../../static/utils";
 import { Unit } from "../../static/types";
 
@@ -55,7 +55,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                     <TableData 
                       key={`print-table-data-${index}`}
                       currentTable={currentTable} 
-                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "V" | "W" | "R" | "S" | "TR"} 
+                      type={CONST_TYPE_INFO[currentTable.type].keyword as "V" | "W" | "R" | "S"} 
                       times={times}
                     />
                   </DeviceContainer>
@@ -65,10 +65,10 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
               return (
                 <UnitCountainerRow key={colIndex}>
                   <DeviceContainer>
-                    <TableUser 
+                    <TableUser
                       key={`print-table-user-${index}`}
                       currentTable={currentTab?.tables[index] || {} as Unit} 
-                      type={CONST_TYPE_INFO_KEYWORDS[CONST_TYPE_INFO_INDEX.indexOf(currentTable.type)] as "U1" | "U2"} 
+                      type={CONST_TYPE_INFO[currentTable.type].keyword as "U1" | "U2" | "TR"} 
                       times={null}
                     />
                   </DeviceContainer>

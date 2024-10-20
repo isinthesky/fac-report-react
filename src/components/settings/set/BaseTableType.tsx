@@ -36,7 +36,7 @@ const BaseTableType: React.FC<BaseUnitTypeProps> = ({ name, unitKeys, containerS
           }
 
           const initStationId =
-            tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index].devices[idx].path_id !== 0
+            tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index]?.devices[idx]?.path_id !== 0
               ? tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index]?.devices[idx]?.station_id
               : tabPageSlice.currentTabPage?.tables[tabPageSlice.unitPosition.index]?.search_st;
           const initDivisionId =

@@ -7,7 +7,7 @@ export const timestampToYYYYMMDD =  (timestamp: number) => {
   }
 
 export const isDataTableTypeByStr = (type: string) => {
-  return type === "V" || type === "W" || type === "R" || type === "S" || type === "TR";
+  return type === "V" || type === "W" || type === "R" || type === "S";
 }
 
 

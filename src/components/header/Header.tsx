@@ -1,9 +1,10 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useRef  } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import { setViewSelect, setSettingSelect } from "../../features/reducers/tabPageSlice";
+import { setIsLoading } from "../../features/reducers/settingSlice";
 import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
@@ -16,15 +17,31 @@ import { HeaderMenus } from "./HeaderMenus";
 export default function Header({ paramMain }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const settingSetMenus = useSelector((state: RootStore) => state.settingReducer.menus);
-  const viewPosition = useSelector((state: RootStore) => state.tabPageReducer.viewPosition);
+  // const settingSetMenus = useSelector((state: RootStore) => state.settingReducer.menus);
+  // const viewPosition = useSelector((state: RootStore) => state.tabPageReducer.viewPosition);
+  // const isInitialMount = useRef(true);
+
+  // useEffect(() => {
+  //   if (isInitialMount.current) {
+  //     isInitialMount.current = false;
+  //     if (settingSetMenus.length > 0) {
+  //       const [mainId, subId] = settingSetMenus[0].split('').map(Number);
+  //       if (viewPosition.main !== mainId || viewPosition.sub !== subId) {
+  //         dispatch(setViewSelect({ mainTab: mainId, subTab: subId }));
+  //       }
+  //     }
+  //   }
+  // }, [dispatch, settingSetMenus]); // 의존성 배열에서 viewPosition 제거
 
   const handleMenuClick = useCallback((mainId: number, subId: number) => {
+    dispatch(setIsLoading(true));
+    console.log("Header : setViewSelect", mainId, subId);
     dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
-    navigate(`/daily/${mainId.toString()}/${subId.toString()}`);
+    navigate("/daily");
   }, [navigate, dispatch]);
 
   const handleGoSetting = useCallback(() => {
+    console.log("Header : setViewSelect", 0, 0);
     dispatch(setViewSelect({mainTab: 0, subTab: 0}));
     dispatch(setSettingSelect({mainTab: 1, subTab: 1}));
     navigate("/settings", { state: { fromNavigate: true } });
@@ -33,13 +50,6 @@ export default function Header({ paramMain }: HeaderProps) {
   const handleGoHome = useCallback(() => {
     navigate("/");
   }, [navigate]);
-
-  useEffect(() => {
-    if (settingSetMenus.length > 0) {
-      const [mainId, subId] = settingSetMenus[0].split('').map(Number);
-      dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
-    }
-  }, [dispatch, settingSetMenus]);
   
   return (
     <TopHeader>
@@ -54,7 +64,7 @@ export default function Header({ paramMain }: HeaderProps) {
       <MenusContainer>
         <HeaderMenus onClickCallback={handleMenuClick} isSettingsActive={paramMain === 0} />
       </MenusContainer>
-      <SettingButton $enable={viewPosition.main === 0} onClick={handleGoSetting}>
+      <SettingButton $enable={paramMain === 0} onClick={handleGoSetting}>
         <img src={`${ICON_HEADER_SETTING}`} alt="settings" />
       </SettingButton>
     </TopHeader>

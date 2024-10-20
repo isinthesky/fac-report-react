@@ -12,7 +12,7 @@ import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDi
 import UnitGroupListControl from "../group/UnitGroupListControl";
 import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO_NAMES, CONST_TYPE_INFO_INDEX, CONST_TYPE_INFO_KEYWORDS } from "../../../env";
+import { CONST_TYPE_INFO, TypeInfo, TableType } from "../../../env";
 import { isDataTableTypeByInt } from "../../../static/utils";
 import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
 
@@ -116,7 +116,7 @@ export const useComposeSet = () => {
       if (isDataTableTypeByInt(tableInfo.type)) {
         for (const device of deviceInfo) {
           if (device.path_id > 0) {
-            await updateDevice(device.id, device.station_id, device.division_id, device.path_id);
+            await updateDevice(device.id, device.station_id, device.division_id, device.path_id, device.decimal_part_digits);
           }
         }
       } else {
@@ -176,18 +176,22 @@ const ComposeSet: React.FC = () => {
   }
 
   const renderUnitType = () => {
-    if (deviceType === 0 || !CONST_TYPE_INFO_INDEX.includes(deviceType)) {
+    if (deviceType === 0) {
       return null;
     }
 
-    const typeIndex = CONST_TYPE_INFO_INDEX.indexOf(deviceType);
-    const typeName = CONST_TYPE_INFO_NAMES[typeIndex];
-    const typeKeyword = CONST_TYPE_INFO_KEYWORDS[typeIndex] as 'V' | 'W' | 'S' | 'R' | 'TR' | 'U1' | 'U2' | 'HIDE';
+    const typeInfo: TypeInfo | undefined = CONST_TYPE_INFO.find(info => info.index === deviceType);
 
+    if (!typeInfo) {
+      return null;
+    }
+
+    const { name, keyword } = typeInfo;
+    
     return (
       <UnitType
-        name={typeName}
-        type={typeKeyword}
+        name={name}
+        type={keyword as TableType}
       />
     );
   };

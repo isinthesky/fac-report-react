@@ -90,7 +90,7 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
                               station_id: selectedSt,
                               division_id: selectedDiv,
                               id: selectedDevice.id || 0,
-                              digit: selectedDevice.digit || 1 };
+                              decimal_part_digits: selectedDevice.decimal_part_digits || 1 };
       setSelectedDevice(updatedDevice);    
   
       dispatch(setCurrentUnitDevice({ 
@@ -103,8 +103,14 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
 
   const handleDeviceDigitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (selectedDevice) {
-      const updatedDevice: Item = { ...selectedDevice, digit: Number(e.target.value) };
+      const updatedDevice: Item = { ...selectedDevice, decimal_part_digits: Number(e.target.value) };
       setSelectedDevice(updatedDevice);
+
+      dispatch(setCurrentUnitDevice({ 
+        unitPosition, 
+        devicePosition, 
+        device: updatedDevice
+      }));
     }
   };
 
@@ -161,11 +167,11 @@ const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({
         </>
       )}
 
-      <DeviceDigitSelector onChange={handleDeviceDigitChange} value={selectedDevice?.digit}>
+      <DeviceDigitSelector onChange={handleDeviceDigitChange} value={selectedDevice?.decimal_part_digits}>
         <BaseOption value={0}>0</BaseOption>
         <BaseOption value={1}>1</BaseOption>
         <BaseOption value={2}>2</BaseOption>
-        <BaseOption value={2}>3</BaseOption>
+        <BaseOption value={3}>3</BaseOption>
       </DeviceDigitSelector>
       
     </DeviceInfoContainer>

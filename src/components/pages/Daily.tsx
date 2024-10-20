@@ -12,7 +12,7 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE, STRING_DAILY_MAIN_BTN_LOAD_HISTORY } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { setMenus, setViewMode } from "../../features/reducers/settingSlice";
+import { setMenus, setViewMode, setIsLoading } from "../../features/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
 import LoadingSpinner from "../viewer/LoadingSpinner";
 import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "../../features/api/page"
@@ -43,33 +43,35 @@ const Daily: React.FC = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
-  const [prevViewPosition, setPrevViewPosition] = useState<ViewPosition>({ main: 0, sub: 0 });
-  const [prevDate, setPrevDate] = useState<number>(0);
+  const prevViewPosition = useRef<ViewPosition>({ main: 0, sub: 0 });
+  const prevDate = useRef<number>(0);
   const [date, setDate] = useState<number>(settingSet.date);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { id1 = DEFAULT_MAIN_TAB, id2 = "1" } = useParams<{ id1?: string; id2?: string }>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHistoryAvailable, setIsHistoryAvailable] = useState<boolean>(true);
   const componentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIsLoading(true);
-
+    dispatch(setIsLoading(true));
+  
     const initializeTabPages = async () => {
       try {
         const buttons = await fetchPageSettings(dispatch, timestampToYYYYMMDD(date));
         if (buttons.length > 0) {
-          console.log("Daily Init: ", buttons, tabPageSet.tabPageInfo, tabPageSet.currentTabPage);
           dispatch(setMenus(buttons));
-          setIsLoading(false);
+  
+          // 초기 viewPosition 설정
+          const [mainId, subId] = buttons[0].split('').map(Number);
+          dispatch(setViewSelect({ mainTab: mainId, subTab: subId }));
+  
+          dispatch(setIsLoading(false));
         }
       } catch (error) {
         console.error("Error initializing tab pages:", error);
       }
-    }
-
+    };
+  
     initializeTabPages();
-  }, [dispatch]);
+  }, [dispatch, date]);
     
   const resetTabUserTableInfo = async () => {
     if (!tabPageSet.currentTabPage || !tabPageSet.currentTabPage.name) {
@@ -100,11 +102,10 @@ const Daily: React.FC = () => {
       resPageSetting.tables = newTables;
 
 
-      dispatch(setTabPage({mainTab: prevViewPosition.main, subTab: prevViewPosition.sub, tabInfo: resPageSetting}));
-      dispatch(setViewSelect({ mainTab: prevViewPosition.main, subTab: prevViewPosition.main }));
+      dispatch(setTabPage({mainTab: prevViewPosition.current.main, subTab: prevViewPosition.current.sub, tabInfo: resPageSetting}));
     }
-
-    setIsLoading(false);
+    console.log("resetTabUserTableInfo : setIsLoading(false)");
+    dispatch(setIsLoading(false));
 
     return true;
   }
@@ -117,11 +118,12 @@ const Daily: React.FC = () => {
         const mainBtnIndex = mainId ? mainId : 1;
         const subBtnIndex = subId ? subId : 1;
 
-        setIsLoading(true);
+        console.log("fetchData : setIsLoading(true)",tabPageSet.viewPosition,mainBtnIndex, subBtnIndex);
+        dispatch(setIsLoading(true));
 
-        if (mainBtnIndex !== prevViewPosition.main || subBtnIndex !== prevViewPosition.sub || date !== prevDate) {
-          setPrevViewPosition({ main: mainBtnIndex, sub: subBtnIndex });
-          setPrevDate(date);  
+        if (mainBtnIndex !== prevViewPosition.current.main || subBtnIndex !== prevViewPosition.current.sub || date !== prevDate.current) {
+          prevViewPosition.current = { main: mainBtnIndex, sub: subBtnIndex };
+          prevDate.current = date;
           await resetTabUserTableInfo();
         }
 
@@ -136,15 +138,15 @@ const Daily: React.FC = () => {
           } else {
             setIsHistoryAvailable(true);
           }
-
-          setIsLoading(false);
+          console.log("fetchData : setIsLoading(false)");
+          dispatch(setIsLoading(false));
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, [date, tabPageSet.viewPosition, prevViewPosition, prevDate]);
+  }, [date, tabPageSet.viewPosition]);
 
   // Print related functions
   const handlePrintFunction = useReactToPrint({
@@ -187,7 +189,8 @@ const Daily: React.FC = () => {
     }
 
     try {
-      setIsLoading(true);
+      console.log("handleHistoryPage : setIsLoading(true)");
+      dispatch(setIsLoading(true));
       const resHistoryPage = await get_history_page_setting(
         tabPageSet.currentTabPage.name, 
         timestampToYYYYMMDD(date)
@@ -218,15 +221,15 @@ const Daily: React.FC = () => {
       dispatch(setCurrentTab(resHistoryPage));
     } catch (error) {
       console.error("Error fetching data:", error);
-      setIsLoading(false);
     } finally {
-      setIsLoading(false);
+      console.log("handleHistoryPage : setIsLoading(false)");
+      dispatch(setIsLoading(false));
     }
   }
 
   return (
     <Flat>
-      <Header paramMain={Number(id1 || DEFAULT_MAIN_TAB)} />
+      <Header paramMain={Number(tabPageSet.viewPosition.main || DEFAULT_MAIN_TAB)} />
       <Title>{STRING_DAILY_MAIN_TITLE}</Title>
       <ControlContainer>
         <Controls>
@@ -236,7 +239,8 @@ const Daily: React.FC = () => {
               <DatePicker
                 selected={new Date(date)}
                 onChange={(value: Date) => {
-                  setIsLoading(true);
+                  console.log("DatePicker : setIsLoading(true)");
+                  dispatch(setIsLoading(true));
                   setDate(value.getTime());
                 }}
                 showIcon={true}
@@ -277,7 +281,7 @@ const Daily: React.FC = () => {
         </BaseModalBack>
       } 
 
-      {isLoading && <LoadingSpinner />}
+      {settingSet.isLoading && <LoadingSpinner />}
     </Flat>
   );
 }

@@ -12,10 +12,11 @@ interface MenuProps {
 }
 
 export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsActive }) => {
-  const tabPositionSlice = useSelector((state: RootStore) => state.tabPageReducer.viewPosition) as SelectedTab;
+  const viewPosition = useSelector((state: RootStore) => state.tabPageReducer.viewPosition) as SelectedTab;
   const [menuStructure, setMenuStructure] = useState<{ id: number; name: string; subMenus: { id: number; name: string }[] }[]>([]);
 
   useEffect(() => {
+    console.log("HeaderMenus : useEffect");
     const structure = [];
     for (let i = 1; i <= 5; i++) {
       const mainMenuName = process.env[`REACT_APP_INIT_REPORT_MENU${i}`];
@@ -38,33 +39,31 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
       <MainMenuGrid>
         {Array.from({ length: 5 }, (_, i) => i + 1).map((index) => {
           const mainMenu = menuStructure.find(menu => menu.id === index);
-          return mainMenu ? (
+          return (
             <MainButton
-              key={mainMenu.id}
-              $isActive={mainMenu.id === tabPositionSlice.main && !isSettingsActive}
-              onClick={() => onClickCallback(mainMenu.id, mainMenu.subMenus[0]?.id || 0)}
+              key={index}
+              $isActive={mainMenu?.id === viewPosition.main && !isSettingsActive}
+              $isEmpty={!mainMenu}
+              onClick={() => mainMenu && onClickCallback(mainMenu.id, mainMenu.subMenus[0]?.id || 0)}
             >
-              {mainMenu.name}
+              {mainMenu?.name || ''}
             </MainButton>
-          ) : (
-            <MainButton key={index} $isActive={false} $isEmpty={true}/>
           );
         })}
       </MainMenuGrid>
       <SubMenuGrid>
         {Array.from({ length: 10 }, (_, i) => i + 1).map((index) => {
-          const activeMainMenu = menuStructure.find(menu => menu.id === tabPositionSlice.main);
+          const activeMainMenu = menuStructure.find(menu => menu.id === viewPosition.main);
           const subMenu = activeMainMenu?.subMenus.find(sub => sub.id === index);
-          return subMenu ? (
+          return (
             <SubButton
-              key={subMenu.id}
-              $isActive={tabPositionSlice.main === activeMainMenu?.id && subMenu.id === tabPositionSlice.sub && !isSettingsActive}
-              onClick={() => onClickCallback(activeMainMenu?.id || 0, subMenu.id)}
+              key={index}
+              $isActive={viewPosition.main === activeMainMenu?.id && subMenu?.id === viewPosition.sub && !isSettingsActive}
+              $isEmpty={!subMenu}
+              onClick={() => subMenu && onClickCallback(activeMainMenu?.id || 0, subMenu.id)}
             >
-              {subMenu.name}
+              {subMenu?.name || ''}
             </SubButton>
-          ) : (
-            <SubButton key={index} $isActive={false} $isEmpty={true} />
           );
         })}
       </SubMenuGrid>

@@ -35,12 +35,53 @@ export const MAX_TABPAGE_COUNT = 4
 export const INIT_TABPAGE_SETTING = {"times":["05:00","11:00","17:00","23:00"], "unitList":[{"id": 1, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 2, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 3, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 4, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 5, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 6, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 7, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 8, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 9, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 10, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 11, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]},{"id": 12, "type":1,"name":"device","st":0,"div":0, "dvList": [0,0,0,0,0,0,0,0,0]}]}
 export const INIT_UNITGROUP_SETTING = {"id": 0, "type":1, "name":"device", "st":0, "div":0, "dvList": [0,0,0,0,0,0,0,0,0]};
 
-export const CONST_TYPE_INFO_NAMES = ["전압", "전력량", "정류기", "태양광", "TR온도", "MOF배율", "최대전력", "숨김"]
-export const CONST_TYPE_INFO_KEYWORDS = ["V", "W", "R", "S", "TR", "U1", "U2", "HIDE"]
-export const CONST_TYPE_INFO_INDEX = [1, 2, 3, 4, 5, 1001, 1002, 9001]
-export const CONST_TYPE_INFO_MAX_DEVICE = [9, 9, 7, 8, 15, 11, 11, 9]
-
 export const MAX_COLUMN_COUNT = 4
 export const MAX_ROW_COUNT = 4
 export const MIN_COLUMN_COUNT = 1
 export const MIN_ROW_COUNT = 1
+
+export interface TypeInfo {
+    name: string;
+    keyword: string;
+    index: number;
+    maxDevice: number;
+    unitKeys: string[];
+  }
+  
+export const CONST_TYPE_INFO: TypeInfo[] = [
+  { name: "전압", keyword: "V", index: 1, maxDevice: 9, unitKeys: ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"] },
+  { name: "전력량", keyword: "W", index: 2, maxDevice: 9, unitKeys: ["R-S", "S-T", "T-R", "R", "S", "T", "PF", "Hz", "kW"] },
+  { name: "정류기", keyword: "R", index: 3, maxDevice: 7, unitKeys: ["R-S", "S-T", "T-R", "Hz", "DC(V)", "DC(A), Alram"] },
+  { name: "태양광", keyword: "S", index: 4, maxDevice: 8, unitKeys: ["R-S", "S-T", "T-R", "R", "S", "T", "Hz", "kW"] },
+  { name: "MOF배율", keyword: "U1", index: 1001, maxDevice: 11, unitKeys: ["전일지침", "금일지침", "전일-금일", "배율소계", "주간4", "저녁5", "심야6", "주간7", "저녁8"] },
+  { name: "최대전력", keyword: "U2", index: 1002, maxDevice: 11, unitKeys: ["현재", "주간", "저녁", "태양광", "7시", "11시", "17시", "23시"] },
+  { name: "TR온도", keyword: "TR", index: 1003, maxDevice: 15, unitKeys: ["R", "S", "T", "R", "S", "T", "R", "S", "T", "R", "S", "T", "R", "S", "T"] },
+  { name: "숨김", keyword: "HIDE", index: 9001, maxDevice: 9, unitKeys: ["1", "2", "3", "4", "5", "6", "7", "8", "9"] },
+];
+
+export type TableType = 'V' | 'W' | 'R' | 'S' | 'TR' | 'U1' | 'U2' | 'HIDE';
+
+export const UNIT_TYPE_INFO: Record<TableType, number> = {
+  'V': 1,
+  'W': 2,
+  'R': 3,
+  'S': 4,
+  'U1': 1001,
+  'U2': 1002,
+  'TR': 1003,
+  'HIDE': 9001
+};
+
+export const UNIT_TYPE_KEYWORDS = Object.keys(UNIT_TYPE_INFO) as TableType[];
+
+export function isValidTableType(type: string): type is TableType {
+  return UNIT_TYPE_KEYWORDS.includes(type as TableType);
+}
+
+export function isValidTableDataType(type: string): type is "V" | "W" | "R" | "S" {
+  return ["V", "W", "R", "S"].includes(type);
+}
+
+export function isValidTableUserType(type: string): type is "U1" | "U2" | "TR" {
+  return ["U1", "U2", "TR"].includes(type);
+}

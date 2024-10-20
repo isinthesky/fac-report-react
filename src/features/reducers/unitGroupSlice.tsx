@@ -36,7 +36,9 @@ export const unitGroupSlice = createSlice({
     },
     updateFromCurrent: (state, action: PayloadAction<number>) => {
       if (state.groups[action.payload]) {
-        state.groups[action.payload] = state.currentGroup;
+        state.groups[action.payload] = JSON.parse(
+          JSON.stringify(state.currentGroup)
+        );
       }
     },
     deleteGroup: (state, action: PayloadAction<number>) => {
@@ -66,7 +68,10 @@ export const unitGroupSlice = createSlice({
       state.currentGroup.tab_device_presets.push(action.payload);
     },
     deleteDevice: (state, action: PayloadAction<number>) => {
-      state.currentGroup.tab_device_presets.splice(action.payload, 1);
+      state.currentGroup = {
+        ...state.currentGroup,
+        tab_device_presets: state.currentGroup.tab_device_presets.filter((_, idx) => idx !== action.payload),
+      };
     },
     updateDevice: (state, action: PayloadAction<number>) => {      
       state.groups[action.payload] = state.currentGroup;

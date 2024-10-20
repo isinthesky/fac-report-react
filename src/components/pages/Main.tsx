@@ -35,7 +35,7 @@ function Main() {
       if (username === "admin") {
         dispatch(setViewSelect({mainTab: 1, subTab: 1}));
         setTimeout(() => {
-          navigate("/daily/1/1");
+          navigate("/daily");
         }, 0);
       } else {
         alert(STRING_MAIN_LOGIN_ERROR);
@@ -43,7 +43,7 @@ function Main() {
     } else {
       dispatch(setViewSelect({mainTab: 1, subTab: 1}));
       setTimeout(() => {
-        navigate("/daily/1/1");
+        navigate("/daily");
       }, 0);
     }
   };
