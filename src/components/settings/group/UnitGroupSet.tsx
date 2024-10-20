@@ -29,7 +29,6 @@ const UnitGroupSet: React.FC = () => {
   };
 
   const handleDelete = (index: number) => {
-    console.log(index)
     dispatch(deleteDevice(index));
   };
 

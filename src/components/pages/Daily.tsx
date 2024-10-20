@@ -114,7 +114,6 @@ const Daily: React.FC = () => {
     await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
     await update_tab_device_value(tabPageSet.currentTabPage.name);
 
-    console.log("resetTabUserTableInfo : get_page_setting #");
     const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
     if (resPageSetting) {
       resPageSetting.name = tabPageSet.currentTabPage.name;
@@ -208,7 +207,6 @@ const Daily: React.FC = () => {
       );
 
       if (resHistoryPage === false) {
-        console.log("No saved page available.");
         setIsHistoryAvailable(false); // Update state accordingly
         return;
       }
@@ -235,7 +233,6 @@ const Daily: React.FC = () => {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      console.log("handleHistoryPage : setIsLoading(false)");
       dispatch(setIsLoading(false));
     }
   }

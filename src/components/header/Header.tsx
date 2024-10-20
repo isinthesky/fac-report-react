@@ -18,13 +18,11 @@ export default function Header({ paramMain }: HeaderProps) {
 
   const handleMenuClick = useCallback((mainId: number, subId: number) => {
     dispatch(setIsLoading(true));
-    console.log("Header : setViewSelect", mainId, subId);
     dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
     navigate("/daily");
   }, [navigate, dispatch]);
 
   const handleGoSetting = useCallback(() => {
-    console.log("Header : setViewSelect", 0, 0);
     dispatch(setViewSelect({mainTab: 0, subTab: 0}));
     dispatch(setSettingSelect({mainTab: 1, subTab: 1}));
     navigate("/settings", { state: { fromNavigate: true } });

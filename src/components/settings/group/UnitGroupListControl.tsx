@@ -49,7 +49,6 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   useEffect(() => {
-    console.log("unitGroupSlice", unitGroupSlice)
     const arrName = unitGroupSlice.groups.map((obj) => {
       return obj.name;
     })
@@ -75,7 +74,6 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   };
 
   const handleUpdate = (index: number) => {
-    console.log(index)
     dispatch(updateFromCurrent(index));
   };
   

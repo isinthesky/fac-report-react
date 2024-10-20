@@ -102,9 +102,6 @@ const PrintSetting: React.FC = () => {
 
   useEffect(() => {
     dispatch(setApproves(approvals as ApprovalsType[]));
-    
-    console.log("approvals", approvals, "approvals")
-
   }, [approvals]);
 
   return (

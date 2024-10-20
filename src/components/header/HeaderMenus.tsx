@@ -16,7 +16,6 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
   const [menuStructure, setMenuStructure] = useState<{ id: number; name: string; subMenus: { id: number; name: string }[] }[]>([]);
 
   useEffect(() => {
-    console.log("HeaderMenus : useEffect");
     const structure = [];
     for (let i = 1; i <= 5; i++) {
       const mainMenuName = process.env[`REACT_APP_INIT_REPORT_MENU${i}`];
