@@ -50,30 +50,62 @@ const Daily: React.FC = () => {
   const [isHistoryAvailable, setIsHistoryAvailable] = useState<boolean>(true);
   const componentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    dispatch(setIsLoading(true));
   
-    const initializeTabPages = async () => {
+  // Combine useEffects into one
+  useEffect(() => {
+    let isMounted = true;
+
+    const initializeAndFetchData = async () => {
+      dispatch(setIsLoading(true));
       try {
+        // Initialize tab pages
         const buttons = await fetchPageSettings(dispatch, timestampToYYYYMMDD(date));
         if (buttons.length > 0) {
           dispatch(setMenus(buttons));
-  
-          // 초기 viewPosition 설정
           const [mainId, subId] = buttons[0].split('').map(Number);
           dispatch(setViewSelect({ mainTab: mainId, subTab: subId }));
-  
-          dispatch(setIsLoading(false));
+        }
+
+        // Fetch data
+        const { main: mainId, sub: subId } = tabPageSet.viewPosition;
+        const mainBtnIndex = mainId || 1;
+        const subBtnIndex = subId || 1;
+
+        if (
+          mainBtnIndex !== prevViewPosition.current.main ||
+          subBtnIndex !== prevViewPosition.current.sub ||
+          date !== prevDate.current
+        ) {
+          prevViewPosition.current = { main: mainBtnIndex, sub: subBtnIndex };
+          prevDate.current = date;
+          await resetTabUserTableInfo();
+        }
+
+        if (tabPageSet.currentTabPage) {
+          const resHistoryInfo = await get_history_page_setting(
+            tabPageSet.currentTabPage.name,
+            timestampToYYYYMMDD(date)
+          );
+
+          if (isMounted) {
+            setIsHistoryAvailable(resHistoryInfo !== false);
+          }
         }
       } catch (error) {
-        console.error("Error initializing tab pages:", error);
+        console.error("Error during initialization and data fetching:", error);
+      } finally {
+        dispatch(setIsLoading(false));
       }
     };
-  
-    initializeTabPages();
-  }, [dispatch, date]);
+
+    initializeAndFetchData();
+
+    return () => {
+      isMounted = false; // Cleanup to prevent setting state on unmounted component
+    };
+  }, [date, dispatch]);
     
-  const resetTabUserTableInfo = async () => {
+  const resetTabUserTableInfo = useCallback(async () => {
     if (!tabPageSet.currentTabPage || !tabPageSet.currentTabPage.name) {
       return false;
     }
@@ -82,13 +114,16 @@ const Daily: React.FC = () => {
     await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
     await update_tab_device_value(tabPageSet.currentTabPage.name);
 
+    console.log("resetTabUserTableInfo : get_page_setting #");
     const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
-    if (resPageSetting) {     
+    if (resPageSetting) {
       resPageSetting.name = tabPageSet.currentTabPage.name;
 
       const newTables = resPageSetting.tables.map((table: Unit) => {
         if (isUserTableTypeByInt(table.type)) {
-          const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
+          const userTable = resPageSetting.user_tables.find(
+            (userTable: UserTableType) => userTable.idx === table.idx
+          );
           if (userTable) {
             table.id = userTable.id;
             table.name = userTable.name;
@@ -97,56 +132,21 @@ const Daily: React.FC = () => {
           }
         }
         return table;
-      })
+      });
 
       resPageSetting.tables = newTables;
 
-
-      dispatch(setTabPage({mainTab: prevViewPosition.current.main, subTab: prevViewPosition.current.sub, tabInfo: resPageSetting}));
+      dispatch(
+        setTabPage({
+          mainTab: prevViewPosition.current.main,
+          subTab: prevViewPosition.current.sub,
+          tabInfo: resPageSetting,
+        })
+      );
     }
-    console.log("resetTabUserTableInfo : setIsLoading(false)");
-    dispatch(setIsLoading(false));
 
     return true;
-  }
-  
-  // Effect for fetching and updating data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { main: mainId, sub: subId } = tabPageSet.viewPosition;
-        const mainBtnIndex = mainId ? mainId : 1;
-        const subBtnIndex = subId ? subId : 1;
-
-        console.log("fetchData : setIsLoading(true)",tabPageSet.viewPosition,mainBtnIndex, subBtnIndex);
-        dispatch(setIsLoading(true));
-
-        if (mainBtnIndex !== prevViewPosition.current.main || subBtnIndex !== prevViewPosition.current.sub || date !== prevDate.current) {
-          prevViewPosition.current = { main: mainBtnIndex, sub: subBtnIndex };
-          prevDate.current = date;
-          await resetTabUserTableInfo();
-        }
-
-        if (tabPageSet.currentTabPage) {
-          const resHistoryInfo = await get_history_page_setting(
-            tabPageSet.currentTabPage?.name, 
-            timestampToYYYYMMDD(date)
-          );
-
-          if (resHistoryInfo === false) {
-            setIsHistoryAvailable(false);
-          } else {
-            setIsHistoryAvailable(true);
-          }
-          console.log("fetchData : setIsLoading(false)");
-          dispatch(setIsLoading(false));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [date, tabPageSet.viewPosition]);
+  }, [date, dispatch, tabPageSet.currentTabPage]);
 
   // Print related functions
   const handlePrintFunction = useReactToPrint({
@@ -155,32 +155,44 @@ const Daily: React.FC = () => {
     body {
       -webkit-print-color-adjust: exact;
     }`,
-    documentTitle: `${settingSet.printTitle}_${new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')}`
+    documentTitle: `${settingSet.printTitle}_${new Date(date).toLocaleDateString("en-CA").replace(/-/g, '')}`,
   });
 
   const handleOpenPrint = useCallback(() => {
     setIsOpen(true);
-    dispatch(setViewMode("print"))
+    dispatch(setViewMode("print"));
   }, [dispatch]);
 
   const handlePrintClose = useCallback(() => {
     setIsOpen(false);
-    dispatch(setViewMode("view"))
+    dispatch(setViewMode("view"));
   }, [dispatch]);
 
-  // Other handlers
-  const handleOpenSave = () => {
+  const handlePageSave = async () => {
+    dispatch(setIsLoading(true));
     if (!tabPageSet.currentTabPage) {
+      dispatch(setIsLoading(false));
       return;
     }
 
-    tabPageSet.currentTabPage.tables.forEach((table: Unit) => {
-      if (isUserTableTypeByInt(table.type)) {
-        update_tab_user_table_info(table.id, table.name, table.type, table.disable, table.device_values);
+    try {
+      for (const table of tabPageSet.currentTabPage.tables) {
+        if (isUserTableTypeByInt(table.type)) {
+          await update_tab_user_table_info(
+            table.id,
+            table.name,
+            table.type,
+            table.disable,
+            table.device_values
+          );
+        }
       }
-    });
-
-    save_page_setting(tabPageSet.currentTabPage.name);
+      await save_page_setting(tabPageSet.currentTabPage.name);
+    } catch (error) {
+      console.error("Error saving page:", error);
+    } finally {
+      dispatch(setIsLoading(false));
+    }
   };
 
   const handleHistoryPage = async () => {
@@ -189,19 +201,20 @@ const Daily: React.FC = () => {
     }
 
     try {
-      console.log("handleHistoryPage : setIsLoading(true)");
       dispatch(setIsLoading(true));
       const resHistoryPage = await get_history_page_setting(
-        tabPageSet.currentTabPage.name, 
+        tabPageSet.currentTabPage.name,
         timestampToYYYYMMDD(date)
       );
 
       if (resHistoryPage === false) {
-        console.log("저장된 페이지가 없습니다.");
+        console.log("No saved page available.");
+        setIsHistoryAvailable(false); // Update state accordingly
         return;
       }
 
       resHistoryPage.name = tabPageSet.currentTabPage.name;
+
       const newTables = resHistoryPage.tables.map((table: Unit) => {
         if (isUserTableTypeByInt(table.type)) {
           const userTable = resHistoryPage.user_tables.find((
@@ -239,8 +252,6 @@ const Daily: React.FC = () => {
               <DatePicker
                 selected={new Date(date)}
                 onChange={(value: Date) => {
-                  console.log("DatePicker : setIsLoading(true)");
-                  dispatch(setIsLoading(true));
                   setDate(value.getTime());
                 }}
                 showIcon={true}
@@ -257,7 +268,7 @@ const Daily: React.FC = () => {
           </CalendarContainer1>
           <ButtonControls>
             <ActiveButton onClick={handleOpenPrint}>{STRING_DAILY_MAIN_BTN_PRINT}</ActiveButton>
-            <ActiveButton onClick={handleOpenSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
+            <ActiveButton onClick={handlePageSave}>{STRING_DEFAULT_SAVE}</ActiveButton>
           </ButtonControls>
         </Controls>
       </ControlContainer>

@@ -256,10 +256,9 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ cur
     )
   };
 
-  let TRTable_Keys = 1;
-
   const TRTable = (valuesObj: { [key: string]: string[] }) => {
-    console.log("TRTable", Object.entries(valuesObj));
+    let keyIndex = 0;
+  
     return (
       <Column key={`section-tr`} style={{ gap: "1px" }}>
         <SectionHeaderRow>TR</SectionHeaderRow>
@@ -270,26 +269,30 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ cur
                 {section.label}
               </SectionHeaderRow>
               <Row>
-                {section.values.map((value, valueIdx) => (
-                  <SectionColumn key={`tr-section-${sectionIdx}-value-${valueIdx}`} mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
-                    {value}
-                  </SectionColumn>
-                ))}
-              </Row>
-              <Column>
-                {Object.entries(valuesObj).map(([key, value], valueIdx) => {
-                  return (
-                    <UserInputColumn
-                      key={`tr-input-${sectionIdx}-${valueIdx}`}
-                      type="text"
-                      fontSize={settingSlice.printFontSize + "px"}
-                      value={value || ""}
-                      mode={settingSlice.viewMode}
-                      onChange={(el: React.ChangeEvent<HTMLInputElement>) => handleInputChange(String(TRTable_Keys), valueIdx, el.target.value)}
-                    />
-                  );
-                })}
-              </Column>
+              {section.values.map((value, valueIdx) => {
+                const currentKey = String(keyIndex + 1);
+                keyIndex++;
+                return (
+                  <Column key={`tr-section-${sectionIdx}-value-${valueIdx}`}>
+                    <SectionColumn mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>
+                      {value}
+                    </SectionColumn>
+                    {valuesObj[currentKey]?.map((inputValue, inputIdx) => (
+                      <UserInputColumn
+                        key={`tr-input-${sectionIdx}-${valueIdx}-${inputIdx}`}
+                        type="text"
+                        fontSize={settingSlice.printFontSize + "px"}
+                        value={inputValue || ""}
+                        mode={settingSlice.viewMode}
+                        onChange={(el: React.ChangeEvent<HTMLInputElement>) => 
+                          handleInputChange(currentKey, inputIdx, el.target.value)
+                        }
+                      />
+                    ))}
+                  </Column>
+                );
+              })}
+            </Row>
             </Column>
           ))}
         </Row>
@@ -344,7 +347,7 @@ const SectionHeaderRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: 
   text-align: center;
   
   width: auto; // Change from 20% to auto
-  // min-width: ${(props) => props.mode === 'print' ? 30 : 40}px;
+  min-width: ${(props) => props.mode === 'print' ? 20 : 30}px;
   align-self: stretch;
 `;
 
@@ -356,7 +359,7 @@ const SectionHeaderColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize
   background-color: ${(props) => props.mode === 'print' ? 'white' : COLORSET_GRID_HEADER_BG};
   
   text-align: center;
-  // min-width: ${(props) => props.mode === 'print' ? 30 : 40}px;
+  min-width: ${(props) => props.mode === 'print' ? 20 : 30}px;
   align-self: stretch;
   
   width: auto; // Change from 20% to auto
@@ -372,7 +375,7 @@ const SectionRow = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: string
   
   width: 100%;
   text-align: center;
-  // min-width: ${(props) => props.mode === 'print' ?  30 : 40}px;
+  min-width: ${(props) => props.mode === 'print' ?  25 : 35}px;
 `;
 
 
@@ -385,7 +388,7 @@ const SectionColumn = styled(BaseFlexCenterDiv) <{ mode?: string, fontSize?: str
 
   width: 100%;
   text-align: center;
-  // min-width: ${(props) => props.mode === 'print' ?  30 : 40}px;
+  min-width: ${(props) => props.mode === 'print' ?  25 : 35}px;
 `;
 
 const UserInputSun = styled.input<{ mode?: string, fontSize?: string }>`

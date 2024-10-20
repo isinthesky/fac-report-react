@@ -34,6 +34,8 @@ export async function fetchPageSettings(dispatch: Dispatch, date: string | null)
             if (date) {
               await updateTabDate(tempTabInfo, date);
             }
+
+            console.log("fetchPageSettings : get_page_setting #", tempTabInfo);
             const resPageSetting = await get_page_setting(tempTabInfo, true);
 
             if (resPageSetting) {     
