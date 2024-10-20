@@ -41,14 +41,13 @@ const TableUser: React.FC<ViewUnitProps & { type: "U1" | "U2" | "TR" }> = ({ cur
     setInputValues(currentTable.device_values || {});
   }, [currentTable.device_values]);
 
-  // Handle input changes and update local state
   const handleInputChange = (key: string, index: number, newValue: string) => {
     setInputValues((prevValues) => {
       const newValues = { ...prevValues };
       if (!newValues[key]) {
         newValues[key] = [];
       }
-      newValues[key] = [...newValues[key]];  // 새 배열 생성
+      newValues[key] = [...newValues[key]];
       newValues[key][index] = newValue;
 
       dispatch(setCurrentTableValues({

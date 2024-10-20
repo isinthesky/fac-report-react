@@ -34,7 +34,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
     times.push(...tabPageInfo.times.map((time: string) => time));
     
     return Array.from({ length: row }).map((_, rowIndex) => (
-      <UnitCountainerLine key={rowIndex}>
+      <UnitContainerLine key={rowIndex}>
         {Array.from({ length: column }).map((_, colIndex) => {
             const index = rowIndex * column + colIndex;
             const currentTable = currentTab.tables[index];
@@ -45,7 +45,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
 
             if (isDataTableTypeByInt(currentTable.type)) {
               return (
-                <UnitCountainerRow key={colIndex}>
+                <UnitContainerRow key={colIndex}>
                   <TimeContainer gap="1px">
                     {times.map((time: string, index: number) => (
                       <TimeDiv key={index} fontSize={settingSlice.printFontSize + "px"}>{time.substring(0, 2)}</TimeDiv>
@@ -59,11 +59,11 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                       times={times}
                     />
                   </DeviceContainer>
-                </UnitCountainerRow>
+                </UnitContainerRow>
               )
             } else {
               return (
-                <UnitCountainerRow key={colIndex}>
+                <UnitContainerRow key={colIndex}>
                   <DeviceContainer>
                     <TableUser
                       key={`print-table-user-${index}`}
@@ -72,11 +72,11 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                       times={null}
                     />
                   </DeviceContainer>
-                </UnitCountainerRow>
+                </UnitContainerRow>
               );
             }
           })}
-      </UnitCountainerLine>
+      </UnitContainerLine>
     ));
   };
 
@@ -172,7 +172,7 @@ const SignDiv = styled(BaseFlexDiv)`
   background-color: #FFF;
 `;
 
-const UnitCountainerLine = styled(BaseFlexCenterDiv)`
+const UnitContainerLine = styled(BaseFlexCenterDiv)`
   align-items: center;
   justify-items: stretch;
   gap: 2px;
@@ -181,7 +181,7 @@ const UnitCountainerLine = styled(BaseFlexCenterDiv)`
   border: 1px solid ${COLORSET_PRINT_BORDER};
 `;
 
-const UnitCountainerRow = styled(BaseFlexRow)`
+const UnitContainerRow = styled(BaseFlexRow)`
   width: 100%;
   background-color: ${COLORSET_PRINT_BORDER};
   gap: 1px;

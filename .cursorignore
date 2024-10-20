@@ -1,5 +1,56 @@
-.eslintrc.js
-.prettierrc
+# Cursor Rules
 
-``
+## Whenever you need a React component with Redux Toolkit
 
+1. Carefully consider the component's purpose, functionality, and design
+2. Think slowly, step by step, and outline your reasoning
+3. Determine if the component needs to interact with the Redux store
+4. Check if similar components or Redux slices already exist
+5. If it doesn't exist, generate a detailed prompt for the component, including:
+   - Component name and purpose
+   - Desired props and their types
+   - Any specific styling or behavior requirements
+   - Mention of using styled-components for styling
+   - Request for TypeScript usage
+   - Specification of Redux store interactions (if any)
+6. URL encode the prompt
+7. Create a clickable link in this format:
+   [ComponentName](https://v0.dev/chat?q={encoded_prompt})
+8. After generating, adapt the component to work with Redux Toolkit:
+   - Import necessary Redux hooks:
+     ```typescript
+     import { useSelector, useDispatch } from 'react-redux';
+     import type { RootState } from '../store';
+     ```
+   - Use `useSelector` to access state:
+     ```typescript
+     const someData = useSelector((state: RootState) => state.someSlice.someData);
+     ```
+   - Use `useDispatch` to dispatch actions:
+     ```typescript
+     const dispatch = useDispatch();
+     dispatch(someSliceActions.someAction());
+     ```
+   - If creating a new slice, use `createSlice` from Redux Toolkit:
+     ```typescript
+     import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+     const someSlice = createSlice({
+       name: 'some',
+       initialState,
+       reducers: {
+         someAction(state, action: PayloadAction<SomeType>) {
+           // update state
+         },
+       },
+     });
+
+     export const { someAction } = someSlice.actions;
+     export default someSlice.reducer;
+     ```
+   - Ensure the slice is added to the root reducer in `store.ts`
+   - Add any necessary custom logic or additional Redux-related code
+
+Always refer to and adhere to Redux best practices when creating or modifying components.
+Clearly understand the responsibilities of each component and ensure Redux is used appropriately.
+Avoid unnecessary use of Redux for local component state.

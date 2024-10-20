@@ -1,15 +1,13 @@
-import { useEffect, useCallback, useRef  } from "react";
+import { useCallback } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootStore } from "../../store/congifureStore";
+import { useDispatch } from "react-redux";
 import { setViewSelect, setSettingSelect } from "../../features/reducers/tabPageSlice";
 import { setIsLoading } from "../../features/reducers/settingSlice";
 import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
-import { throttle } from 'lodash';
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
 import { HeaderProps } from "../../static/interfaces";
 import { HeaderMenus } from "./HeaderMenus";
@@ -17,21 +15,6 @@ import { HeaderMenus } from "./HeaderMenus";
 export default function Header({ paramMain }: HeaderProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const settingSetMenus = useSelector((state: RootStore) => state.settingReducer.menus);
-  // const viewPosition = useSelector((state: RootStore) => state.tabPageReducer.viewPosition);
-  // const isInitialMount = useRef(true);
-
-  // useEffect(() => {
-  //   if (isInitialMount.current) {
-  //     isInitialMount.current = false;
-  //     if (settingSetMenus.length > 0) {
-  //       const [mainId, subId] = settingSetMenus[0].split('').map(Number);
-  //       if (viewPosition.main !== mainId || viewPosition.sub !== subId) {
-  //         dispatch(setViewSelect({ mainTab: mainId, subTab: subId }));
-  //       }
-  //     }
-  //   }
-  // }, [dispatch, settingSetMenus]); // 의존성 배열에서 viewPosition 제거
 
   const handleMenuClick = useCallback((mainId: number, subId: number) => {
     dispatch(setIsLoading(true));
@@ -122,19 +105,6 @@ const MenusContainer = styled(BaseFlex1Column)`
   width: calc(100% - 270px);
   background: linear-gradient(to bottom, ${COLORSET_HEADER_BTN_LINEAR1}, ${COLORSET_HEADER_BTN_LINEAR2});
   gap: 0px;
-`;
-
-const MainMenuControls = styled.div`
-  display: flex;
-  // grid-template-columns: repeat(5, 1fr);
-  
-  height: 50px;
-`;
-
-const SubMenuControlsFlex = styled.div`
-  display: flex;
-  // grid-template-columns: repeat(10, 1fr);
-  height: 30px;
 `;
 
 const SettingButton = styled.button<{ $enable: boolean, fontSize?: string }>`

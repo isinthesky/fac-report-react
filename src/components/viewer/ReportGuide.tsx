@@ -7,7 +7,7 @@ import { RootStore } from "../../store/congifureStore";
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
 import { BaseFlex1Row, BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
-import { CONST_TYPE_INFO, TypeInfo, TableType, isValidTableType, isValidTableUserType, isValidTableDataType } from "../../env";
+import { CONST_TYPE_INFO, isValidTableUserType, isValidTableDataType } from "../../env";
 import { isDataTableTypeByInt } from "../../static/utils";
 
 type ReportGuideProps = {

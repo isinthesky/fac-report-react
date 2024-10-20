@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import styled from "styled-components";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
-import { COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_HEADER_BORDER2 } from "../../static/colorSet";
+import { COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "../../static/colorSet";
 import { SelectedTab } from "../../static/types";
 
 interface MenuProps {
@@ -89,11 +89,6 @@ const SubMenuGrid = styled.div`
   height: 30px;
 `;
 
-const MenuGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const MainButton = styled.button<{ $isActive: boolean; $isEmpty?: boolean; }>`
   height: 50px;
   color: ${(props) => props.$isActive ? "white" : "#444"};
@@ -111,9 +106,4 @@ const SubButton = styled.button<{ $isActive: boolean; $isEmpty?: boolean; }>`
   background-color: transparent;
   border: 0px solid black;
   visibility: ${(props) => props.$isEmpty ? "hidden" : "visible"};
-`;
-
-const SubMenuContainer = styled.div`
-  display: flex;
-  height: 30px;
 `;
