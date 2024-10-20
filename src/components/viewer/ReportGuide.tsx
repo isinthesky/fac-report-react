@@ -36,21 +36,21 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
           {Array.from({ length: column }).map((_, colIndex) => {
             const index = rowIndex * column + colIndex;
             const currentTable = currentTab.tables[index];
-
+  
             if (currentTable.disable) {
-              return <></>;
+              return <React.Fragment key={`report-guide-disabled-${index}`}></React.Fragment>;
             }
-
+  
             if (isDataTableTypeByInt(currentTable.type)) {
               const typeInfo = CONST_TYPE_INFO.find(info => info.index === currentTable.type);
               const tableType = typeInfo?.keyword;
               
               if (tableType && isValidTableDataType(tableType)) {
                 return (
-                  <Container key={`report-guide-container-${colIndex}`} mode="view">
+                  <Container key={`report-guide-container-${index}`} mode="view">
                     <TimeContainer mode="view">
-                      {times.map((time: string, index: number) => (
-                        <TimeDiv key={`report-guide-time-${index}`}>{time}</TimeDiv>
+                      {times.map((time: string, timeIndex: number) => (
+                        <TimeDiv key={`report-guide-time-${index}-${timeIndex}`}>{time}</TimeDiv>
                       ))}
                     </TimeContainer>
                     <BaseFlex1Row>
@@ -64,13 +64,12 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                 )
               }
             } else {
-
               const typeInfo = CONST_TYPE_INFO.find(info => info.index === currentTable.type);
               const tableType = typeInfo?.keyword;
-
+  
               if (tableType && isValidTableUserType(tableType)) {
                 return (
-                <Container key={`report-guide-container-${colIndex}`} mode="view">
+                <Container key={`report-guide-container-${index}`} mode="view">
                   <TableUser 
                     key={`report-guide-table-user-${index}`}
                     currentTable={currentTable} 
@@ -80,11 +79,12 @@ const ReportGuide: React.FC<ReportGuideProps> = ({ row, column }) => {
                 );
               }
             }
+            return <React.Fragment key={`report-guide-empty-${index}`}></React.Fragment>;
           })}
         </RowContainer>
       ));
     };
-  }, [currentTab, row, column]); // Add dependencies here
+  }, [currentTab, row, column]);
 
   return <>{renderDevice()}</>;
 };

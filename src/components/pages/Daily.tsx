@@ -106,7 +106,10 @@ const Daily: React.FC = () => {
   }, [date, dispatch]);
     
   const resetTabUserTableInfo = useCallback(async () => {
-    if (!tabPageSet.currentTabPage || !tabPageSet.currentTabPage.name) {
+    if (!tabPageSet.currentTabPage) {
+      return false;
+    }
+    if (!tabPageSet.currentTabPage.name){
       return false;
     }
 
