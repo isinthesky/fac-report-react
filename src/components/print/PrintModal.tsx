@@ -9,9 +9,7 @@ import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../
 import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../../static/langSet';
 import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSet';
 import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
-import { CONST_TYPE_INFO } from "../../env";
-import { isDataTableTypeByInt, isUserTableTypeByInt } from "../../static/utils";
-import { Unit } from "../../static/types";
+import { isDataTableTypeByInt } from "../../static/utils";
 
 
 type PrintGuideProps = {
@@ -51,11 +49,10 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                       <TimeDiv key={index} fontSize={settingSlice.printFontSize + "px"}>{time.substring(0, 2)}</TimeDiv>
                     ))}
                   </TimeContainer>
-                  <DeviceContainer>
+                  <DeviceContainer>   
                     <TableData 
                       key={`print-table-data-${index}`}
                       currentTable={currentTable} 
-                      type={CONST_TYPE_INFO[currentTable.type].keyword as "V" | "W" | "R" | "S"} 
                       times={times}
                     />
                   </DeviceContainer>
@@ -67,8 +64,7 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
                   <DeviceContainer>
                     <TableUser
                       key={`print-table-user-${index}`}
-                      currentTable={currentTab?.tables[index] || {} as Unit} 
-                      type={CONST_TYPE_INFO[currentTable.type].keyword as "U1" | "U2" | "TR"} 
+                      currentTable={currentTable} 
                       times={null}
                     />
                   </DeviceContainer>
@@ -79,8 +75,6 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
       </UnitContainerLine>
     ));
   };
-
-  console.log("settingSlice.approvals", settingSlice.approvals);
 
   return (
     <PrintArea ref={ref}>

@@ -7,33 +7,35 @@ import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
 import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
+import { TABLE_TYPE_STR_TO_INT } from "../../env";
 
-
-const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" }> = ({ currentTable, type, times }) => {
+const TableData: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const [deviceValues, setDeviceValues] = useState<{ [key: string]: string[] } | null>(null);
   const [tableDevices, setTableDevices] = useState<Item[] | null>(null);
   const sections = useMemo(() => ({
-    V: [
+    [TABLE_TYPE_STR_TO_INT["V"]]: [
       { label: "V", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
       { label: "/", values: ["PF","Hz", "KW"] },
     ],
-    W: [
+    [TABLE_TYPE_STR_TO_INT["W"]]: [
       { label: "W", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
       { label: "/", values: ["PF","Hz", "KW"] },
     ],
-    R: [
+    [TABLE_TYPE_STR_TO_INT["R"]]: [
       { label: "AC(V)", values: ["R-S", "S-T", "T-R"] },
       { label: "/", values: ["Hz", "DC(V)", "DC(A)", "Alram"] }
     ],
-    S: [
+    [TABLE_TYPE_STR_TO_INT["S"]]: [
       { label: "V", values: ["R-S", "S-T", "T-R"] },
       { label: "A", values: ["R", "S", "T"] },
       { label: "/", values: ["Hz", "kW"]}
     ]
-  }[type]), [type]);
+  }), [currentTable.type]);
+
+  const type = currentTable.type as keyof typeof sections;
 
   useEffect(() => {
     setDeviceValues(currentTable.device_values);
@@ -44,7 +46,7 @@ const TableData: React.FC<ViewUnitProps & { type: "V" | "W" | "R" | "S" }> = ({ 
     let deviceIndex = 0;
     return (
       <>
-        {sections.map((section, sectionIdx) => ((
+        {sections[type].map((section, sectionIdx) => ((
           <Column key={`section-${sectionIdx}`} >
             <Row>
               <SectionDiv mode={settingSlice.viewMode} fontSize={settingSlice.printFontSize + "px"}>

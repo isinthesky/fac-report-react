@@ -61,7 +61,7 @@ export const CONST_TYPE_INFO: TypeInfo[] = [
 
 export type TableType = 'V' | 'W' | 'R' | 'S' | 'TR' | 'U1' | 'U2' | 'HIDE';
 
-export const UNIT_TYPE_INFO: Record<TableType, number> = {
+export const TABLE_TYPE_STR_TO_INT: Record<TableType, number> = {
   'V': 1,
   'W': 2,
   'R': 3,
@@ -72,10 +72,20 @@ export const UNIT_TYPE_INFO: Record<TableType, number> = {
   'HIDE': 9001
 };
 
-export const UNIT_TYPE_KEYWORDS = Object.keys(UNIT_TYPE_INFO) as TableType[];
+export const TABLE_TYPE_INT_TO_STR: Record<number, TableType> = {
+  1: "V",
+  2: "W",
+  3: "R",
+  4: "S",
+  1001: "U1",
+  1002: "U2",
+  1003: "TR"
+}
+
+export const TABLE_TYPE_INT_KEYWORDS = Object.keys(TABLE_TYPE_INT_TO_STR) as TableType[];
 
 export function isValidTableType(type: string): type is TableType {
-  return UNIT_TYPE_KEYWORDS.includes(type as TableType);
+  return TABLE_TYPE_INT_KEYWORDS.includes(type as TableType);
 }
 
 export function isValidTableDataType(type: string): type is "V" | "W" | "R" | "S" {
