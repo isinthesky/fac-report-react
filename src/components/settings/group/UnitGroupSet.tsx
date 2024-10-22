@@ -32,8 +32,8 @@ const UnitGroupSet: React.FC = () => {
     dispatch(deleteDevice(index));
   };
 
-  const handleSave = async  () => {
-    dispatch(updateDevice(presetSlice.selectedPos));
+  const handleSave = async () => {
+    dispatch(updateDevice({ index: presetSlice.selectedPos, group: { ...presetSlice.currentGroup } }));
   };
 
   const handleCancel = () => {

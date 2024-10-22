@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DailySetting, ApprovalsType } from "../../static/types";
-import { INIT_PRINT_TITLE } from "../../env";
+import { INIT_PRINT_TITLE, CONST_APP_STATE } from "../../env";
 
 export interface SettingState {
   menus: string[];
@@ -25,7 +25,7 @@ const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yes
 
 const initialState: SettingState = {
   menus: [],
-  date: lastyear.getTime(), // yesterday.getTime(),
+  date: CONST_APP_STATE === "product" ? yesterday.getTime() : lastyear.getTime(),
   unitPostion: { row: 1, column: 1 },
   tabSetting: [],
   viewMode: "view",

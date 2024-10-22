@@ -26,19 +26,22 @@ export const unitGroupSlice = createSlice({
     addUnitGroup: (state, action: PayloadAction<Preset>) => {
       state.groups.push(action.payload);
     },
-    updateGroup: (state, action: PayloadAction<{ index: number; group: Preset }>) => {
+    updateGroup: (state, action: PayloadAction<{ index: number; group: Partial<Preset> }>) => {
       const { index, group } = action.payload;
       if (state.groups[index]) {
-        state.groups[index] = group;
+        state.groups[index] = { ...state.groups[index], ...group };
+    
+        // 현재 선택된 그룹이면 currentGroup도 업데이트
+        if (state.selectedPos === index) {
+          state.currentGroup = { ...state.currentGroup, ...group };
+        }
       } else {
-        state.groups.push(group)
+        state.groups.push({ ...group } as Preset);
       }
     },
     updateFromCurrent: (state, action: PayloadAction<number>) => {
       if (state.groups[action.payload]) {
-        state.groups[action.payload] = JSON.parse(
-          JSON.stringify(state.currentGroup)
-        );
+        state.groups[action.payload] = { ...state.currentGroup };
       }
     },
     deleteGroup: (state, action: PayloadAction<number>) => {
@@ -73,8 +76,11 @@ export const unitGroupSlice = createSlice({
         tab_device_presets: state.currentGroup.tab_device_presets.filter((_, idx) => idx !== action.payload),
       };
     },
-    updateDevice: (state, action: PayloadAction<number>) => {      
-      state.groups[action.payload] = state.currentGroup;
+    updateDevice: (state, action: PayloadAction<{ index: number; group: Preset }>) => {
+      const { index, group } = action.payload;
+      if (state.groups[index]) {
+        state.groups[index] = { ...group };
+      }
     },
   },
 });

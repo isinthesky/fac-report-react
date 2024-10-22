@@ -104,13 +104,13 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
 
 const PrintArea = styled(BaseFlexColumn)`
   position: relative;
-  width: 257mm;
-  height: 170mm;
+  width: 290mm;
+  height: 190mm;
 
-  margin: 5px 0px;
-  padding: 0px 5px;
+  margin: 1px;
+  padding: 1px;
   
-  border: 1px solid #333;
+  border: 0px solid #333;
   background-color: #FFF;
 `;
 

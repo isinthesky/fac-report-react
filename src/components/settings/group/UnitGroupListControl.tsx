@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { addUnitGroup, updateGroup, updateFromCurrent, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
+import { addUnitGroup, updateGroup, updateFromCurrent, updateCurrentGroup, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BigLabel, ControlButton, MediumLabel } from '../../../static/componentSet';
 import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
@@ -22,18 +22,24 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
 
   const toggleEdit = (index: number) => {
-    setEditMode(prev => ({ ...prev, [index]: !prev[index] }));
-
-    if (editMode[index]) {
-      const updatedGroup = { ...unitGroupSlice.groups[index], name: editedNames[index] || unitGroupSlice.groups[index].name };
-      dispatch(updateGroup({ index, group: updatedGroup }));
-    } 
-
-    if (!editMode[index]) {
-      setTimeout(() => {
-        inputRefs.current[index]?.focus();
-      }, 0);
-    }
+    setEditMode(prev => {
+      const newEditMode: { [key: number]: boolean } = { ...prev, [index]: !prev[index] };
+  
+      if (!newEditMode[index]) {
+        const updatedGroup = { ...unitGroupSlice.groups[index], name: editedNames[index] };
+        dispatch(updateGroup({ index, group: updatedGroup }));
+  
+        if (unitGroupSlice.selectedPos === index) {
+          dispatch(updateCurrentGroup(updatedGroup));
+        }
+      } else {
+        setTimeout(() => {
+          inputRefs.current[index]?.focus();
+        }, 0);
+      }
+  
+      return newEditMode;
+    });
   };
 
   const editCancel = (index: number) => {
