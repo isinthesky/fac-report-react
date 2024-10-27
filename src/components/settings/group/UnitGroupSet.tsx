@@ -38,17 +38,8 @@ const UnitGroupSet: React.FC = () => {
       const currentPreset = presetSlice.currentPresetTable;
       const hasNewDevices = currentPreset.tab_device_presets.some(device => device.id === 0);
   
-      if (!hasNewDevices) {
-        // If there are no new devices, update directly
-        const result = await updatePresetDevices(currentPreset);
-        if (result) {
-          alert("저장 되었습니다.");
-        } else {
-          alert("디바이스 프리셋 업데이트에 실패했습니다.");
-        }
-        return;
-      }
-  
+      console.log(currentPreset);
+
       // Update preset table
       const tabUpdateResult = await updatePresetTable(
         currentPreset.id,
@@ -63,32 +54,36 @@ const UnitGroupSet: React.FC = () => {
         alert("프리셋 탭 업데이트에 실패했습니다.");
         return;
       }
-  
+
+      console.log(tabUpdateResult, tabUpdateResult.data);
+
       // Find updated preset in the result
       const updatedPreset = tabUpdateResult.data.find((item: Preset) => item.id === currentPreset.id);
       if (!updatedPreset) {
         alert("업데이트된 프리셋을 찾을 수 없습니다.");
         return;
       }
-  
-      // Merge new device data
-      updatedPreset.tab_device_presets = updatedPreset.tab_device_presets.map((device: Item, index: number) => {
-        const currentDevice = currentPreset.tab_device_presets[index];
-        if (currentDevice.id === 0 && currentDevice.path_id > 0) {
-          return {
-            ...device,
-            station_id: currentDevice.station_id,
-            division_id: currentDevice.division_id,
-            path_id: currentDevice.path_id,
-          };
-        }
-        return device;
-      });
-  
+
+      if (hasNewDevices) {
+        // Merge new device data
+        updatedPreset.tab_device_presets = updatedPreset.tab_device_presets.map((device: Item, index: number) => {
+          const currentDevice = currentPreset.tab_device_presets[index];
+          if (currentDevice.id === 0 && currentDevice.path_id > 0) {
+            return {
+              ...device,
+              station_id: currentDevice.station_id,
+              division_id: currentDevice.division_id,
+              path_id: currentDevice.path_id,
+            };
+          }
+          return device;
+        });
+      }
+
       // Update Redux store
       dispatch(updateGroup({ index: presetSlice.selectedPos, group: updatedPreset }));
       dispatch(updateFromCurrent(presetSlice.selectedPos));
-  
+
       // Save updated devices
       const result = await updatePresetDevices(updatedPreset);
       if (result) {
