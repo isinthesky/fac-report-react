@@ -11,7 +11,9 @@ import { RootStore } from "../../../store/congifureStore";
 import { Item, Preset } from "../../../static/types";
 import UnitGroupAutoSelect from "./UnitGroupSelector";
 import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
-import { addDevice, setCurrentGroup, updateDevice, deleteDevice } from "../../../features/reducers/unitGroupSlice";
+import { addDevice, setCurrentGroup, updateDevice, deleteDevice, updateGroup, updateFromCurrent, updateCurrentGroup } from "../../../entities/reducers/unitGroupSlice";
+import { updatePresetDevices } from "../../../features/preset";
+import { updatePresetTable } from "../../../entities/api/device";
 
 const UnitGroupSet: React.FC = () => {
   const navigate = useNavigate();
@@ -24,8 +26,7 @@ const UnitGroupSet: React.FC = () => {
   }, [dispatch, presetSlice.selectedPos]);
 
   const handleAdd = () => {
-    const newGroup = {idx: 0, station_id: 0, division_id: 0, path_id: 0} as Item;
-    dispatch(addDevice(newGroup));
+    dispatch(addDevice());
   };
 
   const handleDelete = (index: number) => {
@@ -33,14 +34,79 @@ const UnitGroupSet: React.FC = () => {
   };
 
   const handleSave = async () => {
-    dispatch(updateDevice({ index: presetSlice.selectedPos, group: { ...presetSlice.currentGroup } }));
+    try {
+      const currentPreset = presetSlice.currentPresetTable;
+      const hasNewDevices = currentPreset.tab_device_presets.some(device => device.id === 0);
+  
+      if (!hasNewDevices) {
+        // If there are no new devices, update directly
+        const result = await updatePresetDevices(currentPreset);
+        if (result) {
+          alert("저장 되었습니다.");
+        } else {
+          alert("디바이스 프리셋 업데이트에 실패했습니다.");
+        }
+        return;
+      }
+  
+      // Update preset table
+      const tabUpdateResult = await updatePresetTable(
+        currentPreset.id,
+        currentPreset.name,
+        currentPreset.type,
+        currentPreset.tab_device_presets.length,
+        currentPreset.search_st,
+        currentPreset.search_div
+      );
+  
+      if (!tabUpdateResult) {
+        alert("프리셋 탭 업데이트에 실패했습니다.");
+        return;
+      }
+  
+      // Find updated preset in the result
+      const updatedPreset = tabUpdateResult.data.find((item: Preset) => item.id === currentPreset.id);
+      if (!updatedPreset) {
+        alert("업데이트된 프리셋을 찾을 수 없습니다.");
+        return;
+      }
+  
+      // Merge new device data
+      updatedPreset.tab_device_presets = updatedPreset.tab_device_presets.map((device: Item, index: number) => {
+        const currentDevice = currentPreset.tab_device_presets[index];
+        if (currentDevice.id === 0 && currentDevice.path_id > 0) {
+          return {
+            ...device,
+            station_id: currentDevice.station_id,
+            division_id: currentDevice.division_id,
+            path_id: currentDevice.path_id,
+          };
+        }
+        return device;
+      });
+  
+      // Update Redux store
+      dispatch(updateGroup({ index: presetSlice.selectedPos, group: updatedPreset }));
+      dispatch(updateFromCurrent(presetSlice.selectedPos));
+  
+      // Save updated devices
+      const result = await updatePresetDevices(updatedPreset);
+      if (result) {
+        alert("저장 되었습니다.");
+      } else {
+        alert("디바이스 프리셋 업데이트에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error('Failed to update preset:', error);
+      alert("프리셋 업데이트 중 오류가 발생했습니다.");
+    }
   };
 
   const handleCancel = () => {
     navigate("/settings", { state: { fromNavigate: true } });
   }
 
-  const renderSection = (index1: number, unit: Preset) => {
+  const renderSection = (index: number, unit: Preset) => {
     return <>
       {unit.tab_device_presets.map((device: Item, idx: number) => {
           const initStationId = (device.path_id !== 0) ? device.station_id : unit.search_st;
@@ -72,13 +138,13 @@ const UnitGroupSet: React.FC = () => {
         <DevicesContainer>
           <BigLabel>{STRING_SETTING_GROUP_DEVICE_LIST}</BigLabel>
           <BaseFlex1Column>
-            { renderSection(0, presetSlice.currentGroup) }
+            { renderSection(0, presetSlice.currentPresetTable) }
           </BaseFlex1Column>
           <ButtonsContainer>
             <BaseButton onClick={handleAdd} widthsize={"50px"}>
               {STRING_SETTING_GROUP_ADD}
             </BaseButton>
-            <BaseButton onClick={() => handleDelete(presetSlice.currentGroup.tab_device_presets.length - 1)} widthsize={"50px"}>
+            <BaseButton onClick={() => handleDelete(presetSlice.currentPresetTable.tab_device_presets.length - 1)} widthsize={"50px"}>
               {STRING_SETTING_GROUP_DELETE}
             </BaseButton>
           </ButtonsContainer>

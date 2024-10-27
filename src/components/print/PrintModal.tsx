@@ -11,12 +11,10 @@ import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSe
 import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
 import { isDataTableTypeByInt } from "../../static/utils";
 
-
 type PrintGuideProps = {
   row: number;
   column: number;
 };
-
 
 const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column }, ref) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
@@ -85,7 +83,6 @@ const PrintModal = forwardRef<HTMLDivElement, PrintGuideProps>(({ row, column },
           {settingSlice?.approvals.filter(
             (item:ApprovalsType) => item.checked).map(
               (item:ApprovalsType, idx:number) => {
-                console.log("item", item);
                 return (
                   <ApproveDiv key={idx} gap="1px">
                     <NameDiv> {item.text} </NameDiv>

@@ -54,3 +54,5 @@
 Always refer to and adhere to Redux best practices when creating or modifying components.
 Clearly understand the responsibilities of each component and ensure Redux is used appropriately.
 Avoid unnecessary use of Redux for local component state.
+
+Finally, please answer me in Korean.

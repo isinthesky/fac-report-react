@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import ComposeSet from "../settings/set/ComposeSet";
 import ComposeView from "../settings/view/ComposeView";
-import { getDeviceDict, getStationList, getUnitGroupList} from "../../features/api/device";
-import { loadDeviceList, loadStaitionList, loadDivisionList } from "../../features/reducers/deviceSlice";
-import { loadUnitGroupList } from "../../features/reducers/unitGroupSlice";
+import { getDeviceDict, getStationList, getUnitGroupList} from "../../entities/api/device";
+import { loadDeviceList, loadStaitionList, loadDivisionList } from "../../entities/reducers/deviceSlice";
+import { loadUnitGroupList } from "../../entities/reducers/unitGroupSlice";
 import TabControlBar from "../settings/TabControlBar";
 import { BaseFlex1Column } from "../../static/componentSet";
 import { COLORSET_BACKGROUND_COLOR } from "../../static/colorSet";
@@ -17,9 +17,9 @@ import Header from "../header/Header";
 import PageControlBar from "../settings/PageControlBar";
 import PrintSetting from "../settings/PrintSetting";
 import { RootStore } from "../../store/congifureStore";
-import { setApproves } from "../../features/reducers/settingSlice"
-import { setSettingSelect } from "../../features/reducers/tabPageSlice";
-import { fetchPageSettings } from "../../features/api/common";
+import { setApproves } from "../../entities/reducers/settingSlice"
+import { setSettingSelect, setViewSelect } from "../../entities/reducers/tabPageSlice";
+import { fetchPageSettings } from "../../entities/api/common";
 
 function Settings() {
   const dispatch = useDispatch();
@@ -27,6 +27,15 @@ function Settings() {
   const params  = useParams();
   const location = useLocation();
   const tabPageSlice = useSelector((state: RootStore) => state.tabPageReducer);
+
+
+  // Define handleMenuClick
+  const handleMenuClick = useCallback(
+    (mainTab: number, subTab: number) => {
+      dispatch(setViewSelect({ mainTab, subTab }));
+    },
+    [dispatch]
+  );
   
   useEffect(() => {
     const fetchData = async () => {
@@ -60,8 +69,6 @@ function Settings() {
         }
 
         dispatch(setSettingSelect({mainTab: settingMainTab, subTab: settingSubTab}))
-        dispatch(setApproves(tabPageSlice.tabPageInfo[settingMainTab][settingSubTab].approves))
-
       } catch (error) {
         console.error(error);
       }
@@ -83,7 +90,7 @@ function Settings() {
 
   return (
     <Flat>
-      <Header paramMain={0} />
+      <Header paramMain={0} onMenuClick={handleMenuClick} />
       <PageControlBar modeCallback={setMode} mode={mode} />
       {mode === CONST_SETTING_MODE_VIEW ? (
         <>

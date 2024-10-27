@@ -15,7 +15,18 @@ const initialState: TabPageState = {
   viewPosition: {main: 0, sub: 0},
   settingPosition: {main: 0, sub: 0},
   currentTabPage: null,
-  tabPageInfo: Array(5).fill(Array(8).fill({id: 0, approves: [], times: Array(4).fill('00:00'), tables: Array(9).fill(0), user_tables: [] }))
+  tabPageInfo: Array.from({ length: 5 }, () =>
+    Array.from({ length: 10 }, () => ({
+      id: 0,
+      name: "",
+      tbl_row: 0,
+      tbl_column: 0,
+      approves: [],
+      times: Array(4).fill('00:00'),
+      tables: Array(9).fill(0),
+      user_tables: []
+    }))
+  )
 };
 
 export const tabPageSlice = createSlice({
@@ -24,10 +35,17 @@ export const tabPageSlice = createSlice({
   reducers: {
     setViewSelect: (state, action: PayloadAction<{mainTab: number, subTab: number}>) => {
       const { mainTab, subTab } = action.payload;
-      const selectedTab = state.tabPageInfo[mainTab][subTab];
-      if (selectedTab) {
-        state.currentTabPage = selectedTab;
-        state.viewPosition = {main: mainTab, sub: subTab};
+
+      // Only update if the tab is actually changing
+      if (
+        state.viewPosition.main !== mainTab ||
+        state.viewPosition.sub !== subTab
+      ) {
+        const selectedTab = state.tabPageInfo[mainTab][subTab];
+        if (selectedTab) {
+          state.currentTabPage = { ...selectedTab }; // Create a new object
+          state.viewPosition = { main: mainTab, sub: subTab };
+        }
       }
     },
 

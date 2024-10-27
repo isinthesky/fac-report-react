@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IDivision, IStation, IDevice, DeviceSelectProps, Item } from "../../../static/types";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentUnitDevice } from "../../../features/reducers/tabPageSlice";
+import { setCurrentUnitDevice } from "../../../entities/reducers/tabPageSlice";
 import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
 import { RootStore } from "../../../store/congifureStore";
 import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT } from "../../../static/colorSet";

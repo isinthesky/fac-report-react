@@ -21,11 +21,11 @@ const oneDayMillisec = 24 * 60 * 60 * 1000;
 const yesterday = new Date(today.getTime() - oneDayMillisec);
 
 // 개발
-const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth(), yesterday.getDate());
+const lastyear = new Date(yesterday.getFullYear() - 2, yesterday.getMonth(), yesterday.getDate());
 
 const initialState: SettingState = {
   menus: [],
-  date: CONST_APP_STATE === "product" ? yesterday.getTime() : lastyear.getTime(),
+  date: CONST_APP_STATE === "PRODUCT" ? yesterday.getTime() : lastyear.getTime(),
   unitPostion: { row: 1, column: 1 },
   tabSetting: [],
   viewMode: "view",

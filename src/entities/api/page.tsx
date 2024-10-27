@@ -31,7 +31,6 @@ export const get_page_list = async (): Promise<any> => {
 
 export const get_page_setting = async (tabName: string, withValue: boolean): Promise<any> => {
   try {
-    console.log("get_page_setting call", tabName, withValue)
     const params = {
         tab_name: tabName,
         with_table_info: true,
@@ -122,7 +121,6 @@ export const update_tab_device_value = async (tabName: string): Promise<any> => 
 
 export const get_history_page_setting = async (tabName: string, date: string): Promise<any> => {
   try {
-    console.log("get_history_page_setting call", tabName, date)
     const params = {
         tab_name: tabName,
         target_date: date,

@@ -174,14 +174,14 @@ export const getUnitGroupList = (): Promise<any> => {
 };
 
 
-export const updatePresetTab = (
+export const updatePresetTable = (
     id: number,
     name: string,
     type: number,
     max_device: number,
     search_st: number,
     search_div: number
-  ): Promise<boolean> => {
+  ): Promise<any> => {
     const data = {
       id: id,
       name: name,
@@ -193,7 +193,7 @@ export const updatePresetTab = (
     return axiosInstance.put("/FacReport/PageInfo/TabTablePreset/update", data)
       .then(response => {
       if (response.data.content.success) {
-        return true;
+        return response.data.content.data;
       } else {
         return false;
       }

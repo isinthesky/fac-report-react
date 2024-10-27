@@ -1,10 +1,9 @@
 import { Dispatch } from 'redux';
 import { get_page_list, get_page_setting, reset_tab_user_table_info, updateTabDate } from './page';
-import { setTabSetting } from '../reducers/settingSlice';
+import { setApproves, setTabSetting } from '../reducers/settingSlice';
 import { setTabPage } from '../reducers/tabPageSlice';
 import { INIT_TAB_COUNT } from  '../../env';
-import { Unit, UserTableType } from '../../static/types';
-import { isUserTableTypeByInt } from '../../static/utils';
+import { getTabPageSetting } from '../../features/page';
 
 export async function fetchPageSettings(dispatch: Dispatch, date: string | null) {
   const buttons: string[] = []; 
@@ -35,27 +34,13 @@ export async function fetchPageSettings(dispatch: Dispatch, date: string | null)
               await updateTabDate(tempTabInfo, date);
             }
 
-            const resPageSetting = await get_page_setting(tempTabInfo, true);
-
-            if (resPageSetting) {     
-              resPageSetting.name = tempTabInfo;
-
-              const newTables = resPageSetting.tables.map((table: Unit) => {
-                if (isUserTableTypeByInt(table.type)) {
-                  const userTable = resPageSetting.user_tables.find((userTable: UserTableType) => userTable.idx === table.idx);
-                  if (userTable) {
-                    table.id = userTable.id;
-                    table.name = userTable.name;
-                    table.disable = userTable.disable;
-                    table.device_values = userTable.user_data;
-                  }
-                }
-                return table;
-              })
+            const resPage = await getTabPageSetting(tempTabInfo);
+            if (resPage) {
+              if (mainId === 1 && subId === 1) {
+                dispatch(setApproves(resPage.approves));
+              }
               
-              resPageSetting.tables = newTables;
-              
-              dispatch(setTabPage({ mainTab: mainId, subTab: subId, tabInfo: resPageSetting }));
+              dispatch(setTabPage({ mainTab: mainId, subTab: subId, tabInfo: resPage }));
             }
 
             if (count >= Number(INIT_TAB_COUNT)) {

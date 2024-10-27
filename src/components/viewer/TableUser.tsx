@@ -7,7 +7,7 @@ import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BA
 import { useSelector, useDispatch } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import { isUserTableTypeByInt, renderWithLineBreaks } from "../../static/utils";
-import { setCurrentTableValues } from "../../features/reducers/tabPageSlice";
+import { setCurrentTableValues } from "../../entities/reducers/tabPageSlice";
 import { TABLE_TYPE_STR_TO_INT } from "../../env";
 const sections = {
   [TABLE_TYPE_STR_TO_INT["U1"]]: [

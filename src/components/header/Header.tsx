@@ -1,26 +1,25 @@
+import React from "react";
 import { useCallback } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setViewSelect, setSettingSelect } from "../../features/reducers/tabPageSlice";
-import { setIsLoading } from "../../features/reducers/settingSlice";
+import { setViewSelect, setSettingSelect } from "../../entities/reducers/tabPageSlice";
+import { setIsLoading } from "../../entities/reducers/settingSlice";
 import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
 import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
 import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
 import { ICON_HEADER_SETTING } from "../../static/constSet";
 import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
-import { HeaderProps } from "../../static/interfaces";
 import { HeaderMenus } from "./HeaderMenus";
 
-export default function Header({ paramMain }: HeaderProps) {
+interface HeaderProps {
+  paramMain: number;
+  onMenuClick: (mainTab: number, subTab: number) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ paramMain, onMenuClick }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const handleMenuClick = useCallback((mainId: number, subId: number) => {
-    dispatch(setIsLoading(true));
-    dispatch(setViewSelect({mainTab: mainId, subTab: subId}));
-    navigate("/daily");
-  }, [navigate, dispatch]);
 
   const handleGoSetting = useCallback(() => {
     dispatch(setViewSelect({mainTab: 0, subTab: 0}));
@@ -32,6 +31,16 @@ export default function Header({ paramMain }: HeaderProps) {
     navigate("/");
   }, [navigate]);
   
+  const handleMenuItemClick = useCallback(
+    (mainTab: number, subTab: number) => {
+      console.log("Header Menu Clicked - Main Tab:", mainTab, "Sub Tab:", subTab);
+
+      onMenuClick(mainTab, subTab);
+      navigate("/daily");
+    },
+    [onMenuClick]
+  );
+
   return (
     <TopHeader>
       <TitleContainer>
@@ -43,7 +52,7 @@ export default function Header({ paramMain }: HeaderProps) {
         </TitleTextContainer>
       </TitleContainer>
       <MenusContainer>
-        <HeaderMenus onClickCallback={handleMenuClick} isSettingsActive={paramMain === 0} />
+        <HeaderMenus onClickCallback={handleMenuItemClick} isSettingsActive={paramMain === 0} />
       </MenusContainer>
       <SettingButton $enable={paramMain === 0} onClick={handleGoSetting}>
         <img src={`${ICON_HEADER_SETTING}`} alt="settings" />
@@ -115,3 +124,5 @@ const SettingButton = styled.button<{ $enable: boolean, fontSize?: string }>`
   border-left: 1px solid #333;
   border-bottom: 1px solid #333;
 `;
+
+export default Header;

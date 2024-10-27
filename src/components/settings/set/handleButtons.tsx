@@ -1,5 +1,5 @@
-import { setResetSettings } from "../../../features/api";
-import { resetXmlDevice } from "../../../features/api/device";
+import { setResetSettings } from "../../../entities/api";
+import { resetXmlDevice } from "../../../entities/api/device";
 
 
 export const handleInitSettings = async () => {

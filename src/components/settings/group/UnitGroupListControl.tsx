@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { addUnitGroup, updateGroup, updateFromCurrent, updateCurrentGroup, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../features/reducers/unitGroupSlice';
+import { addUnitGroup, updateGroup, updateFromCurrent, updateCurrentGroup, deleteGroup, setCurrentGroup, setSelectedGroup } from '../../../entities/reducers/unitGroupSlice';
 import { RootStore } from '../../../store/congifureStore';
 import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlex1Div, BaseFlex1Row, BaseFlexDiv, BigLabel, ControlButton, MediumLabel } from '../../../static/componentSet';
 import { ICON_DAY_CHECK, ICON_DAY_EDIT, ICON_DAY_UNDO, SIZESET_DEFAULT_INPUT_HEIGHT,  } from '../../../static/constSet';
@@ -9,8 +9,9 @@ import { STRING_SETTING_GROUP_ADD, STRING_SETTING_GROUP_APPLY, STRING_SETTING_GR
 import { Preset, ViewModeProp } from '../../../static/types';
 import { FONTSET_DEFAULT_INPUT_SIZE } from '../../../static/fontSet';
 import { COLORSET_GROUP_INPUT_NOMAL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_GROUP_CONTROL_BG, COLORSET_GROUP_CONTROL_BORDER, COLORSET_GROUP_INPUT_ACTIVE_BORDER, COLORSET_GROUP_INPUT_ACTIVE_FONT, COLORSET_GROUP_INPUT_NOMAL_BORDER, COLORSET_GROUP_INPUT_NOMAL_FONT } from '../../../static/colorSet';
-import { setCurrentUnit } from '../../../features/reducers/tabPageSlice';
-import { setdeviceSearchWord } from '../../../features/reducers/settingSlice';
+import { setCurrentUnit } from '../../../entities/reducers/tabPageSlice';
+import { setdeviceSearchWord } from '../../../entities/reducers/settingSlice';
+import { updatePresetTable } from '../../../entities/api/device';
 
 
 const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
@@ -22,24 +23,27 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
   const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
 
   const toggleEdit = (index: number) => {
-    setEditMode(prev => {
-      const newEditMode: { [key: number]: boolean } = { ...prev, [index]: !prev[index] };
+    const isCurrentlyEditing = editMode[index];
+    
+    if (isCurrentlyEditing) {
+      // 편집 모드를 끝내는 경우
+      const updatedGroup = { ...unitGroupSlice.groups[index], name: editedNames[index] };
+      dispatch(updateGroup({ index, group: updatedGroup }));
   
-      if (!newEditMode[index]) {
-        const updatedGroup = { ...unitGroupSlice.groups[index], name: editedNames[index] };
-        dispatch(updateGroup({ index, group: updatedGroup }));
-  
-        if (unitGroupSlice.selectedPos === index) {
-          dispatch(updateCurrentGroup(updatedGroup));
-        }
-      } else {
-        setTimeout(() => {
-          inputRefs.current[index]?.focus();
-        }, 0);
+      if (unitGroupSlice.selectedPos === index) {
+        dispatch(updateCurrentGroup(updatedGroup));
       }
+    } else {
+      // 편집 모드를 시작하는 경우
+      setTimeout(() => {
+        inputRefs.current[index]?.focus();
+      }, 0);
+    }
   
-      return newEditMode;
-    });
+    setEditMode(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
   };
 
   const editCancel = (index: number) => {
@@ -79,8 +83,16 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
     dispatch(addUnitGroup(newGroup));
   };
 
-  const handleUpdate = (index: number) => {
-    dispatch(updateFromCurrent(index));
+  const handleUpdate = async (index: number) => {
+    try {
+      const currentPreset = unitGroupSlice.currentPresetTable;
+      if (await updatePresetTable(currentPreset.id, currentPreset.name, currentPreset.type, currentPreset.max_device, currentPreset.search_st, currentPreset.search_div)) {
+        dispatch(updateFromCurrent(index));
+        alert("저장 되었습니다.");
+      }
+    } catch (error) {
+      console.error('Failed to update preset tab:', error);
+    }
   };
   
   const handleDelete = (index: number) => {
@@ -94,9 +106,9 @@ const UnitGroupListControl: React.FC<ViewModeProp> = ({settingMode}) => {
       if (currentTabUnit) {
         const updatedDevices = currentTabUnit.devices?.map((device, i) => ({
           ...device,
-          division_id: unitGroupSlice.currentGroup.tab_device_presets[i].division_id,
-          path_id: unitGroupSlice.currentGroup.tab_device_presets[i].path_id,
-          station_id: unitGroupSlice.currentGroup.tab_device_presets[i].station_id,
+          division_id: unitGroupSlice.currentPresetTable.tab_device_presets[i].division_id,
+          path_id: unitGroupSlice.currentPresetTable.tab_device_presets[i].path_id,
+          station_id: unitGroupSlice.currentPresetTable.tab_device_presets[i].station_id,
         }));
 
         const updatedUnit = {

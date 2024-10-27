@@ -3,7 +3,7 @@ import { DeviceSelectProps, IDevice, IDivision, IStation, Item } from "../../../
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { BaseFlex1Row, BaseOption, BaseSelect } from "../../../static/componentSet";
-import { updateCurrentUnitDevice, updateFromCurrent } from "../../../features/reducers/unitGroupSlice";
+import { updateCurrentUnitDevice, updateFromCurrent } from "../../../entities/reducers/unitGroupSlice";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../../store/congifureStore";
 import {COLORSET_DARK_CONTROL_FONT, COLORSET_DARK_CONTROL_BG} from "../../../static/colorSet"

@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { IStation, IDivision } from "../../../static/types";
 import { RootStore } from "../../../store/congifureStore";
 import { BaseOption, BaseSelect, BaseInput, ControlButton, BigLabel, BaseFlexRow, SmallLabel, BaseFlexColumn } from "../../../static/componentSet";
-import { updateCurrentGroupUnit } from "../../../features/reducers/unitGroupSlice";
-import { setdeviceSearchWord } from "../../../features/reducers/settingSlice";
+import { updateCurrentGroupUnit } from "../../../entities/reducers/unitGroupSlice";
+import { setdeviceSearchWord } from "../../../entities/reducers/settingSlice";
 import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
 import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
 import { STRING_SETTING_GROUP_FILTER } from "../../../static/langSet";
@@ -18,19 +18,19 @@ const Filter: React.FC = () => {
   const deviceSearchWord = useSelector((state: RootStore) => state.settingReducer.deviceSearchWord);
   const [searchWord, setSearchWord] = useState(deviceSearchWord);
 
-  const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentGroup.search_st);
-  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentGroup.search_div);
+  const [selectedStation, setSelectedStation] = useState<number>(unitGroupSlice.currentPresetTable.search_st);
+  const [selectedDivision, setSelectedDivision] = useState<number>(unitGroupSlice.currentPresetTable.search_div);
 
   useEffect(() => {
-    setSelectedStation( (unitGroupSlice.currentGroup.search_st === 0) 
+    setSelectedStation( (unitGroupSlice.currentPresetTable.search_st === 0) 
                         ? deviceSet.stations[0]?.id
-                        : unitGroupSlice.currentGroup.search_st);     
+                        : unitGroupSlice.currentPresetTable.search_st);     
   
-    setSelectedDivision( (unitGroupSlice.currentGroup.search_div === 0) 
+    setSelectedDivision( (unitGroupSlice.currentPresetTable.search_div === 0) 
                         ? deviceSet.divisions.filter((item) => item.station_id === selectedStation)[0]?.id
-                        : unitGroupSlice.currentGroup.search_div);     
+                        : unitGroupSlice.currentPresetTable.search_div);     
                     
-  }, [unitGroupSlice.currentGroup]);
+  }, [unitGroupSlice.currentPresetTable]);
 
 
   useEffect(() => {

@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback, forwardRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState, useRef, useCallback, forwardRef, useMemo } from "react";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "../viewer/ReportGuide";
@@ -12,23 +12,19 @@ import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv,
 import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE, STRING_DAILY_MAIN_BTN_LOAD_HISTORY } from "../../static/langSet";
 import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
 import Header from "../header/Header";
-import { setMenus, setViewMode, setIsLoading } from "../../features/reducers/settingSlice";
+import { setMenus, setViewMode, setIsLoading, setApproves } from "../../entities/reducers/settingSlice";
 import { timestampToYYYYMMDD } from "../../static/utils";
 import LoadingSpinner from "../viewer/LoadingSpinner";
-import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "../../features/api/page"
-import { setTabPage, setViewSelect, setCurrentTab } from "../../features/reducers/tabPageSlice";
-import { fetchPageSettings } from "../../features/api/common";
+import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "../../entities/api/page"
+import { setTabPage, setViewSelect, setCurrentTab } from "../../entities/reducers/tabPageSlice";
+import { fetchPageSettings } from "../../entities/api/common";
 import { TabPageInfotype, Unit, UserTableType } from "../../static/types";
 import { isUserTableTypeByInt } from "../../static/utils";
+import { getTabPageSetting, saveTabPage } from "../../features/page";
 
 interface CustomInputProps {
   value: string;
   onClick: () => void;
-}
-
-interface ViewPosition {
-  main: number;
-  sub: number;
 }
 
 const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ value, onClick }, ref) => (
@@ -37,73 +33,89 @@ const ExampleCustomInput = forwardRef<HTMLButtonElement, CustomInputProps>(({ va
   </CalendarButton>
 ));
 
-const DEFAULT_MAIN_TAB = "1";
+const DEFAULT_MAIN_TAB = 1;
+
+const MemoizedReportGuide = React.memo(ReportGuide);
 
 const Daily: React.FC = () => {
   const dispatch = useDispatch();
   const settingSet = useSelector((state: RootStore) => state.settingReducer);
   const tabPageSet = useSelector((state: RootStore) => state.tabPageReducer);
-  const prevViewPosition = useRef<ViewPosition>({ main: 0, sub: 0 });
-  const prevDate = useRef<number>(0);
+  const viewPosition = useSelector(
+    (state: RootStore) => state.tabPageReducer.viewPosition,
+    shallowEqual
+  );
+  const currentTabPage = useSelector(
+    (state: RootStore) => state.tabPageReducer.currentTabPage
+  );
   const [date, setDate] = useState<number>(settingSet.date);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isHistoryAvailable, setIsHistoryAvailable] = useState<boolean>(true);
   const componentRef = useRef<HTMLDivElement>(null);
 
-  
-  // Combine useEffects into one
-  useEffect(() => {
-    let isMounted = true;
+useEffect(() => {
+  // Fetch initial settings on component mount
+  const initializeSettings = async () => {
+    dispatch(setIsLoading(true));
+    try {
+      // Fetch page settings only once
+      const buttons = await fetchPageSettings(dispatch, timestampToYYYYMMDD(date));
+      if (buttons.length > 0) {
+        dispatch(setMenus(buttons));
+        const [mainId, subId] = buttons[0].split('').map(Number);
+        dispatch(setViewSelect({ mainTab: mainId, subTab: subId }));
+      }
+    } catch (error) {
+      console.error("Error during initialization:", error);
+    } finally {
+      dispatch(setIsLoading(false));
+    }
+  }
 
-    const initializeAndFetchData = async () => {
+  initializeSettings();
+}, [dispatch]);
+
+  // Define handleMenuClick
+  const handleMenuClick = useCallback(
+    (mainTab: number, subTab: number) => {
+      console.log("mainTab", mainTab, "subTab", subTab);
+      if (
+        mainTab !== viewPosition.main ||
+        subTab !== viewPosition.sub
+      ) {
+        const selectedTab = tabPageSet.tabPageInfo[mainTab][subTab];
+
+        console.log("setViewSelect", mainTab, subTab, selectedTab);
+        dispatch(setViewSelect({ mainTab, subTab }));
+      }
+    },
+    [dispatch, viewPosition]
+  );
+  
+  useEffect(() => {
+    // Fetch data for current tab whenever currentTabPage or date changes
+    const fetchDataForTab = async () => {
       dispatch(setIsLoading(true));
       try {
-        // Initialize tab pages
-        const buttons = await fetchPageSettings(dispatch, timestampToYYYYMMDD(date));
-        if (buttons.length > 0) {
-          dispatch(setMenus(buttons));
-          const [mainId, subId] = buttons[0].split('').map(Number);
-          dispatch(setViewSelect({ mainTab: mainId, subTab: subId }));
-        }
-
-        // Fetch data
-        const { main: mainId, sub: subId } = tabPageSet.viewPosition;
-        const mainBtnIndex = mainId || 1;
-        const subBtnIndex = subId || 1;
-
-        if (
-          mainBtnIndex !== prevViewPosition.current.main ||
-          subBtnIndex !== prevViewPosition.current.sub ||
-          date !== prevDate.current
-        ) {
-          prevViewPosition.current = { main: mainBtnIndex, sub: subBtnIndex };
-          prevDate.current = date;
-          await resetTabUserTableInfo();
-        }
-
-        if (tabPageSet.currentTabPage) {
+        await resetTabUserTableInfo();
+  
+        if (currentTabPage) {
           const resHistoryInfo = await get_history_page_setting(
-            tabPageSet.currentTabPage.name,
+            currentTabPage.name,
             timestampToYYYYMMDD(date)
           );
-
-          if (isMounted) {
-            setIsHistoryAvailable(resHistoryInfo !== false);
-          }
+  
+          setIsHistoryAvailable(resHistoryInfo !== false);
         }
       } catch (error) {
-        console.error("Error during initialization and data fetching:", error);
+        console.error("Error during data fetching:", error);
       } finally {
         dispatch(setIsLoading(false));
       }
-    };
-
-    initializeAndFetchData();
-
-    return () => {
-      isMounted = false; // Cleanup to prevent setting state on unmounted component
-    };
-  }, [date, dispatch]);
+    }
+  
+    fetchDataForTab();
+  }, [currentTabPage, date, dispatch]);
     
   const resetTabUserTableInfo = useCallback(async () => {
     if (!tabPageSet.currentTabPage) {
@@ -117,38 +129,22 @@ const Daily: React.FC = () => {
     await updateTabDate(tabPageSet.currentTabPage.name, timestampToYYYYMMDD(date));
     await update_tab_device_value(tabPageSet.currentTabPage.name);
 
-    const resPageSetting = await get_page_setting(tabPageSet.currentTabPage.name, true);
-    if (resPageSetting) {
-      resPageSetting.name = tabPageSet.currentTabPage.name;
+    console.log(tabPageSet.currentTabPage.name);
 
-      const newTables = resPageSetting.tables.map((table: Unit) => {
-        if (isUserTableTypeByInt(table.type)) {
-          const userTable = resPageSetting.user_tables.find(
-            (userTable: UserTableType) => userTable.idx === table.idx
-          );
-          if (userTable) {
-            table.id = userTable.id;
-            table.name = userTable.name;
-            table.disable = userTable.disable;
-            table.device_values = userTable.user_data;
-          }
-        }
-        return table;
-      });
-
-      resPageSetting.tables = newTables;
-
+    const resPage = await getTabPageSetting(tabPageSet.currentTabPage.name);
+    if (resPage) {
+      dispatch(setApproves(resPage.approves));
       dispatch(
         setTabPage({
-          mainTab: prevViewPosition.current.main,
-          subTab: prevViewPosition.current.sub,
-          tabInfo: resPageSetting,
+          mainTab: viewPosition.main,
+          subTab: viewPosition.sub,
+          tabInfo: resPage,
         })
       );
     }
 
     return true;
-  }, [date, dispatch, tabPageSet.currentTabPage]);
+  }, [date, dispatch, currentTabPage]);
 
   // Print related functions
   const handlePrintFunction = useReactToPrint({
@@ -171,25 +167,15 @@ const Daily: React.FC = () => {
   }, [dispatch]);
 
   const handlePageSave = async () => {
-    dispatch(setIsLoading(true));
-    if (!tabPageSet.currentTabPage) {
-      dispatch(setIsLoading(false));
-      return;
-    }
-
     try {
-      for (const table of tabPageSet.currentTabPage.tables) {
-        if (isUserTableTypeByInt(table.type)) {
-          await update_tab_user_table_info(
-            table.id,
-            table.name,
-            table.type,
-            table.disable,
-            table.device_values
-          );
-        }
+      dispatch(setIsLoading(true));
+      if (!tabPageSet.currentTabPage) {
+        dispatch(setIsLoading(false));
+        return;
       }
-      await save_page_setting(tabPageSet.currentTabPage.name);
+      
+      await saveTabPage(tabPageSet.currentTabPage);
+
     } catch (error) {
       console.error("Error saving page:", error);
     } finally {
@@ -240,9 +226,22 @@ const Daily: React.FC = () => {
     }
   }
 
+  const renderReportGuide = useMemo(
+    () => (
+      <MemoizedReportGuide
+        row={currentTabPage?.tbl_row || 0}
+        column={currentTabPage?.tbl_column || 0}
+      />
+    ),
+    [currentTabPage?.tbl_row, currentTabPage?.tbl_column]
+  );
+
   return (
     <Flat>
-      <Header paramMain={Number(tabPageSet.viewPosition.main || DEFAULT_MAIN_TAB)} />
+      <Header
+        paramMain={viewPosition.main || DEFAULT_MAIN_TAB}
+        onMenuClick={handleMenuClick}
+      />
       <Title>{STRING_DAILY_MAIN_TITLE}</Title>
       <ControlContainer>
         <Controls>
@@ -273,7 +272,7 @@ const Daily: React.FC = () => {
         </Controls>
       </ControlContainer>
       <ReportLine>
-        <ReportGuide row={tabPageSet.currentTabPage?.tbl_row || 0} column={tabPageSet.currentTabPage?.tbl_column || 0} />
+        {renderReportGuide}
       </ReportLine>
       {isOpen && 
         <BaseModalBack onClick={handlePrintClose}>

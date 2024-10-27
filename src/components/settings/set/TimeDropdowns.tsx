@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDropdown, removeDropdown, setTimes } from "../../../features/reducers/tabPageSlice";
+import { addDropdown, removeDropdown, setTimes } from "../../../entities/reducers/tabPageSlice";
 import styled from "styled-components";
 import { RootStore } from '../../../store/congifureStore';
 import { STRING_SETTING_SET_TIME_ADD } from '../../../static/langSet';

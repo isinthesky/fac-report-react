@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootStore } from "../../store/congifureStore";
 import styled from "styled-components";
@@ -11,9 +11,14 @@ interface MenuProps {
   isSettingsActive: boolean;
 }
 
+type MenuStructure = { id: number; name: string; subMenus: { id: number; name: string }[] }[];
+
 export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsActive }) => {
-  const viewPosition = useSelector((state: RootStore) => state.tabPageReducer.viewPosition) as SelectedTab;
-  const [menuStructure, setMenuStructure] = useState<{ id: number; name: string; subMenus: { id: number; name: string }[] }[]>([]);
+  const viewPosition = useSelector(
+    (state: RootStore) => state.tabPageReducer.viewPosition
+  );
+
+  const [menuStructure, setMenuStructure] = useState<MenuStructure>([]);
 
   useEffect(() => {
     const structure = [];
@@ -22,7 +27,8 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
       if (mainMenuName) {
         const subMenus = [];
         for (let j = 1; j <= 10; j++) {
-          const subMenuName = process.env[`REACT_APP_INIT_REPORT_MENU${i}_SUB${j}`];
+          const subMenuName =
+            process.env[`REACT_APP_INIT_REPORT_MENU${i}_SUB${j}`];
           if (subMenuName) {
             subMenus.push({ id: j, name: subMenuName });
           }
@@ -33,39 +39,61 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
     setMenuStructure(structure);
   }, []);
 
+  const mainMenuComponents = useMemo(() => {
+    return (
+      <MainMenuGrid>
+        {menuStructure.map((mainMenu) => (
+          <MainButton
+            key={mainMenu.id}
+            $isActive={mainMenu.id === viewPosition.main && !isSettingsActive}
+            $isEmpty={!mainMenu}
+            onClick={() =>
+              mainMenu &&
+              onClickCallback(
+                mainMenu.id,
+                mainMenu.subMenus[0]?.id || 0
+              )
+            }
+          >
+            {mainMenu.name || ""}
+          </MainButton>
+        ))}
+      </MainMenuGrid>
+    );
+  }, [menuStructure, viewPosition, isSettingsActive, onClickCallback]);
+
+  const subMenuComponents = useMemo(() => {
+    const activeMainMenu = menuStructure.find(
+      (menu) => menu.id === viewPosition.main
+    );
+    if (!activeMainMenu) return null;
+
+    return (
+      <SubMenuGrid>
+        {activeMainMenu.subMenus.map((subMenu) => (
+          <SubButton
+            key={subMenu.id}
+            $isActive={
+              viewPosition.main === activeMainMenu.id &&
+              subMenu.id === viewPosition.sub &&
+              !isSettingsActive
+            }
+            $isEmpty={!subMenu}
+            onClick={() =>
+              subMenu && onClickCallback(activeMainMenu.id, subMenu.id)
+            }
+          >
+            {subMenu.name}
+          </SubButton>
+        ))}
+      </SubMenuGrid>
+    );
+  }, [menuStructure, viewPosition, isSettingsActive, onClickCallback]);
+
   return (
     <MenuContainer>
-      <MainMenuGrid>
-        {Array.from({ length: 5 }, (_, i) => i + 1).map((index) => {
-          const mainMenu = menuStructure.find(menu => menu.id === index);
-          return (
-            <MainButton
-              key={index}
-              $isActive={mainMenu?.id === viewPosition.main && !isSettingsActive}
-              $isEmpty={!mainMenu}
-              onClick={() => mainMenu && onClickCallback(mainMenu.id, mainMenu.subMenus[0]?.id || 0)}
-            >
-              {mainMenu?.name || ''}
-            </MainButton>
-          );
-        })}
-      </MainMenuGrid>
-      <SubMenuGrid>
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((index) => {
-          const activeMainMenu = menuStructure.find(menu => menu.id === viewPosition.main);
-          const subMenu = activeMainMenu?.subMenus.find(sub => sub.id === index);
-          return (
-            <SubButton
-              key={index}
-              $isActive={viewPosition.main === activeMainMenu?.id && subMenu?.id === viewPosition.sub && !isSettingsActive}
-              $isEmpty={!subMenu}
-              onClick={() => subMenu && onClickCallback(activeMainMenu?.id || 0, subMenu.id)}
-            >
-              {subMenu?.name || ''}
-            </SubButton>
-          );
-        })}
-      </SubMenuGrid>
+      {mainMenuComponents}
+      {subMenuComponents}
     </MenuContainer>
   );
 };

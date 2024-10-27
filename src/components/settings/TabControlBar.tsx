@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setMenus } from "../../features/reducers/settingSlice";
-import { setSettingSelect } from "../../features/reducers/tabPageSlice";
+import { setMenus } from "../../entities/reducers/settingSlice";
+import { setSettingSelect } from "../../entities/reducers/tabPageSlice";
 import { RootStore } from "../../store/congifureStore";
 import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_SETTING_TAB_BUTTON_ACTIVE } from "../../static/colorSet";
 import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DESCRIPTION_LABEL_SIZE } from "../../static/fontSet";

@@ -5,7 +5,7 @@ import { DEFAULT_MAINLOGO_COLUMN_PATH, DEFAULT_LOCATION_NAME, DEFAULT_BGIMG_PATH
 import { STRING_MAIN_LOGIN_BTN, STRING_MAIN_LOGIN_ID, STRING_MAIN_LOGIN_PW, STRING_MAIN_LOGIN_ERROR } from "../../static/langSet";
 import { BaseFlexColumn, BaseFlexRow } from "../../static/componentSet";
 import { useNavigate } from "react-router-dom";
-import { setViewSelect } from '../../features/reducers/tabPageSlice';
+import { setViewSelect } from '../../entities/reducers/tabPageSlice';
 
 
 function Main() {
