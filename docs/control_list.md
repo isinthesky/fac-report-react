@@ -59,6 +59,3 @@
  - Delete : STRING_SETTING_GROUP_DELETE
  - Update : STRING_SETTING_GROUP_UPDATE
  - Edit : STRING_DEFAULT_EDIT / STRING_DEFAULT_SAVE
-
-
-{"1": ["E", "E", "E", "E"], "2": ["E", "E", "E", "E"], "3": ["E", "E", "E", "E"], "4": ["E", "E", "E", "E"], "5": ["E", "E", "E", "E"],"6": ["E", "E", "E", "E"],"7": ["E", "E", "E", "E"],"8": ["E", "E", "E", "E"],"9": ["E", "E", "E", "E"],"10": ["E", "E", "E", "E"],"11": ["E", "E", "E", "E"],"12": ["E", "E", "E", "E"],"13": ["E", "E", "E", "E"],"14": ["E", "E", "E", "E"],"15": ["E", "E", "E", "E"]}
