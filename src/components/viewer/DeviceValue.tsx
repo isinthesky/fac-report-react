@@ -1,10 +1,10 @@
 import React, {useMemo} from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { RootStore } from "../../store/congifureStore";
-import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
-import { BaseFlexCenterDiv } from "../../static/componentSet";
-import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_PRINT_FONT } from "../../static/colorSet";
+import { RootStore } from "@/store/congifureStore";
+import { FONTSET_DEFAULT_DIV_SIZE } from "@/static/fontSet";
+import { BaseFlexCenterDiv } from "@/static/componentSet";
+import { COLORSET_FONT_BASE, COLORSET_GRID_CONTROL_BG, COLORSET_PRINT_FONT } from "@/static/colorSet";
 
 
 const formatNumber = (value: string, digit: number): string => {

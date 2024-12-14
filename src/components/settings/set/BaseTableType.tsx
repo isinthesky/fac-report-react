@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { SetDeviceType, Item } from "../../../static/types";
+import { SetDeviceType, Item } from "@/types/types";
 import DeviceAutoSelect from "./DeviceSelector";
-import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, SmallLabel } from "../../../static/componentSet";
-import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT } from "../../../static/colorSet";
+import { RootStore } from "@/store/congifureStore";
+import { BaseFlex1Column, BaseFlex1Div, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, SmallLabel } from "@/static/componentSet";
+import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_GRID_CONTROL_FONT } from "@/static/colorSet";
 
 interface BaseUnitTypeProps extends SetDeviceType {
   unitKeys: string[];

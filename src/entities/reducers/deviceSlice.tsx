@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IDevice, IDivision, IStation } from "../../static/types";
+import { IDevice, IDivision, IStation } from "@/types/types";
 
 export interface DeviceState {
     devices: { [key: number]: IDevice };

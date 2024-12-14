@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Preset, updateCurrentGroupType, updateCurrenUnitDevice, Item } from "../../static/types";
+import { Preset, updateCurrentGroupType, updateCurrenUnitDevice, Item } from "@/types/types";
 
 
 export interface UnitGroupState {

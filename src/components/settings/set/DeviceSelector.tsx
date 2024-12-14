@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { IDivision, IStation, IDevice, DeviceSelectProps, Item } from "../../../static/types";
+import { IDivision, IStation, IDevice, DeviceSelectProps, Item } from "@/types/types";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentUnitDevice } from "../../../entities/reducers/tabPageSlice";
-import { BaseOption, BaseFlex1Row, BaseSelect } from "../../../static/componentSet";
-import { RootStore } from "../../../store/congifureStore";
-import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT } from "../../../static/colorSet";
-import { STRING_SETTING_DEVICE_FOUND, STRING_SETTING_DEVICE_SELECT } from "../../../static/langSet";
+import { setCurrentUnitDevice } from "@/entities/reducers/tabPageSlice";
+import { BaseOption, BaseFlex1Row, BaseSelect } from "@/static/componentSet";
+import { RootStore } from "@/store/congifureStore";
+import { COLORSET_DARK_CONTROL_BG, COLORSET_DARK_CONTROL_FONT } from "@/static/colorSet";
+import { STRING_SETTING_DEVICE_FOUND, STRING_SETTING_DEVICE_SELECT } from "@/static/langSet";
 
 
 const DeviceAutoSelect: React.FC<DeviceSelectProps> = ({

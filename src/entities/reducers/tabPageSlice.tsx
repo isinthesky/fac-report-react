@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitValues, updateCurrenUnitDevice, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, setCurrnetUnitProp, DailySetting, updateCurrentTabPageUserDataType } from "../../static/types";
+import { TabPageInfotype, SetTabPageProp, updateCurrentTabPageType, updateCurrenUnitValues, updateCurrenUnitDevice, DeleteDropDownType, SetDropDownType, updateCurrentTabPageUnit, setCurrnetUnitProp, DailySetting, updateCurrentTabPageUserDataType } from "@/types/types";
 
 
 export interface TabPageState {
