@@ -1,4 +1,4 @@
-import { logAPIRequest, logAPIResponse, logAPIError } from './apiLogger';
+import APILogger from './apiLogger';
 
 export const withLogging = async (
   apiCall: () => Promise<any>,
@@ -11,18 +11,18 @@ export const withLogging = async (
   
   try {
     // Log request
-    logAPIRequest({
+    APILogger.logRequest({
       method,
       url,
       params,
-      body
+      data: body
     });
 
     // Execute API call
     const response = await apiCall();
 
     // Log success response
-    logAPIResponse({
+    APILogger.logResponse({
       method,
       url,
       status: response.status,
@@ -33,7 +33,7 @@ export const withLogging = async (
     return response;
   } catch (error: any) {
     // Log error
-    logAPIError({
+    APILogger.logError({
       method,
       url,
       error,
