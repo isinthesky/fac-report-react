@@ -73,8 +73,8 @@ class BrowserLogger {
   }
 
   private sendToErrorMonitoring(entry: LogEntry) {
-    // Sentry나 다른 에러 모니터링 서비스로 전송하는 로직
-    // 예: Sentry.captureException(entry);
+    // Temporary implementation until error monitoring service is integrated
+    console.log('Error sent to monitoring service:', entry);
   }
 
   getLogHistory(): LogEntry[] {

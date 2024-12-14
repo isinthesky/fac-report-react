@@ -32,7 +32,7 @@ const sections = {
 };
 
 
-const TableUser: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
+const TableUser: React.FC<ViewUnitProps> = ({ currentTable }) => {
   const dispatch = useDispatch();
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);
   const initialValues = currentTable.device_values || {}
@@ -172,7 +172,7 @@ const TableUser: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
             ))}
           </Column>
           <Column key="u2-input-column-1" style={{flex: 7}}>
-          {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key, keyIdx) => (
+          {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key,_) => (
             <UserInputColumn
                 key={`u2table-input-${key}-${0}`}
                 type="text"
@@ -184,7 +184,7 @@ const TableUser: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
             ))}
           </Column>
           <Column key="u2-input-column-2" style={{flex: 7}}>
-          {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key, keyIdx) => (
+          {[U2Table_Key1,U2Table_Key2,U2Table_Key3].map((key,_) => (
             <UserInputColumn
                 key={`u2table-input-${key}-${1}`}
                 type="text"

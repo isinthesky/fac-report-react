@@ -68,7 +68,7 @@ const TableData: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
                       arrPosValue={
                         times ? times.flatMap((_, i) => 
                           Object.entries(value_obj)
-                            .map(([key, value], index) => 
+                            .map(([_, value], index) => 
                               index === i ? value[currentDeviceIndex] || "" : undefined)
                             .filter((v): v is string => v !== undefined)
                         ) : []

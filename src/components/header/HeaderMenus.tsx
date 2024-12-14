@@ -31,7 +31,7 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
 
 
   useEffect(() => {
-    const structure = [];
+    const structure: MenuStructure = [];
     const menuEnvVars = [
       { main: INIT_REPORT_TYPE1, subs: [INIT_REPORT_TYPE1_SUB1, INIT_REPORT_TYPE1_SUB2] },
       { main: INIT_REPORT_TYPE2, subs: [INIT_REPORT_TYPE2_SUB1] },

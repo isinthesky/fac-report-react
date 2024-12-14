@@ -1,6 +1,5 @@
 import { Dict } from "styled-components/dist/types";
-import { DeviceState } from "../entities/reducers/deviceSlice";
-import { TableType } from '../env';
+import { DeviceState } from "@/entities/reducers/deviceSlice";
 
 export type IDevice = {
   id: number;

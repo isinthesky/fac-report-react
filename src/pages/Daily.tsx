@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback, forwardRef, useMemo } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { useParams } from "react-router-dom";
 import { useReactToPrint } from 'react-to-print';
 import ReportGuide from "@/components/features/viewer/ReportGuide";
 import PrintModal from "@/components/print/PrintModal";
@@ -15,10 +14,10 @@ import Header from "@/components/layout/Header";
 import { setMenus, setViewMode, setIsLoading, setApproves } from "@/store/slices/settingSlice";
 import { timestampToYYYYMMDD } from "@/static/utils";
 import LoadingSpinner from "@/components/viewer/LoadingSpinner";
-import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "@/entities/api/page"
+import { updateTabDate, update_tab_device_value, get_history_page_setting, reset_tab_user_table_info } from "@/entities/api/page"
 import { setTabPage, setViewSelect, setCurrentTab } from "@/entities/reducers/tabPageSlice";
 import { fetchPageSettings } from "@/entities/api/common";
-import { TabPageInfotype, Unit, UserTableType } from "@/types/types";
+import { Unit, UserTableType } from "@/types/types";
 import { isUserTableTypeByInt } from "@/static/utils";
 import { getTabPageSetting, saveTabPage } from "@/features/page";
 
@@ -248,6 +247,7 @@ useEffect(() => {
           <CalendarContainer1>
             <DateLabel>{STRING_DAILY_MAIN_SELECT_DATE}</DateLabel>
             <BaseFlexRow style={{ width: '180px' }}>
+              {/* @ts-expect-error - Known type issue with react-datepicker */}
               <DatePicker
                 selected={new Date(date)}
                 onChange={(value: Date) => {
@@ -379,11 +379,6 @@ const ExitBtn = styled(MiniButton)<{ bgColor?: string }>
   backgroundColor: props.bgColor || COLORSET_SIGNITURE_COLOR,
   borderRadius: '10px',
 }));
-
-const LoadHistoryBtn = styled(ActiveButton) `
-  margin: 20px;
-  border-radius: 10px;
-`;
 
 const PrintBtn = styled(ActiveButton) `
   margin: 20px;

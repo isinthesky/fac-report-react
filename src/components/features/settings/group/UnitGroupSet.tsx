@@ -11,7 +11,7 @@ import { RootStore } from "@/store/congifureStore";
 import { Item, Preset } from "@/types/types";
 import UnitGroupAutoSelect from "@/components/settings/group/UnitGroupSelector";
 import { COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER } from "@/static/colorSet";
-import { addDevice, setCurrentGroup, updateDevice, deleteDevice, updateGroup, updateFromCurrent, updateCurrentGroup } from "@/entities/reducers/unitGroupSlice";
+import { addDevice, setCurrentGroup, deleteDevice, updateGroup, updateFromCurrent } from "@/entities/reducers/unitGroupSlice";
 import { updatePresetDevices } from "@/features/preset";
 import { updatePresetTable } from "@/entities/api/device";
 
@@ -101,7 +101,7 @@ const UnitGroupSet: React.FC = () => {
     navigate("/settings", { state: { fromNavigate: true } });
   }
 
-  const renderSection = (index: number, unit: Preset) => {
+  const renderSection = (unit: Preset) => {
     return <>
       {unit.tab_device_presets.map((device: Item, idx: number) => {
           const initStationId = (device.path_id !== 0) ? device.station_id : unit.search_st;
@@ -133,7 +133,7 @@ const UnitGroupSet: React.FC = () => {
         <DevicesContainer>
           <BigLabel>{STRING_SETTING_GROUP_DEVICE_LIST}</BigLabel>
           <BaseFlex1Column>
-            { renderSection(0, presetSlice.currentPresetTable) }
+            { renderSection(presetSlice.currentPresetTable) }
           </BaseFlex1Column>
           <ButtonsContainer>
             <BaseButton onClick={handleAdd} widthsize={"50px"}>

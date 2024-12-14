@@ -145,9 +145,7 @@ const PrintSetting: React.FC = () => {
                 <PrintBtn onClick={handlePrint}>{STRING_DAILY_MAIN_BTN_PRINT}</PrintBtn>
                 <ExitBtn onClick={handlePrintClose}>x</ExitBtn>
               </DivHeader>
-              <PrintModal row={tabPageSet.currentTabPage?.tbl_row || 0}
-                          column={tabPageSet.currentTabPage?.tbl_column || 0} 
-                          ref={componentRef} />
+              <PrintModal/>
             </ModalView>
           </BaseModalBack>
         : null} 

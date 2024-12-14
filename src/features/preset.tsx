@@ -1,5 +1,5 @@
-import { updatePresetDevice } from "../entities/api/device";
-import { Preset } from "../static/types";
+import { updatePresetDevice } from "@/entities/api/device";
+import { Preset } from "@/types/types";
 
 export const updatePresetDevices = async (currentPreset: Preset): Promise<boolean> => {
   try {
