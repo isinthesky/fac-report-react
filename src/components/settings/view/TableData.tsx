@@ -19,7 +19,7 @@ const TableData: React.FC<TableSettingType> = ({
   );
 
   const getDevName = (id:number) => {
-    if (true === Object.hasOwn(deviceSet.devices, id)) {
+    if (deviceSet.devices.hasOwnProperty(id)) {
       return deviceSet.devices[id].name;
     } else {
       return ""

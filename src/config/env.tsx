@@ -1,29 +1,35 @@
-export const SERVER_URL = import.meta.env.VITE_APP_SERVER_URL;
-export const INIT_GENERAL_SETTING = import.meta.env.VITE_APP_INIT_GENERAL_SETTING;
-export const INIT_APPROVES_SETTING = import.meta.env.VITE_APP_INIT_APPROVES_SETTING;
-export const CONST_APP_STATE = import.meta.env.VITE_APP_STATE;
+import { getEnvVar, validateEnvVars } from '@/utils/env';
 
-export const INIT_REPORT_TYPE1 = import.meta.env.VITE_APP_INIT_REPORT_MENU1;
-export const INIT_REPORT_TYPE2 = import.meta.env.VITE_APP_INIT_REPORT_MENU2;
-export const INIT_REPORT_TYPE3 = import.meta.env.VITE_APP_INIT_REPORT_MENU3;
+// 앱 시작 시 환경변수 검증
+validateEnvVars();
 
-export const INIT_REPORT_TYPE1_SUB1 = import.meta.env.VITE_APP_INIT_REPORT_MENU1_SUB1;
-export const INIT_REPORT_TYPE1_SUB2   = import.meta.env.VITE_APP_INIT_REPORT_MENU1_SUB2;   
-export const INIT_REPORT_TYPE2_SUB1 = import.meta.env.VITE_APP_INIT_REPORT_MENU2_SUB1;
-export const INIT_REPORT_TYPE3_SUB1 = import.meta.env.VITE_APP_INIT_REPORT_MENU3_SUB1;
+export const SERVER_URL = getEnvVar('VITE_APP_SERVER_URL');
+export const INIT_GENERAL_SETTING = getEnvVar('VITE_APP_INIT_GENERAL_SETTING');
+export const INIT_APPROVES_SETTING = getEnvVar('VITE_APP_INIT_APPROVES_SETTING');
+export const CONST_APP_STATE = getEnvVar('VITE_APP_STATE');
 
-export const INIT_MAINTAB_COUNT = import.meta.env.VITE_APP_INIT_MAINTAB_COUNT;
-export const INIT_TAB_COUNT = import.meta.env.VITE_APP_INIT_TAB_COUNT;
-export const INIT_PRINT_TITLE = import.meta.env.VITE_APP_INIT_PRINT_TITLE;
+export const INIT_REPORT_TYPE1 = getEnvVar('VITE_APP_INIT_REPORT_MENU1');
+export const INIT_REPORT_TYPE2 = getEnvVar('VITE_APP_INIT_REPORT_MENU2');
+export const INIT_REPORT_TYPE3 = getEnvVar('VITE_APP_INIT_REPORT_MENU3');
 
-export const CONST_TABINFO_NAME = import.meta.env.VITE_APP_CONST_TABINFO_NAME as string;
-export const CONST_UNITGROUP_NAME = import.meta.env.VITE_APP_CONST_UNITGROUP_NAME as string;
+export const INIT_REPORT_TYPE1_SUB1 = getEnvVar('VITE_APP_INIT_REPORT_MENU1_SUB1');
+export const INIT_REPORT_TYPE1_SUB2 = getEnvVar('VITE_APP_INIT_REPORT_MENU1_SUB2');
+export const INIT_REPORT_TYPE2_SUB1 = getEnvVar('VITE_APP_INIT_REPORT_MENU2_SUB1');
+export const INIT_REPORT_TYPE3_SUB1 = getEnvVar('VITE_APP_INIT_REPORT_MENU3_SUB1');
 
-export const CONST_LANG = import.meta.env.VITE_APP_CONST_LANG
-export const CONST_KEY_VALUE = import.meta.env.VITE_APP_KEY_VALUE
-export const CONST_LOGIN_PW = import.meta.env.VITE_APP_CONST_LOGIN_PW
+export const INIT_MAINTAB_COUNT = getEnvVar('VITE_APP_INIT_MAINTAB_COUNT');
+export const INIT_TAB_COUNT = getEnvVar('VITE_APP_INIT_TAB_COUNT');
+export const INIT_PRINT_TITLE = getEnvVar('VITE_APP_INIT_PRINT_TITLE');
 
-export const DEFAULT_LOCATION_NAME = import.meta.env.VITE_APP_LOCATION_NAME
+export const CONST_TABINFO_NAME = getEnvVar('VITE_APP_CONST_TABINFO_NAME');
+export const CONST_UNITGROUP_NAME = getEnvVar('VITE_APP_CONST_UNITGROUP_NAME');
+
+export const CONST_LANG = getEnvVar('VITE_APP_CONST_LANG');
+export const CONST_KEY_VALUE = getEnvVar('VITE_APP_KEY_VALUE');
+export const CONST_LOGIN_PW = getEnvVar('VITE_APP_CONST_LOGIN_PW');
+
+export const DEFAULT_LOCATION_NAME = getEnvVar('VITE_APP_LOCATION_NAME');
+
 export const DEFAULT_CI_PATH = "/images/main_ci.png"
 export const DEFAULT_MAINLOGO_COLUMN_PATH = "/images/bg/main_logo_col.png"
 export const DEFAULT_MAINLOGO_ROW_PATH = "/images/bg/main_logo_row.png"
