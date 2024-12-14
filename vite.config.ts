@@ -2,6 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+const port = parseInt(process.env.PORT || '3000', 10);
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -19,7 +21,7 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000,
+    port: port,
     host: true, // 모든 네트워크 인터페이스에서 수신
     strictPort: true, // 지정된 포트를 엄격하게 사용
   },

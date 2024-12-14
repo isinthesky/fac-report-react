@@ -1,5 +1,3 @@
-
-
 export const SERVER_URL = import.meta.env.VITE_APP_SERVER_URL;
 export const INIT_GENERAL_SETTING = import.meta.env.VITE_APP_INIT_GENERAL_SETTING;
 export const INIT_APPROVES_SETTING = import.meta.env.VITE_APP_INIT_APPROVES_SETTING;
