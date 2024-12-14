@@ -5,13 +5,9 @@ import styled from "styled-components";
 import { FONTSET_MAIN_MENU_SIZE } from "@/static/fontSet";
 import { COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "@/static/colorSet";
 import {
-  INIT_REPORT_TYPE1,
-  INIT_REPORT_TYPE2,
-  INIT_REPORT_TYPE3,
-  INIT_REPORT_TYPE1_SUB1,
-  INIT_REPORT_TYPE1_SUB2,
-  INIT_REPORT_TYPE2_SUB1,
-  INIT_REPORT_TYPE3_SUB1,
+  INIT_REPORT_MENU1,
+  INIT_REPORT_MENU1_SUB1,
+  INIT_REPORT_MENU1_SUB2,
 } from "@/config/env";
 
 
@@ -33,9 +29,7 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
   useEffect(() => {
     const structure: MenuStructure = [];
     const menuEnvVars = [
-      { main: INIT_REPORT_TYPE1, subs: [INIT_REPORT_TYPE1_SUB1, INIT_REPORT_TYPE1_SUB2] },
-      { main: INIT_REPORT_TYPE2, subs: [INIT_REPORT_TYPE2_SUB1] },
-      { main: INIT_REPORT_TYPE3, subs: [INIT_REPORT_TYPE3_SUB1] },
+      { main: INIT_REPORT_MENU1, subs: [INIT_REPORT_MENU1_SUB1, INIT_REPORT_MENU1_SUB2] }
     ];
 
     menuEnvVars.forEach((menuVar, index) => {
