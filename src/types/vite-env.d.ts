@@ -6,12 +6,8 @@ interface ImportMetaEnv {
     readonly VITE_APP_INIT_APPROVES_SETTING: string
     readonly VITE_APP_STATE: string
     readonly VITE_APP_INIT_REPORT_MENU1: string
-    readonly VITE_APP_INIT_REPORT_MENU2: string
-    readonly VITE_APP_INIT_REPORT_MENU3: string
     readonly VITE_APP_INIT_REPORT_MENU1_SUB1: string
     readonly VITE_APP_INIT_REPORT_MENU1_SUB2: string
-    readonly VITE_APP_INIT_REPORT_MENU2_SUB1: string
-    readonly VITE_APP_INIT_REPORT_MENU3_SUB1: string
     readonly VITE_APP_INIT_MAINTAB_COUNT: string
     readonly VITE_APP_INIT_TAB_COUNT: string
     readonly VITE_APP_INIT_PRINT_TITLE: string
