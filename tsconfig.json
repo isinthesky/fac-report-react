@@ -1,33 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["es2022", "dom"],
-    "module": "ESNext",
+    "composite": true,
     "skipLibCheck": true,
+    "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@/app/*": ["src/app/*"],
-      "@/components/*": ["src/components/*"],
-      "@/entities/*": ["src/entities/*"],
-      "@/features/*": ["src/features/*"],
-      "@/pages/*": ["src/pages/*"],
-      "@/shared/*": ["src/shared/*"],
-      "@/static/*": ["src/static/*"],
-      "@/store/*": ["src/store/*"],
-      "@/types/*": ["src/types/*"]
-    }
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src"]
+  "include": ["vite.config.ts"]
 }
