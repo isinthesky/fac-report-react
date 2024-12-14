@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import { TableSettingType } from "../../../static/types";
+import { TableSettingType } from "@/types/types";
 import { useSelector } from "react-redux";
-import { RootStore } from "../../../store/congifureStore";
-import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "../../../static/componentSet";
-import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../../static/constSet";
-import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
-import { CONST_TYPE_INFO, TypeInfo } from "../../../env";
+import { RootStore } from "@/store/congifureStore";
+import { BaseFlex1Column, BaseFlex1Div, MediumLabel, CenterLabel, SmallLabel } from "@/static/componentSet";
+import { SIZESET_DEFAULT_INPUT_HEIGHT } from "@/config/constSet";
+import { COLORSET_NORMAL_INPUT_BG, COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BG2, COLORSET_GRID_CONTROL_BORDER, COLORSET_ACTIVE_CONTROL_BG } from "@/static/colorSet";
+import { CONST_TYPE_INFO, TypeInfo } from "@/config/env";
 
 const TableData: React.FC<TableSettingType> = ({
   type,

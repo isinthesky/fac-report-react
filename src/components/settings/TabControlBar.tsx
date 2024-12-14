@@ -1,14 +1,14 @@
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setMenus } from "../../entities/reducers/settingSlice";
-import { setSettingSelect } from "../../entities/reducers/tabPageSlice";
-import { RootStore } from "../../store/congifureStore";
-import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_SETTING_TAB_BUTTON_ACTIVE } from "../../static/colorSet";
-import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DESCRIPTION_LABEL_SIZE } from "../../static/fontSet";
-import { BaseButton, BaseFlexRow, MediumLabel } from "../../static/componentSet";
+import { setMenus } from "@/store/slices/settingSlice";
+import { setSettingSelect } from "@/entities/reducers/tabPageSlice";
+import { RootStore } from "@/store/congifureStore";
+import { COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_DARK_CONTROL_BG, COLORSET_NORMAL_CONTROL_BG, COLORSET_NORMAL_CONTROL_BORDER, COLORSET_SETTING_TAB_BUTTON_ACTIVE } from "@/static/colorSet";
+import { FONTSET_DEFAULT_BUTTON_SIZE, FONTSET_DESCRIPTION_LABEL_SIZE } from "@/static/fontSet";
+import { BaseButton, BaseFlexRow, MediumLabel } from "@/static/componentSet";
 import { handleInitSettings } from "./set/handleButtons";
-import { STRING_SETTING_MAIN_BTN_INIT } from "../../static/langSet";
+import { STRING_SETTING_MAIN_BTN_INIT } from "@/static/langSet";
 
 const TabControlBar: React.FC<{ showInit: boolean }> = ({ showInit }) => {
   const dispatch =  useDispatch()

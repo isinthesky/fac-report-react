@@ -1,6 +1,6 @@
-import { update_tab_user_table_info, save_page_setting, get_page_setting } from "../entities/api/page";
-import { isUserTableTypeByInt } from "../static/utils";
-import { TabPageInfotype, Unit, UserTableType } from "../static/types";
+import { update_tab_user_table_info, save_page_setting, get_page_setting } from "@/entities/api/page";
+import { isUserTableTypeByInt } from "@/static/utils";
+import { TabPageInfotype, Unit, UserTableType } from "@/types/types";
 
 export const saveTabPage = async (currentTab: TabPageInfotype) => {
 try {

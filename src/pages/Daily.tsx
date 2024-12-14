@@ -2,25 +2,25 @@ import React, { useEffect, useState, useRef, useCallback, forwardRef, useMemo } 
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useReactToPrint } from 'react-to-print';
-import ReportGuide from "../viewer/ReportGuide";
-import PrintModal from "../print/PrintModal";
+import ReportGuide from "@/components/features/viewer/ReportGuide";
+import PrintModal from "@/components/print/PrintModal";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { RootStore } from "../../store/congifureStore";
-import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton, BaseFlexCenterDiv } from "../../static/componentSet";
-import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE, STRING_DAILY_MAIN_BTN_LOAD_HISTORY } from "../../static/langSet";
-import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
-import Header from "../header/Header";
-import { setMenus, setViewMode, setIsLoading, setApproves } from "../../entities/reducers/settingSlice";
-import { timestampToYYYYMMDD } from "../../static/utils";
-import LoadingSpinner from "../viewer/LoadingSpinner";
-import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "../../entities/api/page"
-import { setTabPage, setViewSelect, setCurrentTab } from "../../entities/reducers/tabPageSlice";
-import { fetchPageSettings } from "../../entities/api/common";
-import { TabPageInfotype, Unit, UserTableType } from "../../static/types";
-import { isUserTableTypeByInt } from "../../static/utils";
-import { getTabPageSetting, saveTabPage } from "../../features/page";
+import { RootStore } from "@/store/congifureStore";
+import { ActiveButton, BaseButton, BaseFlex1Column, BaseFlexColumn, BaseFlexDiv, BaseFlexRow, BaseModalBack, MiniButton, BaseFlexCenterDiv } from "@/static/componentSet";
+import { STRING_DAILY_MAIN_BTN_PRINT, STRING_DEFAULT_SAVE, STRING_DAILY_MAIN_SELECT_DATE, STRING_DAILY_MAIN_TITLE, STRING_DAILY_MAIN_BTN_LOAD_HISTORY } from "@/static/langSet";
+import { COLORSET_BACKGROUND_COLOR, COLORSET_SIGNITURE_COLOR } from "@/static/colorSet";
+import Header from "@/components/layout/Header";
+import { setMenus, setViewMode, setIsLoading, setApproves } from "@/store/slices/settingSlice";
+import { timestampToYYYYMMDD } from "@/static/utils";
+import LoadingSpinner from "@/components/viewer/LoadingSpinner";
+import { get_page_setting, updateTabDate, update_tab_device_value, get_history_page_setting, update_tab_user_table_info, save_page_setting, reset_tab_user_table_info } from "@/entities/api/page"
+import { setTabPage, setViewSelect, setCurrentTab } from "@/entities/reducers/tabPageSlice";
+import { fetchPageSettings } from "@/entities/api/common";
+import { TabPageInfotype, Unit, UserTableType } from "@/types/types";
+import { isUserTableTypeByInt } from "@/static/utils";
+import { getTabPageSetting, saveTabPage } from "@/features/page";
 
 interface CustomInputProps {
   value: string;

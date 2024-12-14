@@ -4,13 +4,13 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setViewSelect, setSettingSelect } from "../../entities/reducers/tabPageSlice";
-import { setIsLoading } from "../../entities/reducers/settingSlice";
-import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "../../env";
-import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
-import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "../../static/colorSet";
-import { ICON_HEADER_SETTING } from "../../static/constSet";
-import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "../../static/componentSet";
-import { HeaderMenus } from "./HeaderMenus";
+import { setIsLoading } from "@/store/slices/settingSlice";
+import { DEFAULT_MAINLOGO_ROW_PATH, DEFAULT_LOCATION_NAME } from "@/config/env";
+import { FONTSET_MAIN_MENU_SIZE } from "@/static/fontSet";
+import { COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2, COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BORDER1 } from "@/static/colorSet";
+import { ICON_HEADER_SETTING } from "@/config/constSet";
+import { BaseFlex1Column, BaseFlexCenterDiv, BaseFlexColumn } from "@/static/componentSet";
+import { HeaderMenus } from "@/components/header/HeaderMenus";
 
 interface HeaderProps {
   paramMain: number;

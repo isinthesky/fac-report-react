@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DailySetting, ApprovalsType } from "../../static/types";
-import { INIT_PRINT_TITLE, CONST_APP_STATE } from "../../env";
+import { DailySetting, ApprovalsType } from "@/types/types";
+import { INIT_PRINT_TITLE, CONST_APP_STATE } from "@/config/env";
 
 export interface SettingState {
   menus: string[];
@@ -21,7 +21,7 @@ const oneDayMillisec = 24 * 60 * 60 * 1000;
 const yesterday = new Date(today.getTime() - oneDayMillisec);
 
 // 개발
-const lastyear = new Date(yesterday.getFullYear() - 2, yesterday.getMonth(), yesterday.getDate());
+const lastyear = new Date(yesterday.getFullYear() - 1, yesterday.getMonth() - 5, yesterday.getDate());
 
 const initialState: SettingState = {
   menus: [],

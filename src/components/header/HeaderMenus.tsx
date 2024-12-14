@@ -1,10 +1,19 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { RootStore } from "../../store/congifureStore";
+import { RootStore } from "@/store/congifureStore";
 import styled from "styled-components";
-import { FONTSET_MAIN_MENU_SIZE } from "../../static/fontSet";
-import { COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "../../static/colorSet";
-import { SelectedTab } from "../../static/types";
+import { FONTSET_MAIN_MENU_SIZE } from "@/static/fontSet";
+import { COLORSET_SIGNITURE_COLOR, COLORSET_HEADER_BTN_LINEAR1, COLORSET_HEADER_BTN_LINEAR2 } from "@/static/colorSet";
+import {
+  INIT_REPORT_TYPE1,
+  INIT_REPORT_TYPE2,
+  INIT_REPORT_TYPE3,
+  INIT_REPORT_TYPE1_SUB1,
+  INIT_REPORT_TYPE1_SUB2,
+  INIT_REPORT_TYPE2_SUB1,
+  INIT_REPORT_TYPE3_SUB1,
+} from "@/config/env";
+
 
 interface MenuProps {
   onClickCallback: (mainId: number, subId: number) => void;
@@ -20,22 +29,34 @@ export const HeaderMenus: React.FC<MenuProps> = ({ onClickCallback, isSettingsAc
 
   const [menuStructure, setMenuStructure] = useState<MenuStructure>([]);
 
+
   useEffect(() => {
     const structure = [];
-    for (let i = 1; i <= 5; i++) {
-      const mainMenuName = process.env[`REACT_APP_INIT_REPORT_MENU${i}`];
-      if (mainMenuName) {
-        const subMenus = [];
-        for (let j = 1; j <= 10; j++) {
-          const subMenuName =
-            process.env[`REACT_APP_INIT_REPORT_MENU${i}_SUB${j}`];
-          if (subMenuName) {
-            subMenus.push({ id: j, name: subMenuName });
-          }
+    const menuEnvVars = [
+      { main: INIT_REPORT_TYPE1, subs: [INIT_REPORT_TYPE1_SUB1, INIT_REPORT_TYPE1_SUB2] },
+      { main: INIT_REPORT_TYPE2, subs: [INIT_REPORT_TYPE2_SUB1] },
+      { main: INIT_REPORT_TYPE3, subs: [INIT_REPORT_TYPE3_SUB1] },
+    ];
+
+    menuEnvVars.forEach((menuVar, index) => {
+      if (menuVar.main) {
+        const subMenus = menuVar.subs
+          .filter(subMenu => subMenu)
+          .map((subMenu, subIndex) => ({
+            id: subIndex + 1,
+            name: subMenu
+          }));
+
+        if (subMenus.length > 0) {
+          structure.push({
+            id: index + 1,
+            name: menuVar.main,
+            subMenus
+          });
         }
-        structure.push({ id: i, name: mainMenuName, subMenus });
       }
-    }
+    });
+
     setMenuStructure(structure);
   }, []);
 

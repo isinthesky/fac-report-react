@@ -1,4 +1,4 @@
-import { CONST_LANG } from "../env";
+import { CONST_LANG } from "@/config/env";
 import {
   ENG_DEFALT_SAVE,
   ENG_DEFALT_SAVEALL,

@@ -1,15 +1,15 @@
 import { forwardRef } from 'react';
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { ApprovalsType } from '../../static/types';
-import TableData from "../viewer/TableData";
-import TableUser from "../viewer/TableUser";
-import { RootStore } from '../../store/congifureStore';
-import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from '../../static/componentSet';
-import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from '../../static/langSet';
-import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from '../../static/colorSet';
-import { FONTSET_DEFAULT_DIV_SIZE } from '../../static/fontSet';
-import { isDataTableTypeByInt } from "../../static/utils";
+import { ApprovalsType } from "@/types/types";
+import TableData from "@/components/viewer/TableData";
+import TableUser from "@/components/features/viewer/TableUser";
+import { RootStore } from "@/store/congifureStore";
+import { BaseFlexCenterDiv, BaseFlexColumn, BaseFlexDiv, BaseFlexRow } from "@/static/componentSet";
+import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME } from "@/static/langSet";
+import { COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "@/static/colorSet";
+import { FONTSET_DEFAULT_DIV_SIZE } from "@/static/fontSet";
+import { isDataTableTypeByInt } from "@/static/utils";
 
 type PrintGuideProps = {
   row: number;

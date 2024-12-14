@@ -1,13 +1,13 @@
 import React, { useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import DeviceValue from "./DeviceValue";
-import { Item, ViewUnitProps } from "../../static/types";
-import { BaseFlexCenterDiv } from "../../static/componentSet";
-import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
-import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
+import { Item, ViewUnitProps } from "@/types/types";
+import { BaseFlexCenterDiv } from "@/static/componentSet";
+import { FONTSET_DEFAULT_DIV_SIZE } from "@/static/fontSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "@/static/colorSet";
 import { useSelector } from "react-redux";
-import { RootStore } from "../../store/congifureStore";
-import { TABLE_TYPE_STR_TO_INT } from "../../env";
+import { RootStore } from "@/store/congifureStore";
+import { TABLE_TYPE_STR_TO_INT } from "@/config/env";
 
 const TableData: React.FC<ViewUnitProps> = ({ currentTable, times }) => {
   const settingSlice = useSelector((state: RootStore) => state.settingReducer);

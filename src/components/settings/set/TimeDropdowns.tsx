@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDropdown, removeDropdown, setTimes } from "../../../entities/reducers/tabPageSlice";
+import { addDropdown, removeDropdown, setTimes } from "@/entities/reducers/tabPageSlice";
 import styled from "styled-components";
-import { RootStore } from '../../../store/congifureStore';
-import { STRING_SETTING_SET_TIME_ADD } from '../../../static/langSet';
-import { BaseButton, BaseFlex1Row, BaseFlexColumn, BaseOption, BaseSelect, MiniButton } from '../../../static/componentSet';
-import { ICON_DAY_DELETE } from '../../../static/constSet';
-import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from '../../../static/colorSet';
-import { COLORSET_DARK_CONTROL_FONT } from '../../../static/colorSet';
+import { RootStore } from '@/store/congifureStore';
+import { STRING_SETTING_SET_TIME_ADD } from '@/static/langSet';
+import { BaseButton, BaseFlex1Row, BaseFlexColumn, BaseOption, BaseSelect, MiniButton } from '@/static/componentSet';
+import { ICON_DAY_DELETE } from '@/config/constSet';
+import { COLORSET_DARK_CONTROL_BG, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from '@/static/colorSet';
+import { COLORSET_DARK_CONTROL_FONT } from '@/static/colorSet';
 
 const TimeDropdowns: React.FC = () => {
   const dispatch = useDispatch();

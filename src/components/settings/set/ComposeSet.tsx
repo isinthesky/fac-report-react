@@ -7,14 +7,14 @@ import { updateTable, updateDevice, updateTabTimeInfo, updateTabUserTableInfo } 
 import { setTabUnitPosition, saveTabPage, setSettingSelect } from "../../../entities/reducers/tabPageSlice";
 import { RootStore } from "../../../store/congifureStore";
 import DeviceHeaderSet from "./UnitSettingHeader";
-import { setUnitSelectPosition, setdeviceSearchWord } from "../../../entities/reducers/settingSlice";
-import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "../../../static/componentSet";
-import UnitGroupListControl from "../group/UnitGroupListControl";
-import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "../../../static/langSet";
+import { setUnitSelectPosition, setdeviceSearchWord } from "../../../store/slices/settingSlice";
+import { ActiveButton, BaseButton,MediumLabel, BaseFlex1Column, BaseFlexCenterDiv } from "@/static/componentSet";
+import UnitGroupListControl from "@/components/features/settings/group/UnitGroupListControl";
+import { STRING_DEFAULT_REFRESH, STRING_DEFAULT_SAVE, STRING_DEFAULT_SAVEALL, STRING_SETTING_DEVICE_UNIT_SELECT, STRING_CONFIRM_SAVE_CHANGES, STRING_CONFIRM_SAVE_ALL_CHANGES } from "@/static/langSet";
 import { COLORSET_ACTIVE_CONTROL_DISABLE, COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_NORMAL_CONTROL_BG, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "../../../static/colorSet";
-import { CONST_TYPE_INFO, TypeInfo, TableType } from "../../../env";
-import { isDataTableTypeByInt } from "../../../static/utils";
-import { BaseFlex1Row, BaseFlexColumn } from "../../../static/componentSet";
+import { CONST_TYPE_INFO, TypeInfo, TableType } from "@/config/env";
+import { isDataTableTypeByInt } from "@/static/utils";
+import { BaseFlex1Row, BaseFlexColumn } from "@/static/componentSet";
 
 
 export const UnitSelector: React.FC = () => {

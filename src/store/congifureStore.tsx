@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
-import settingReducer, { SettingState } from "../entities/reducers/settingSlice";
-import tabPageReducer, { TabPageState } from "../entities/reducers/tabPageSlice";
-import deviceReducer, { DeviceState } from "../entities/reducers/deviceSlice";
-import unitGroupReducer, { UnitGroupState } from "../entities/reducers/unitGroupSlice";
+import settingReducer, { SettingState } from "@/store/slices/settingSlice";
+import tabPageReducer, { TabPageState } from "@/entities/reducers/tabPageSlice";
+import deviceReducer, { DeviceState } from "@/entities/reducers/deviceSlice";
+import unitGroupReducer, { UnitGroupState } from "@/entities/reducers/unitGroupSlice";
 
 export interface RootStore {
   settingReducer: SettingState;

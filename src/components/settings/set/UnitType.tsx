@@ -1,8 +1,8 @@
 import React from "react";
 import BaseTableType from "./BaseTableType";
-import { SetDeviceType } from "../../../static/types";
-import { COLORSET_ACTIVE_CONTROL_BG } from "../../../static/colorSet";
-import { CONST_TYPE_INFO, TypeInfo, TableType, isValidTableUserType } from "../../../env";
+import { SetDeviceType } from "@/types/types";
+import { COLORSET_ACTIVE_CONTROL_BG } from "@/static/colorSet";
+import { CONST_TYPE_INFO, TypeInfo, TableType, isValidTableUserType } from "@/config/env";
 
 interface UnitTypeProps extends SetDeviceType {
   name: string;

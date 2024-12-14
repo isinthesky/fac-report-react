@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { SIZESET_DEFAULT_INPUT_HEIGHT } from "../../static/constSet";
+import { SIZESET_DEFAULT_INPUT_HEIGHT } from "@/config/constSet";
 
 function Login() {
   return (

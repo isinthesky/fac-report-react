@@ -9,17 +9,16 @@ import { loadDeviceList, loadStaitionList, loadDivisionList } from "../../entiti
 import { loadUnitGroupList } from "../../entities/reducers/unitGroupSlice";
 import TabControlBar from "../settings/TabControlBar";
 import { BaseFlex1Column } from "../../static/componentSet";
-import { COLORSET_BACKGROUND_COLOR } from "../../static/colorSet";
-import { CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "../../static/constSet";
-import { IDivision, IStation } from "../../static/types";
-import UnitGroupSet from "../settings/group/UnitGroupSet";
-import Header from "../header/Header";
-import PageControlBar from "../settings/PageControlBar";
-import PrintSetting from "../settings/PrintSetting";
-import { RootStore } from "../../store/congifureStore";
-import { setApproves } from "../../entities/reducers/settingSlice"
-import { setSettingSelect, setViewSelect } from "../../entities/reducers/tabPageSlice";
-import { fetchPageSettings } from "../../entities/api/common";
+import { COLORSET_BACKGROUND_COLOR } from "@/static/colorSet";
+import { CONST_SETTING_MODE_DEVICE, CONST_SETTING_MODE_VIEW, CONST_SETTING_MODE_UNIT, CONST_SETTING_MODE_PRINT } from "@/config/constSet";
+import { IDivision, IStation } from "@/types/types";
+import UnitGroupSet from "@/components/features/settings/group/UnitGroupSet";
+import Header from "@/components/layout/Header";
+import PageControlBar from "@/components/settings/PageControlBar";
+import PrintSetting from "@/components/features/settings/PrintSetting";
+import { RootStore } from "@/store/congifureStore";
+import { setSettingSelect, setViewSelect } from "@/entities/reducers/tabPageSlice";
+import { fetchPageSettings } from "@/entities/api/common";
 
 function Settings() {
   const dispatch = useDispatch();

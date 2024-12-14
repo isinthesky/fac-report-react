@@ -2,15 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useReactToPrint } from 'react-to-print';
-import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row } from '../../static/componentSet';
-import { RootStore } from '../../store/congifureStore';
-import { setPrintTitle, setApproves, setPrintFontSize, setViewMode } from "../../entities/reducers/settingSlice"; // Assuming similar actions exist
-import { BaseFlexColumn, MediumLabel, BaseModalBack, MiniButton } from '../../static/componentSet';
-import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE,STRING_SETTING_SET_PRINT_PREVIEW, STRING_SETTING_SET_PRINT_APPROVE, STRING_SETTING_SET_PRINT_FONT_SIZE, STRING_DAILY_MAIN_BTN_PRINT } from '../../static/langSet';
-import { update_page_approve } from '../../entities/api/page';
-import { ApprovalsType } from '../../static/types';
-import { COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from '../../static/colorSet';
-import PrintModal from "../print/PrintModal";
+import { BaseInput, BaseFlexCenterDiv, BaseButton, ActiveButton, BaseFlex1Row } from "@/static/componentSet";
+import { RootStore } from "@/store/congifureStore";
+import { setPrintTitle, setApproves, setPrintFontSize, setViewMode } from "@/store/slices/settingSlice"; // Assuming similar actions exist
+import { BaseFlexColumn, MediumLabel, BaseModalBack, MiniButton } from "@/static/componentSet";
+import { STRING_DEFAULT_CANCEL, STRING_DEFAULT_SAVE, STRING_SETTING_SET_PRINT_TITLE,STRING_SETTING_SET_PRINT_PREVIEW, STRING_SETTING_SET_PRINT_APPROVE, STRING_SETTING_SET_PRINT_FONT_SIZE, STRING_DAILY_MAIN_BTN_PRINT } from "@/static/langSet";
+import { update_page_approve } from "@/entities/api/page";
+import { ApprovalsType } from "@/types/types";
+import { COLORSET_ACTIVE_CONTROL_BORDER, COLORSET_SETTING_TAB_BG, COLORSET_SIGNITURE_COLOR } from "@/static/colorSet";
+import PrintModal from "@/components/features/settings/PrintSetting";
 
 const PrintSetting: React.FC = () => {
   const dispatch = useDispatch();

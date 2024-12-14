@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import TableData from "./TableData";
-import TableUser from "./TableUser";
-import { RootStore } from "../../store/congifureStore";
-import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "../../static/langSet";
-import { BaseFlex1Row, BaseFlexCenterDiv, BaseFlexDiv } from "../../static/componentSet";
-import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "../../static/colorSet";
-import { CONST_TYPE_INFO, isValidTableUserType, isValidTableDataType } from "../../env";
-import { isDataTableTypeByInt } from "../../static/utils";
+import TableData from "@/components/viewer/TableData";
+import TableUser from "@/components/features/viewer/TableUser";
+import { RootStore } from "@/store/congifureStore";
+import { STRING_DAILY_MAIN_VIEW_SORTATION, STRING_DAILY_MAIN_VIEW_TIME, STRING_ERR_SERVER_CONNECT } from "@/static/langSet";
+import { BaseFlex1Row, BaseFlexCenterDiv, BaseFlexDiv } from "@/static/componentSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_PRINT_BORDER } from "@/static/colorSet";
+import { CONST_TYPE_INFO, isValidTableUserType, isValidTableDataType } from "@/config/env";
+import { isDataTableTypeByInt } from "@/static/utils";
 
 type ReportGuideProps = {
   row: number;

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
-import { RootStore } from "../../../store/congifureStore";
-import { BaseInput, ControlButton, BaseFlexDiv } from '../../../static/componentSet';
-import { ICON_DAY_SEARCH, ICON_DAY_REFRESH } from '../../../static/constSet';
-import { setdeviceSearchWord } from "../../../entities/reducers/settingSlice";
-import { COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_INPUT_BG } from '../../../static/colorSet';
+import { RootStore } from "@/store/congifureStore";
+import { BaseInput, ControlButton, BaseFlexDiv } from '@/static/componentSet';
+import { ICON_DAY_SEARCH, ICON_DAY_REFRESH } from '@/config/constSet';
+import { setdeviceSearchWord } from "@/store/slices/settingSlice";
+import { COLORSET_NORMAL_CONTROL_BORDER, COLORSET_NORMAL_INPUT_BG } from '@/static/colorSet';
 
 const DeviceSearch: React.FC = () => {
   const dispatch = useDispatch()

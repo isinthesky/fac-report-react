@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import { IStation, IDivision } from "../../../static/types";
-import { RootStore } from "../../../store/congifureStore";
-import { BaseOption, BaseSelect, BaseInput, ControlButton, BigLabel, BaseFlexRow, SmallLabel, BaseFlexColumn } from "../../../static/componentSet";
-import { updateCurrentGroupUnit } from "../../../entities/reducers/unitGroupSlice";
-import { setdeviceSearchWord } from "../../../entities/reducers/settingSlice";
-import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "../../../static/constSet";
-import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "../../../static/colorSet";
-import { STRING_SETTING_GROUP_FILTER } from "../../../static/langSet";
+import { IStation, IDivision } from "@/types/types";
+import { RootStore } from "@/store/congifureStore";
+import { BaseOption, BaseSelect, BaseInput, ControlButton, BigLabel, BaseFlexRow, SmallLabel, BaseFlexColumn } from "@/static/componentSet";
+import { updateCurrentGroupUnit } from "@/entities/reducers/unitGroupSlice";
+import { setdeviceSearchWord } from "@/store/slices/settingSlice";
+import { ICON_DAY_CLOSE, ICON_DAY_SEARCH } from "@/config/constSet";
+import { COLORSET_GRID_CONTROL_BG, COLORSET_GRID_CONTROL_BORDER } from "@/static/colorSet";
+import { STRING_SETTING_GROUP_FILTER } from "@/static/langSet";
 
 
 const Filter: React.FC = () => {

@@ -3,12 +3,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { BaseButton, BaseFlex1Row, BaseFlexDiv } from "../../static/componentSet";
-import { STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET, STRING_SETTING_MAIN_BTN_INFO, STRING_DEFAULT_SETTING } from "../../static/langSet";
-import { COLORSET_BACKGROUND_COLOR, COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_SETTING_TAB_BUTTON_ACTIVE, COLORSET_SIGNITURE_COLOR } from "../../static/colorSet";
-import { PageControlBarProps } from "../../static/interfaces";
-import { FONTSET_DEFAULT_TAB_SIZE } from "../../static/fontSet";
-import { CONST_LANG } from "../../env";
+import { BaseButton, BaseFlex1Row, BaseFlexDiv } from "@/static/componentSet";
+import { STRING_SETTING_MAIN_BTN_DEVSET, STRING_SETTING_MAIN_BTN_PRINTSET, STRING_SETTING_MAIN_BTN_GROUPSET, STRING_SETTING_MAIN_BTN_INFO, STRING_DEFAULT_SETTING } from "@/static/langSet";
+import { COLORSET_BACKGROUND_COLOR, COLORSET_NORMAL_CONTROL_FONT, COLORSET_ACTIVE_CONTROL_BG, COLORSET_SETTING_TAB_BUTTON_ACTIVE, COLORSET_SIGNITURE_COLOR } from "@/static/colorSet";
+import { PageControlBarProps } from "@/types/interfaces";
+import { FONTSET_DEFAULT_TAB_SIZE } from "@/static/fontSet";
+import { CONST_LANG } from "@/config/env";
 
 
 const PageControlBar: React.FC<PageControlBarProps> = ({ mode, modeCallback }) => {

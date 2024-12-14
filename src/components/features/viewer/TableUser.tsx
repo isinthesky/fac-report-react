@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react";
 import styled from "styled-components";
-import { ViewUnitProps } from "../../static/types";
-import { BaseFlexCenterDiv } from "../../static/componentSet";
-import { FONTSET_DEFAULT_DIV_SIZE } from "../../static/fontSet";
-import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "../../static/colorSet";
+import { ViewUnitProps } from "@/types/types";
+import { BaseFlexCenterDiv } from "@/static/componentSet";
+import { FONTSET_DEFAULT_DIV_SIZE } from "@/static/fontSet";
+import { COLORSET_GRID_HEADER_BG, COLORSET_GRID_CONTROL_BORDER, COLORSET_FONT_BASE, COLORSET_PRINT_BORDER, COLORSET_PRINT_FONT } from "@/static/colorSet";
 import { useSelector, useDispatch } from "react-redux";
-import { RootStore } from "../../store/congifureStore";
-import { isUserTableTypeByInt, renderWithLineBreaks } from "../../static/utils";
-import { setCurrentTableValues } from "../../entities/reducers/tabPageSlice";
-import { TABLE_TYPE_STR_TO_INT } from "../../env";
+import { RootStore } from "@/store/congifureStore";
+import { isUserTableTypeByInt, renderWithLineBreaks } from "@/static/utils";
+import { setCurrentTableValues } from "@/entities/reducers/tabPageSlice";
+import { TABLE_TYPE_STR_TO_INT } from "@/config/env";
 const sections = {
   [TABLE_TYPE_STR_TO_INT["U1"]]: [
     { label: "MOF 배율", values: ["전일지침", "금일지침", "변화량", "소계"]},

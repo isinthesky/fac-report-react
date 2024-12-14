@@ -1,7 +1,9 @@
 import axios from "axios";
+import { SERVER_URL } from "@/config/env";
+import { withAPILogging } from "@/utils/logger/withAPILogging";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_SERVER_URL,
+  baseURL: SERVER_URL,
   headers: {
     'accept': 'application/json'
   }
@@ -11,34 +13,40 @@ export const setInitSettings = async (
   keyString: string,
   valueData: string
 ): Promise<any> => {
-  try {
-    await axiosInstance.post("/report/general/createSetting", {
-      type: keyString,
-      value: JSON.parse(valueData),
-    });
-  } catch (error) {
-    console.error("setInitSettings", keyString, error);
-  }
+  const data = { type: keyString, value: JSON.parse(valueData) };
+  return withAPILogging(
+    async () => {
+      const response = await axiosInstance.post("/report/general/createSetting", data);
+      return response.data.success;
+    },
+    'POST',
+    "/report/general/createSetting",
+    data
+  );
 };
 
 export const setResetSettings = async (): Promise<boolean> => {
-  try {
-    await axiosInstance.put("/report/general/resetSettings");
-    return true;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  return withAPILogging(
+    async () => {
+      const response = await axiosInstance.put("/report/general/resetSettings");
+      return response.data.success;
+    },
+    'PUT',
+    "/report/general/resetSettings",
+    {}
+  );
 };
 
 export const setDeleteSettings = async (): Promise<boolean> => {
-  try {
-    await axiosInstance.delete("/report/general/deleteSettings");
-    return true;
-  } catch (error) {
-    console.error("setDeleteSettings", error);
-    return false;
-  }
+  return withAPILogging(
+    async () => {
+      const response = await axiosInstance.delete("/report/general/deleteSettings");
+      return response.data.success;
+    },
+    'DELETE',
+    "/report/general/deleteSettings",
+    {}
+  );
 };
 
 export const setUpdateSettingsColRow = async (
@@ -47,19 +55,16 @@ export const setUpdateSettingsColRow = async (
   row: number,
   column: number
 ): Promise<any> => {
-  try {
-    console.log("setUpdateS", id, name, column, row)
-    const response = await axiosInstance.put("/FacReport/PageInfo/TabInfo/update", {
-      id: id,
-      name: name,
-      tbl_row: row,
-      tbl_column: column
-    });
-    return response.data.success;
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  const data = { id, name, tbl_row: row, tbl_column: column };
+  return withAPILogging(
+    async () => {
+      const response = await axiosInstance.put("/FacReport/PageInfo/TabInfo/update", data);
+      return response.data.success;
+    },
+    'PUT',
+    "/FacReport/PageInfo/TabInfo/update",
+    data
+  );
 };
 
 
@@ -68,14 +73,14 @@ export const setUpdateSettingsApprove = async (
   text: string,
   checked: number
 ): Promise<any> => {
-  try {
-    return await axiosInstance.put("/FacReport/PageInfo/TabApprove/update", {
-      id: id,
-      text: text,
-      checked: checked
-    });
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
+  const data = { id, text, checked };
+  return withAPILogging(
+    async () => {
+      const response = await axiosInstance.put("/FacReport/PageInfo/TabApprove/update", data);
+      return response.data.success;
+    },
+    'PUT',
+    "/FacReport/PageInfo/TabApprove/update",
+    data
+  );
 };
