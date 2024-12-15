@@ -1,11 +1,16 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import legacy from '@vitejs/plugin-legacy';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(),
+    legacy({
+      targets: ['ie >= 11'],
+      additionalLegacyPolyfills: ['regenerator-runtime/runtime']
+    })],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -26,7 +31,17 @@ export default defineConfig({
     strictPort: true, // 지정된 포트를 엄격하게 사용
   },
   build: {
-    chunkSizeWarningLimit: 1500, // 기본값 500에서 상향 조정
+    target: ['es2015', 'ie11'],
+    cssCodeSplit: false,
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          style: ['styled-components']
+        }
+      }
+    }
   },
   base: '/'
 }); 
