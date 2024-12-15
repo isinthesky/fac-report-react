@@ -23,9 +23,9 @@ export default defineConfig({
   server: {
     port: port,
     host: true, // 모든 네트워크 인터페이스에서 수신
-    strictPort: true, // 지정된 포트를 엄격하게 사용
   },
   build: {
+    sourcemap: true,
     chunkSizeWarningLimit: 1500, // 기본값 500에서 상향 조정
   },
   base: '/'
